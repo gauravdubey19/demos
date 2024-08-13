@@ -17,6 +17,8 @@ interface CursorContextType {
   backRef: React.RefObject<HTMLDivElement>;
   activeElement: string | null;
   setActiveElement: React.Dispatch<React.SetStateAction<string | null>>;
+  showTxt: boolean | null;
+  setShowTxt: React.Dispatch<React.SetStateAction<boolean>>;
   showVideo: boolean | null;
   setShowVideo: React.Dispatch<React.SetStateAction<boolean>>;
 }
@@ -31,6 +33,7 @@ export const CursorProvider: React.FC<{ children: React.ReactNode }> = ({
   const vidRef = useRef<HTMLDivElement>(null);
   const backRef = useRef<HTMLDivElement>(null);
   const [activeElement, setActiveElement] = useState<string | null>(null);
+  const [showTxt, setShowTxt] = useState<boolean>(false);
   const [showVideo, setShowVideo] = useState<boolean>(false);
 
   useEffect(() => {
@@ -40,7 +43,7 @@ export const CursorProvider: React.FC<{ children: React.ReactNode }> = ({
     const back = backRef.current;
 
     const handleMouseMove = (e: MouseEvent) => {
-      // console.log("Mouse moved:", e.clientX, e.clientY);
+      console.log("Mouse moved:", e.clientX, e.clientY);
       if (cursor) {
         gsap.to(cursor, {
           x: e.clientX,
@@ -61,7 +64,8 @@ export const CursorProvider: React.FC<{ children: React.ReactNode }> = ({
         } else if (target === back) {
           setActiveElement("back");
         }
-        if (!showVideo || target === back) gsap.to(cursor, { scale: 5 });
+        if (!showTxt || !showVideo || target === back)
+          gsap.to(cursor, { scale: 5 });
       }
     };
 
@@ -91,7 +95,7 @@ export const CursorProvider: React.FC<{ children: React.ReactNode }> = ({
       back?.removeEventListener("mouseenter", handleMouseEnter);
       back?.removeEventListener("mouseleave", handleMouseLeave);
     };
-  }, [showVideo]);
+  }, [showTxt, showVideo]);
 
   return (
     <CursorContext.Provider
@@ -102,6 +106,8 @@ export const CursorProvider: React.FC<{ children: React.ReactNode }> = ({
         backRef,
         activeElement,
         setActiveElement,
+        showTxt,
+        setShowTxt,
         showVideo,
         setShowVideo,
       }}
@@ -109,22 +115,13 @@ export const CursorProvider: React.FC<{ children: React.ReactNode }> = ({
       {children}
       <div
         ref={cursorRef}
-        className={`fixed z-[9999] left-0 top-0 w-2 h-2 flex items-center justify-center rounded-full bg-gray-950/95 backdrop-blur-md select-none text-[3px] text-white text-balance font-medium ${
+        className={`fixed left-0 top-0 w-2 h-2 flex items-center justify-center rounded-full bg-gray-950/90 backdrop-blur-md select-none text-[3px] text-white text-balance font-medium ${
           activeElement ? "p-2" : ""
         }`}
       >
         {activeElement === "txt" && (
           <>
             <span>3D Text</span>
-            <IoArrowBackSharp
-              size={8}
-              className="absolute -left-[7.2px] top-[3.5px]"
-            />
-          </>
-        )}
-        {activeElement === "back" && (
-          <>
-            <span>Swipe Back</span>
             <IoArrowBackSharp
               size={8}
               className="absolute -left-[7.2px] top-[3.5px]"
@@ -138,6 +135,22 @@ export const CursorProvider: React.FC<{ children: React.ReactNode }> = ({
               size={8}
               className="absolute -right-[7.2px] top-[3.5px]"
             />
+          </>
+        )}
+        {activeElement === "back" && (
+          <>
+            <span>Swipe Back</span>
+            {showTxt ? (
+              <IoArrowForwardSharp
+                size={8}
+                className="absolute -right-[7.2px] top-[3.5px]"
+              />
+            ) : (
+              <IoArrowBackSharp
+                size={8}
+                className="absolute -left-[7.2px] top-[3.5px]"
+              />
+            )}
           </>
         )}
       </div>

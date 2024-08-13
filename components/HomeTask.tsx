@@ -5,9 +5,21 @@ import { useCursor } from "@/context/CursorProvider";
 import ScrollVideo from "./ScrollVideo";
 
 const HomeTask: React.FC = () => {
-  const { txtRef, vidRef, backRef, showVideo, setShowVideo } = useCursor();
+  const {
+    txtRef,
+    vidRef,
+    backRef,
+    showTxt,
+    setShowTxt,
+    showVideo,
+    setShowVideo,
+  } = useCursor();
 
-  const handleDragEnd = (e: React.DragEvent<HTMLDivElement>) => {
+  const handleDragEndTxt = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    setShowTxt(!showTxt);
+  };
+  const handleDragEndVid = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     setShowVideo(!showVideo);
   };
@@ -23,24 +35,40 @@ const HomeTask: React.FC = () => {
       <div
         ref={txtRef}
         className={`h-full ${
-          showVideo ? "w-0" : "w-[35%]"
-        } bg-gray-400 transition-all ease-in-out duration-300 overflow-hidden`}
-      />
+          showVideo ? "w-0" : showTxt ? "w-full" : "w-[35%]"
+        } bg-gray-400 transition-all ease-in-out duration-300`}
+      >
+        {!showTxt && (
+          <div
+            draggable
+            onDragEnd={handleDragEndTxt}
+            className="absolute left-0 top-0 h-full w-[35%] z-10 bg-transparent cursor-grab active:cursor-grabbing borde"
+          ></div>
+        )}
+        {showTxt && (
+          <div
+            ref={backRef}
+            draggable
+            onDragEnd={handleDragEndTxt}
+            className="absolute right-0 top-0 h-full w-[35%] z-10 bg-transparent cursor-grab active:cursor-grabbing borde"
+          ></div>
+        )}
+      </div>
       <div
         className={`h-full ${
-          showVideo ? "w-0" : "w-[30%]"
+          showVideo || showTxt ? "w-0" : "w-[30%]"
         } bg-gray-600 transition-all ease-in-out duration-300 overflow-hidden`}
       />
       <div
         ref={vidRef}
         className={`relative h-full ${
-          showVideo ? "w-full" : "w-[35%]"
+          showVideo ? "w-full" : showTxt ? "w-0" : "w-[35%]"
         } bg-black transition-all ease-in-out duration-300`}
       >
         {!showVideo && (
           <div
             draggable
-            onDragEnd={handleDragEnd}
+            onDragEnd={handleDragEndVid}
             // onClick={() => setShowVideo(!showVideo)}
             className="absolute right-0 top-0 h-full w-full z-10 bg-transparent cursor-grab active:cursor-grabbing borde"
           ></div>
@@ -49,7 +77,7 @@ const HomeTask: React.FC = () => {
           <div
             ref={backRef}
             draggable
-            onDragEnd={handleDragEnd}
+            onDragEnd={handleDragEndVid}
             className="absolute left-0 top-0 h-full w-[35%] z-10 bg-transparent cursor-grab active:cursor-grabbing borde"
           ></div>
         )}
