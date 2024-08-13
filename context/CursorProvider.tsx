@@ -17,9 +17,9 @@ interface CursorContextType {
   backRef: React.RefObject<HTMLDivElement>;
   activeElement: string | null;
   setActiveElement: React.Dispatch<React.SetStateAction<string | null>>;
-  showTxt: boolean | null;
+  showTxt: boolean;
   setShowTxt: React.Dispatch<React.SetStateAction<boolean>>;
-  showVideo: boolean | null;
+  showVideo: boolean;
   setShowVideo: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
@@ -115,7 +115,7 @@ export const CursorProvider: React.FC<{ children: React.ReactNode }> = ({
       {children}
       <div
         ref={cursorRef}
-        className={`fixed left-0 top-0 w-2 h-2 flex items-center justify-center rounded-full bg-gray-950/90 backdrop-blur-md select-none text-[3px] text-white text-balance font-medium ${
+        className={`fixed left-0 top-0 w-2 h-2 flex-center rounded-full bg-gray-950/90 backdrop-blur-md select-none text-[3px] text-white text-balance font-medium ${
           activeElement ? "p-2" : ""
         }`}
       >

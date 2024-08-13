@@ -53,9 +53,11 @@ const HomeTask: React.FC = () => {
             className="absolute right-0 top-0 h-full w-[35%] z-10 bg-transparent cursor-grab active:cursor-grabbing borde"
           ></div>
         )}
-        <div className="w-full h-full z-[1] select-none text-2xl bg-gray-400 flex items-center justify-center">
-          3D Text
-        </div>
+        {showTxt && (
+          <div className="w-full h-full z-[1] select-none text-2xl bg-gray-400 flex-center">
+            3D Text
+          </div>
+        )}
       </div>
       <div
         className={`h-full ${
@@ -85,9 +87,9 @@ const HomeTask: React.FC = () => {
           ></div>
         )}
         <ScrollVideo
-          className={`h-[350vh] w-full relative overflow-hidden`}
-          playbackConst={0}
           videoUrl="/macpro.mp4"
+          playbackConst={0}
+          className={`h-[500vh] w-full overflow-hidden`}
           // videoUrl="https://assets.codepen.io/39255/output_960.mp4"
         />
       </div>

@@ -5,6 +5,8 @@
 * {
   padding: 0%;
   margin: 0%;
+  scroll-behavior: smooth !important;
+  box-sizing: border-box;
 }
 
 body {
@@ -12,6 +14,15 @@ body {
 }
 
 @layer utilities {
+  .flex-center {
+    @apply flex items-center justify-center;
+  }
+  .flex-between {
+    @apply flex items-center justify-between;
+  }
+  .br {
+    @apply border border-[red] border-solid;
+  }
   .text-balance {
     text-wrap: balance;
   }

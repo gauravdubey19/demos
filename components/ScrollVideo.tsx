@@ -3,12 +3,13 @@
 import React, { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useCursor } from "@/context/CursorProvider";
 
 gsap.registerPlugin(ScrollTrigger);
 
 interface VideoProps {
-  playbackConst: number;
   videoUrl: string;
+  playbackConst: number;
   className?: string;
 }
 
@@ -19,14 +20,15 @@ const ScrollVideo: React.FC<VideoProps> = ({
 }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const { showVideo } = useCursor();
 
   useEffect(() => {
     const video = videoRef.current;
     const container = containerRef.current;
 
-    if (!video || !container) return;
+    if (!showVideo || !video || !container) return;
 
-    video.playbackRate = playbackConst; //playback rate between 0-5
+    video.playbackRate = playbackConst; // Playback rate between 0-5
 
     // Creating a GSAP timeline with ScrollTrigger
     gsap
@@ -35,14 +37,14 @@ const ScrollVideo: React.FC<VideoProps> = ({
           trigger: container,
           start: "top top",
           end: "bottom bottom",
-          scrub: true,
+          scrub: 2,
           // markers: true // Uncomment to see ScrollTrigger markers for debugging
         },
       })
       .fromTo(video, { currentTime: 0 }, { currentTime: video.duration || 1 });
 
     const onMetadataLoaded = () => {
-      video.currentTime = 0; // Start from the beginning
+      video.currentTime = 0;
     };
 
     video.addEventListener("loadedmetadata", onMetadataLoaded);
@@ -50,23 +52,21 @@ const ScrollVideo: React.FC<VideoProps> = ({
     return () => {
       video.removeEventListener("loadedmetadata", onMetadataLoaded);
     };
-  }, [videoUrl, playbackConst]);
+  }, [videoUrl, playbackConst, showVideo]);
 
   return (
-    <>
-      <div ref={containerRef} className={`${className}`}>
+    <div ref={containerRef} className={className}>
+      {showVideo && (
         <video
           ref={videoRef}
           src={videoUrl}
           playsInline
           muted
-          className="fixed w-full h-auto object-cover"
+          className="fixed z-0 w-full h-auto object-cover"
         />
-      </div>
-    </>
+      )}
+    </div>
   );
 };
 
 export default ScrollVideo;
-
-//https://www.apple.com/media/us/mac-pro/2013/16C1b6b5-1d91-4fef-891e-ff2fc1c1bb58/videos/macpro_main_desktop.mp4
