@@ -43,7 +43,7 @@ export const CursorProvider: React.FC<{ children: React.ReactNode }> = ({
     const back = backRef.current;
 
     const handleMouseMove = (e: MouseEvent) => {
-      console.log("Mouse moved:", e.clientX, e.clientY);
+      // console.log("Mouse moved:", e.clientX, e.clientY);
       if (cursor) {
         gsap.to(cursor, {
           x: e.clientX,
@@ -119,7 +119,7 @@ export const CursorProvider: React.FC<{ children: React.ReactNode }> = ({
           activeElement ? "p-2" : ""
         }`}
       >
-        {activeElement === "txt" && (
+        {activeElement === "txt" && !showTxt && (
           <>
             <span>3D Text</span>
             <IoArrowBackSharp

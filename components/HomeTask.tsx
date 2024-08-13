@@ -36,7 +36,7 @@ const HomeTask: React.FC = () => {
         ref={txtRef}
         className={`h-full ${
           showVideo ? "w-0" : showTxt ? "w-full" : "w-[35%]"
-        } bg-gray-400 transition-all ease-in-out duration-300`}
+        } bg-gray-400 transition-all ease-in-out duration-300 overflow-hidden`}
       >
         {!showTxt && (
           <div
@@ -53,6 +53,9 @@ const HomeTask: React.FC = () => {
             className="absolute right-0 top-0 h-full w-[35%] z-10 bg-transparent cursor-grab active:cursor-grabbing borde"
           ></div>
         )}
+        <div className="w-full h-full z-[1] select-none text-2xl bg-gray-400 flex items-center justify-center">
+          3D Text
+        </div>
       </div>
       <div
         className={`h-full ${
