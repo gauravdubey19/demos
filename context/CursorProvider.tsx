@@ -46,8 +46,8 @@ export const CursorProvider: React.FC<{ children: React.ReactNode }> = ({
       // console.log("Mouse moved:", e.clientX, e.clientY);
       if (cursor) {
         gsap.to(cursor, {
-          x: e.clientX,
-          y: e.clientY,
+          x: e.clientX - 10,
+          y: e.clientY - 10,
           duration: 1,
           ease: "back.out",
         });
@@ -121,7 +121,7 @@ export const CursorProvider: React.FC<{ children: React.ReactNode }> = ({
       {children}
       <div
         ref={cursorRef}
-        className={`fixed left-0 top-0 w-2 h-2 flex-center rounded-full bg-gray-950/90 backdrop-blur-md select-none text-[3px] text-white text-balance font-medium ${
+        className={`hidden lg:flex-center fixed left-0 top-0 w-2 h-2 rounded-full bg-gray-950/90 backdrop-blur-md select-none text-[3px] text-white text-balance font-medium ${
           activeElement ? "p-2" : ""
         }`}
       >
@@ -136,7 +136,7 @@ export const CursorProvider: React.FC<{ children: React.ReactNode }> = ({
         )}
         {activeElement === "vid" && !showVideo && (
           <>
-            <span>Watch Video</span>
+            <span>Scroll Video</span>
             <IoArrowForwardSharp
               size={8}
               className="absolute -right-[7.2px] top-[3.5px]"

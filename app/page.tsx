@@ -19,6 +19,11 @@ export default function Home() {
           href={"/#"}
           carousel={cardList}
         />
+        <Product
+          productName="Product Category 3"
+          href={"/#"}
+          carousel={cardList}
+        />
       </section>
     </main>
   );

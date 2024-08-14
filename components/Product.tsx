@@ -10,18 +10,18 @@ const Product: React.FC<ProductProps> = ({ productName, href, carousel }) => {
     <>
       <div className="w-full overflow-hidden">
         <div className="w-full pt-4 pb-2 px-2 md:px-6 lg:px-8 flex-between">
-          <div className="text-2xl font-bold">{productName}</div>
+          <div className="text-lg md:text-xl lg:text-2xl font-bold">
+            {productName}
+          </div>
           <Link
             href={href}
-            className="group w-fit flex-center gap-2 p-2 px-4 rounded-3xl cursor-pointer active:bg-slate-800 lg:hover:bg-slate-800 active:scale-95 ease-in-out duration-300"
+            className="group w-fit flex-center gap-2 p-1 px-3 md:p-2 md:px-4 rounded-3xl cursor-pointer bg-slate-800 md:bg-transparent active:bg-slate-800 lg:hover:bg-slate-800 active:scale-95 ease-in-out duration-300"
           >
-            <span className="text-md font-medium">View More</span>
-            <div className="">
-              <IoArrowForwardSharp
-                size={25}
-                className="group-active:translate-x-1.5 ease-in-out duration-300"
-              />
-            </div>
+            <span className="text-sm md:text-md font-medium">View More</span>
+            <IoArrowForwardSharp
+              size={25}
+              className="group-active:translate-x-1.5 ease-in-out duration-300"
+            />
           </Link>
         </div>
         <Carousel>
