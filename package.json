@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "gsap": "^3.12.5",
+    "lenis": "^1.1.9",
     "next": "14.2.5",
     "react": "^18",
     "react-dom": "^18",

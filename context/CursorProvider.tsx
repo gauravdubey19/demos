@@ -64,8 +64,14 @@ export const CursorProvider: React.FC<{ children: React.ReactNode }> = ({
         } else if (target === back) {
           setActiveElement("back");
         }
-        if (!showTxt || !showVideo || target === back)
+        // if (
+        //   activeElement === "txt" ||
+        //   activeElement === "vid" ||
+        //   activeElement === "back"
+        // ) {
+        if (!showTxt || !showVideo || target === back) {
           gsap.to(cursor, { scale: 5 });
+        }
       }
     };
 

@@ -8,7 +8,18 @@
   scroll-behavior: smooth !important;
   box-sizing: border-box;
 }
-
+/* ::-webkit-scrollbar-track {
+  @apply bg-[#000300];
+} */
+::-webkit-scrollbar-thumb {
+  @apply rounded-full bg-zinc-500;
+}
+::-webkit-scrollbar {
+  @apply w-[5px] h-[5px];
+}
+.scroll-none::-webkit-scrollbar {
+  display: none;
+}
 body {
   @apply bg-black text-white;
 }

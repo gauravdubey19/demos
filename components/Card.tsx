@@ -10,8 +10,8 @@ interface CardDetails {
 const Card: React.FC<CardDetails> = ({ card }) => {
   return (
     <>
-      <div className="w-[250px] h-[380px] scale-95 bg-gray-950 rounded-xl cursor-grab active:cursor-grabbing hover:scale-100 hover:shadow-[0_0_5px_gray] ease-in-out duration-300 overflow-hidden">
-        <div className="h-[40%] w-full bg-gray-700 rounded-t-xl flex-center overflow-hidden">
+      <div className="w-[250px] h-[380px] scale-95 bg-gray-950 rounded-xl cursor-grab text-[rgb(31,48,91) active:cursor-grabbing hover:scale-100 hover:shadow-[0_0_5px_rgb(31,48,91)] ease-in-out duration-300 overflow-hidden">
+        <div className="h-[45%] w-full bg-gray-700 rounded-t-xl flex-center select-none overflow-hidden">
           <Image
             src={card.img}
             alt={card.head}
@@ -21,12 +21,14 @@ const Card: React.FC<CardDetails> = ({ card }) => {
             className="w-full h-full object-cover"
           />
         </div>
-        <div className="h-[60%] w-full flex justify-between flex-col gap-1 rounded-b-xl p-3 overflow-hidden">
-          <div className="h-fit w-full text-lg font-semibold line-clamp-1">
-            {card.head}
-          </div>
-          <div className="h-fit w-full text-sm text-zinc-300 text-balance text-justify line-clamp-5">
-            {card.description}
+        <div className="h-[55%] w-full flex justify-between flex-col gap-1 rounded-b-xl p-3 overflow-hidden">
+          <div className="">
+            <div className="h-fit w-full text-lg font-semibold line-clamp-1">
+              {card.head}
+            </div>
+            <div className="h-fit w-full text-sm text-zinc-300 text-balance text-justify line-clamp-5">
+              {card.description}
+            </div>
           </div>
           <Link
             href={card.href}

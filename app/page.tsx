@@ -1,16 +1,27 @@
-import CircleTask from "@/components/Circle";
 import HomeTask from "@/components/HomeTask";
 import Product from "@/components/Product";
+import ScrollVideo from "@/components/ScrollVideo";
 import { cardList } from "@/lib/data";
 
 export default function Home() {
   return (
     <main className="">
-      {/* <CircleTask /> */}
+      {/* <ScrollVideo videoUrl="/macpro.mp4" /> */}
       <HomeTask />
-      {/* <div className="w-full h-[50vh]"></div> */}
-      <Product productName="Product Name" href={"/#"} carousel={cardList} />
-      <Product productName="Product Name 2" href={"/#"} carousel={cardList} />
+      <section className="">
+        <Product
+          productName="Product Category"
+          href={"/#"}
+          carousel={cardList}
+        />
+        <Product
+          productName="Product Category 2"
+          href={"/#"}
+          carousel={cardList}
+        />
+      </section>
     </main>
   );
 }
+
+/* <div className="w-full h-[50vh]"></div> */

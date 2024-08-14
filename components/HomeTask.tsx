@@ -88,8 +88,6 @@ const HomeTask: React.FC = () => {
         )}
         <ScrollVideo
           videoUrl="/macpro.mp4"
-          playbackConst={0}
-          className={`h-[500vh] w-full overflow-hidden`}
           // videoUrl="https://assets.codepen.io/39255/output_960.mp4"
         />
       </div>

@@ -18,13 +18,16 @@ const Carousel: React.FC<CarouselProps> = ({
 }) => {
   const settings = {
     dots: false,
+    adaptiveHeight: true,
+    focusOnSelect: true,
+    draggable: true,
     infinite: infinite || true,
-    autoplay: autoplay || true,
+    autoplay: autoplay || false,
     autoplaySpeed: autoplaySpeed || 2000,
     pauseOnHover: pauseOnHover || true,
-    slidesToShow: slidesToShow || 4,
-    slidesToScroll: slidesToScroll || 2,
     arrows: arrows || false,
+    slidesToScroll: slidesToScroll || 2,
+    slidesToShow: slidesToShow || 4,
     responsive: [
       {
         breakpoint: 1124,
