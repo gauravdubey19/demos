@@ -30,7 +30,7 @@ const MobileNav = () => {
         </SheetTrigger>
         <SheetContent
           side={"right"}
-          closeIcon={false}
+          // closeIcon={false}
           className="top-[4.5rem] backdrop-blur-lg bg-transparent z-50 border-none p-4 shadow-[0_0_20px_rgba(0,0,0,0.5)]"
         >
           <DialogTitle></DialogTitle>
