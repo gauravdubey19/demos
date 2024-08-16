@@ -1,3 +1,11 @@
+export const links = [
+  { id: 0, head: "Home", href: "/" },
+  { id: 1, head: "3D Textile View", href: "/" },
+  { id: 2, head: "Ready Made", href: "/" },
+  { id: 3, head: "About", href: "/#about" },
+  { id: 4, head: "Contact", href: "/#contact" },
+];
+
 export const cardList = [
   {
     id: 0,
