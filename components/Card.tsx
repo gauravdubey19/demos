@@ -1,41 +1,113 @@
-import { CardProps } from "@/lib/types";
-import Image from "next/image";
+"use client";
+
+import React, { useState } from "react";
 import Link from "next/link";
-import React from "react";
+import Image from "next/image";
+import { CardProps } from "@/lib/types";
+import { Button } from "./ui/button";
+import { IoMdStar } from "react-icons/io";
+import { GoHeart, GoHeartFill } from "react-icons/go";
+import { MdOutlineAddShoppingCart } from "react-icons/md";
 
 interface CardDetails {
   card: CardProps;
 }
 
 const Card: React.FC<CardDetails> = ({ card }) => {
+  const [fav, setFav] = useState<boolean>(false);
   return (
     <>
-      <div className="w-[165px] h-[230px] md:w-[200px] md:h-[330px] lg:w-[331px] lg:h-[360px] scale-95 bg-gray-950 rounded-xl cursor-grab text-[rgb(31,48,91) active:cursor-grabbing hover:scale-100 hover:shadow-[0_0_5px_rgb(31,48,91)] ease-in-out duration-300 overflow-hidden">
-        <div className="h-[95px] md:h-[45%] w-full bg-gray-700 rounded-t-xl flex-center select-none overflow-hidden">
-          <Image
-            src={card.img}
-            alt={card.head}
-            width={400}
-            height={400}
-            loading="lazy"
-            className="w-full h-full object-cover"
-          />
+      {/* Link href={"#"} */}
+      <div className="h-[405px] md:h-[390px] lg:h-[508px] w-full group border border-[#E9D7D7] scale-90 hover:scale-95 hover:shadow-[0_0_5px_rgb(31,48,91)] ease-in-out duration-300 overflow-hidden">
+        <div className="relative h-[240px] sm:h-[240px] md:h-[220px] lg:h-[340px] w-full flex-center select-none overflow-hidden">
+          <div
+            onClick={() => setFav(!fav)}
+            className="absolute top-1 right-1 z-10 cursor-pointer w-8 h-8 flex-center bg-white/50 backdrop-blur-md p-1 rounded-full shadow-[0_0_1.5px_black] hover:scale-105 ease-in-out duration-300"
+          >
+            {!fav ? (
+              <GoHeart size={20} color="#FF6464" />
+            ) : (
+              <GoHeartFill size={20} color="#FF6464" />
+            )}
+          </div>
+          <div className="w-full h-full group-hover:scale-105 ease-in-out duration-300">
+            <Image
+              src={card.img}
+              alt={card.head}
+              width={400}
+              height={400}
+              loading="lazy"
+              className="w-full h-full object-cover scale-105 group-hover:scale-95 ease-in-out duration-300"
+            />
+          </div>
         </div>
-        <div className="h-[55%] w-full flex justify-between flex-col gap-1 rounded-b-xl p-1 md:p-3 overflow-hidden">
+        <div className="h-auto w-full flex justify-between flex-col gap-1 p-1.5 md:px-3 overflow-hidden">
           <div className="">
-            <div className="h-fit w-full text-md md:text-lg font-semibold line-clamp-1">
+            <div className="h-fit w-full text-lg md:text-xl font-semibold line-clamp-1">
               {card.head}
             </div>
-            <div className="h-fit w-full text-[12px] md:text-sm text-zinc-300  line-clamp-3 md:line-clamp-5">
+            <div className="h-fit w-full text-[11px] text-xs font-light text-[#818181] flex gap-1">
+              <span className="flex gap-0.5">
+                {Array(card.rate)
+                  .fill(null)
+                  .map((_, index) => (
+                    <IoMdStar key={index} color="yellow" size={15} />
+                  ))}
+              </span>
+              <span>| {card.review} reviews</span>
+            </div>
+            <div className="h-fit w-full text-[11px] md:text-xs text-[#818181] line-clamp-2">
               {card.description}
             </div>
           </div>
-          <Link
-            href={card.href}
-            className="w-full bg-slate-900 text-center text-xs md:text-md p-2 px-6 rounded-md cursor-pointer hover:bg-slate-800 active:translate-y-0.5 ease-in-out duration-200"
-          >
-            View More
-          </Link>
+          <div className="flex gap-2 items-end">
+            <span className="text-lg md:text-xl font-bold">${card.price}</span>
+            <div className="relative text-sm md:text-md text-gray-400">
+              <span className="absolute top-[50%] w-full h-[1px] bg-gray-500"></span>
+              ${card.oldPrice}
+            </div>
+            <span className="text-sm md:text-md text-[#2CD396]">
+              ({card.discount}% off)
+            </span>
+          </div>
+          <div className="flex gap-2">
+            <Link href={`/category/${card.head}`}>
+              <Button
+                size="sm"
+                className="w-full bg-transparent border border-primary text-primary font-light rounded-none hover:shadow-md transition-transform duration-300"
+              >
+                View More
+              </Button>
+            </Link>
+            <Button
+              size="sm"
+              className="hidden md:inline-flex w-full bg-primary text-white font-light rounded-none hover:shadow-md transition-transform duration-300"
+            >
+              Add to cart
+            </Button>
+            <div className="md:hidden flex items-center">
+              <MdOutlineAddShoppingCart size={25} className="text-primary" />
+            </div>
+          </div>
+          {/* <div className="w-full flex-between gap-1">
+            <Link href={`/category/${card.head}`} className="w-full">
+              <Button
+                size="sm"
+                className="w-full bg-transparent border border-primary text-primary text-md font-light rounded-none hover:shadow-md active:translate-y-0.5 ease-in-out duration-300"
+              >
+                View More
+              </Button>
+            </Link>
+            <div className="md:hidden p-1">
+              <MdOutlineAddShoppingCart size={25} className="fill-primary" />
+            </div>
+            <Button
+              size="sm"
+              className="hidden md:flex w-full bg-primary text-white text-md font-light rounded-none hover:shadow-md active:translate-y-0.5 ease-in-out duration-300"
+            >
+              Add to cart
+            </Button>
+          </div> */}
         </div>
       </div>
     </>
@@ -43,3 +115,17 @@ const Card: React.FC<CardDetails> = ({ card }) => {
 };
 
 export default Card;
+
+const k = {
+  id: 0,
+  img: "/assets/card.jpeg",
+  head: "Heading 1",
+  description:
+    "Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugalaboriosam nesciunt voluptatibus ad reprehenderit magnivwev evprovident cumque, a cupiditate. Fuga laboriosam nesciuntvoluptatibus",
+  href: "/#",
+  price: 19,
+  oldPrice: 25,
+  discount: 25,
+  rate: 5,
+  review: 100,
+};

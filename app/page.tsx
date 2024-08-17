@@ -1,5 +1,5 @@
-import HomeTask from "@/components/HomeTask";
-import Product from "@/components/Product";
+import Hero from "@/components/Hero";
+import ProductSection from "@/components/ProductSection";
 import ScrollVideo from "@/components/ScrollVideo";
 import { cardList } from "@/lib/data";
 
@@ -7,21 +7,21 @@ export default function Home() {
   return (
     <main className="">
       {/* <ScrollVideo videoUrl="/macpro.mp4" /> */}
-      <HomeTask />
+      <Hero />
       <section className="">
-        <Product
-          productName="Product Category"
-          href={"/#"}
+        <ProductSection
+          category="Product Category 1"
+          href={"/Product Category 1"}
           carousel={cardList}
         />
-        <Product
-          productName="Product Category 2"
-          href={"/#"}
+        <ProductSection
+          category="Product Category 2"
+          href={"/Product Category 2"}
           carousel={cardList}
         />
-        <Product
-          productName="Product Category 3"
-          href={"/#"}
+        <ProductSection
+          category="Product Category 3"
+          href={"/Product Category 3"}
           carousel={cardList}
         />
       </section>

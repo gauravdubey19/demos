@@ -52,7 +52,7 @@ const MobileNav = () => {
         </SheetTrigger>
         <SheetContent
           side={"right"}
-          className="top-[4.3rem] backdrop-blur-lg bg-white/10 z-50 border-none p-4 shadow-[0_0_20px_rgba(0,0,0,0.5)]"
+          className="top-[3.7rem] backdrop-blur-lg bg-transparent z-50 border-none p-4 shadow-[0_0_20px_rgba(0,0,0,0.5)]"
         >
           <DialogTitle></DialogTitle>
           <div className="h-fit flex flex-col gap-6 pt-5 overflow-hidden">
@@ -64,10 +64,10 @@ const MobileNav = () => {
               >
                 <Link
                   href={link.href}
-                  className={`w-full capitalize text-3xl font-semibold ${
+                  className={`w-full capitalize text-2xl font-semibold ${
                     active === link.head
                       ? "text-primary font-semibold"
-                      : " active:translate-y-0.5"
+                      : "text-white active:translate-y-0.5"
                   }`}
                 >
                   {link.head}

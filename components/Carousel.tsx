@@ -14,49 +14,67 @@ const Carousel: React.FC<CarouselProps> = ({
   autoplaySpeed,
   pauseOnHover,
   slidesToShow,
-  slidesToScroll,
   arrows,
 }) => {
   const settings = {
     dots: false,
-    adaptiveHeight: true,
     draggable: true,
+    swipe: true,
+    swipeToSlide: true,
+    touchMove: true,
+    adaptiveHeight: true,
     infinite: infinite || true,
     autoplay: autoplay || false,
     autoplaySpeed: autoplaySpeed || 2000,
     pauseOnHover: pauseOnHover || true,
-    slidesToScroll: slidesToScroll || 2,
-    slidesToShow: slidesToShow || 4,
+    slidesToShow: slidesToShow || 5,
     responsive: [
       {
-        breakpoint: 1124,
+        breakpoint: 1280,
+        settings: {
+          arrows: arrows || true,
+          slidesToShow: 5,
+        },
+      },
+      {
+        breakpoint: 970,
         settings: {
           arrows: arrows || true,
           slidesToShow: 4,
         },
       },
       {
-        breakpoint: 768,
+        breakpoint: 680,
         settings: {
           arrows: arrows || false,
           slidesToShow: 3,
         },
       },
       {
-        breakpoint: 640,
+        breakpoint: 560,
         settings: {
           arrows: arrows || false,
           slidesToShow: 2,
         },
       },
+      // {
+      //   breakpoint: 530,
+      //   settings: {
+      //     arrows: arrows || false,
+      //     slidesToShow: 2,
+      //   },
+      // },
     ],
-    centerPadding: "60px",
+    // centerPadding: "60px",
     nextArrow: <NextArrow />,
     prevArrow: <PrevArrow />,
   };
   return (
     <>
-      <Slider {...settings} className="px-2 md:px-6 lg:px-8 py-2">
+      <Slider
+        {...settings}
+        className="cursor-grab active:cursor-grabbing px-2 md:px-6 lg:px-8 py-2"
+      >
         {children}
       </Slider>
     </>
@@ -81,7 +99,7 @@ const NextArrow = (props: any) => {
   return (
     <div
       onClick={onClick}
-      className="absolute -top-3 left-16 cursor-pointer hover:scale-105 active:-translate-x-1 ease-in-out duration-200"
+      className="absolute -top-3 left-16 cursor-pointer hover:scale-105 active:translate-x-1 ease-in-out duration-200"
     >
       <IoArrowForwardSharp size={20} />
     </div>

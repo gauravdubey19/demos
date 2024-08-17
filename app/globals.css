@@ -87,9 +87,9 @@
   display: none;
 }
 
-body {
+/* body {
   @apply bg-black text-white;
-}
+} */
 
 @layer utilities {
   .flex-center {

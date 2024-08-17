@@ -1,3 +1,5 @@
+import { CardProps } from "./types";
+
 export const links = [
   { id: 0, head: "Home", href: "/" },
   { id: 1, head: "3D Textile View", href: "/" },
@@ -6,14 +8,19 @@ export const links = [
   { id: 4, head: "Contact", href: "/#contact" },
 ];
 
-export const cardList = [
+export const cardList: CardProps[] = [
   {
     id: 0,
-    img: "https://images.pexels.com/photos/90946/pexels-photo-90946.jpeg?cs=srgb&dl=pexels-madebymath-90946.jpg&fm=jpg",
+    img: "/assets/card.jpeg",
     head: "Heading 1",
     description:
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugalaboriosam nesciunt voluptatibus ad reprehenderit magnivwev evprovident cumque, a cupiditate. Fuga laboriosam nesciuntvoluptatibus",
     href: "/#",
+    price: 19,
+    oldPrice: 25,
+    discount: 25,
+    rate: 5,
+    review: 100,
   },
   {
     id: 1,
@@ -22,6 +29,11 @@ export const cardList = [
     description:
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugalaboriosam nesciunt voluptatibus ad reprehenderit magnivwev evprovident cumque, a cupiditate. Fuga laboriosam nesciuntvoluptatibus",
     href: "/#",
+    price: 10,
+    oldPrice: 10,
+    discount: 5,
+    rate: 2,
+    review: 100,
   },
   {
     id: 2,
@@ -30,6 +42,11 @@ export const cardList = [
     description:
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugalaboriosam nesciunt voluptatibus ad reprehenderit magnivwev evprovident cumque, a cupiditate. Fuga laboriosam nesciuntvoluptatibus",
     href: "/#",
+    price: 19,
+    oldPrice: 25,
+    discount: 25,
+    rate: 5,
+    review: 100,
   },
   {
     id: 3,
@@ -38,6 +55,11 @@ export const cardList = [
     description:
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugalaboriosam nesciunt voluptatibus ad reprehenderit magnivwev evprovident cumque, a cupiditate. Fuga laboriosam nesciuntvoluptatibus",
     href: "/#",
+    price: 10,
+    oldPrice: 10,
+    discount: 5,
+    rate: 2,
+    review: 100,
   },
   {
     id: 4,
@@ -46,6 +68,11 @@ export const cardList = [
     description:
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugalaboriosam nesciunt voluptatibus ad reprehenderit magnivwev evprovident cumque, a cupiditate. Fuga laboriosam nesciuntvoluptatibus",
     href: "/#",
+    price: 19,
+    oldPrice: 25,
+    discount: 25,
+    rate: 5,
+    review: 100,
   },
   {
     id: 5,
@@ -54,6 +81,11 @@ export const cardList = [
     description:
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugalaboriosam nesciunt voluptatibus ad reprehenderit magnivwev evprovident cumque, a cupiditate. Fuga laboriosam nesciuntvoluptatibus",
     href: "/#",
+    price: 10,
+    oldPrice: 10,
+    discount: 5,
+    rate: 2,
+    review: 100,
   },
   {
     id: 6,
@@ -62,5 +94,23 @@ export const cardList = [
     description:
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugalaboriosam nesciunt voluptatibus ad reprehenderit magnivwev evprovident cumque, a cupiditate. Fuga laboriosam nesciuntvoluptatibus",
     href: "/#",
+    price: 19,
+    oldPrice: 25,
+    discount: 25,
+    rate: 5,
+    review: 100,
+  },
+  {
+    id: 7,
+    img: "https://images.pexels.com/photos/90946/pexels-photo-90946.jpeg?cs=srgb&dl=pexels-madebymath-90946.jpg&fm=jpg",
+    head: "Heading 8",
+    description:
+      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugalaboriosam nesciunt voluptatibus ad reprehenderit magnivwev evprovident cumque, a cupiditate. Fuga laboriosam nesciuntvoluptatibus",
+    href: "/#",
+    price: 10,
+    oldPrice: 10,
+    discount: 5,
+    rate: 2,
+    review: 100,
   },
 ];

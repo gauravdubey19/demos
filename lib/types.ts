@@ -1,7 +1,18 @@
-export interface ProductProps {
-  productName: string;
+export interface ProductCategoryDetailParams {
+  params: {
+    category: string;
+    id: number;
+  };
+}
+
+export interface ProductSectionProps {
+  category: string;
   href: string;
   carousel: CardProps[];
+}
+export interface ProductCategoryProps {
+  category: string;
+  products: CardProps[];
 }
 
 export interface CardProps {
@@ -10,6 +21,11 @@ export interface CardProps {
   head: string;
   description: string;
   href: string;
+  price: number;
+  oldPrice?: number;
+  discount?: number;
+  rate?: number;
+  review?: number;
 }
 
 export interface CarouselProps {
@@ -19,6 +35,5 @@ export interface CarouselProps {
   autoplaySpeed?: number;
   pauseOnHover?: boolean;
   slidesToShow?: number;
-  slidesToScroll?: number;
   arrows?: boolean;
 }
