@@ -53,6 +53,7 @@ const MobileNav = () => {
         <SheetContent
           side={"right"}
           className="top-[3.7rem] backdrop-blur-lg bg-transparent z-50 border-none p-4 shadow-[0_0_20px_rgba(0,0,0,0.5)]"
+          closeIcon={false}
         >
           <DialogTitle></DialogTitle>
           <div className="h-fit flex flex-col gap-6 pt-5 overflow-hidden">

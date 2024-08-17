@@ -24,7 +24,7 @@ const Navbar: React.FC<{ appName: string }> = ({ appName }) => {
   return (
     <>
       {/* shadow-[0_0_5px_black] */}
-      <div className="sticky top-0 z-50 h-[60px] w-full flex-between bg-white text-black p-2 px-3 md:p-4 lg:p-6 overflow-hidden">
+      <div className="sticky top-0 z-[9999] h-[60px] w-full flex-between bg-white text-black p-2 px-3 md:p-4 lg:p-6 overflow-hidden">
         <Link href="/" className="text-2xl lg:text-3xl font-black">
           {appName}
         </Link>
