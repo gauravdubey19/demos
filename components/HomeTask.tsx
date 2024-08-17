@@ -84,16 +84,16 @@ const HomeTask: React.FC = () => {
           <div className="w-full flex-center flex-col gap-16 select-none">
             <div className="w-full flex flex-col gap-2">
               <div className="relative w-full h-[230px] flex items-end justify-center bg-white text-primary p-4">
-                <div className="absolute md:-left-[6.51rem] top-7 gap-1 text-[90px] font-medium">
+                <div className="absolute md:-left-[6.8rem] top-7 gap-1 text-[90px] font-medium">
                   <span className="md:text-white">Ex</span>
                   <span className="">plore</span>
                 </div>
-                <span className="md:text-6xl lg:text-7xl font-light">
+                <span className="text-6xl lg:text-7xl font-light">
                   Textiles
                 </span>
               </div>
-              <span className="w-full text-center text-balance text-[2.18rem] font-extralight overflow-hidden">
-                Textiles <span className="text-[#AA6C00]">&</span> Ready made
+              <span className="w-full text-center text-balance text-[2rem] md:text-2xl lg:text-[2rem] font-light overflow-hidden">
+                Textiles <span className="text-[#AA6C00] font-medium">&</span> Ready made
               </span>
             </div>
             <button
@@ -128,6 +128,7 @@ const HomeTask: React.FC = () => {
           ></div>
         )}
         <ScrollVideo
+          // videoUrl="/assets/sample.mp4"
           videoUrl="/macpro.mp4"
           // videoUrl="https://assets.codepen.io/39255/output_960.mp4"
         />

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Turn as Hamburger } from "hamburger-react";
 import Link from "next/link";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
@@ -10,6 +10,9 @@ import { DialogTitle } from "@radix-ui/react-dialog";
 const MobileNav = () => {
   const [active, setActive] = useState<string>(links[0].head);
   const [isOpen, setOpen] = useState(false);
+  const [windowWidth, setWindowWidth] = useState<number>(
+    typeof window !== "undefined" ? window.innerWidth : 0
+  );
 
   const handleMenuClick = () => {
     setOpen(!isOpen);
@@ -19,6 +22,25 @@ const MobileNav = () => {
     setActive(head);
     setOpen(false);
   };
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    // Clean up the event listener on component unmount
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (windowWidth > 770) {
+      setOpen(false);
+    }
+  }, [windowWidth]);
 
   return (
     <div className="md:hidden">
@@ -30,8 +52,7 @@ const MobileNav = () => {
         </SheetTrigger>
         <SheetContent
           side={"right"}
-          // closeIcon={false}
-          className="top-[4.5rem] backdrop-blur-lg bg-transparent z-50 border-none p-4 shadow-[0_0_20px_rgba(0,0,0,0.5)]"
+          className="top-[4.3rem] backdrop-blur-lg bg-white/10 z-50 border-none p-4 shadow-[0_0_20px_rgba(0,0,0,0.5)]"
         >
           <DialogTitle></DialogTitle>
           <div className="h-fit flex flex-col gap-6 pt-5 overflow-hidden">
