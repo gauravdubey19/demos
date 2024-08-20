@@ -100,7 +100,7 @@ const Hero: React.FC = () => {
             </div>
             <Button
               onClick={handleScrollDown}
-              className="w-fit h-fit bg-white text-primary text-xl font-semibold tracking-[6px] p-2 px-4 rounded-none hover:shadow-xl ease-in-out duration-300"
+              className="w-fit h-fit bg-white text-primary text-xl font-semibold tracking-[6px] p-2 px-3 rounded-none hover:shadow-xl ease-in-out duration-300"
             >
               SHOP NOW
             </Button>

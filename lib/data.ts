@@ -24,7 +24,7 @@ export const cardList: CardProps[] = [
   },
   {
     id: 1,
-    img: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8cHJvZHVjdHxlbnwwfHwwfHx8MA%3D%3D",
+    img: "https://image.made-in-china.com/2f0j00hswiAnGJiRoZ/Business-Suit-Men-s-Striped-Stretch-Business-Suit-Color-Textile-OEM-ODM.webp",
     head: "Heading 2",
     description:
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugalaboriosam nesciunt voluptatibus ad reprehenderit magnivwev evprovident cumque, a cupiditate. Fuga laboriosam nesciuntvoluptatibus",
@@ -37,7 +37,7 @@ export const cardList: CardProps[] = [
   },
   {
     id: 2,
-    img: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8cHJvZHVjdHxlbnwwfHwwfHx8MA%3D%3D",
+    img: "https://rukminim2.flixcart.com/image/850/1000/xif0q/kurta/j/h/f/xl-men-ethnic-premium-kurta-dhar-textile-original-imagy2tcphwu3jzh.jpeg?q=90&crop=false",
     head: "Heading 3",
     description:
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugalaboriosam nesciunt voluptatibus ad reprehenderit magnivwev evprovident cumque, a cupiditate. Fuga laboriosam nesciuntvoluptatibus",
@@ -50,7 +50,7 @@ export const cardList: CardProps[] = [
   },
   {
     id: 3,
-    img: "https://images.pexels.com/photos/3907507/pexels-photo-3907507.jpeg?cs=srgb&dl=pexels-alexazabache-3907507.jpg&fm=jpg",
+    img: "https://cdn.linenclub.com/media/catalog/product/cache/41d32663a01600992c99bcd3aa36f0e1/l/c/lcsfsp0212930_1.jpg",
     head: "Heading 4",
     description:
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugalaboriosam nesciunt voluptatibus ad reprehenderit magnivwev evprovident cumque, a cupiditate. Fuga laboriosam nesciuntvoluptatibus",
@@ -63,7 +63,7 @@ export const cardList: CardProps[] = [
   },
   {
     id: 4,
-    img: "https://d2v5dzhdg4zhx3.cloudfront.net/web-assets/images/storypages/primary/ProductShowcasesampleimages/JPEG/Product+Showcase-1.jpg",
+    img: "https://d118ps6mg0w7om.cloudfront.net/media/catalog/product/1/_/fit-in/1000x1333/1_mfk-9381-q-24-off-white_1.jpg",
     head: "Heading 5",
     description:
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugalaboriosam nesciunt voluptatibus ad reprehenderit magnivwev evprovident cumque, a cupiditate. Fuga laboriosam nesciuntvoluptatibus",
@@ -76,7 +76,7 @@ export const cardList: CardProps[] = [
   },
   {
     id: 5,
-    img: "https://plus.unsplash.com/premium_photo-1675896084254-dcb626387e1e?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8cHJvZHVjdHxlbnwwfHwwfHx8MA%3D%3D",
+    img: "https://5.imimg.com/data5/ANDROID/Default/2021/6/DJ/TP/HU/12881310/product-jpeg.jpg",
     head: "Heading 6",
     description:
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugalaboriosam nesciunt voluptatibus ad reprehenderit magnivwev evprovident cumque, a cupiditate. Fuga laboriosam nesciuntvoluptatibus",
@@ -89,7 +89,7 @@ export const cardList: CardProps[] = [
   },
   {
     id: 6,
-    img: "https://cdn.shopify.com/s/files/1/0070/7032/files/product-label-design.jpg?v=1680902906",
+    img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSEdFaWkG3JgjADdehk3p7PZni3qT4p5-4JBDBKSigPBj-cec8jEzOP2xesN3zf5LEhhG4&usqp=CAU",
     head: "Heading 7",
     description:
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugalaboriosam nesciunt voluptatibus ad reprehenderit magnivwev evprovident cumque, a cupiditate. Fuga laboriosam nesciuntvoluptatibus",
@@ -102,7 +102,7 @@ export const cardList: CardProps[] = [
   },
   {
     id: 7,
-    img: "https://images.pexels.com/photos/90946/pexels-photo-90946.jpeg?cs=srgb&dl=pexels-madebymath-90946.jpg&fm=jpg",
+    img: "https://www.mkistore.co.uk/cdn/shop/files/MKI_30_5_240603.jpg?v=1719584934&width=1156",
     head: "Heading 8",
     description:
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugalaboriosam nesciunt voluptatibus ad reprehenderit magnivwev evprovident cumque, a cupiditate. Fuga laboriosam nesciuntvoluptatibus",

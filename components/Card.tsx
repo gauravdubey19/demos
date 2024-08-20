@@ -18,7 +18,7 @@ const Card: React.FC<CardDetails> = ({ card }) => {
   return (
     <>
       {/* Link href={"#"} */}
-      <div className="h-[405px] md:h-[390px] lg:h-[508px] w-full group border border-[#E9D7D7] scale-90 hover:scale-95 hover:shadow-lg ease-in-out duration-300 overflow-hidden">
+      <div className="h-[405px] md:h-[390px] lg:h-[508px] w-full max-w-[198px] md:max-w-[260px] group border border-[#E9D7D7] scale-90 hover:scale-95 hover:shadow-lg ease-in-out duration-300 overflow-hidden">
         <div className="relative h-[240px] sm:h-[240px] md:h-[220px] lg:h-[340px] w-full flex-center select-none overflow-hidden">
           <div
             onClick={() => setFav(!fav)}
@@ -30,7 +30,10 @@ const Card: React.FC<CardDetails> = ({ card }) => {
               <GoHeartFill size={20} color="#FF6464" />
             )}
           </div>
-          <div className="w-full h-full group-hover:scale-105 ease-in-out duration-300">
+          <Link
+            href={`/category/${card.head}`}
+            className="w-full h-full group-hover:scale-105 ease-in-out duration-300"
+          >
             <Image
               src={card.img}
               alt={card.head}
@@ -39,9 +42,9 @@ const Card: React.FC<CardDetails> = ({ card }) => {
               loading="lazy"
               className="w-full h-full object-cover scale-105 group-hover:scale-95 ease-in-out duration-300"
             />
-          </div>
+          </Link>
         </div>
-        <div className="h-auto w-full flex justify-between flex-col gap-1 p-1.5 md:px-3 overflow-hidden">
+        <div className="h-auto w-full flex justify-between flex-col gap-1 p-1.5 md:px-2.5 overflow-hidden">
           <div className="">
             <div className="h-fit w-full text-lg md:text-xl font-semibold line-clamp-1">
               {card.head}
@@ -70,25 +73,25 @@ const Card: React.FC<CardDetails> = ({ card }) => {
               ({card.discount}% off)
             </span>
           </div>
-          <div className="w-full flex gap-2">
-            <Link href={`/category/${card.head}`} className="w-full">
+          {/* <div className="w-full flex gap-2"> */}
+          {/* <Link href={`/category/${card.head}`} className="w-full">
               <Button
                 size="sm"
                 className="w-full bg-transparent border border-primary text-primary font-light rounded-none hover:shadow-md transition-transform duration-300"
               >
                 View More
               </Button>
-            </Link>
-            <Button
-              size="sm"
-              className="hidden lg:inline-flex w-full bg-primary text-white font-light rounded-none hover:shadow-md transition-transform duration-300"
-            >
-              Add to cart
-            </Button>
-            <div className="lg:hidden flex items-center">
+            </Link> */}
+          <Button
+            size="sm"
+            className="w-full bg-primary text-white font-light rounded-none hover:shadow-md active:translate-y-0.5 ease-in-out duration-300"
+          >
+            Add to cart
+          </Button>
+          {/* <div className="lg:hidden flex items-center">
               <MdOutlineAddShoppingCart size={25} className="text-primary" />
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
     </>

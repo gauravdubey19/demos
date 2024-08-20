@@ -121,7 +121,7 @@ export const CursorProvider: React.FC<{ children: React.ReactNode }> = ({
       {children}
       <div
         ref={cursorRef}
-        className={`hidden lg:flex-center fixed left-0 top-0 w-2 h-2 rounded-full bg-gray-950/90 backdrop-blur-md select-none text-[3px] text-white text-balance font-medium ${
+        className={`hidden lg:flex-center fixed left-0 top-0 w-0 h-0 rounded-full bg-gray-950/90 backdrop-blur-md select-none text-[3px] text-white text-balance font-medium ${
           activeElement ? "p-2" : ""
         }`}
       >

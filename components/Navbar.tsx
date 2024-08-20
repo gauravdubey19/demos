@@ -1,10 +1,12 @@
 "use client";
 
+import React, { useState } from "react";
+import Link from "next/link";
 import { useCursor } from "@/context/CursorProvider";
 import { links } from "@/lib/data";
-import Link from "next/link";
-import React, { useState } from "react";
 import MobileNav from "./MobileNav";
+import { IoCart } from "react-icons/io5";
+import Image from "next/image";
 
 const Navbar: React.FC<{ appName: string }> = ({ appName }) => {
   const [active, setActive] = useState<string>(links[0].head);
@@ -29,7 +31,7 @@ const Navbar: React.FC<{ appName: string }> = ({ appName }) => {
           {appName}
         </Link>
         <MobileNav />
-        <nav className="hidden md:flex gap-2 md:gap-4 lg:gap-8 text-md md:text-lg lg:text-xl font-normal">
+        <nav className="hidden md:flex items-center gap-2 md:gap-4 lg:gap-8 text-md md:text-lg lg:text-xl font-normal">
           {links.map((link, index) => (
             <Link
               href={link.href}
@@ -44,6 +46,24 @@ const Navbar: React.FC<{ appName: string }> = ({ appName }) => {
               <button onClick={() => handleHero(link.id)}>{link.head}</button>
             </Link>
           ))}
+          <div className="ml-2 flex gap-3">
+            <Link
+              href={"/#cart"}
+              className="relative w-10 h-10 rounded-full border border-[#D3D3D3] flex-center"
+            >
+              <div className="absolute top-0.5 right-0.5 w-1.5 h-1.5 bg-primary rounded-full"></div>
+              <IoCart size={25} className="fill-[#717171]" />
+            </Link>
+            <div className="w-10 h-10 rounded-full overflow-hidden">
+              <Image
+                src="/assets/card.jpeg"
+                alt="profile"
+                width={200}
+                height={200}
+                className="w-full h-full"
+              />
+            </div>
+          </div>
         </nav>
       </div>
     </>

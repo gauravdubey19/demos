@@ -3,9 +3,15 @@
 import React, { useState, useEffect } from "react";
 import { Turn as Hamburger } from "hamburger-react";
 import Link from "next/link";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import {
+  Sheet,
+  SheetContent,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 import { links } from "@/lib/data";
-import { DialogTitle } from "@radix-ui/react-dialog";
+import { IoCart } from "react-icons/io5";
+import Image from "next/image";
 
 const MobileNav = () => {
   const [active, setActive] = useState<string>(links[0].head);
@@ -55,7 +61,24 @@ const MobileNav = () => {
           className="top-[3.7rem] backdrop-blur-lg bg-transparent z-50 border-none p-4 shadow-[0_0_20px_rgba(0,0,0,0.5)]"
           closeIcon={false}
         >
-          <DialogTitle></DialogTitle>
+          <SheetTitle className="w-full flex justify-end gap-6">
+            <Link
+              href={"/#cart"}
+              className="relative w-12 h-12 rounded-full border border-[#D3D3D3] flex-center"
+            >
+              <div className="absolute top-0.5 right-0.5 w-1.5 h-1.5 bg-primary rounded-full"></div>
+              <IoCart size={25} className="fill-[#717171]" />
+            </Link>
+            <div className="w-12 h-12 rounded-full overflow-hidden">
+              <Image
+                src="/assets/card.jpeg"
+                alt="profile"
+                width={200}
+                height={200}
+                className="w-full h-full"
+              />
+            </div>
+          </SheetTitle>
           <div className="h-fit flex flex-col gap-6 pt-5 overflow-hidden">
             {links.map((link, index) => (
               <div

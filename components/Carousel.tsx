@@ -9,12 +9,12 @@ import { IoArrowBackSharp, IoArrowForwardSharp } from "react-icons/io5";
 
 const Carousel: React.FC<CarouselProps> = ({
   children,
-  infinite,
-  autoplay,
-  autoplaySpeed,
-  pauseOnHover,
-  slidesToShow,
-  arrows,
+  infinite = true,
+  autoplay = false,
+  autoplaySpeed = 2000,
+  pauseOnHover = true,
+  slidesToShow = 5,
+  arrows = false,
 }) => {
   const settings = {
     dots: false,
@@ -23,11 +23,12 @@ const Carousel: React.FC<CarouselProps> = ({
     swipeToSlide: true,
     touchMove: true,
     adaptiveHeight: true,
-    infinite: infinite || true,
-    autoplay: autoplay || false,
-    autoplaySpeed: autoplaySpeed || 2000,
-    pauseOnHover: pauseOnHover || true,
-    slidesToShow: slidesToShow || 5,
+    infinite: infinite,
+    autoplay: autoplay,
+    autoplaySpeed: autoplaySpeed,
+    pauseOnHover: pauseOnHover,
+    slidesToShow: slidesToShow,
+    arrows: arrows,
     responsive: [
       {
         breakpoint: 1280,
@@ -57,13 +58,6 @@ const Carousel: React.FC<CarouselProps> = ({
           slidesToShow: 2,
         },
       },
-      // {
-      //   breakpoint: 530,
-      //   settings: {
-      //     arrows: arrows || false,
-      //     slidesToShow: 2,
-      //   },
-      // },
     ],
     // centerPadding: "60px",
     nextArrow: <NextArrow />,
@@ -73,7 +67,7 @@ const Carousel: React.FC<CarouselProps> = ({
     <>
       <Slider
         {...settings}
-        className="cursor-grab active:cursor-grabbing px-2 md:px-6 lg:px-8"
+        className={`cursor-grab active:cursor-grabbing ${arrows && "md:py-2"}`}
       >
         {children}
       </Slider>
@@ -88,7 +82,7 @@ const PrevArrow = (props: any) => {
   return (
     <div
       onClick={onClick}
-      className="absolute -top-3 left-10 cursor-pointer hover:scale-105 active:-translate-x-1 ease-in-out duration-200"
+      className="absolute -top-2.5 left-3 p-1 cursor-pointer hover:scale-105 active:-translate-x-1 ease-in-out duration-200"
     >
       <IoArrowBackSharp size={20} />
     </div>
@@ -99,7 +93,7 @@ const NextArrow = (props: any) => {
   return (
     <div
       onClick={onClick}
-      className="absolute -top-3 left-16 cursor-pointer hover:scale-105 active:translate-x-1 ease-in-out duration-200"
+      className="absolute -top-2.5 left-10 p-1 cursor-pointer hover:scale-105 active:translate-x-1 ease-in-out duration-200"
     >
       <IoArrowForwardSharp size={20} />
     </div>

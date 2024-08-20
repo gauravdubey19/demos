@@ -94,7 +94,7 @@ interface AdditionalInfoProps {
 
 const ProductDetail: React.FC<ProductDetailProps> = ({ product }) => {
   return (
-    <div className="grid md:grid-cols-2 gap-6 lg:gap-12 items-start max-w-6xl px-4 mx-auto py-4">
+    <div className="grid lg:grid-cols-2 gap-6 lg:gap-12 items-start max-w-6xl px-4 mx-auto py-4">
       <ImageGallery
         images={product.images}
         initialMainImage={product.mainImage}
@@ -184,85 +184,73 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({
   }, [handleScroll]);
 
   return (
-    <div className="select-none lg:sticky top-20 w-full h-fit md:h-[85vh] flex flex-col gap-3 md:flex-row-reverse justify-between overflow-hidden">
+    <div className="select-none lg:sticky top-20 w-full h-full md:h-[50vh] lg:h-[85vh] flex flex-col gap-3 md:flex-row-reverse justify-between overflow-hidden">
       <Image
         src={currentImage}
         alt="Product Image"
         layout="responsive"
         width={800}
         height={800}
-        className="h-[75%] w-full md:h-full md:w-[80%] rounded-lg overflow-hidden"
+        className="h-[75%] w-full md:h-full md:w-[80%] overflow-hidden"
       />
 
-      <div
-        ref={thumbnailRef}
-        className={`relative w-full h-full ${
-          isMobileView ? "md:w-full flex-row" : "md:w-[20%] flex-col"
-        } flex gap-2 items-center overflow-scroll scroll-none`}
-      >
-        {isMobileView && showArrowLeft && (
-          <div
-            onClick={() => scrollThumbnails("left")}
-            className="sticky top-8 left-1 z-10 flex-center group cursor-pointer rounded-full bg-black/40 backdrop-blur-md p-1 active:-translate-x-1 ease-in-out duration-200"
-          >
-            <IoIosArrowBack
-              size={30}
-              className="fill-primary group-active:scale-90 transition-transform duration-300"
-            />
-          </div>
-        )}
-
-        {!isMobileView && showArrowLeft && (
-          <div
-            onClick={() => scrollThumbnails("up")}
-            className="sticky top-0 left-0 z-10 w-full flex justify-center group cursor-pointer bg-gradient-to-b from-white to-transparent"
-          >
-            <IoIosArrowBack
-              size={30}
-              className="rotate-90 group-hover:scale-110 group-active:-translate-y-1/2 ease-in-out duration-300"
-            />
-          </div>
-        )}
-
-        {images.map((image, index) => (
-          <button
-            key={index}
-            className={`${
-              image === currentImage ? "shadow-lg" : ""
-            } hover:drop-shadow-lg rounded-lg overflow-hidden flex-shrink-0`}
-            onClick={() => setCurrentImage(image)}
-            aria-label={`View Image ${index + 1}`}
-          >
+      <div className="relative w-full md:w-[20%] h-[25%] md:h-full">
+        <div
+          ref={thumbnailRef}
+          className={`absolute h-full flex ${
+            isMobileView ? "flex-row" : "flex-col"
+          } gap-2 items-center overflow-scroll scroll-none`}
+        >
+          {images.map((image, index) => (
             <Image
+              key={index}
               src={image}
               alt={`Preview thumbnail ${index + 1}`}
+              onClick={() => setCurrentImage(image)}
+              aria-label={`View Image ${index + 1}`}
               width={100}
               height={100}
-              className="aspect-square object-cover"
+              className="cursor-pointer w-full h-full"
             />
-          </button>
-        ))}
+          ))}
+        </div>
 
-        {isMobileView && showArrowRight && (
+        {showArrowLeft && (
           <div
-            onClick={() => scrollThumbnails("right")}
-            className="sticky top-8 right-1 z-10 flex-center group cursor-pointer rounded-full bg-black/40 backdrop-blur-md p-1 active:translate-x-1 ease-in-out duration-200"
+            onClick={() => scrollThumbnails(isMobileView ? "left" : "up")}
+            className={`absolute top-0 z-10 flex-center group cursor-pointer ${
+              isMobileView
+                ? "-left-1 h-full w-10 bg-gradient-to-r from-white to-transparent"
+                : "w-full h-20 bg-gradient-to-b from-white to-transparent"
+            } ease-in-out duration-200`}
           >
-            <IoIosArrowForward
+            <IoIosArrowBack
               size={30}
-              className="fill-primary group-active:scale-90 transition-transform duration-300"
+              className={`${
+                isMobileView
+                  ? "group-active:scale-90 group-active:-translate-x-1"
+                  : "rotate-90 group-hover:scale-110 group-active:-translate-y-1 group-active:-translate-x-1"
+              } ease-in-out duration-300`}
             />
           </div>
         )}
 
-        {!isMobileView && showArrowRight && (
+        {showArrowRight && (
           <div
-            onClick={() => scrollThumbnails("down")}
-            className="sticky bottom-0 right-0 w-full flex justify-center group cursor-pointer bg-gradient-to-b from-transparent to-white"
+            onClick={() => scrollThumbnails(isMobileView ? "right" : "down")}
+            className={`absolute bottom-0 z-10 flex-center group cursor-pointer ${
+              isMobileView
+                ? "-right-1 h-full w-10 bg-gradient-to-l from-white to-transparent"
+                : "w-full h-20 bg-gradient-to-b from-transparent to-white"
+            } ease-in-out duration-200`}
           >
             <IoIosArrowForward
               size={30}
-              className="rotate-90 group-hover:scale-110 transition-transform ease-in-out duration-300"
+              className={`${
+                isMobileView
+                  ? "group-active:scale-90 group-active:translate-x-1"
+                  : "rotate-90 group-hover:scale-110 group-active:translate-y-1"
+              } ease-in-out duration-300`}
             />
           </div>
         )}
@@ -273,10 +261,10 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({
 
 const Details: React.FC<DetailsProps> = ({ product }) => {
   const sizeLabels: { [key: string]: string } = {
-    s: "Small",
-    m: "Medium",
-    l: "Large",
-    xl: "Extra Large",
+    S: "Small",
+    M: "Medium",
+    L: "Large",
+    XL: "Extra Large",
   };
 
   const defaultSize =
@@ -291,27 +279,29 @@ const Details: React.FC<DetailsProps> = ({ product }) => {
 
       <div className="flex justify-between items-center">
         {/* Pricing and Discount */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-end gap-2">
           <span className="text-4xl font-bold">
             ${product.price.toFixed(2)}
           </span>
           {product.discount > 0 && (
-            <span className="text-sm text-green-500 font-medium">
-              {product.discount}% off
+            <span className="text-md text-green-500 font-medium">
+              -{product.discount}% off
             </span>
           )}
         </div>
 
         {/* Ratings and Reviews */}
         <div className="flex items-center gap-1 md:gap-4">
+          <span className="text-primary">Reviews</span>
           <div className="flex items-center gap-0.5">
-            {Array.from({ length: product.ratings }, (_, index) => (
-              <IoMdStar key={index} color="yellow" size={15} />
+            {Array.from({ length: 5 }, (_, index) => (
+              <IoMdStar
+                key={index}
+                color={index < product.ratings ? "yellow" : "gray"}
+                size={15}
+              />
             ))}
           </div>
-          <Link href="#" className="text-primary">
-            {product.reviews} reviews
-          </Link>
         </div>
       </div>
 
@@ -328,8 +318,8 @@ const Details: React.FC<DetailsProps> = ({ product }) => {
             </SelectTrigger>
             <SelectContent>
               {product.sizes.map((size) => (
-                <SelectItem key={size} value={size.toLowerCase()}>
-                  {sizeLabels[size.toLowerCase()] || size}
+                <SelectItem key={size} value={size}>
+                  {sizeLabels[size] || size}
                 </SelectItem>
               ))}
             </SelectContent>
@@ -340,11 +330,14 @@ const Details: React.FC<DetailsProps> = ({ product }) => {
         <div className="grid gap-2">
           <Button
             size="lg"
-            className="w-full flex gap-1 bg-transparent text-lg text-primary border border-primary rounded-none"
+            className="w-full flex gap-1 bg-transparent text-lg text-primary border border-primary rounded-none hover:shadow-md active:translate-y-0.5 ease-in-out duration-300"
           >
             Add to cart <span className="text-2xl">+</span>
           </Button>
-          <Button size="lg" className="w-full text-lg rounded-none">
+          <Button
+            size="lg"
+            className="w-full text-lg rounded-none hover:shadow-md active:translate-y-0.5 ease-in-out duration-300"
+          >
             Buy now
           </Button>
         </div>
@@ -358,7 +351,7 @@ const AdditionalInfo: React.FC<AdditionalInfoProps> = ({ product }) => {
   return (
     <>
       {/* Additional Information */}
-      <div className="bg-[#FFB4332E] text-sm text-primary text-justify p-4 rounded-md">
+      <div className="bg-[#FFB4332E] text-sm text-primary text-justify p-4">
         Easy 10 days return and exchange. Return policies may vary based on
         products and promotions. For full details on our Returns Policies,
         please check our website.
