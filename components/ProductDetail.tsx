@@ -277,7 +277,7 @@ const Details: React.FC<DetailsProps> = ({ product }) => {
         <p className="text-muted-foreground mt-2">{product.description}</p>
       </div>
 
-      <div className="flex justify-between items-center">
+      <div className="flex justify-between items-end">
         {/* Pricing and Discount */}
         <div className="flex items-end gap-2">
           <span className="text-4xl font-bold">
@@ -285,14 +285,14 @@ const Details: React.FC<DetailsProps> = ({ product }) => {
           </span>
           {product.discount > 0 && (
             <span className="text-md text-green-500 font-medium">
-              -{product.discount}% off
+              {product.discount}% off
             </span>
           )}
         </div>
 
         {/* Ratings and Reviews */}
         <div className="flex items-center gap-1 md:gap-4">
-          <span className="text-primary">Reviews</span>
+          <span className="text-md text-primary">Reviews</span>
           <div className="flex items-center gap-0.5">
             {Array.from({ length: 5 }, (_, index) => (
               <IoMdStar
