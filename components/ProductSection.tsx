@@ -17,8 +17,9 @@ const ProductSection: React.FC<ProductSectionProps> = ({
           <div className="text-xl lg:text-2xl font-bold">{category}</div>
           <Link
             href={href}
-            className="group w-fit flex-center gap-2 p-1 px-3 md:p-1.5 md:px-4 rounded-3xl cursor-pointer bg-primary md:bg-transparent active:bg-primary lg:hover:bg-primary active:scale-95 ease-in-out duration-300"
+            className="group w-fit flex-center gap-2 p-1 px-3 md:p-1.5 md:px-4 rounded-3xl cursor-pointer  active:bg-primary lg:hover:bg-primary active:scale-95 ease-in-out duration-300"
           >
+            {/* bg-primary md:bg-transparent */}
             <span className="text-md md:text-lg font-medium translate-x-0.5">
               View More
             </span>

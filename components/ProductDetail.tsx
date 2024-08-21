@@ -277,32 +277,28 @@ const Details: React.FC<DetailsProps> = ({ product }) => {
         <p className="text-muted-foreground mt-2">{product.description}</p>
       </div>
 
-      <div className="flex justify-between items-end">
-        {/* Pricing and Discount */}
-        <div className="flex items-end gap-2">
-          <span className="text-4xl font-bold">
-            ${product.price.toFixed(2)}
+      {/* Pricing and Discount */}
+      <div className="flex items-end gap-2">
+        <span className="text-4xl font-bold">${product.price.toFixed(2)}</span>
+        {product.discount > 0 && (
+          <span className="text-md text-green-500 font-medium">
+            {product.discount}% off
           </span>
-          {product.discount > 0 && (
-            <span className="text-md text-green-500 font-medium">
-              {product.discount}% off
-            </span>
-          )}
-        </div>
+        )}
+      </div>
 
-        {/* Ratings and Reviews */}
-        <div className="flex items-center gap-1 md:gap-4">
-          <span className="text-md text-primary">Reviews</span>
-          <div className="flex items-center gap-0.5">
-            {Array.from({ length: 5 }, (_, index) => (
-              <IoMdStar
-                key={index}
-                color={index < product.ratings ? "yellow" : "gray"}
-                size={15}
-              />
-            ))}
-          </div>
+      {/* Ratings and Reviews */}
+      <div className="flex items-center gap-1 md:gap-4">
+        <div className="flex items-center gap-0.5">
+          {Array.from({ length: 5 }, (_, index) => (
+            <IoMdStar
+              key={index}
+              size={15}
+              className={index < product.ratings ? "fill-primary" : "fill-gray-500"}
+            />
+          ))}
         </div>
+        | <span className="text-primary">{product.reviews} reviews</span>
       </div>
 
       {/* Size Selection and Buttons */}
