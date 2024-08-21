@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { LiaFilterSolid } from "react-icons/lia";
-import { FaArrowDownShortWide } from "react-icons/fa6";
+import { FaArrowDownShortWide, FaArrowUpShortWide } from "react-icons/fa6";
 import {
   Sheet,
   SheetClose,
@@ -12,6 +12,8 @@ import {
 } from "./ui/sheet";
 
 const MobileFilter = () => {
+  // "inc" | "dec"
+  const [short, setShort] = useState<boolean>();
   const [isOpen, setOpen] = useState<boolean>(false);
   const [windowWidth, setWindowWidth] = useState<number>(
     typeof window !== "undefined" ? window.innerWidth : 0
@@ -39,18 +41,25 @@ const MobileFilter = () => {
     <>
       <div className="md:hidden">
         <Sheet open={isOpen} onOpenChange={setOpen}>
-          <SheetTrigger asChild>
-            <div className="fixed bottom-0 left-0 right-0 z-10 w-full bg-zinc-700 flex-between text-white py-2">
-              <div className="w-1/2 flex-center gap-1 border-r">
-                <span>Short</span>
+          <div className="fixed bottom-0 left-0 right-0 z-10 w-full bg-zinc-700 flex-between text-white py-2 divide-x-1">
+            <div
+              onClick={() => setShort(!short)}
+              className="w-1/2 flex-center gap-1 active:translate-y-1 ease-in-out duration-300"
+            >
+              <span>Short</span>
+              {short ? (
+                <FaArrowUpShortWide size={18} />
+              ) : (
                 <FaArrowDownShortWide size={18} />
-              </div>
+              )}
+            </div>
+            <SheetTrigger asChild className=" active:translate-y-1 ease-in-out duration-300">
               <div className="w-1/2 flex-center gap-1">
                 <span>Filter</span>
                 <LiaFilterSolid size={18} />
               </div>
-            </div>
-          </SheetTrigger>
+            </SheetTrigger>
+          </div>
           <SheetContent
             side="bottom"
             className="md:hidden bottom-0 z-50 w-full h-[70vh] rounded-t-3xl backdrop-blur-lg bg-transparent border-none outline-none shadow-[0_0_20px_rgba(0,0,0,0.5)] p-4 overflow-x-hidden overflow-y-scroll"
