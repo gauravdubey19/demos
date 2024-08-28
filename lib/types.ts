@@ -4,18 +4,33 @@ export interface ProductCategoryDetailParams {
     id: number;
   };
 }
+export interface ProfileParams {
+  params: {
+    section: string;
+  };
+  children?: React.ReactNode;
+}
+export interface ProfileSectionParams {
+  params: {
+    section: string;
+  };
+}
 
 export interface ProductSectionProps {
   category: string;
   href: string;
-  carousel: CardProps[];
+  carousel: CardValues[];
 }
 export interface ProductCategoryProps {
   category: string;
-  products: CardProps[];
+  products: CardValues[];
 }
-
-export interface CardProps {
+export interface LinkValues {
+  id: number;
+  head: string;
+  href: string;
+}
+export interface CardValues {
   id: number;
   img: string;
   head: string;

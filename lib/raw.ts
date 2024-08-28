@@ -31,3 +31,19 @@ export const a = "b";
 
 // playbackConst={0}
 // className={`h-[500vh] w-full overflow-hidden`}
+
+// const gifsVid1 = [
+//     "/hero/c1.gif",
+//     "/hero/c2.gif",
+//     "/hero/c3.gif",
+//     "/hero/c4.gif",
+//     "/hero/c5.gif",
+//   ];
+
+//   const gifsVid2 = [
+//     "/hero/w1.gif",
+//     "/hero/w2.gif",
+//     "/hero/w3.gif",
+//     "/hero/w4.gif",
+//     "/hero/w5.gif",
+//   ];

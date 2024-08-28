@@ -1,6 +1,6 @@
-import { CardProps } from "./types";
+import { CardValues, LinkValues } from "./types";
 
-export const links = [
+export const links: LinkValues[] = [
   { id: 0, head: "Home", href: "/" },
   { id: 1, head: "3D Textile View", href: "/" },
   { id: 2, head: "Ready Made", href: "/" },
@@ -8,7 +8,7 @@ export const links = [
   { id: 4, head: "Contact", href: "/#contact" },
 ];
 
-export const cardList: CardProps[] = [
+export const cardList: CardValues[] = [
   {
     id: 0,
     img: "/assets/card.jpeg",
@@ -63,7 +63,7 @@ export const cardList: CardProps[] = [
   },
   {
     id: 4,
-    img: "https://d118ps6mg0w7om.cloudfront.net/media/catalog/product/1/_/fit-in/1000x1333/1_mfk-9381-q-24-off-white_1.jpg",
+    img: "https://cdn.linenclub.com/media/catalog/product/cache/41d32663a01600992c99bcd3aa36f0e1/l/c/lcjkch3000701_0.jpg",
     head: "Heading 5",
     description:
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugalaboriosam nesciunt voluptatibus ad reprehenderit magnivwev evprovident cumque, a cupiditate. Fuga laboriosam nesciuntvoluptatibus",

@@ -87,9 +87,9 @@
   display: none;
 }
 
-/* body {
-  @apply bg-black text-white;
-} */
+body {
+  @apply bg-background text-[var(--foreground)];
+}
 
 @layer utilities {
   .flex-center {
@@ -103,5 +103,9 @@
   }
   .text-balance {
     text-wrap: balance;
+  }
+  .set-sticky {
+    position: -webkit-sticky;
+    position: sticky;
   }
 }

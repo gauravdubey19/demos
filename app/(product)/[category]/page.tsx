@@ -1,6 +1,6 @@
-import ProductCategory from "@/components/ProductCategory";
-import { ProductCategoryDetailParams } from "@/lib/types";
 import { cardList } from "@/lib/data";
+import { ProductCategoryDetailParams } from "@/lib/types";
+import ProductCategory from "@/components/product/ProductCategory";
 
 export default function ProductCategoryPage({
   params,
