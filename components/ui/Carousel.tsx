@@ -23,6 +23,11 @@ const Carousel: React.FC<CarouselProps> = ({
     swipeToSlide: true,
     touchMove: true,
     adaptiveHeight: true,
+    // focusOnSelect: true,
+    // className: "center",
+    // centerMode: true,
+    // centerPadding: "10px",
+
     infinite: infinite,
     autoplay: autoplay,
     autoplaySpeed: autoplaySpeed,
@@ -67,7 +72,9 @@ const Carousel: React.FC<CarouselProps> = ({
     <>
       <Slider
         {...settings}
-        className={`cursor-grab active:cursor-grabbing bg-white ${arrows && "md:py-2"}`}
+        className={`cursor-grab active:cursor-grabbing bg-white ${
+          arrows && "md:py-2"
+        }`}
       >
         {children}
       </Slider>

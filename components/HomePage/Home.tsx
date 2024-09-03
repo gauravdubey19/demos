@@ -1,11 +1,13 @@
 import { cardList } from "@/lib/data";
 import ProductSection from "../product/ProductSection";
 import Hero from "./Hero";
+import CategorySection from "./CategorySection";
 
 const Home = () => {
   return (
     <>
       <Hero />
+      <CategorySection />
       <ProductSection
         category="Product Category 1"
         href={"/Product Category 1"}

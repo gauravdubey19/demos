@@ -62,7 +62,7 @@ const Navbar: React.FC<{ appName: string }> = ({ appName }) => {
   return (
     <div
       ref={navbarRef}
-      className="fixed top-0 z-[9999] h-[60px] w-full flex-between bg-white text-black p-2 px-3 md:p-4 lg:p-6 overflow-hidden shadow-lg transition-all"
+      className="fixed top-0 z-[9999] h-[60px] w-full flex-between bg-white text-black p-2 px-3 md:p-4 lg:px-12 overflow-hidden shadow-lg transition-all"
       style={{ transform: "translateY(-100px)", opacity: 0 }}
     >
       <Link href="/" className="text-2xl lg:text-3xl font-black">
