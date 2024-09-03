@@ -28,7 +28,7 @@ const Cards = ({ item, activeSlide, index }: CardsI) => {
               <div className="flex items-center flex-col gap-3 w-[70%]">
                   <div className="flex items-center flex-col  ">
                       <h1 className="text-lg ">Vibrant checks Shirt</h1>
-                      <p className="text-[#a1a1a1]">classic full-sleeve men's shirt red and blue check pattern.</p>
+                      <p className="text-[#a1a1a1]">classic full-sleeve men`&apos;`s shirt red and blue check pattern.</p>
                   </div>
 
                   <Button

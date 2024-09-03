@@ -130,7 +130,7 @@ const Carousel2 = () => {
             <div className="slider-container max-w-6xl  w-full">
                 <Slider {...settings} className="h-max" >
                     {carouselItems.map((item, index) => (
-                        <Cards item={item} activeSlide={activeSlide} index={index}/>
+                        <Cards key={item.id} item={item} activeSlide={activeSlide} index={index}/>
                     ))}
                 </Slider>
             </div>
