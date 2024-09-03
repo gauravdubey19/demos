@@ -1,6 +1,7 @@
 import { cardList } from "@/lib/data";
 import ProductSection from "../product/ProductSection";
 import HeroTwo from "./HeroTwo";
+import Carousel2 from "../category2/carousel2";
 
 const Home = () => {
   //   const [isLoading, setIsLoading] = useState(true);
@@ -20,6 +21,7 @@ const Home = () => {
     <>
       <HeroTwo />
       <div className="z-50 bg-white">
+        <Carousel2/>
         <ProductSection
           category="Product Category 1"
           href={"/Product Category 1"}
