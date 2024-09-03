@@ -3,8 +3,8 @@ import ScrollVideo from "../ScrollVideo";
 
 const PreLoader = () => {
   return (
-    <section className="w-full h-full z-50 bg-white flext-center">
-      <ScrollVideo videoUrl="/assets/onScroll.mp4" />
+    <section className="w-full h-full flext-center bg-white">
+      <ScrollVideo videoUrl="/macpro.mp4" />
     </section>
   );
 };

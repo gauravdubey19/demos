@@ -3,6 +3,8 @@
 import React, { useState, useEffect } from "react";
 import { Turn as Hamburger } from "hamburger-react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import Image from "next/image";
 import {
   Sheet,
   SheetContent,
@@ -11,23 +13,17 @@ import {
 } from "@/components/ui/sheet";
 import { links } from "@/lib/data";
 import { IoCart } from "react-icons/io5";
-import Image from "next/image";
 
 const MobileNav = () => {
-  const [active, setActive] = useState<string>(links[0].head);
   const [isOpen, setOpen] = useState<boolean>(false);
   const [windowWidth, setWindowWidth] = useState<number>(
     typeof window !== "undefined" ? window.innerWidth : 0
   );
+  const pathname = usePathname();
 
-  const handleMenuClick = () => {
-    setOpen(!isOpen);
-  };
+  const handleMenuClick = () => setOpen(!isOpen);
 
-  const handleLinkClick = (head: string) => {
-    setActive(head);
-    setOpen(false);
-  };
+  const handleLinkClick = () => setOpen(false);
 
   useEffect(() => {
     const handleResize = () => {
@@ -88,24 +84,28 @@ const MobileNav = () => {
             </Link>
           </SheetTitle>
           <div className="h-fit flex flex-col gap-6 pt-5 overflow-hidden">
-            {links.map((link, index) => (
-              <div
-                key={index}
-                className="cursor-pointer z-50"
-                onClick={() => handleLinkClick(link.head)}
-              >
-                <Link
-                  href={link.href}
-                  className={`w-full capitalize text-2xl font-semibold ${
-                    active === link.head
-                      ? "text-primary font-semibold"
-                      : "text-white active:translate-y-0.5"
-                  }`}
+            {links.map((link, index) => {
+              const isActive = pathname === link.href;
+
+              return (
+                <div
+                  key={index}
+                  className="cursor-pointer z-50"
+                  onClick={handleLinkClick}
                 >
-                  {link.head}
-                </Link>
-              </div>
-            ))}
+                  <Link
+                    href={link.href}
+                    className={`w-full capitalize text-2xl font-semibold ${
+                      isActive
+                        ? "text-primary font-semibold"
+                        : "text-white active:translate-y-0.5"
+                    }`}
+                  >
+                    {link.head}
+                  </Link>
+                </div>
+              );
+            })}
           </div>
         </SheetContent>
       </Sheet>

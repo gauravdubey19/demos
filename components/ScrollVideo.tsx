@@ -3,7 +3,6 @@
 import React, { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { useCursor } from "@/context/CursorProvider";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -16,17 +15,16 @@ interface VideoProps {
 const ScrollVideo: React.FC<VideoProps> = ({
   videoUrl,
   playbackConst = 0,
-  className = "relative z-0 h-[450vh] w-full",
+  className = "relative z-0 h-[450vh] w-full flex justify-center scroll-none",
 }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  const { showVideo, setShowVideo } = useCursor();
   const scrollTriggerRef = useRef<ScrollTrigger | null>(null);
 
   useEffect(() => {
     const video = videoRef.current;
     const container = containerRef.current;
-    if (!showVideo || !video || !container) return;
+    if (!video || !container) return;
 
     video.playbackRate = playbackConst;
 
@@ -37,11 +35,7 @@ const ScrollVideo: React.FC<VideoProps> = ({
       start: "top top",
       end: "bottom bottom",
       scrub: 3,
-      // onEnter: () => {
-      //   setShowVideo(true);
-      // },
       onLeave: () => {
-        setShowVideo(false);
         ScrollTrigger.create({
           trigger: container,
           start: "bottom bottom",
@@ -68,23 +62,16 @@ const ScrollVideo: React.FC<VideoProps> = ({
         scrollTriggerRef.current = null;
       }
     };
-  }, [showVideo, videoUrl, playbackConst, setShowVideo]);
+  }, [videoUrl, playbackConst]);
 
   return (
-    <div
-      ref={containerRef}
-      className={`${className} ${
-        showVideo && "flex justify-center scroll-none"
-      }`}
-    >
+    <div ref={containerRef} className={className}>
       <video
         ref={videoRef}
         src={videoUrl}
         playsInline
         muted
-        className={`${
-          showVideo ? "fixed" : "absolute"
-        } h-screen w-auto object-cover`}
+        className="h-screen w-auto object-cover"
       />
     </div>
   );

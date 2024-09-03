@@ -81,7 +81,7 @@
   @apply rounded-full bg-zinc-500;
 }
 ::-webkit-scrollbar {
-  @apply w-[5px] h-[5px];
+  @apply w-[2px] h-[2px];
 }
 .scroll-none::-webkit-scrollbar {
   display: none;

@@ -47,3 +47,327 @@ export const a = "b";
 //     "/hero/w4.gif",
 //     "/hero/w5.gif",
 //   ];
+
+// "use client";
+
+// import { img } from "@/lib/data";
+// import React, { useEffect, useRef } from "react";
+
+// interface Particle {
+//   x: number;
+//   y: number;
+//   size: number;
+//   speed: number;
+//   velocity: number;
+//   angle: number;
+//   color: string;
+//   brightness: number;
+//   targetX: number;
+//   targetY: number;
+//   arrived: boolean;
+// }
+
+// const HeroThree: React.FC = () => {
+//   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+//   const particlesArray = useRef<Particle[]>([]);
+//   const numberOfParticles = 5000;
+//   const detail = 1;
+//   const particlesMerged = useRef(false);
+
+//   useEffect(() => {
+//     const canvas = canvasRef.current;
+//     if (!canvas) return;
+
+//     const ctx = canvas.getContext("2d");
+//     if (!ctx) return;
+
+//     const image = new Image();
+//     image.src = "/logo.png"; // Your image path
+//     // image.src = "/hero/main.png"; // Your image path
+//     image.onload = function () {
+//       canvas.width = 522; // Width of your image
+//       canvas.height = 353; // Height of your image
+
+//       ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+//       const pixels = ctx.getImageData(0, 0, canvas.width, canvas.height);
+
+//       // Clear the canvas after getting image data
+//       ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+//       const grid: {
+//         color: string;
+//         brightness: number;
+//         x: number;
+//         y: number;
+//       }[][] = [];
+//       for (let y = 0; y < canvas.height; y += detail) {
+//         const row = [];
+//         for (let x = 0; x < canvas.width; x += detail) {
+//           const red = pixels.data[y * 4 * pixels.width + x * 4];
+//           const green = pixels.data[y * 4 * pixels.width + x * 4 + 1];
+//           const blue = pixels.data[y * 4 * pixels.width + x * 4 + 2];
+//           const color = `rgb(${red},${green},${blue})`;
+//           const brightness = calculateBrightness(red, green, blue) / 100;
+//           row.push({ color, brightness, x, y });
+//         }
+//         grid.push(row);
+//       }
+
+//       class Particle {
+//         x: number;
+//         y: number;
+//         size: number;
+//         speed: number;
+//         velocity: number;
+//         angle: number;
+//         color: string;
+//         brightness: number;
+//         targetX: number;
+//         targetY: number;
+//         arrived: boolean;
+
+//         constructor(
+//           targetX: number,
+//           targetY: number,
+//           color: string,
+//           brightness: number
+//         ) {
+//           this.x = canvas.width + Math.random() * 200; // Start from the right side
+//           this.y = Math.random() * canvas.height;
+//           this.size = Math.random() * 2 + 0.5;
+//           this.speed = 0;
+//           this.velocity = Math.random() * 0.5 + 0.5;
+//           this.angle = 0;
+//           this.arrived = false;
+//           this.color = color;
+//           this.brightness = brightness;
+//           this.targetX = targetX;
+//           this.targetY = targetY;
+//         }
+
+//         update() {
+//           const dx = this.targetX - this.x;
+//           const dy = this.targetY - this.y;
+//           const distance = Math.sqrt(dx * dx + dy * dy);
+//           this.speed = distance * 0.03;
+//           this.x += dx * this.speed * 0.1;
+//           this.y += dy * this.speed * 0.1;
+
+//           if (distance < 1) {
+//             this.arrived = true;
+//           }
+//         }
+
+//         draw(ctx: CanvasRenderingContext2D) {
+//           ctx.beginPath();
+//           ctx.fillStyle = this.color;
+//           ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+//           ctx.fill();
+//         }
+//       }
+
+//       function initParticles() {
+//         particlesArray.current = [];
+//         for (let y = 0; y < grid.length; y++) {
+//           for (let x = 0; x < grid[y].length; x++) {
+//             const { color, brightness, x: targetX, y: targetY } = grid[y][x];
+//             particlesArray.current.push(
+//               new Particle(targetX, targetY, color, brightness)
+//             );
+//           }
+//         }
+//       }
+//       initParticles();
+
+//       function animateParticles() {
+//         ctx.globalAlpha = 0.05;
+//         ctx.fillStyle = "rgb(0, 0, 0)";
+//         ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+//         ctx.globalAlpha = 0.2;
+//         let allArrived = true;
+//         for (let i = 0; i < particlesArray.current.length; i++) {
+//           const particle = particlesArray.current[i];
+//           particle.update();
+//           particle.draw(ctx);
+//           if (!particle.arrived) {
+//             allArrived = false;
+//           }
+//         }
+
+//         if (allArrived && !particlesMerged.current) {
+//           particlesMerged.current = true;
+//           ctx.globalAlpha = 1;
+//           ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear previous frame
+//           ctx.drawImage(image, 0, 0, canvas.width, canvas.height); // Draw the final image
+//         } else {
+//           requestAnimationFrame(animateParticles);
+//         }
+//       }
+//       animateParticles();
+
+//       function calculateBrightness(red: number, green: number, blue: number) {
+//         return Math.sqrt(
+//           red * red * 0.299 + green * green * 0.587 + blue * blue * 0.114
+//         );
+//       }
+//     };
+//   }, []);
+
+//   return (
+//     <div className="relative w-full h-[calc(100vh-60px)] flex-center">
+//       <canvas ref={canvasRef} className="w-[60vh] h-[50vh]" />
+//     </div>
+//   );
+// };
+
+// export default HeroThree;
+
+// "use client";
+
+// import React, { useEffect, useRef } from "react";
+// import { cardList } from "@/lib/data";
+// import { usePreload } from "@/context/PreloaderProvider";
+// import ProductSection from "../product/ProductSection";
+// import Hero from "./Hero";
+// import PreLoader from "./PreLoader";
+// import gsap from "gsap";
+// import HeroThree from "./HeroThree";
+
+// const Home = () => {
+//   const { activePreload } = usePreload();
+//   const preloaderRef = useRef<HTMLDivElement>(null);
+//   const mainRef = useRef<HTMLDivElement>(null);
+
+//   useEffect(() => {
+//     if (!activePreload) {
+//       const timeline = gsap.timeline();
+
+//       timeline
+//         .to(preloaderRef.current, {
+//           y: "-100%",
+//           duration: 1,
+//           ease: "power2.inOut",
+//           onComplete: () => {
+//             preloaderRef.current?.remove();
+//           },
+//         })
+//         .fromTo(
+//           mainRef.current,
+//           { opacity: 0 },
+//           { opacity: 1, duration: 1, ease: "power2.inOut" }
+//         );
+//     }
+//   }, [activePreload]);
+
+//   return (
+//     <>
+//       <HeroThree />
+//       {/* {activePreload ? (
+//         <div ref={preloaderRef}>
+//           <PreLoader />
+//         </div>
+//       ) : (
+//         <main ref={mainRef} className="opacity-0">
+//           <Hero />
+//           <div className="z-50 bg-white">
+//             <ProductSection
+//               category="Product Category 1"
+//               href={"/Product Category 1"}
+//               carousel={cardList}
+//             />
+//             <ProductSection
+//               category="Product Category 2"
+//               href={"/Product Category 2"}
+//               carousel={cardList}
+//             />
+//             <ProductSection
+//               category="Product Category 3"
+//               href={"/Product Category 3"}
+//               carousel={cardList}
+//             />
+//           </div>
+//         </main>
+//       )} */}
+//     </>
+//   );
+// };
+
+// export default Home;
+
+// "use client";
+
+// import React, { useState } from "react";
+// import Link from "next/link";
+// import { useCursor } from "@/context/CursorProvider";
+// import { links } from "@/lib/data";
+// import MobileNav from "./MobileNav";
+// import { IoCart } from "react-icons/io5";
+// import Image from "next/image";
+
+// const Navbar: React.FC<{ appName: string }> = ({ appName }) => {
+//   const [active, setActive] = useState<string>(links[0].head);
+//   const { showTxt, setShowTxt, showVideo, setShowVideo } = useCursor();
+//   const handleHero = (id: number) => {
+//     if (id === 1) {
+//       setShowTxt(true);
+//       if (showVideo) setShowVideo(false);
+//     } else if (id === 2) {
+//       if (showTxt) setShowTxt(false);
+//       setShowVideo(true);
+//     } else {
+//       setShowTxt(false);
+//       setShowVideo(false);
+//     }
+//   };
+//   return (
+//     <>
+//       {/* shadow-[0_0_5px_black] */}
+//       <div className="sticky top-0 z-[9999] h-[60px] w-full flex-between bg-white text-black p-2 px-3 md:p-4 lg:p-6 overflow-hidden">
+//         <Link href="/" className="text-2xl lg:text-3xl font-black">
+//           {appName}
+//         </Link>
+//         <MobileNav />
+//         <nav className="hidden md:flex items-center gap-2 md:gap-4 lg:gap-8 text-md md:text-lg lg:text-xl font-normal">
+//           {links.map((link, index) => (
+//             <Link
+//               href={link.href}
+//               key={index}
+//               onClick={() => setActive(link.head)}
+//               className={`capitalize cursor-pointer ${
+//                 active === link.head
+//                   ? "text-primary font-semibold"
+//                   : "hover:border-b hover:border-b-primary active:translate-y-0.5"
+//               } ease-in-out duration-200`}
+//             >
+//               <button onClick={() => handleHero(link.id)}>{link.head}</button>
+//             </Link>
+//           ))}
+//           <div className="ml-2 flex gap-3">
+//             <Link
+//               href={"/#cart"}
+//               className="relative w-10 h-10 rounded-full border border-[#D3D3D3] flex-center"
+//             >
+//               <div className="absolute top-0.5 right-0.5 w-1.5 h-1.5 bg-primary rounded-full"></div>
+//               <IoCart size={25} className="fill-[#717171]" />
+//             </Link>
+//             <Link
+//               href={"/profile/personal-information"}
+//               className="w-10 h-10 rounded-full overflow-hidden"
+//             >
+//               <Image
+//                 src="/assets/card.jpeg"
+//                 alt="profile"
+//                 width={200}
+//                 height={200}
+//                 className="w-full h-full"
+//               />
+//             </Link>
+//           </div>
+//         </nav>
+//       </div>
+//     </>
+//   );
+// };
+
+// export default Navbar;
