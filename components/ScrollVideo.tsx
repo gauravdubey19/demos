@@ -15,7 +15,7 @@ interface VideoProps {
 const ScrollVideo: React.FC<VideoProps> = ({
   videoUrl,
   playbackConst = 0,
-  className = "relative z-0 h-[450vh] w-full flex justify-center scroll-none",
+  className = "relative -z-10 h-[450vh] w-full flex justify-center scroll-none",
 }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);

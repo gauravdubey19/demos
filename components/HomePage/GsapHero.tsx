@@ -1,0 +1,264 @@
+"use client";
+
+import React, { useEffect, useRef, useState } from "react";
+import { gsap } from "gsap";
+import { Draggable } from "gsap/dist/Draggable";
+import ScrollVideo from "../ScrollVideo";
+import { Button } from "../ui/button";
+import { IoArrowBackSharp, IoArrowForwardSharp } from "react-icons/io5";
+
+gsap.registerPlugin(Draggable);
+
+const GsapHero: React.FC = () => {
+  const [showLeft, setShowLeft] = useState<boolean>(true);
+  const [showRight, setShowRight] = useState<boolean>(true);
+  const [containerDraggable, setContainerDraggable] = useState<boolean>(false);
+  const leftSectionRef = useRef<HTMLDivElement>(null);
+  const leftContainerRef = useRef<HTMLDivElement>(null);
+  const leftSlideBackRef = useRef<HTMLDivElement>(null);
+  const rightSectionRef = useRef<HTMLDivElement>(null);
+  const rightContainerRef = useRef<HTMLDivElement>(null);
+  const rightSlideBackRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const updateBounds = () => {
+      const leftContainerWidth = leftContainerRef.current?.offsetWidth ?? 0;
+      const rightContainerWidth = rightContainerRef.current?.offsetWidth ?? 0;
+
+      if (leftSectionRef.current) {
+        Draggable.create(leftSectionRef.current, {
+          type: "x",
+          bounds: { minX: 0, maxX: leftContainerWidth },
+          onDragEnd() {
+            if (this.x >= leftContainerWidth * 0.2) {
+              gsap.to(leftContainerRef.current, {
+                x: 0,
+                duration: 1,
+                ease: "power2.inOut",
+              });
+              gsap.to(this.target, {
+                x: 100,
+                duration: 0.5,
+                ease: "power2.inOut",
+              });
+              setShowLeft(false);
+            }
+          },
+        });
+      }
+
+      if (rightSectionRef.current) {
+        Draggable.create(rightSectionRef.current, {
+          type: "x",
+          bounds: { minX: -rightContainerWidth, maxX: 0 },
+          onDragEnd() {
+            if (this.x <= -rightContainerWidth * 0.2) {
+              gsap.to(rightContainerRef.current, {
+                x: 0,
+                duration: 1,
+                ease: "power2.inOut",
+              });
+              gsap.to(this.target, {
+                x: -100,
+                duration: 0.5,
+                ease: "power2.inOut",
+              });
+              setShowRight(false);
+            }
+          },
+        });
+      }
+
+      if (leftSlideBackRef.current) {
+        Draggable.create(leftSlideBackRef.current, {
+          type: "x",
+          bounds: { minX: -leftContainerWidth, maxX: 0 },
+          onDragEnd() {
+            if (this.x <= -leftContainerWidth * 0.2) {
+              gsap.to(leftContainerRef.current, {
+                x: "-100%",
+                duration: 1,
+                ease: "power2.inOut",
+              });
+              gsap.to(this.target, {
+                x: 0,
+                duration: 0.5,
+                ease: "power2.inOut",
+              });
+              setShowLeft(true);
+            }
+          },
+        });
+      }
+
+      if (rightSlideBackRef.current) {
+        Draggable.create(rightSlideBackRef.current, {
+          type: "x",
+          bounds: { minX: 0, maxX: rightContainerWidth },
+          onDragEnd() {
+            if (this.x >= rightContainerWidth * 0.2) {
+              gsap.to(rightContainerRef.current, {
+                x: "100%",
+                duration: 1,
+                ease: "power2.inOut",
+              });
+              gsap.to(this.target, {
+                x: 0,
+                duration: 0.5,
+                ease: "power2.inOut",
+              });
+              setShowRight(true);
+            }
+          },
+        });
+      }
+    };
+
+    updateBounds();
+
+    const handleScroll = () => {
+      setContainerDraggable(window.scrollY > window.innerHeight * 2.9);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    handleScroll();
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
+  return (
+    <>
+      <section className="h-[400vh] bg-white">
+        <div className="w-full h-screen sticky top-0 flex flex-col md:flex-row overflow-hidden">
+          <>
+            {/* left hero section */}
+            <div
+              ref={leftContainerRef}
+              className={`absolute inset-0 z-50 transition-transform duration-300 ${
+                containerDraggable ? "-translate-x-full" : "-translate-x-[110%]"
+              }`}
+            >
+              <div
+                ref={leftSlideBackRef}
+                className="absolute right-0 z-50 w-[30vw] h-full bg-transparent cursor-grab active:cursor-grabbing"
+              ></div>
+              <LeftContainer />
+              <div
+                ref={leftSectionRef}
+                className="absolute right-0 top-0 w-20 h-full flex items-center justify-center translate-x-20"
+              >
+                <IoArrowBackSharp size={40} color="white" />
+              </div>
+            </div>
+
+            {/* right hero section */}
+            <div
+              ref={rightContainerRef}
+              className={`absolute inset-0 z-50 transition-transform duration-300 ${
+                containerDraggable ? "translate-x-full" : "translate-x-[110%]"
+              }`}
+            >
+              <div
+                ref={rightSlideBackRef}
+                className="absolute left-0 z-50 w-[30vw] h-full bg-transparent cursor-grab active:cursor-grabbing"
+              ></div>
+              <div
+                ref={rightSectionRef}
+                className="absolute left-0 w-20 h-full flex items-center justify-center -translate-x-20"
+              >
+                <IoArrowForwardSharp size={40} color="white" />
+              </div>
+              <RightContainer />
+            </div>
+          </>
+          <>
+            <div
+              id="left-section"
+              className="h-full w-full md:w-[30vw] lg:w-[35vw] transition-transform duration-300 overflow-hidden"
+            >
+              <ScrollVideo videoUrl="/macpro.mp4" />
+            </div>
+
+            <div
+              id="middle-section"
+              className="relative h-full bg-primary flex items-center justify-center w-full md:w-[40vw] lg:w-[30vw] px-6 transition-transform duration-300"
+            >
+              <MiddleContainer />
+            </div>
+
+            <div
+              id="right-section"
+              className="h-full w-full md:w-[30vw] lg:w-[35vw] transition-transform duration-300 overflow-hidden"
+            >
+              <ScrollVideo videoUrl="/macpro.mp4" />
+            </div>
+          </>
+        </div>
+      </section>
+      <section className="w-full h-screen bg-gray-900"></section>
+    </>
+  );
+};
+
+export default GsapHero;
+
+const MiddleContainer: React.FC = () => {
+  const handleScrollDown = () => {
+    window.scrollTo({
+      top: window.innerHeight * 3.91,
+      behavior: "smooth",
+    });
+  };
+
+  return (
+    <div className="w-full flex flex-col items-center gap-16">
+      <div className="w-full flex flex-col gap-2">
+        <div className="relative w-full h-[230px] flex items-end justify-center bg-white text-primary p-4">
+          <div className="absolute md:-left-[6.8rem] top-7 gap-1 text-[90px] font-medium">
+            <span className="md:text-white">Ex</span>
+            <span>plore</span>
+          </div>
+          <span className="text-6xl lg:text-7xl font-light">Textiles</span>
+        </div>
+        <span className="w-full text-center text-balance text-[2rem] md:text-2xl lg:text-[2rem] font-light overflow-hidden">
+          Textiles <span className="text-[#AA6C00] font-medium">&</span> Ready
+          made
+        </span>
+      </div>
+      <Button
+        onClick={handleScrollDown}
+        className="w-fit h-fit select-none bg-white text-primary text-xl font-semibold tracking-[6px] p-2 px-3 rounded-none hover:shadow-xl ease-in-out duration-300"
+      >
+        SHOP NOW
+      </Button>
+    </div>
+  );
+};
+
+const LeftContainer = () => {
+  return (
+    <div className="w-full h-full flex-between select-none bg-white overflow-hidden"></div>
+  );
+};
+
+const RightContainer = () => {
+  return (
+    <div className="w-full h-full flex-between select-none overflow-hidden">
+      <div className="h-[calc(100vh-60px)] flex-center w-full bg-white mt-[60px] p-10 overflow-hidden">
+        <div className="h-fit w-fit space-y-4">
+          <h2 className="text-8xl font-semibold">Welcome</h2>
+          <p className="text-2xl">
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Enim,
+            odit.
+          </p>
+          <Button>Check Out Now</Button>
+        </div>
+      </div>
+      <div className="h-[calc(100vh-60px)] w-full bg-black mt-[60px] overflow-hidden">
+        {/* <ParticlesImage img="/assets/rightImage.png" /> */}
+      </div>
+    </div>
+  );
+};
