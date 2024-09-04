@@ -2,12 +2,14 @@ import { cardList } from "@/lib/data";
 import ProductSection from "../product/ProductSection";
 import Hero from "./Hero";
 import CategorySection from "./CategorySection";
+import GridCards from "../Grids/GridCards";
 
 const Home = () => {
   return (
     <>
       <Hero />
       <CategorySection />
+      <GridCards/>
       <ProductSection
         category="Product Category 1"
         href={"/Product Category 1"}
