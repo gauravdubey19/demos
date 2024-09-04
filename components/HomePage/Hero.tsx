@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { useCursor } from "@/context/CursorProvider";
 import { Button } from "@/components/ui/button";
 import ScrollVideo from "@/components/ScrollVideo";
-import ParticlesImage from "../ui/ParticlesImage";
+import ParticlesImage from "../ui/ParticlesImageOld";
 
 export default function Hero() {
   const {

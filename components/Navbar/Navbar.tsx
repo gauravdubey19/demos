@@ -5,10 +5,10 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
 import { gsap } from "gsap";
-import { links } from "@/lib/data";
-import { IoCart } from "react-icons/io5";
-import MobileNav from "./MobileNav";
 import { useCursor } from "@/context/CursorProvider";
+import { links } from "@/lib/data";
+import MobileNav from "./MobileNav";
+import { IoCart } from "react-icons/io5";
 
 const Navbar: React.FC<{ appName: string }> = ({ appName }) => {
   const [isVisible, setIsVisible] = useState<boolean>(false);
@@ -65,7 +65,17 @@ const Navbar: React.FC<{ appName: string }> = ({ appName }) => {
       className="fixed top-0 z-[9999] h-[60px] w-full flex-between bg-white text-black p-2 px-3 md:p-4 lg:px-12 overflow-hidden shadow-lg transition-all"
       style={{ transform: "translateY(-100px)", opacity: 0 }}
     >
-      <Link href="/" className="text-2xl lg:text-3xl font-black">
+      <Link
+        href="/"
+        className="flex-between gap-1 text-2xl lg:text-3xl font-black overflow-hidden"
+      >
+        <Image
+          src="/logo.png"
+          alt="LoGo"
+          width={400}
+          height={400}
+          className="w-14 h-14"
+        />
         {appName}
       </Link>
       <MobileNav />

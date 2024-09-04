@@ -6,12 +6,16 @@ import { Draggable } from "gsap/dist/Draggable";
 import ScrollVideo from "../ScrollVideo";
 import { Button } from "../ui/button";
 import { IoArrowBackSharp, IoArrowForwardSharp } from "react-icons/io5";
+import ImagePracticles from "../ui/ImagePracticles";
+import { img } from "@/lib/data";
+import { useCursor } from "@/context/CursorProvider";
 
 gsap.registerPlugin(Draggable);
 
 const GsapHero: React.FC = () => {
-  const [showLeft, setShowLeft] = useState<boolean>(true);
-  const [showRight, setShowRight] = useState<boolean>(true);
+  const { showLeft, setShowLeft, showRight, setShowRight } = useCursor();
+  // const [showLeft, setShowLeft] = useState<boolean>(true);
+  // const [showRight, setShowRight] = useState<boolean>(true);
   const [containerDraggable, setContainerDraggable] = useState<boolean>(false);
   const leftSectionRef = useRef<HTMLDivElement>(null);
   const leftContainerRef = useRef<HTMLDivElement>(null);
@@ -30,7 +34,7 @@ const GsapHero: React.FC = () => {
           type: "x",
           bounds: { minX: 0, maxX: leftContainerWidth },
           onDragEnd() {
-            if (this.x >= leftContainerWidth * 0.2) {
+            if (this.x >= leftContainerWidth * 0.1) {
               gsap.to(leftContainerRef.current, {
                 x: 0,
                 duration: 1,
@@ -41,7 +45,7 @@ const GsapHero: React.FC = () => {
                 duration: 0.5,
                 ease: "power2.inOut",
               });
-              setShowLeft(false);
+              setShowLeft(true);
             }
           },
         });
@@ -52,7 +56,7 @@ const GsapHero: React.FC = () => {
           type: "x",
           bounds: { minX: -rightContainerWidth, maxX: 0 },
           onDragEnd() {
-            if (this.x <= -rightContainerWidth * 0.2) {
+            if (this.x <= -rightContainerWidth * 0.1) {
               gsap.to(rightContainerRef.current, {
                 x: 0,
                 duration: 1,
@@ -63,7 +67,7 @@ const GsapHero: React.FC = () => {
                 duration: 0.5,
                 ease: "power2.inOut",
               });
-              setShowRight(false);
+              setInterval(() => setShowRight(true), 800);
             }
           },
         });
@@ -74,7 +78,7 @@ const GsapHero: React.FC = () => {
           type: "x",
           bounds: { minX: -leftContainerWidth, maxX: 0 },
           onDragEnd() {
-            if (this.x <= -leftContainerWidth * 0.2) {
+            if (this.x <= -leftContainerWidth * 0.1) {
               gsap.to(leftContainerRef.current, {
                 x: "-100%",
                 duration: 1,
@@ -85,7 +89,7 @@ const GsapHero: React.FC = () => {
                 duration: 0.5,
                 ease: "power2.inOut",
               });
-              setShowLeft(true);
+              setShowLeft(false);
             }
           },
         });
@@ -96,7 +100,7 @@ const GsapHero: React.FC = () => {
           type: "x",
           bounds: { minX: 0, maxX: rightContainerWidth },
           onDragEnd() {
-            if (this.x >= rightContainerWidth * 0.2) {
+            if (this.x >= rightContainerWidth * 0.1) {
               gsap.to(rightContainerRef.current, {
                 x: "100%",
                 duration: 1,
@@ -107,7 +111,7 @@ const GsapHero: React.FC = () => {
                 duration: 0.5,
                 ease: "power2.inOut",
               });
-              setShowRight(true);
+              setShowRight(false);
             }
           },
         });
@@ -126,7 +130,7 @@ const GsapHero: React.FC = () => {
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
-  }, []);
+  }, [setShowLeft, setShowRight]);
 
   return (
     <>
@@ -170,7 +174,7 @@ const GsapHero: React.FC = () => {
               >
                 <IoArrowForwardSharp size={40} color="white" />
               </div>
-              <RightContainer />
+              <RightContainer showRight={showRight} />
             </div>
           </>
           <>
@@ -197,7 +201,7 @@ const GsapHero: React.FC = () => {
           </>
         </div>
       </section>
-      <section className="w-full h-screen bg-gray-900"></section>
+      {/* <section className="w-full h-screen bg-gray-900"></section> */}
     </>
   );
 };
@@ -243,10 +247,10 @@ const LeftContainer = () => {
   );
 };
 
-const RightContainer = () => {
+const RightContainer: React.FC<{ showRight: boolean }> = ({ showRight }) => {
   return (
-    <div className="w-full h-full flex-between select-none overflow-hidden">
-      <div className="h-[calc(100vh-60px)] flex-center w-full bg-white mt-[60px] p-10 overflow-hidden">
+    <div className="w-full h-full flex-between select-none bg-white overflow-hidden">
+      <div className="h-[calc(100vh-60px)] flex-center w-full mt-[60px] p-10 overflow-hidden">
         <div className="h-fit w-fit space-y-4">
           <h2 className="text-8xl font-semibold">Welcome</h2>
           <p className="text-2xl">
@@ -256,8 +260,9 @@ const RightContainer = () => {
           <Button>Check Out Now</Button>
         </div>
       </div>
-      <div className="h-[calc(100vh-60px)] w-full bg-black mt-[60px] overflow-hidden">
-        {/* <ParticlesImage img="/assets/rightImage.png" /> */}
+      <div className="h-[calc(100vh-60px)] w-full mt-[60px] overflow-hidden">
+        {/* <ImagePracticles img={img} /> */}
+        {showRight && <ImagePracticles img={img} />}
       </div>
     </div>
   );
