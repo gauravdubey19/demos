@@ -1,4 +1,5 @@
-import { CardValues, LinkValues } from "./types";
+import { CardValues, FooterSection, LinkValues } from "./types";
+import { FaFacebookF, FaInstagram, FaYoutube } from "react-icons/fa";
 
 export const links: LinkValues[] = [
   { id: 0, head: "Home", href: "/" },
@@ -145,6 +146,59 @@ export const carouselItems = [
     id: 6,
     imageUrl:
       "https://csk-demo.netlify.app/assets/img/media_20240710_190937_9152305180124524051.png",
+  },
+];
+
+export const footer: FooterSection[] = [
+  {
+    title: "",
+    links: [
+      { label: "Home", href: "/" },
+      { label: "About Us", href: "/about" },
+      { label: "Contact Us", href: "/contact" },
+      { label: "FAQs", href: "/contact#faqs" },
+    ],
+  },
+  {
+    title: "More Links",
+    links: [
+      { label: "New Arrivals", href: "/#" },
+      { label: "Shipping & Delivery", href: "/#" },
+      { label: "Returns & Exchanges", href: "/#" },
+    ],
+  },
+  {
+    title:
+      "Stay Ahead in Fashion – Subscribe to Newsteller for the Latest Textile Trends and Updates!",
+    isNewsletter: true,
+  },
+  {
+    isSocialLinks: true,
+    title: "Social Links",
+    links: [
+      {
+        label: "Facebook",
+        href: "#",
+        icon: FaFacebookF,
+        color: "hover:text-[blue] hover:border-[blue]",
+      },
+      {
+        label: "Instagram",
+        href: "#",
+        icon: FaInstagram,
+        color: "hover:text-[pink] hover:border-[pink]",
+      },
+      {
+        label: "YouTube",
+        href: "#",
+        icon: FaYoutube,
+        color: "hover:text-[red] hover:border-[red]",
+      },
+    ],
+  },
+  {
+    isCopyRight: true,
+    title: "CSK Textile. All rights reserved.",
   },
 ];
 

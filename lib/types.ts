@@ -140,3 +140,24 @@ export interface SectionValues {
 export interface SectionProps {
   section: string;
 }
+
+// Footer
+export interface FooterLink {
+  label: string;
+  href: string;
+  icon?: React.ElementType;
+  color?: string;
+}
+
+export interface FooterSection {
+  title?: string;
+  links?: FooterLink[];
+  isNewsletter?: boolean;
+  isSocialLinks?: boolean;
+  isCopyRight?: boolean;
+}
+
+export interface FormStatus {
+  status?: string;
+  message?: string;
+}
