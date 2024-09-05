@@ -27,7 +27,7 @@ const Home = () => {
         href={"/Product Category 3"}
         carousel={cardList}
       />
-      <TestimonialContainer/>
+      <TestimonialContainer />
     </>
   );
 };
