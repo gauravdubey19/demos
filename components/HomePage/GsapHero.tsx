@@ -14,8 +14,6 @@ gsap.registerPlugin(Draggable);
 
 const GsapHero: React.FC = () => {
   const { showLeft, setShowLeft, showRight, setShowRight } = useCursor();
-  // const [showLeft, setShowLeft] = useState<boolean>(true);
-  // const [showRight, setShowRight] = useState<boolean>(true);
   const [containerDraggable, setContainerDraggable] = useState<boolean>(false);
   const leftSectionRef = useRef<HTMLDivElement>(null);
   const leftContainerRef = useRef<HTMLDivElement>(null);
@@ -141,7 +139,9 @@ const GsapHero: React.FC = () => {
             <div
               ref={leftContainerRef}
               className={`absolute inset-0 z-50 transition-transform duration-300 ${
-                containerDraggable ? "-translate-x-full" : "-translate-x-[110%]"
+                containerDraggable
+                  ? "-translate-x-full"
+                  : "-translate-x-[115%] md:-translate-x-[110%]"
               }`}
             >
               <div
@@ -153,7 +153,7 @@ const GsapHero: React.FC = () => {
                 ref={leftSectionRef}
                 className="absolute right-0 top-0 w-20 h-full flex items-center justify-center translate-x-20"
               >
-                <IoArrowBackSharp size={40} color="white" />
+                <IoArrowBackSharp size={40} className="text-primary" />
               </div>
             </div>
 
@@ -161,7 +161,9 @@ const GsapHero: React.FC = () => {
             <div
               ref={rightContainerRef}
               className={`absolute inset-0 z-50 transition-transform duration-300 ${
-                containerDraggable ? "translate-x-full" : "translate-x-[110%]"
+                containerDraggable
+                  ? "translate-x-full"
+                  : "translate-x-[115%] md:translate-x-[110%]"
               }`}
             >
               <div
@@ -172,7 +174,7 @@ const GsapHero: React.FC = () => {
                 ref={rightSectionRef}
                 className="absolute left-0 w-20 h-full flex items-center justify-center -translate-x-20"
               >
-                <IoArrowForwardSharp size={40} color="white" />
+                <IoArrowForwardSharp size={40} className="text-primary" />
               </div>
               <RightContainer showRight={showRight} />
             </div>
@@ -187,7 +189,7 @@ const GsapHero: React.FC = () => {
 
             <div
               id="middle-section"
-              className="relative h-full bg-primary flex items-center justify-center w-full md:w-[40vw] lg:w-[30vw] px-6 transition-transform duration-300"
+              className="relative h-full bg-primary flex items-center justify-center w-full md:w-[40vw] lg:w-[30vw] p-6 transition-transform duration-300"
             >
               <MiddleContainer />
             </div>
@@ -217,7 +219,7 @@ const MiddleContainer: React.FC = () => {
   };
 
   return (
-    <div className="w-full flex flex-col items-center gap-16">
+    <div className="w-full flex flex-col items-center gap-10 md:gap-16">
       <div className="w-full flex flex-col gap-2">
         <div className="relative w-full h-[230px] flex items-end justify-center bg-white text-primary p-4">
           <div className="absolute md:-left-[6.8rem] top-7 gap-1 text-[90px] font-medium">
@@ -243,16 +245,18 @@ const MiddleContainer: React.FC = () => {
 
 const LeftContainer = () => {
   return (
-    <div className="w-full h-full flex-between select-none bg-white overflow-hidden"></div>
+    <div className="w-full h-full flex-between select-none bg-zinc-400 overflow-hidden"></div>
   );
 };
 
 const RightContainer: React.FC<{ showRight: boolean }> = ({ showRight }) => {
   return (
-    <div className="w-full h-full flex-between select-none bg-white overflow-hidden">
-      <div className="h-[calc(100vh-60px)] flex-center w-full mt-[60px] p-10 overflow-hidden">
+    <div className="w-full h-full flex-between flex-col-reverse md:flex-row select-none bg-white overflow-hidden">
+      <div className="h-[calc(100vh-60px)] md:flex-center w-full mt-[60px] p-4 md:p-8 lg:p-10 overflow-hidden">
         <div className="h-fit w-fit space-y-4">
-          <h2 className="text-8xl font-semibold">Welcome</h2>
+          <h2 className="text-5xl md:text-7xl lg:text-8xl font-semibold">
+            Welcome
+          </h2>
           <p className="text-2xl">
             Lorem ipsum dolor sit amet, consectetur adipisicing elit. Enim,
             odit.

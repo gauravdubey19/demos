@@ -56,7 +56,7 @@ export default function Hero() {
 
   return (
     <>
-      <section className={`${visible ? "h-screen" : "h-[400vh]"} bg-slate-500`}>
+      <section className={`${visible ? "h-screen" : "h-[400vh]"} bg-slate-500 overflow-hidden`}>
         <div className="w-full h-screen sticky top-0 flex-between overflow-hidden">
           <div
             ref={leftRef}

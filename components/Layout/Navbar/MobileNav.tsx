@@ -98,7 +98,7 @@ const MobileNav = () => {
                     className={`w-full capitalize text-2xl font-semibold ${
                       isActive
                         ? "text-primary font-semibold"
-                        : "text-white active:translate-y-0.5"
+                        : "text-white active:translate-y-0.5 w-fit hover-underline-lr"
                     }`}
                   >
                     {link.head}

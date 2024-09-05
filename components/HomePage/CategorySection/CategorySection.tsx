@@ -2,8 +2,8 @@
 
 import React, { useState } from "react";
 import { carouselItems } from "@/lib/data";
-import CategoryCard from "../ui/category/CategoryCard";
-import CategoryCarousel from "../ui/category/CategoryCarousel";
+import CategoryCard from "./CategoryCard";
+import CategoryCarousel from "../../ui/category/CategoryCarousel";
 
 const CategorySection: React.FC = () => {
   const [activeSlide, setActiveSlide] = useState<number>(0);

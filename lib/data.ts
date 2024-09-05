@@ -119,31 +119,43 @@ export const cardList: CardValues[] = [
 export const carouselItems = [
   {
     id: 1,
+    title: "Black Coat",
+    href: "/Product Black Coat",
     imageUrl:
       "https://csk-demo.netlify.app/assets/img/media_20240710_190936_2842665475252130661.png",
   },
   {
     id: 2,
+    title: "Kurta",
+    href: "/Product Kurta",
     imageUrl:
       "https://csk-demo.netlify.app/assets/img/media_20240710_190937_843411630433170671.png",
   },
   {
     id: 3,
+    title: "Shirt",
+    href: "/Product Shirt",
     imageUrl:
       "https://csk-demo.netlify.app/assets/img/media_20240710_190937_9152305180124524051.png",
   },
   {
     id: 4,
+    title: "Black Coat",
+    href: "/Product Black Coat",
     imageUrl:
       "https://csk-demo.netlify.app/assets/img/media_20240710_190936_2842665475252130661.png",
   },
   {
     id: 5,
+    title: "Kurta",
+    href: "/Product Kurta",
     imageUrl:
       "https://csk-demo.netlify.app/assets/img/media_20240710_190937_843411630433170671.png",
   },
   {
     id: 6,
+    title: "Shirt",
+    href: "/Product Shirt",
     imageUrl:
       "https://csk-demo.netlify.app/assets/img/media_20240710_190937_9152305180124524051.png",
   },

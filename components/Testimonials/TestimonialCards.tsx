@@ -5,17 +5,22 @@ import { FaPlay } from "react-icons/fa";
 
 const TestimonialCards = () => {
   const videoRef = useRef<HTMLVideoElement | null>(null);
-  const [isPlaying, setIsPlaying] = useState(true);
+  const [isPlaying, setIsPlaying] = useState<boolean>(true);
+  const [isHovering, setIsHovering] = useState<boolean>(false);
 
   const handleMouseEnter = () => {
-    if (!videoRef.current || !isPlaying) return;
-    videoRef.current.play();
+    setIsHovering(true);
+    if (videoRef.current && isPlaying) {
+      videoRef.current.play();
+    }
   };
 
   const handleMouseLeave = () => {
-    if (!videoRef.current) return;
-    videoRef.current.pause();
-    setIsPlaying(true);
+    setIsHovering(false);
+    if (videoRef.current) {
+      videoRef.current.pause();
+      setIsPlaying(true);
+    }
   };
 
   const handleVideoClick = () => {
@@ -26,6 +31,7 @@ const TestimonialCards = () => {
       } else {
         videoRef.current.pause();
         setIsPlaying(false);
+        setIsHovering(false);
       }
     }
   };
@@ -38,7 +44,7 @@ const TestimonialCards = () => {
     >
       <div
         className={`absolute inset-0 z-10 w-full h-full cursor-pointer flex items-center justify-center ${
-          isPlaying ? "shadow-none" : "shadow-[inset_0_0_30px_rgba(0,0,0,0.5)]"
+          isHovering ? "shadow-none" : "shadow-[inset_0_0_30px_rgba(0,0,0,0.5)]"
         }`}
         onClick={handleVideoClick}
       >

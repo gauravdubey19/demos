@@ -89,7 +89,7 @@ const Navbar: React.FC<{ appName?: string }> = ({ appName = "LOGO" }) => {
               className={`capitalize cursor-pointer ${
                 isActive
                   ? "text-primary font-semibold"
-                  : "hover:border-b hover:border-b-primary active:translate-y-0.5"
+                  : "w-fit hover-underline-lr active:translate-y-0.5"
               } ease-in-out duration-200`}
             >
               {link.head}
