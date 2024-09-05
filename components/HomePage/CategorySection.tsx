@@ -9,7 +9,7 @@ const CategorySection: React.FC = () => {
   const [activeSlide, setActiveSlide] = useState<number>(0);
 
   return (
-    <section className="h-[calc(100vh-60px)] flex-center flex-col px-4">
+    <section className="h-[calc(100vh-60px)] flex-center flex-col p-4">
       <div className="w-full max-w-3xl mb-5">
         <div className="h-[2px] bg-black w-full mb-5" />
         <h1 className="text-4xl font-bold text-center">Choose Your Style</h1>
