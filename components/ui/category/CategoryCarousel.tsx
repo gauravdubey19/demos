@@ -22,7 +22,7 @@ const CategoryCarousel: React.FC<CategoryCarouselProps> = ({
     autoplaySpeed: 2000,
     centerMode: true,
     infinite: true,
-    centerPadding: "10px",
+    centerPadding: "100px",
     slidesToShow: 3,
     speed: 500,
     // nextArrow: <ChevronRight height={60} width={60} color="#ffb433" />,
@@ -33,7 +33,7 @@ const CategoryCarousel: React.FC<CategoryCarouselProps> = ({
         breakpoint: 768,
         settings: {
           slidesToShow: 1,
-          centerPadding: "60px",
+          centerPadding: "100px",
         },
       },
     ],
