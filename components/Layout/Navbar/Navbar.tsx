@@ -10,7 +10,7 @@ import { links } from "@/lib/data";
 import MobileNav from "./MobileNav";
 import { IoCart } from "react-icons/io5";
 
-const Navbar: React.FC<{ appName: string }> = ({ appName }) => {
+const Navbar: React.FC<{ appName?: string }> = ({ appName = "LOGO" }) => {
   const [isVisible, setIsVisible] = useState<boolean>(false);
   const navbarRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();

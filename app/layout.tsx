@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { Montserrat } from "next/font/google";
 import { CursorProvider } from "@/context/CursorProvider";
-import Navbar from "@/components/Navbar/Navbar";
+import Navbar from "@/components/Layout/Navbar/Navbar";
+import Footer from "@/components/Layout/Footer";
 import "./globals.css";
 
 const inter = Montserrat({ subsets: ["latin"] });
@@ -24,6 +25,7 @@ export default function RootLayout({
         <CursorProvider>
           <Navbar appName="CSK" />
           {children}
+          <Footer appName="CSK Textile" />
         </CursorProvider>
       </body>
     </html>
