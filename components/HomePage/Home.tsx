@@ -4,6 +4,7 @@ import CategorySection from "./CategorySection";
 import GsapHero from "./GsapHero";
 // import Hero from "./Hero";
 import GridCards from "../Grids/GridCards";
+import TestimonialContainer from "../Testimonials/TestimonialContainer";
 
 const Home = () => {
   return (
@@ -26,6 +27,7 @@ const Home = () => {
         href={"/Product Category 3"}
         carousel={cardList}
       />
+      <TestimonialContainer/>
     </>
   );
 };
