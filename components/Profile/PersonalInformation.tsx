@@ -1,5 +1,6 @@
 import React from "react";
 import { Button } from "../ui/button";
+import { InputFieldProps } from "@/lib/types";
 
 const PersonalInformation = () => {
   return (
@@ -47,13 +48,6 @@ const ContactSection = () => (
     </div>
   </section>
 );
-
-interface InputFieldProps {
-  id: string;
-  label: string;
-  defaultValue?: string;
-  type?: string;
-}
 
 const InputField: React.FC<InputFieldProps> = ({
   id,

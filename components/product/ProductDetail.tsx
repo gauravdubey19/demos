@@ -18,79 +18,12 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { IoMdStar, IoIosArrowForward, IoIosArrowBack } from "react-icons/io";
-
-interface ProductDetailProps {
-  product: {
-    title: string;
-    images: string[];
-    mainImage: string;
-    description: string;
-    price: number;
-    oldPrice: number;
-    discount: number;
-    ratings: number;
-    reviews: number;
-    sizes: string[];
-    colors: string[];
-    material: string;
-    fabricType: string;
-    careInstructions: string;
-    origin: string;
-    availableSizes: string[];
-    colorOptions: string[];
-    countryOfManufacture: string;
-    faqs: {
-      question: string;
-      answer: string;
-    }[];
-  };
-}
-
-interface DetailsProps {
-  product: {
-    title: string;
-    description: string;
-    price: number;
-    oldPrice: number;
-    discount: number;
-    ratings: number;
-    reviews: number;
-    sizes: string[];
-    colors: string[];
-    material: string;
-    fabricType: string;
-    careInstructions: string;
-    origin: string;
-    availableSizes: string[];
-    colorOptions: string[];
-    countryOfManufacture: string;
-    faqs: {
-      question: string;
-      answer: string;
-    }[];
-  };
-}
-
-interface ImageGalleryProps {
-  images: string[];
-  initialMainImage: string;
-}
-
-interface AdditionalInfoProps {
-  product: {
-    material: string;
-    fabricType: string;
-    careInstructions: string;
-    origin: string;
-    availableSizes: string[];
-    colorOptions: string[];
-    countryOfManufacture: string;
-    faqs: {
-      question: string;
-      answer: string;
-    }[];
-  };
-}
+import {
+  AdditionalInfoProps,
+  DetailsProps,
+  ImageGalleryProps,
+  ProductDetailProps,
+} from "@/lib/types";
 
 const ProductDetail: React.FC<ProductDetailProps> = ({ product }) => {
   return (
@@ -279,7 +212,7 @@ const Details: React.FC<DetailsProps> = ({ product }) => {
 
       {/* Pricing and Discount */}
       <div className="flex items-end gap-2">
-        <span className="text-4xl font-bold">${product.price.toFixed(2)}</span>
+        <span className="text-4xl font-bold">₹{product.price.toFixed(2)}</span>
         {product.discount > 0 && (
           <span className="text-md text-green-500 font-medium">
             {product.discount}% off
@@ -294,7 +227,9 @@ const Details: React.FC<DetailsProps> = ({ product }) => {
             <IoMdStar
               key={index}
               size={15}
-              className={index < product.ratings ? "fill-primary" : "fill-gray-500"}
+              className={
+                index < product.ratings ? "fill-primary" : "fill-gray-500"
+              }
             />
           ))}
         </div>

@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
-import { SectionProps } from "./Sidebar";
 import PersonalInformation from "./PersonalInformation";
 import { replaceHyphensWithSpaces } from "@/lib/utils";
+import { SectionProps } from "@/lib/types";
 
 const Section: React.FC<SectionProps> = ({ section }) => {
   return (
@@ -10,7 +10,11 @@ const Section: React.FC<SectionProps> = ({ section }) => {
         <h2 className="capitalize text-xl font-bold tracking-tight">
           {replaceHyphensWithSpaces(section)}
         </h2>
-        {section === "personal-information" && <Button className="bg-transparent text-primary border border-primary rounded-none active:translate-y-0.5">Edit Profile</Button>}
+        {section === "personal-information" && (
+          <Button className="bg-transparent text-primary border border-primary rounded-none active:translate-y-0.5">
+            Edit Profile
+          </Button>
+        )}
       </div>
       <div className="w-full h-full overflow-y-scroll over-x">
         {section === "personal-information" && <PersonalInformation />}

@@ -6,23 +6,7 @@ import { LuFileHeart } from "react-icons/lu";
 import { RiMoneyDollarCircleLine, RiUserSettingsLine } from "react-icons/ri";
 import { PiWarningCircleThin } from "react-icons/pi";
 import Link from "next/link";
-
-export interface SectionValues {
-  id:
-    | "personal-information"
-    | "order-history"
-    | "wishlist"
-    | "payment-methods"
-    | "account-settings"
-    | "customer-support-&-help"
-    | string;
-  head: string;
-  icon: React.ReactNode;
-}
-
-export interface SectionProps {
-  section: string;
-}
+import { SectionProps, SectionValues } from "@/lib/types";
 
 const Sidebar: React.FC<SectionProps> = ({ section }) => {
   // console.log(section);
