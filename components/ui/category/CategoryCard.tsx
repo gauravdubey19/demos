@@ -8,7 +8,7 @@ interface CategoryCard {
   index: any;
 }
 
-const Card = ({ item, activeSlide, index }: CategoryCard) => {
+const CategoryCard = ({ item, activeSlide, index }: CategoryCard) => {
   return (
     <div className="px-2">
       <div
@@ -44,4 +44,4 @@ const Card = ({ item, activeSlide, index }: CategoryCard) => {
   );
 };
 
-export default Card;
+export default CategoryCard;

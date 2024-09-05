@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { carouselItems } from "@/lib/data";
-import Card from "../ui/category/Card";
+import CategoryCard from "../ui/category/CategoryCard";
 import CategoryCarousel from "../ui/category/CategoryCarousel";
 
 const CategorySection: React.FC = () => {
@@ -18,7 +18,7 @@ const CategorySection: React.FC = () => {
         <div className="slider-container max-w-6xl w-full">
           <CategoryCarousel setActiveSlide={setActiveSlide}>
             {carouselItems.map((item, index) => (
-              <Card
+              <CategoryCard
                 key={item.id}
                 item={item}
                 activeSlide={activeSlide}

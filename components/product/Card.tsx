@@ -3,15 +3,11 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { CardValues } from "@/lib/types";
+import { CardDetails } from "@/lib/types";
 import { Button } from "../ui/button";
 import { IoMdStar } from "react-icons/io";
 import { GoHeart, GoHeartFill } from "react-icons/go";
 import { MdOutlineAddShoppingCart } from "react-icons/md";
-
-interface CardDetails {
-  card: CardValues;
-}
 
 const Card: React.FC<CardDetails> = ({ card }) => {
   const [fav, setFav] = useState<boolean>(false);
@@ -64,7 +60,7 @@ const Card: React.FC<CardDetails> = ({ card }) => {
             </div>
           </div>
           <div className="flex gap-2 items-end">
-            <span className="text-lg md:text-xl font-bold">${card.price}</span>
+            <span className="text-lg md:text-xl font-bold">₹{card.price}</span>
             <div className="relative text-sm md:text-md text-gray-400">
               <span className="absolute top-[50%] w-full h-[1px] bg-gray-500"></span>
               ${card.oldPrice}
