@@ -25,33 +25,33 @@ const GridCards = () => {
   };
 
   return (
-    <div className='md:h-screen w-full'>
-      <div className='flex flex-col md:flex-row items-start justify-between md:px-20 sm:px-5 px-1 w-full gap-2 sm:gap-4 h-[75%]'>
+    <div className='h-screen w-full'>
+      <div className='flex flex-col md:flex-row items-start justify-between md:px-20 sm:px-20 px-2 w-full gap-2 sm:gap-4 md:h-[75%] h-[85%]'>
         {/* Column 1 */}
         <div className='flex md:flex-col flex-row sm:gap-4 gap-2 md:w-[30%] w-full h-[30%] md:h-full'>
           <div className='md:h-[50%] w-full bg-[#F4F4F4] rounded-3xl  flex items-center justify-center'>
-            <Image src={outfits[currentOutfit][0]} alt="image" width={100} height={100} className="w-full h-auto md:p-[6rem] xl:p-[8rem] p-9 object-contain" />
+            <Image src={outfits[currentOutfit][0]} alt="image" width={100} height={100} className="w-full h-auto sm:p-[5rem] md:p-[6rem] xl:p-[8rem] p-9 object-contain" />
           </div>
           <div className='md:h-[50%] w-full bg-[#F4F4F4] rounded-3xl flex items-center justify-center'>
-            <Image src={outfits[currentOutfit][1]} alt="image" width={100} height={100} className="w-full h-auto md:p-[6rem] xl:p-[8rem] p-9 object-contain" />
+            <Image src={outfits[currentOutfit][1]} alt="image" width={100} height={100} className="w-full h-auto md:p-[5rem] sm:p-[6rem] xl:p-[8rem] p-9 object-contain" />
           </div>
         </div>
 
         {/* Column 2 */}
         <div className='flex flex-col md:w-[40%] w-full h-[40%] md:h-[103%]'>
-          <div className='md:h-full py-10 w-full bg-[#F4F4F4] rounded-3xl flex items-center justify-center flex-col gap-10'>
+          <div className='md:h-full md:py-10 py-4 w-full bg-[#F4F4F4] rounded-3xl flex items-center justify-center flex-col md:gap-10 gap-5'>
             <h1 className='capitalize font-bold text-xl md:text-2xl text-wrap text-[#767676]'>Magician coat</h1>
-            <Image src={outfits[currentOutfit][2]} className='md:w-[150px] w-[120px]' alt={`image`} />
+            <Image  src={outfits[currentOutfit][2]} className='md:w-[150px] sm:w-[60px]  w-[75px] ' alt={`image`} />
           </div>
         </div>
 
         {/* Column 3 */}
         <div className='flex md:flex-col flex-row sm:gap-4 gap-2 md:w-[30%] h-[30%] w-full md:h-full'>
           <div className='md:h-[50%] w-full bg-[#F4F4F4] rounded-3xl flex items-center justify-center'>
-            <Image src={outfits[currentOutfit][3]} alt="image" width={100} height={100} className="w-full h-auto md:p-[6rem] xl:p-[8rem] p-9 object-contain" />
+            <Image src={outfits[currentOutfit][3]} alt="image" width={100} height={100} className="w-full h-auto sm:p-[5rem] md:p-[6rem] xl:p-[8rem] p-9 object-contain" />
           </div>
           <div className='md:h-[50%] w-full bg-[#F4F4F4] rounded-3xl flex items-center h-full justify-center'>
-            <Image src={outfits[currentOutfit][4]} alt="image" width={100} height={100} className="w-full h-auto md:p-[6rem] xl:p-[8rem] p-9 object-contain" />
+            <Image src={outfits[currentOutfit][4]} alt="image" width={100} height={100} className="w-full h-auto sm:p-[5rem] md:p-[6rem] xl:p-[8rem] p-9 object-contain" />
           </div>
         </div>
       </div>
