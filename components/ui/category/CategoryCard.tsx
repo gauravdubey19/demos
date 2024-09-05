@@ -72,7 +72,7 @@ const CategoryCard: React.FC<CategoryCardProps> = ({ item, activeSlide, index })
           width={100}
           height={100}
           className="w-full h-auto max-h-[20rem] object-cover transition-all duration-300"
-        />
+          />
         <div className="flex items-center flex-col gap-3 w-full sm:w-[70%] mt-4">
           <div className="flex items-center flex-col text-center">
             <h1 className="text-lg font-semibold">{item.title}</h1>
