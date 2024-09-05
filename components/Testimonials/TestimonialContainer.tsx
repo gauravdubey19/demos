@@ -27,32 +27,24 @@
 
 // export default TestimonialContainer
 
-
-"use client"
-import React, { useState } from 'react';
-import { MoveRight } from 'lucide-react';
-import Image from 'next/image';
+import React from 'react';
 import TestimonialCards from './TestimonialCards';
-import Sliders from './Sliders';
 
 const TestimonialContainer = () => {
-    const [activeSlide, setActiveSlide] = useState<number>(0);
     return (
-        <div className='px-20'>
-            <h1 className="text-4xl font-bold text-center">Our Testimonies</h1>
+        <div className="md:px-20">
+            <h1 className="text-4xl font-bold text-center mb-10">Our Testimonies</h1>
 
-            <div className='bg-[#FFBC49] h-[60vh] w-full mt-10 overflow-hidden flex items-center px-10'>
-                <h1 className='w-[20%] text-4xl font-semibold text-white flex items-center'>
-                    What our customers Say
-                    <MoveRight className='ml-4' height={80} width={80} />
-                </h1>
-                {/* Slider Container */}
-                <div className='h-full w-[80%] flex-1 py-20 px-1'>
-                    <Sliders setActiveSlide={setActiveSlide}>
-                        <TestimonialCards  />
-                        <TestimonialCards  />
-                        <TestimonialCards  />
-                    </Sliders>
+            <div className="relative w-full overflow-hidden">
+                <div className="absolute inset-y-0 left-0 md:bg-gradient-to-r from-white to-transparent w-8 z-10"></div>
+                <div className="absolute inset-y-0 right-0 md:bg-gradient-to-l from-white to-transparent w-8 z-10"></div>
+
+                <div className="overflow-x-auto pb-4 scrollbar-hide">
+                    <div className="flex gap-4 w-max px-4">
+                        {[...Array(8)].map((_, index) => (
+                            <TestimonialCards key={index} />
+                        ))}
+                    </div>
                 </div>
             </div>
         </div>

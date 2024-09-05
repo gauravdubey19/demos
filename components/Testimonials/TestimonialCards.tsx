@@ -1,26 +1,42 @@
-import React from 'react'
-import star from '@/public/images/Star.png'
-import Image from 'next/image';
+"use client"
+import React, { useRef, useState } from 'react';
 
 const TestimonialCards = () => {
-  return (
-      <div className='w-[19rem] h-[20rem] bg-white p-2 flex items-center justify-between flex-col'>
-          <video controls style={{ width: '500px', height: '500px' }}>
-              <source src='https://ik.imagekit.io/ikmedia/example_video.mp4' />
-          </video>
-          <div className='flex flex-col items-start w-full justify-start '>
-              <h2 className='font-semibold text-xl'>Adarsh Gupta</h2>
-              <div className='flex flex-row justify-between w-full'>
-                  <h4 className='text-sm text-[#ADADAD]'>Fullstack Dev</h4>
-                  <div className='flex flex-row'>
-                      <h4 className='text-sm text-[#ADADAD]'>4.9 </h4>
-                      <Image height={20} width={20} src={star} alt={'star'} />
-                  </div>
-              </div>
-              <p className='text-sm text-[#ADADAD] pt-5'>Lorem ipsum dolor, sit amet consectetur adipisicing elit. </p>
-          </div>
-      </div>
-  )
-}
+    const videoRef = useRef<HTMLVideoElement | null>(null); // Specify the type
+    const [isHovering, setIsHovering] = useState(false);
 
-export default TestimonialCards
+    const handleMouseEnter = () => {
+        setIsHovering(true);
+        if (videoRef.current) {
+            videoRef.current.play(); // No error now
+        }
+    };
+
+    const handleMouseLeave = () => {
+        setIsHovering(false);
+        if (videoRef.current) {
+            videoRef.current.pause();
+        }
+    };
+
+    return (
+        <div
+            className='md:w-[15rem] w-[13rem] h-[20rem] md:h-[25rem] rounded-xl overflow-hidden bg-white flex items-center justify-between flex-col'
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
+        >
+            <video
+                ref={videoRef}
+                
+                loop
+                playsInline
+                className='w-full h-full object-cover'
+            >
+                <source src='https://cdn.shopify.com/videos/c/o/v/c2c6651fcf274ea195057f49b0b2e7b4.mp4' type="video/mp4" />
+                Your browser does not support the video tag.
+            </video>
+        </div>
+    );
+};
+
+export default TestimonialCards;
