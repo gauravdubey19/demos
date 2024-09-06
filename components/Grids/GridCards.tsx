@@ -34,7 +34,7 @@ const GridCards = () => {
   };
 
   return (
-    <div className='h-screen'>
+    <div className='sm:h-screen '>
     <div className='h-full w-full flex flex-col justify-evenly gap-5'>
       <div className='flex flex-col md:flex-row items-start gap-2 justify-evenly md:px-20 sm:px-20 px-2 w-full sm:gap-4 md:h-[75%] sm:h-[60%] h-[85%]'>
         {/* Column 1 */}
@@ -66,7 +66,7 @@ const GridCards = () => {
         </div>
       </div>
 
-      <div className='flex flex-row gap-4 md:gap-10 items-end justify-center pb-10 '>
+      <div className='flex flex-row gap-4 mt-5 md:gap-10 items-end justify-center pb-10 '>
         {outfits.map((_, index) => (
           <CircularButton pic={icon} index={index} key={index} onClick={() => handleButtonClick(index)} />
         ))}
