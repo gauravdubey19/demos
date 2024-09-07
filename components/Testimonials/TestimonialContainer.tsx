@@ -43,9 +43,9 @@ const TestimonialContainer = () => {
         <div className="absolute inset-y-0 left-0 md:bg-gradient-to-r from-white to-transparent w-8 z-10"></div>
         <div className="absolute inset-y-0 right-0 md:bg-gradient-to-l from-white to-transparent w-8 z-10"></div>
 
-        <div ref={panelsRef} className="w-full flex gap-4 px-4">
+        <div ref={panelsRef} className="w-full flex gap-4 px-4 ">
           {[...Array(8)].map((_, index) => (
-            <div key={index} className="panel w-screen">
+            <div key={index} className="panel w-screen ">
               <TestimonialCards />
             </div>
           ))}
