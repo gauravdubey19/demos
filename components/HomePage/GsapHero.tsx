@@ -271,3 +271,4 @@ const RightContainer: React.FC<{ showRight: boolean }> = ({ showRight }) => {
     </div>
   );
 };
+
