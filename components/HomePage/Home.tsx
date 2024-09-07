@@ -9,25 +9,27 @@ import TestimonialContainer from "../Testimonials/TestimonialContainer";
 const Home = () => {
   return (
     <>
-      <GsapHero />
-      <CategorySection />
-      <GridCards />
-      <ProductSection
-        category="Product Category 1"
-        href={"/Product Category 1"}
-        carousel={cardList}
-      />
-      <ProductSection
-        category="Product Category 2"
-        href={"/Product Category 2"}
-        carousel={cardList}
-      />
-      <ProductSection
-        category="Product Category 3"
-        href={"/Product Category 3"}
-        carousel={cardList}
-      />
-      <TestimonialContainer />
+      <main>
+        <GsapHero />
+        <CategorySection />
+        <GridCards />
+        <ProductSection
+          category="Product Category 1"
+          href={"/products/Product Category 1"}
+          carousel={cardList}
+        />
+        <ProductSection
+          category="Product Category 2"
+          href={"/products/Product Category 2"}
+          carousel={cardList}
+        />
+        <ProductSection
+          category="Product Category 3"
+          href={"/products/Product Category 3"}
+          carousel={cardList}
+        />
+        <TestimonialContainer />
+      </main>
     </>
   );
 };

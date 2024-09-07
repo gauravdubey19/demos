@@ -2,11 +2,11 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import MagneticDiv from "../ui/MagnaticDiv";
 import { footer } from "@/lib/data";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { FormStatus } from "@/lib/types";
+import MagneticDiv from "./ui/MagnaticDiv";
 
 const Footer: React.FC<{ appName?: string }> = ({ appName = "LOGO" }) => {
   return (
