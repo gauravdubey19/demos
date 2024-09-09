@@ -1,3 +1,5 @@
+import AuthPage from "@/components/Auth/AuthPage";
+
 export default function SignInPage() {
-  return <div>SignInPage</div>;
+  return <AuthPage/>;
 }
