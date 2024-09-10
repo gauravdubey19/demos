@@ -1,7 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import Carousel from "../ui/Carousel";
-import Card from "../Product/Card";
+import Card from "../Products/Card";
 import { ProductSectionProps } from "@/lib/types";
 import { IoIosArrowForward } from "react-icons/io";
 
