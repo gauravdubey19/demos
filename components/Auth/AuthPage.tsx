@@ -2,8 +2,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import AuthContainer from "./AuthContainer";
-import { SignupForm } from "./SignupForm";
-import { LoginForm } from "./LoginForm";
 
 const AuthPage = () => {
   const [isSignup, setIsSignup] = useState(false);
