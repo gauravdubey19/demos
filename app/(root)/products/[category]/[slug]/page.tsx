@@ -1,5 +1,5 @@
-import ProductDetail from "@/components/Product/ProductDetail";
 import { ProductCategoryDetailParams } from "@/lib/types";
+import ProductDetail from "@/components/Product/ProductDetail";
 
 export default function ProductDetailPage({
   params,

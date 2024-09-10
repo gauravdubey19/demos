@@ -1,8 +1,8 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { connectToDB } from "@/utils/db";
 import Products from "@/models/Products";
 
-export const POST = async (request: { json: () => any }) => {
+export const POST = async (request: NextRequest) => {
   try {
     const {
       title,

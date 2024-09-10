@@ -1,7 +1,7 @@
 import React from "react";
-import Card from "./Card";
 import { ProductCategoryProps } from "@/lib/types";
 import MobileFilter from "./MobileFilter";
+import Card from "./Card";
 
 const ProductCategory: React.FC<ProductCategoryProps> = ({
   category,
