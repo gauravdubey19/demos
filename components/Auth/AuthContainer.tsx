@@ -53,7 +53,7 @@ const AuthContainer = ({ children, handleToggleForm, isSignup }: AuthContainerI)
                                 </>
                             ) : (
                                 <>
-                                    Don't have an account?
+                                    Don&apos;t have an account?
                                     <button
                                         onClick={handleToggleForm}
                                         className='ml-2 text-blue-500 hover:text-blue-700'

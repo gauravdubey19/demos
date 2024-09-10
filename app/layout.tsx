@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { Montserrat } from "next/font/google";
 import "./globals.css";
+import SessionProviderC from "@/context/SessionProviderC";
 
 const inter = Montserrat({ subsets: ["latin"] });
-// This is a testing comment if my code is pushed or not ~Ashri
 
 export const metadata: Metadata = {
   title: "CSK Textile",
@@ -19,7 +19,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <SessionProviderC>
       <body className={inter.className}>{children}</body>
+      </SessionProviderC>
     </html>
   );
 }
