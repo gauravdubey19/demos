@@ -61,9 +61,6 @@ const Navbar: React.FC<{ appName?: string }> = ({ appName = "LOGO" }) => {
     }
   }, [isVisible]);
 
-  useEffect(() => {
-    console.log("session: ", session);
-  }, [session]);
   return (
     <div
       ref={navbarRef}
@@ -71,6 +68,7 @@ const Navbar: React.FC<{ appName?: string }> = ({ appName = "LOGO" }) => {
       style={{ transform: "translateY(-100px)", opacity: 0 }}
     >
       <Link
+      shallow
         href="/"
         className="flex-between gap-1 text-2xl lg:text-3xl font-black overflow-hidden"
       >
@@ -89,6 +87,7 @@ const Navbar: React.FC<{ appName?: string }> = ({ appName = "LOGO" }) => {
           const isActive = pathname === link.href;
           return (
             <Link
+            shallow
               href={link.href}
               key={index}
               className={`capitalize cursor-pointer ${
@@ -103,6 +102,7 @@ const Navbar: React.FC<{ appName?: string }> = ({ appName = "LOGO" }) => {
         })}
         <div className="ml-2 flex gap-3">
           <Link
+          shallow
             href={"/#cart"}
             className="relative w-10 h-10 rounded-full border border-[#D3D3D3] flex-center"
           >
@@ -111,6 +111,7 @@ const Navbar: React.FC<{ appName?: string }> = ({ appName = "LOGO" }) => {
           </Link>
           {session?.user ? (
             <Link
+            shallow
               href={"/profile/personal-information"}
               className="w-10 h-10 rounded-full overflow-hidden"
             >
@@ -124,6 +125,7 @@ const Navbar: React.FC<{ appName?: string }> = ({ appName = "LOGO" }) => {
             </Link>
           ) : (
             <Link
+            shallow
               href={"/sign-in"}
               className="capitalize cursor-pointer px-4 py-2 rounded ring-1 ring-primary shadow-md text-black hover:text-white hover:bg-primary ease-in-out duration-300"
             >
