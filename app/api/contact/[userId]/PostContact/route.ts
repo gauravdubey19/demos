@@ -34,6 +34,7 @@ export async function POST(req: NextRequest, { params }: { params: { userId: str
     await connectToDB();
 
     const { userId } = params;
+    console.log(userId)
 
     if (!userId) {
         return NextResponse.json({ error: 'User ID is required' }, { status: 400 });
@@ -63,7 +64,7 @@ export async function POST(req: NextRequest, { params }: { params: { userId: str
         // Return the saved contact
         return NextResponse.json(result, { status: 200 });
     } catch (error) {
-        console.error('Error sending contact message:', error);
-        return NextResponse.json({ error: 'Error sending contact message' }, { status: 500 });
+        console.error('Error Creating contact:', error);
+        return NextResponse.json({ error: 'Error Creating contact message' }, { status: 500 });
     }
 }
