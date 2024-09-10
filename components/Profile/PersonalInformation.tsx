@@ -1,18 +1,32 @@
+"use client";
+
 import React from "react";
 import { Button } from "../ui/button";
 import { InputFieldProps } from "@/lib/types";
+import { signOut } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 const PersonalInformation = () => {
+  const router = useRouter();
   return (
     <>
       <section className="flex-1 p-2 md:p-4 bg-gray-50 space-y-6">
         <PersonalSection />
         <ContactSection />
       </section>
-      <div className="flex justify-end p-2 md:p-4">
+      <div className="flex flex-row justify-end p-2 md:p-4 gap-x-2">
+        <Button
+          className="font-bold text-sm md:text-base active:translate-y-0.5 border-red-500 text-red-500 bg-white border-1 border rounded-none hover:bg-red-600 hover:text-white"
+          onClick={() => {
+            signOut();
+            router.replace("/");
+          }}
+        >
+          Logout
+        </Button>
         <Button
           variant="destructive"
-          className="font-bold text-sm md:text-base rounded-none active:translate-y-0.5"
+          className="font-bold text-sm md:text-base rounded-none active:translate-y-0.5 hover:bg-red-600 "
         >
           Delete your Account
         </Button>

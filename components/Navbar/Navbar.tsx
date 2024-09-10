@@ -9,9 +9,11 @@ import { useCursor } from "@/context/CursorProvider";
 import { links } from "@/lib/data";
 import MobileNav from "./MobileNav";
 import { IoCart } from "react-icons/io5";
+import { useSession } from "next-auth/react";
 
 const Navbar: React.FC<{ appName?: string }> = ({ appName = "LOGO" }) => {
   const [isVisible, setIsVisible] = useState<boolean>(false);
+  const { data: session } = useSession();
   const navbarRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
   const { showLeft, showRight } = useCursor();
@@ -59,6 +61,9 @@ const Navbar: React.FC<{ appName?: string }> = ({ appName = "LOGO" }) => {
     }
   }, [isVisible]);
 
+  useEffect(() => {
+    console.log("session: ", session);
+  }, [session]);
   return (
     <div
       ref={navbarRef}
@@ -104,18 +109,27 @@ const Navbar: React.FC<{ appName?: string }> = ({ appName = "LOGO" }) => {
             <div className="absolute top-0.5 right-0.5 w-1.5 h-1.5 bg-primary rounded-full"></div>
             <IoCart size={25} className="fill-[#717171]" />
           </Link>
-          <Link
-            href={"/profile/personal-information"}
-            className="w-10 h-10 rounded-full overflow-hidden"
-          >
-            <Image
-              src="/assets/card.jpeg"
-              alt="profile"
-              width={200}
-              height={200}
-              className="w-full h-full"
-            />
-          </Link>
+          {session?.user ? (
+            <Link
+              href={"/profile/personal-information"}
+              className="w-10 h-10 rounded-full overflow-hidden"
+            >
+              <Image
+                src="/assets/card.jpeg"
+                alt="profile"
+                width={200}
+                height={200}
+                className="w-full h-full"
+              />
+            </Link>
+          ) : (
+            <Link
+              href={"/sign-in"}
+              className="capitalize cursor-pointer px-4 py-2 rounded ring-1 ring-primary shadow-md text-black hover:text-white hover:bg-primary ease-in-out duration-300"
+            >
+              login
+            </Link>
+          )}
         </div>
       </nav>
     </div>

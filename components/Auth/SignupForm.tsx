@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import { LogIn } from "lucide-react";
 
-export function SignupForm() {
+export default function SignupForm() {
   // State to manage the visibility of the password
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
