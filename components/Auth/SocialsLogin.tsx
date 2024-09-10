@@ -25,7 +25,7 @@ const SocialsLogin = () => {
     })();
   }, []);
   useEffect(() => {
-    console.log(providers);
+    // console.log(providers);
   }, [providers]);
 
   return (

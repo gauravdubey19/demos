@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useRef, useCallback, useEffect } from "react";
-import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import {
@@ -22,12 +21,51 @@ import {
   AdditionalInfoProps,
   DetailsProps,
   ImageGalleryProps,
-  ProductDetailProps,
+  ProductDetailValues,
 } from "@/lib/types";
 
-const ProductDetail: React.FC<ProductDetailProps> = ({ product }) => {
+const ProductDetail: React.FC<{ slug: string }> = ({ slug }) => {
+  const [product, setProduct] = useState<ProductDetailValues | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+
+  useEffect(() => {
+    const fetchProductBySlug = async () => {
+      try {
+        setLoading(true);
+        const res = await fetch("/api/products/read/get-by-slug", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ slug }),
+        });
+
+        if (!res.ok) {
+          throw new Error("Failed to fetch product");
+        }
+
+        const data = await res.json();
+        setProduct(data.product);
+      } catch (error) {
+        console.error("Error fetching product:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProductBySlug();
+  }, [slug]);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (!product) {
+    return <div>Product not found</div>;
+  }
+
+  // console.log(product);
+
   return (
-    <div className="grid lg:grid-cols-2 gap-6 lg:gap-12 items-start max-w-6xl px-4 mx-auto py-4">
+    <div className="grid lg:grid-cols-2 gap-6 lg:gap-12 items-start max-w-6xl px-4 mx-auto py-4 mt-[60px]">
       <ImageGallery
         images={product.images}
         initialMainImage={product.mainImage}
@@ -154,7 +192,7 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({
             className={`absolute top-0 z-10 flex-center group cursor-pointer ${
               isMobileView
                 ? "-left-1 h-full w-10 bg-gradient-to-r from-white to-transparent"
-                : "w-full h-20 bg-gradient-to-b from-white to-transparent"
+                : "w-full h-16 bg-gradient-to-b from-white to-transparent"
             } ease-in-out duration-200`}
           >
             <IoIosArrowBack
@@ -174,7 +212,7 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({
             className={`absolute bottom-0 z-10 flex-center group cursor-pointer ${
               isMobileView
                 ? "-right-1 h-full w-10 bg-gradient-to-l from-white to-transparent"
-                : "w-full h-20 bg-gradient-to-b from-transparent to-white"
+                : "w-full h-16 bg-gradient-to-b from-transparent to-white"
             } ease-in-out duration-200`}
           >
             <IoIosArrowForward
@@ -201,7 +239,8 @@ const Details: React.FC<DetailsProps> = ({ product }) => {
   };
 
   const defaultSize =
-    sizeLabels[product.sizes[1].toLowerCase()] || product.sizes[1];
+    sizeLabels[product.availableSizes[1].toLowerCase()] ||
+    product.availableSizes[1];
 
   return (
     <div className="grid gap-6">
@@ -233,7 +272,7 @@ const Details: React.FC<DetailsProps> = ({ product }) => {
             />
           ))}
         </div>
-        | <span className="text-primary">{product.reviews} reviews</span>
+        | <span className="text-primary">{product.reviews.length} reviews</span>
       </div>
 
       {/* Size Selection and Buttons */}
@@ -248,7 +287,7 @@ const Details: React.FC<DetailsProps> = ({ product }) => {
               <SelectValue placeholder="Select size" />
             </SelectTrigger>
             <SelectContent>
-              {product.sizes.map((size) => (
+              {product.availableSizes.map((size) => (
                 <SelectItem key={size} value={size}>
                   {sizeLabels[size] || size}
                 </SelectItem>

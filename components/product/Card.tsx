@@ -27,12 +27,12 @@ const Card: React.FC<CardDetails> = ({ card }) => {
             )}
           </div>
           <Link
-            href={`/category/${card.head}`}
+            href={`/products/category/${card.slug}`}
             className="w-full h-full group-hover:scale-105 ease-in-out duration-300"
           >
             <Image
               src={card.img}
-              alt={card.head}
+              alt={card.title}
               width={400}
               height={400}
               loading="lazy"
@@ -43,7 +43,7 @@ const Card: React.FC<CardDetails> = ({ card }) => {
         <div className="h-auto w-full flex justify-between flex-col gap-1 p-1.5 md:px-2.5 overflow-hidden">
           <div className="">
             <div className="h-fit w-full text-lg md:text-xl font-semibold line-clamp-1">
-              {card.head}
+              {card.title}
             </div>
             <div className="h-fit w-full text-[11px] text-xs font-light text-[#818181] flex gap-1">
               <span className="flex gap-0.5">
@@ -70,7 +70,7 @@ const Card: React.FC<CardDetails> = ({ card }) => {
             </span>
           </div>
           {/* <div className="w-full flex gap-2"> */}
-          {/* <Link href={`/category/${card.head}`} className="w-full">
+          {/* <Link href={`/products/category/${card.head}`} className="w-full">
               <Button
                 size="sm"
                 className="w-full bg-transparent border border-primary text-primary font-light rounded-none hover:shadow-md transition-transform duration-300"

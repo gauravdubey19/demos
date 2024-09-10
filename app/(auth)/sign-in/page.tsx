@@ -6,6 +6,7 @@ import LoginForm from "@/components/Auth/LoginForm";
 export default async function SignInPage() {
   const session = await getServerSession();
   if (session) redirect("/");
+  
   return (
     <AuthContainer>
       <LoginForm />

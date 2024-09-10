@@ -2,7 +2,7 @@
 export interface ProductCategoryDetailParams {
   params: {
     category: string;
-    id: number;
+    slug: string;
   };
 }
 
@@ -41,7 +41,8 @@ export interface CarouselProps {
 export interface CardValues {
   id: number;
   img: string;
-  head: string;
+  title: string;
+  slug: string;
   description: string;
   href: string;
   price: number;
@@ -65,8 +66,7 @@ export interface ProductDetailValues {
   oldPrice: number;
   discount: number;
   ratings: number;
-  reviews: number;
-  sizes: string[];
+  reviews: [];
   colors: string[];
   material: string;
   fabricType: string;

@@ -13,7 +13,8 @@ export const cardList: CardValues[] = [
   {
     id: 0,
     img: "/assets/card.jpeg",
-    head: "Heading 1",
+    title: "Bold Red Shirt",
+    slug: "bold-red-shirt",
     description:
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugalaboriosam nesciunt voluptatibus ad reprehenderit magnivwev evprovident cumque, a cupiditate. Fuga laboriosam nesciuntvoluptatibus",
     href: "/#",
@@ -26,7 +27,8 @@ export const cardList: CardValues[] = [
   {
     id: 1,
     img: "https://image.made-in-china.com/2f0j00hswiAnGJiRoZ/Business-Suit-Men-s-Striped-Stretch-Business-Suit-Color-Textile-OEM-ODM.webp",
-    head: "Heading 2",
+    title: "Bold Red Shirt",
+    slug: "bold-red-shirt",
     description:
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugalaboriosam nesciunt voluptatibus ad reprehenderit magnivwev evprovident cumque, a cupiditate. Fuga laboriosam nesciuntvoluptatibus",
     href: "/#",
@@ -39,7 +41,8 @@ export const cardList: CardValues[] = [
   {
     id: 2,
     img: "https://rukminim2.flixcart.com/image/850/1000/xif0q/kurta/j/h/f/xl-men-ethnic-premium-kurta-dhar-textile-original-imagy2tcphwu3jzh.jpeg?q=90&crop=false",
-    head: "Heading 3",
+    title: "Bold Red Shirt",
+    slug: "bold-red-shirt",
     description:
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugalaboriosam nesciunt voluptatibus ad reprehenderit magnivwev evprovident cumque, a cupiditate. Fuga laboriosam nesciuntvoluptatibus",
     href: "/#",
@@ -52,7 +55,8 @@ export const cardList: CardValues[] = [
   {
     id: 3,
     img: "https://cdn.linenclub.com/media/catalog/product/cache/41d32663a01600992c99bcd3aa36f0e1/l/c/lcsfsp0212930_1.jpg",
-    head: "Heading 4",
+    title: "Bold Red Shirt",
+    slug: "bold-red-shirt",
     description:
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugalaboriosam nesciunt voluptatibus ad reprehenderit magnivwev evprovident cumque, a cupiditate. Fuga laboriosam nesciuntvoluptatibus",
     href: "/#",
@@ -65,7 +69,8 @@ export const cardList: CardValues[] = [
   {
     id: 4,
     img: "https://cdn.linenclub.com/media/catalog/product/cache/41d32663a01600992c99bcd3aa36f0e1/l/c/lcjkch3000701_0.jpg",
-    head: "Heading 5",
+    title: "Bold Red Shirt",
+    slug: "bold-red-shirt",
     description:
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugalaboriosam nesciunt voluptatibus ad reprehenderit magnivwev evprovident cumque, a cupiditate. Fuga laboriosam nesciuntvoluptatibus",
     href: "/#",
@@ -78,7 +83,8 @@ export const cardList: CardValues[] = [
   {
     id: 5,
     img: "https://5.imimg.com/data5/ANDROID/Default/2021/6/DJ/TP/HU/12881310/product-jpeg.jpg",
-    head: "Heading 6",
+    title: "Bold Red Shirt",
+    slug: "bold-red-shirt",
     description:
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugalaboriosam nesciunt voluptatibus ad reprehenderit magnivwev evprovident cumque, a cupiditate. Fuga laboriosam nesciuntvoluptatibus",
     href: "/#",
@@ -91,7 +97,8 @@ export const cardList: CardValues[] = [
   {
     id: 6,
     img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSEdFaWkG3JgjADdehk3p7PZni3qT4p5-4JBDBKSigPBj-cec8jEzOP2xesN3zf5LEhhG4&usqp=CAU",
-    head: "Heading 7",
+    title: "Bold Red Shirt",
+    slug: "bold-red-shirt",
     description:
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugalaboriosam nesciunt voluptatibus ad reprehenderit magnivwev evprovident cumque, a cupiditate. Fuga laboriosam nesciuntvoluptatibus",
     href: "/#",
@@ -104,7 +111,8 @@ export const cardList: CardValues[] = [
   {
     id: 7,
     img: "https://www.mkistore.co.uk/cdn/shop/files/MKI_30_5_240603.jpg?v=1719584934&width=1156",
-    head: "Heading 8",
+    title: "Bold Red Shirt",
+    slug: "bold-red-shirt",
     description:
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugalaboriosam nesciunt voluptatibus ad reprehenderit magnivwev evprovident cumque, a cupiditate. Fuga laboriosam nesciuntvoluptatibus",
     href: "/#",
