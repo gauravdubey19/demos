@@ -45,7 +45,6 @@ const PersonalInformation = () => {
       if (response.ok) {
         signOut();
         alert('Account deleted successfully.');
-        router.push('/'); // Redirect to home or login page after deletion
       } else {
         const errorData = await response.json();
         alert(`Error: ${errorData.message}`);

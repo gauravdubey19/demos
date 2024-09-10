@@ -1,7 +1,14 @@
 import mongoose, { Schema, model, models, mongo } from 'mongoose';
 
 const UserSchema = new Schema({
-    name: {
+    firstName: {
+        type: String,
+        required: true,
+        unique: true,
+        trim: true,
+        lowercase: true
+    },
+    lastName: {
         type: String,
         required: true,
         unique: true,

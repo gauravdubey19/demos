@@ -60,8 +60,12 @@ const handler = NextAuth({
         let user = userExists;
         if (!userExists) {
           console.log("Profile extracted is: ", extendedProfile);
+          let [firstName, ...lastNameParts] = extendedProfile.name.split(" ");
+          let lastName = lastNameParts.join(" ");
+
           user = await User.create({
-            name: extendedProfile.name && extendedProfile.name,
+            firstName: firstName,
+            lastName: lastName,
             email: extendedProfile.email,
             profile: extendedProfile.image,
             phone: extendedProfile.phone_number,
@@ -106,5 +110,41 @@ const deleteUser = async (req: NextRequest) => {
   }
 };
 
+const updateUser = async (req: NextRequest) => {
+  if (req.method !== 'PUT') {
+    return new NextResponse(JSON.stringify({ message: 'Method not allowed' }), { status: 405 });
+  }
+
+  const { userId, firstName, lastName, email, profile, dateOfBirth, phone, gender } = await req.json();
+
+  if (!userId) {
+    return new NextResponse(JSON.stringify({ message: 'User ID is required' }), { status: 400 });
+  }
+
+  try {
+    await connectToDB();
+
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return new NextResponse(JSON.stringify({ message: 'User not found' }), { status: 404 });
+    }
+
+    user.firstName = firstName ?? user.firstName;
+    user.lastName = lastName ?? user.lastName;
+    user.email = email ?? user.email;
+    user.profile = profile ?? user.profile;
+    user.dateOfBirth = dateOfBirth ?? user.dateOfBirth;
+    user.phone = phone ?? user.phone;
+    user.gender = gender ?? user.gender;
+
+    await user.save();
+
+    return new NextResponse(JSON.stringify({ message: 'User updated successfully' }), { status: 200 });
+  } catch (error) {
+    console.error('Error updating user:', error);
+    return new NextResponse(JSON.stringify({ message: 'Internal server error' }), { status: 500 });
+  }
+};
 export { handler as GET, handler as POST, deleteUser as DELETE};
 

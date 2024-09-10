@@ -24,9 +24,6 @@ const SocialsLogin = () => {
       setProviders(res);
     })();
   }, []);
-  useEffect(() => {
-    console.log(providers);
-  }, [providers]);
 
   return (
     <div className="w-full mt-10">
