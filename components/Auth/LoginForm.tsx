@@ -37,7 +37,7 @@ export function LoginForm() {
     };
 
     return (
-        <div className='w-full '>
+        <div className='w-full h-full animate-slide-down'>
             <h2 className='text-3xl text-black text-center mb-8 font-semibold'>Login!</h2>
             <div className='w-full flex items-center justify-center'>
                 <form onSubmit={handleSubmit} className='w-full max-w-sm flex flex-col items-center '>

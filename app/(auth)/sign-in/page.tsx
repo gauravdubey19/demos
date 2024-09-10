@@ -1,5 +1,10 @@
-import AuthPage from "@/components/Auth/AuthPage";
+import AuthContainer from "@/components/Auth/AuthContainer";
+import { LoginForm } from "@/components/Auth/LoginForm";
 
 export default function SignInPage() {
-  return <AuthPage/>;
+  return (
+    <AuthContainer>
+      <LoginForm />
+    </AuthContainer>
+  );
 }

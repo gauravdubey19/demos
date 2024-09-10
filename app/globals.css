@@ -71,8 +71,8 @@
 * {
   padding: 0%;
   margin: 0%;
-  scroll-behavior: smooth !important;
   box-sizing: border-box;
+  scroll-behavior: smooth !important;
 }
 /* ::-webkit-scrollbar-track {
   @apply bg-[#000300];
