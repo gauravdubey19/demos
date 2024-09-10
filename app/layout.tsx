@@ -3,6 +3,7 @@ import { Montserrat } from "next/font/google";
 import "./globals.css";
 
 const inter = Montserrat({ subsets: ["latin"] });
+// This is a testing comment if my code is pushed or not ~Ashri
 
 export const metadata: Metadata = {
   title: "CSK Textile",
