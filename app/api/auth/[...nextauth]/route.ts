@@ -2,6 +2,7 @@ import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import User from "@/models/User";
 import { connectToDB } from "@/utils/db";
+import { NextRequest, NextResponse } from "next/server";
 
 const googleClientId = process.env.GOOGLE_ID;
 const googleClientSecret = process.env.GOOGLE_CLIENT_SECRET;
@@ -9,12 +10,21 @@ const googleClientSecret = process.env.GOOGLE_CLIENT_SECRET;
 if (!googleClientId || !googleClientSecret) {
   throw new Error("Missing Google OAuth environment variables");
 }
-
+interface ExtendedProfile extends Record<string, any> {
+  phone_number?: string;
+  birthday?: string;
+  gender?: string;
+}
 const handler = NextAuth({
   providers: [
     GoogleProvider({
       clientId: googleClientId,
       clientSecret: googleClientSecret,
+      authorization:{
+        params:{
+          scope: "openid email profile https://www.googleapis.com/auth/user.birthday.read https://www.googleapis.com/auth/user.phonenumbers.read https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/user.gender.read",
+        }
+      }
     }),
   ],
   secret: process.env.NEXTAUTH_SECRET,
@@ -26,6 +36,9 @@ const handler = NextAuth({
           return session;
         }
         const sessionUser = await User.findOne({ email: session.user.email });
+        if (!sessionUser) {
+          return session;
+        }
         session.user.id = sessionUser._id.toString();
       } catch (error) {
         console.error("Error fetching user session:", error);
@@ -33,22 +46,31 @@ const handler = NextAuth({
       return session;
     },
     async signIn({ account, profile }) {
-      if (!profile) {
+      const extendedProfile = profile as ExtendedProfile;
+      if (!extendedProfile) {
         return false;
       }
       try {
         await connectToDB();
 
         // check if user already exists
-        const userExists = await User.findOne({ email: profile.email });
+        const userExists = await User.findOne({ email: extendedProfile.email });
 
         // if not, create a new document and save user in MongoDB
         let user = userExists;
         if (!userExists) {
+          console.log("Profile extracted is: ", extendedProfile);
+          let [firstName, ...lastNameParts] = extendedProfile.name.split(" ");
+          let lastName = lastNameParts.join(" ");
+
           user = await User.create({
-            email: profile.email,
-            name: profile.name && profile.name, //.replace(/\s+/g, "").toLowerCase()
-            password: "",
+            firstName: firstName,
+            lastName: lastName,
+            email: extendedProfile.email,
+            profile: extendedProfile.image,
+            phone: extendedProfile.phone_number,
+            dob: extendedProfile.birthday,
+            gender: extendedProfile.gender, 
           });
         }
         console.log("User logged In: ", user);
@@ -61,10 +83,68 @@ const handler = NextAuth({
   },
 });
 
-export { handler as GET, handler as POST };
+const deleteUser = async (req: NextRequest) => {
+  if (req.method !== 'DELETE') {
+    return new NextResponse(JSON.stringify({ message: 'Method not allowed' }), { status: 405 });
+  }
 
-// import NextAuth from "next-auth/next";
-// import { authOptions } from "@/utils/authOptions";
+  const { userId } = await req.json();
 
-// const handler = NextAuth(authOptions);
-// export { handler as GET, handler as POST };
+  if (!userId) {
+    return new NextResponse(JSON.stringify({ message: 'User ID is required' }), { status: 400 });
+  }
+
+  try {
+    await connectToDB();
+
+    const user = await User.findByIdAndDelete(userId);
+
+    if (!user) {
+      return new NextResponse(JSON.stringify({ message: 'User not found' }), { status: 404 });
+    }
+
+    return new NextResponse(JSON.stringify({ message: 'User deleted successfully' }), { status: 200 });
+  } catch (error) {
+    console.error('Error deleting user:', error);
+    return new NextResponse(JSON.stringify({ message: 'Internal server error' }), { status: 500 });
+  }
+};
+
+const updateUser = async (req: NextRequest) => {
+  if (req.method !== 'PUT') {
+    return new NextResponse(JSON.stringify({ message: 'Method not allowed' }), { status: 405 });
+  }
+
+  const { userId, firstName, lastName, email, profile, dateOfBirth, phone, gender } = await req.json();
+
+  if (!userId) {
+    return new NextResponse(JSON.stringify({ message: 'User ID is required' }), { status: 400 });
+  }
+
+  try {
+    await connectToDB();
+
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return new NextResponse(JSON.stringify({ message: 'User not found' }), { status: 404 });
+    }
+
+    user.firstName = firstName ?? user.firstName;
+    user.lastName = lastName ?? user.lastName;
+    user.email = email ?? user.email;
+    user.profile = profile ?? user.profile;
+    user.dateOfBirth = dateOfBirth ?? user.dateOfBirth;
+    user.phone = phone ?? user.phone;
+    user.gender = gender ?? user.gender;
+
+    await user.save();
+
+    return new NextResponse(JSON.stringify({ message: 'User updated successfully' }), { status: 200 });
+  } catch (error) {
+    console.error('Error updating user:', error);
+    return new NextResponse(JSON.stringify({ message: 'Internal server error' }), { status: 500 });
+  }
+};
+export { handler as GET, handler as POST, deleteUser as DELETE};
+
