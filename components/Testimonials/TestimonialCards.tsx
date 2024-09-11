@@ -3,7 +3,15 @@
 import React, { useRef, useState } from "react";
 import { FaPlay } from "react-icons/fa";
 
-const TestimonialCards = () => {
+interface TestimonialCardsI{
+  file:any
+}
+
+const TestimonialCards = (
+  { file }: TestimonialCardsI
+) => {
+
+  console.log(file.key);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const [isPlaying, setIsPlaying] = useState<boolean>(true);
   const [isHovering, setIsHovering] = useState<boolean>(false);
@@ -58,7 +66,7 @@ const TestimonialCards = () => {
         onClick={handleVideoClick}
       >
         <source
-          src="https://cdn.shopify.com/videos/c/o/v/c2c6651fcf274ea195057f49b0b2e7b4.mp4"
+          src={`https://utfs.io/f/${file?.key}`}
           type="video/mp4"
         />
         Your browser does not support the video tag.
