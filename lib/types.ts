@@ -129,6 +129,11 @@ export interface InputFieldProps {
   label: string;
   defaultValue?: string;
   type?: string;
+  isDisabled?: boolean;
+  capitalize?: boolean;
+  value?: string;
+  setValue?: (value: string) => void;
+  formValidation?: (value: string) => string;
 }
 
 export interface SectionValues {

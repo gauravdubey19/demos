@@ -7,7 +7,7 @@ import { IoIosArrowForward } from "react-icons/io";
 
 const ProductSection2: React.FC<ProductSectionProps> = ({
   category,
-  href,
+  categorySlug,
   carousel,
 }) => {
   return (
@@ -16,7 +16,7 @@ const ProductSection2: React.FC<ProductSectionProps> = ({
         <div className="w-full flex-between">
           <div className="text-xl lg:text-2xl font-bold">{category}</div>
           <Link
-            href={href}
+            href={`/products/${categorySlug}`}
             className="group w-fit flex-center gap-2 p-1 px-3 md:p-1.5 md:px-4 rounded-3xl cursor-pointer lg:hover:bg-primary active:scale-95 ease-in-out duration-300"
           >
             {/* bg-primary md:bg-transparent active:bg-primary*/}
@@ -31,7 +31,9 @@ const ProductSection2: React.FC<ProductSectionProps> = ({
         </div>
         <Carousel>
           {carousel &&
-            carousel.map((card, index) => <Card key={index} card={card} />)}
+            carousel.map((card, index) => (
+              <Card key={index} card={card} category={""} />
+            ))}
         </Carousel>
       </section>
     </>
