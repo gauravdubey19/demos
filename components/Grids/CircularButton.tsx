@@ -14,7 +14,7 @@ const CircularButton: React.FC<CircularButtonProps> = ({ index, pic, onClick }) 
             onClick={() => onClick(index)}
         >
             <div className='h-full w-full rounded-full bg-[#e2e2e2] p-2 md:p-3 flex items-center justify-center'>
-                <Image src={pic} alt={`image-${index}`} layout="responsive" width={100} height={100} />
+                <Image src={pic} alt={`image-${index}`} width={100} height={100} />
             </div>
         </div>
     )

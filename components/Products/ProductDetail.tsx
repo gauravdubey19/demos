@@ -156,14 +156,13 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({
 
   return (
     <div className="select-none lg:sticky top-20 w-full h-full md:h-[50vh] lg:h-[85vh] flex flex-col gap-3 md:flex-row-reverse justify-between overflow-hidden">
-      <Image
-        src={currentImage}
-        alt="Product Image"
-        layout="responsive"
-        width={800}
-        height={800}
-        className="h-[75%] w-full md:h-full md:w-[80%] overflow-hidden"
-      />
+       <Image
+      src={currentImage}
+      alt="Product Image"
+      width={800}
+      height={800}
+      className="h-[75%] w-full md:h-full md:w-[80%] overflow-hidden"
+    />
 
       <div className="relative w-full md:w-[20%] h-[25%] md:h-full">
         <div

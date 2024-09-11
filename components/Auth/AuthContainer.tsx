@@ -19,7 +19,7 @@ const AuthContainer: React.FC<{ children?: React.ReactNode }> = ({
             <Image
               src="/textile.png"
               alt="Fall in Woods"
-              layout="fill"
+              fill
               objectFit="cover"
             />
             <div className="absolute inset-0 flex flex-col p-5 items-end gap-5 justify-center">
