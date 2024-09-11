@@ -3,6 +3,12 @@ import { Montserrat } from "next/font/google";
 import "./globals.css";
 import SessionProviderC from "@/context/SessionProviderC";
 
+// upload things
+import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
+import { extractRouterConfig } from "uploadthing/server";
+import { ourFileRouter } from "@/app/api/uploadthing/core";
+
+
 const inter = Montserrat({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -20,7 +26,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <SessionProviderC>
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}>
+        <NextSSRPlugin routerConfig={extractRouterConfig(ourFileRouter)}/>
+        {children}
+      </body>
       </SessionProviderC>
     </html>
   );
