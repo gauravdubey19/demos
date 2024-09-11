@@ -116,7 +116,7 @@ const Navbar: React.FC<{ appName?: string }> = ({ appName = "LOGO" }) => {
               className="w-10 h-10 rounded-full overflow-hidden"
             >
               <Image
-                src="/assets/card.jpeg"
+                src="/assets/card.jpeg" //{session?.user?.image}
                 alt="profile"
                 width={200}
                 height={200}

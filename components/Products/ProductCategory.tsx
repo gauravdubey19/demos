@@ -1,7 +1,7 @@
 import React from "react";
-import Card from "./Card";
 import { ProductCategoryProps } from "@/lib/types";
 import MobileFilter from "./MobileFilter";
+import Card from "./Card";
 
 const ProductCategory: React.FC<ProductCategoryProps> = ({
   category,
@@ -9,7 +9,7 @@ const ProductCategory: React.FC<ProductCategoryProps> = ({
 }) => {
   return (
     <>
-      <section className="relative w-full py-4 overflow-hidden">
+      <section className="relative w-full mt-[60px] py-4 overflow-hidden">
         <MobileFilter />
         <div className="hidden md:flex fixed bottom-0 top-[3.7rem] right-0 z-10 w-[20%] h-screen flex-col space-y-4 bg-transparent border-l border-gray-500 p-4">
           <h2 className="text-2xl font-semibold">Filter</h2>

@@ -1,5 +1,5 @@
 import { cardList } from "@/lib/data";
-import ProductSection from "../product/ProductSection";
+import ProductSection from "../Products/ProductSection";
 import CategorySection from "./CategorySection/CategorySection";
 import GsapHero from "./GsapHero";
 // import Hero from "./Hero";
