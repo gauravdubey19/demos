@@ -23,6 +23,7 @@ import {
   ImageGalleryProps,
   ProductDetailValues,
 } from "@/lib/types";
+import { calculateDiscount } from "@/lib/utils";
 
 const ProductDetail: React.FC<{ slug: string }> = ({ slug }) => {
   const [product, setProduct] = useState<ProductDetailValues | null>(null);
@@ -179,8 +180,8 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({
               alt={`Preview thumbnail ${index + 1}`}
               onClick={() => setCurrentImage(image)}
               aria-label={`View Image ${index + 1}`}
-              width={100}
-              height={100}
+              width={200}
+              height={200}
               className="cursor-pointer w-full h-full"
             />
           ))}
@@ -252,11 +253,9 @@ const Details: React.FC<DetailsProps> = ({ product }) => {
       {/* Pricing and Discount */}
       <div className="flex items-end gap-2">
         <span className="text-4xl font-bold">₹{product.price.toFixed(2)}</span>
-        {product.discount > 0 && (
-          <span className="text-md text-green-500 font-medium">
-            {product.discount}% off
-          </span>
-        )}
+        <span className="text-md text-green-500 font-medium">
+          {calculateDiscount(product.price, product.oldPrice)}% off
+        </span>
       </div>
 
       {/* Ratings and Reviews */}
@@ -267,12 +266,17 @@ const Details: React.FC<DetailsProps> = ({ product }) => {
               key={index}
               size={15}
               className={
-                index < product.ratings ? "fill-primary" : "fill-gray-500"
+                // product.ratings
+                index < 3 ? "fill-primary" : "fill-gray-500"
               }
             />
           ))}
         </div>
-        | <span className="text-primary">{product.reviews.length} reviews</span>
+        |{" "}
+        <div>
+          <span className="text-primary">0</span> reviews
+          {/* <span className="text-primary">{product.reviews.length}</span> reviews */}
+        </div>
       </div>
 
       {/* Size Selection and Buttons */}

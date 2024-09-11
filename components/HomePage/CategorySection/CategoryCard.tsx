@@ -5,11 +5,11 @@ import Link from "next/link";
 
 interface CategoryCardProps {
   item: {
-    id: number;
+    _id: string;
     title: string;
     description?: string;
-    href: string;
-    imageUrl: string;
+    slug: string;
+    image: string;
   };
   activeSlide: number;
   index: number;
@@ -30,8 +30,8 @@ const CategoryCard: React.FC<CategoryCardProps> = ({
         }`}
       >
         <Image
-          src={item.imageUrl}
-          alt={`Slide ${item.id}`}
+          src={item.image}
+          alt={`Slide ${index + 1}`}
           width={400}
           height={400}
           className="w-full h-auto max-h-[20rem] object-contain transition-all duration-300"
@@ -42,7 +42,7 @@ const CategoryCard: React.FC<CategoryCardProps> = ({
             <p className="text-sm text-gray-600">{item?.description}</p>
           </div>
 
-          <Link href={item?.href}>
+          <Link href={`/products/${item?.slug}`}>
             <Button className="mt-2 w-full max-w-xs transition-all duration-300 bg-primary rounded-none">
               View More
             </Button>

@@ -1,13 +1,17 @@
 "use client";
 
+import ProductCategorySection from "@/components/HomePage/CategorySection/ProductCategorySection";
+import { generateSlug } from "@/lib/utils";
 import React, { useState } from "react";
 
 export default function TestPage() {
-  const [responseMessage, setResponseMessage] = useState("");
+  const [responseMessage, setResponseMessage] = useState<string>("");
+  const [image, setImage] = useState<string>("");
+  const [category, setCategory] = useState<string>("");
 
   const createProduct = async () => {
     try {
-      const res = await fetch("/api/products/create", {
+      const res = await fetch("/api/products/create/create-product", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(sampleProduct),
@@ -16,9 +20,32 @@ export default function TestPage() {
       const data = await res.json();
       // console.log("res -> ", data);
       setResponseMessage(data.message || "Failed to create product");
+      setInterval(() => setResponseMessage(""), 2000);
     } catch (error) {
       console.error("Error creating product:", error);
       setResponseMessage("Error creating product");
+    }
+  };
+  const createCategory = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    const categorySlug = generateSlug(category);
+    try {
+      console.log(category, categorySlug, image);
+
+      const res = await fetch("/api/products/create/create-category", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ title: category, slug: categorySlug, image }),
+      });
+
+      const data = await res.json();
+      console.log("res -> ", data);
+      setResponseMessage(data.message || "Failed to create category");
+      setInterval(() => setResponseMessage(""), 2000);
+    } catch (error) {
+      console.error("Error creating category:", error);
+      setResponseMessage("Error creating category");
     }
   };
 
@@ -32,45 +59,64 @@ export default function TestPage() {
         Create Product
       </button>
       <div className="mt-4">Response: {responseMessage}</div>
+
+      <form onSubmit={createCategory}>
+        <input
+          type="text"
+          name="category"
+          placeholder="Enter category"
+          value={category}
+          onChange={(e) => setCategory(e.target.value)}
+          className="p-2 bg-transparent border-b"
+        />
+        <input
+          type="text"
+          name="image"
+          placeholder="Enter Image"
+          value={image}
+          onChange={(e) => setImage(e.target.value)}
+          className="p-2 bg-transparent border-b"
+        />
+        <button type="submit" className="bg-blue-500 text-white p-2 rounded">
+          Add Category
+        </button>
+      </form>
+      <ProductCategorySection limit={1} />
     </div>
   );
 }
 
 const sampleProduct = {
   images: [
-    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRAKt17ghf-_Ch-PAPRYR-HX4sFAMeNms-wJ_teltLQVqpODxd071yo2HXwdC_lHmMtxZs&usqp=CAU",
-    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT8q_D6ppo485V3YbtYs9bNfeP7rTHM4mT_ZWxFJhhV3KV2CfChh5_ma6ftZ_0FwsCNCSE&usqp=CAU",
-    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRK_kD1yGyzjoWg14HP9xPzpw1xuPu_wdqpnmFpKWIqizOt04f2aDUP3dh9mrylfi0fN40&usqp=CAU",
-    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ0YU05IKMVty8nAoyG7JmTy37wh_V0d4zzAP2RMixyFf0FwZe--sqpsq5UFxBTDk4_i0A&usqp=CAU",
+    "https://www.textale.tech/cdn/shop/files/FRESH_Stain-Repel_Tee_Relaxed_Fit__textale_LR.jpg?v=1698207711&width=720",
+    "https://static.wixstatic.com/media/bf39a3_a7a0f5b26bb14870b1f5e07f8b9dcbcc~mv2.jpg/v1/fill/w_980,h_1225,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/bf39a3_a7a0f5b26bb14870b1f5e07f8b9dcbcc~mv2.jpg",
+    "https://heyupnow.com/cdn/shop/products/tex_tale_tee_600x.png?v=1679563774",
+    "https://www.textale.tech/cdn/shop/files/Tee_1efc19c3-e426-46c5-a315-e27b9bd9c241.jpg?v=1714473708&width=1200",
+    "https://www.textale.tech/cdn/shop/files/Tee_c4a29b07-e4e0-43b1-a20f-98a57d4dbbdb.jpg?v=1714473708&width=1200",
   ],
   mainImage:
-    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRAKt17ghf-_Ch-PAPRYR-HX4sFAMeNms-wJ_teltLQVqpODxd071yo2HXwdC_lHmMtxZs&usqp=CAU",
-  title: "Floral Summer Dress",
-  slug: "floral-summer-dress",
-  description:
-    "This floral summer dress is light and airy, perfect for warm days out.",
-  price: 59.99,
-  oldPrice: 69.99,
-  discount: 14,
-  ratings: 4.7,
-  availableSizes: ["S", "M", "L"],
-  colorOptions: ["Yellow", "Pink", "White"],
-  categories: ["Clothing", "Dresses", "Women's Fashion"],
+    "https://www.textale.tech/cdn/shop/files/FRESH_Stain-Repel_Tee_Relaxed_Fit__textale_LR.jpg?v=1698207711&width=720",
+  title: "Soft Cotton T-Shirt",
+  slug: "soft-cotton-t-shirt",
+  description: "A soft and comfortable cotton t-shirt perfect for casual wear.",
+  price: 24.99,
+  oldPrice: 29.99,
+  availableSizes: ["S", "M", "L", "XL"],
+  colorOptions: ["White", "Grey", "Navy"],
+  categories: [
+    { title: "Clothing", slug: "clothing" },
+    { title: "T-Shirts", slug: "t-shirts" },
+    { title: "WFH Casual Wear", slug: "wfh-casual-wear" },
+  ],
   material: "Cotton",
-  fabricType: "Woven",
+  fabricType: "Single Jersey",
   careInstructions: "Machine wash cold, tumble dry low",
-  countryOfManufacture: "India",
-  origin: "India",
+  countryOfManufacture: "Bangladesh",
+  origin: "Bangladesh",
   faqs: [
     {
-      question: "Is it see-through?",
-      answer: "No, it has a lining to prevent transparency.",
-    },
-  ],
-  reviews: [
-    {
-      userName: "Lisa Daniels",
-      review: "Very comfortable and the design is beautiful!",
+      question: "Does this t-shirt shrink in the wash?",
+      answer: "Minimal shrinkage if washed in cold water.",
     },
   ],
 };

@@ -8,8 +8,11 @@ import { Button } from "../ui/button";
 import { IoMdStar } from "react-icons/io";
 import { GoHeart, GoHeartFill } from "react-icons/go";
 import { MdOutlineAddShoppingCart } from "react-icons/md";
+import { calculateDiscount } from "@/lib/utils";
 
-const Card: React.FC<CardDetails> = ({ card }) => {
+const Card: React.FC<CardDetails> = ({ card, category }) => {
+  // console.log(card);
+
   const [fav, setFav] = useState<boolean>(false);
   return (
     <>
@@ -27,14 +30,14 @@ const Card: React.FC<CardDetails> = ({ card }) => {
             )}
           </div>
           <Link
-            href={`/products/category/${card.slug}`}
+            href={`/products/${category}/${card.slug}`}
             className="w-full h-full group-hover:scale-105 ease-in-out duration-300"
           >
             <Image
-              src={card.img}
+              src={card.mainImage}
               alt={card.title}
-              width={400}
-              height={400}
+              width={600}
+              height={600}
               loading="lazy"
               className="w-full h-full object-cover scale-105 group-hover:scale-95 ease-in-out duration-300"
             />
@@ -47,13 +50,21 @@ const Card: React.FC<CardDetails> = ({ card }) => {
             </div>
             <div className="h-fit w-full text-[11px] text-xs font-light text-[#818181] flex gap-1">
               <span className="flex gap-0.5">
-                {Array(card.rate)
-                  .fill(null)
-                  .map((_, index) => (
-                    <IoMdStar key={index} color="yellow" size={15} />
-                  ))}
+                {Array.from({ length: 5 }, (_, index) => (
+                  <IoMdStar
+                    key={index}
+                    size={15}
+                    className={
+                      //
+                      index < 3 ? "fill-primary" : "fill-gray-500"
+                    }
+                  />
+                ))}
               </span>
-              <span className="line-clamp-1">| {card.review} reviews</span>
+              <span className="line-clamp-1">
+                | 0 reviews
+                {/* | {card.reviews.length} reviews */}
+              </span>
             </div>
             <div className="h-fit w-full text-[11px] md:text-xs text-[#818181] line-clamp-2">
               {card.description}
@@ -66,7 +77,7 @@ const Card: React.FC<CardDetails> = ({ card }) => {
               ${card.oldPrice}
             </div>
             <span className="text-sm md:text-md text-[#2CD396]">
-              ({card.discount}% off)
+              ({calculateDiscount(card.price, card.oldPrice)}% off)
             </span>
           </div>
           {/* <div className="w-full flex gap-2"> */}
@@ -95,17 +106,3 @@ const Card: React.FC<CardDetails> = ({ card }) => {
 };
 
 export default Card;
-
-const k = {
-  id: 0,
-  img: "/assets/card.jpeg",
-  head: "Heading 1",
-  description:
-    "Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugalaboriosam nesciunt voluptatibus ad reprehenderit magnivwev evprovident cumque, a cupiditate. Fuga laboriosam nesciuntvoluptatibus",
-  href: "/#",
-  price: 19,
-  oldPrice: 25,
-  discount: 25,
-  rate: 5,
-  review: 100,
-};

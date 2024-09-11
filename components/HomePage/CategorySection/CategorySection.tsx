@@ -1,25 +1,52 @@
 "use client";
 
-import React, { useState } from "react";
-import { carouselItems } from "@/lib/data";
+import React, { useEffect, useState } from "react";
+import CategoryCarousel from "@/components/ui/category/CategoryCarousel";
 import CategoryCard from "./CategoryCard";
-import CategoryCarousel from "../../ui/category/CategoryCarousel";
+import { CategoryValues } from "@/lib/types";
 
 const CategorySection: React.FC = () => {
   const [activeSlide, setActiveSlide] = useState<number>(0);
+  const [categories, setCategories] = useState<CategoryValues[]>([]);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const res = await fetch("/api/products/read/get-categories", {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+        });
+
+        if (!res.ok) {
+          throw new Error("Failed to fetch categories");
+        }
+
+        const data = await res.json();
+        // console.log(data.categories as CategoryValues[]);
+
+        setCategories(data.categories as CategoryValues[]);
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      }
+    };
+
+    fetchCategories();
+  }, []);
 
   return (
-    <section className=" h-[calc(100vh-60px)] flex-center flex-col p-4">
+    <section className="h-[calc(100vh-60px)] flex-center flex-col p-4">
       <div className="w-full max-w-3xl mb-5">
         <div className="h-[2px] bg-black w-full mb-5" />
-        <h1 className="md:text-4xl text-2xl  font-bold text-center">Choose Your Style</h1>
+        <h1 className="md:text-4xl text-2xl font-bold text-center">
+          Choose Your Style
+        </h1>
       </div>
       <div className="w-full flex justify-center">
         <div className="slider-container max-w-6xl w-full">
           <CategoryCarousel setActiveSlide={setActiveSlide}>
-            {carouselItems.map((item, index) => (
+            {categories.map((item, index) => (
               <CategoryCard
-                key={item.id}
+                key={item._id}
                 item={item}
                 activeSlide={activeSlide}
                 index={index}

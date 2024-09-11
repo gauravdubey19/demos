@@ -1,9 +1,7 @@
-import { cardList } from "@/lib/data";
-import ProductSection from "../Products/ProductSection";
-import CategorySection from "./CategorySection/CategorySection";
 import GsapHero from "./GsapHero";
-// import Hero from "./Hero";
+import CategorySection from "./CategorySection/CategorySection";
 import GridCards from "../Grids/GridCards";
+import ProductCategorySection from "./CategorySection/ProductCategorySection";
 import TestimonialContainer from "../Testimonials/TestimonialContainer";
 
 const Home = () => {
@@ -13,21 +11,7 @@ const Home = () => {
         <GsapHero />
         <CategorySection />
         <GridCards />
-        <ProductSection
-          category="Product Category 1"
-          href={"/products/Product Category 1"}
-          carousel={cardList}
-        />
-        <ProductSection
-          category="Product Category 2"
-          href={"/products/Product Category 2"}
-          carousel={cardList}
-        />
-        <ProductSection
-          category="Product Category 3"
-          href={"/products/Product Category 3"}
-          carousel={cardList}
-        />
+        <ProductCategorySection />
         <TestimonialContainer />
       </main>
     </>

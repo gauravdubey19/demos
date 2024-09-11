@@ -521,3 +521,70 @@ export const a = "b";
 // };
 
 // export default CategoryCard;
+
+// // 1
+// 0
+// "https://adamoonline.com/cdn/shop/files/DSC06018_5ed0cbde-f231-4414-a31d-51f258c4a94b.jpg?v=1724672204&width=2800"
+// 1
+// "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcREGjQIQIeOSOqfFqJT4un7L93fnneY-6EqQiIqBC9PagK0cYeqFP0YVrlSbuu-JcA9MdE&usqp=CAU"
+// 2
+// "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSLFYkB4nzTYB-deGXdB2NH_Z3IaVA6cjUapy6Dkh7l9I5HCy9_4tDXnngrSAGJEH-P2Pk&usqp=CAU"
+// 3
+// "https://adamoonline.com/cdn/shop/files/DSC06018_5ed0cbde-f231-4414-a31d-51f258c4a94b.jpg?v=1724672204&width=2800"
+// 4
+// "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSLFYkB4nzTYB-deGXdB2NH_Z3IaVA6cjUapy6Dkh7l9I5HCy9_4tDXnngrSAGJEH-P2Pk&usqp=CAU"
+
+
+// // 2
+// 0
+// "https://adamoonline.com/cdn/shop/files/DSC06662.jpg?v=1722584839&width=2800"
+
+// 1
+// "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRkCLdrnNJLEy57VD3yof4N3b1jlmBPUIKFzNRAwQq6fSSWPkK4-s7kztQiU-mrHn340gg&usqp=CAU"
+
+// 2
+// "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSRRlMmjZBa249gXbP4rm5YrvJVqKGlypXvkzC0rqSfJsvMOLBkCB0MtcP0PYkmUEABEQ4&usqp=CAU"
+
+// 3
+// "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRkCLdrnNJLEy57VD3yof4N3b1jlmBPUIKFzNRAwQq6fSSWPkK4-s7kztQiU-mrHn340gg&usqp=CAU"
+
+
+// 4
+// "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSC-O35cMgDf1I1bihH7sWxce3Ne4KFWcPhftk1_E1SDKulfNVX8a4qpX_pTB6dZwrTe1Y&usqp=CAU"
+
+// 3
+
+0
+"https://www.chinaecofiber.com/uploads/image/20210126/13/mens-corduroy-shirts.jpg"
+1
+"https://www.chinaecofiber.com/uploads/image/20210126/13/mens-corduroy-shirts_1611640617.jpg"
+2
+"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQNSx47n8C5DatSa5C--uW8isy3wX6_5PQTcdNUvbaMFoumr57eKMe_YQ9LKfm-4mGM13Y&usqp=CAU"
+3
+"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQI7wMMrsJedyZE9i0QGsBy0ADE6EQWFcmV6-OXHRSnBr27oPH_UWz4c7Ow4Yj3qBR-yIo&usqp=CAU"
+
+// 4
+
+0
+"https://www.green-shirts.com/media/image/9c/a6/4f/W-GB1340-PAM-Hemd-aus-Leinen-Nachhaltige-Mode-Frauen-MASVIDE-Beige-Vorne2_1280x1280.jpg"
+1
+"https://www.green-shirts.com/media/image/c3/d0/8c/W-GB1340-PAM-Hemd-aus-Leinen-Nachhaltige-Mode-Frauen-MASVIDE-Beige-Detail2_1280x1280.jpg"
+2
+"https://www.green-shirts.com/media/image/12/c7/99/W-GB1340-PAM-Hemd-aus-Leinen-Nachhaltige-Mode-Frauen-MASVIDE-Beige-Vorne_1280x1280.jpg"
+3
+"https://www.green-shirts.com/media/image/bb/e5/5f/W-GB1340-PAM-Hemd-aus-Leinen-Nachhaltige-Mode-Frauen-MASVIDE-Beige-Hinten_600x600.jpg"
+4
+"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQKN8RODNAqK6CH5GgT0bAgO2TMpkyAnUjxkxQ3oIxPZglyIvX8R7_ZT9tt8f_UFITGmCE&usqp=CAU"
+
+// 5
+
+0
+"https://www.textale.tech/cdn/shop/files/FRESH_Stain-Repel_Tee_Relaxed_Fit__textale_LR.jpg?v=1698207711&width=720"
+1
+"https://static.wixstatic.com/media/bf39a3_a7a0f5b26bb14870b1f5e07f8b9dcbcc~mv2.jpg/v1/fill/w_980,h_1225,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/bf39a3_a7a0f5b26bb14870b1f5e07f8b9dcbcc~mv2.jpg"
+2
+"https://heyupnow.com/cdn/shop/products/tex_tale_tee_600x.png?v=1679563774"
+3
+"https://www.textale.tech/cdn/shop/files/Tee_1efc19c3-e426-46c5-a315-e27b9bd9c241.jpg?v=1714473708&width=1200"
+4
+"https://www.textale.tech/cdn/shop/files/Tee_c4a29b07-e4e0-43b1-a20f-98a57d4dbbdb.jpg?v=1714473708&width=1200"

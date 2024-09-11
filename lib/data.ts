@@ -126,45 +126,45 @@ export const cardList: CardValues[] = [
 
 export const carouselItems = [
   {
-    id: 1,
+    _id: "1",
     title: "Black Coat",
-    href: "/products/Product Black Coat",
-    imageUrl:
+    slug: "/products/Product Black Coat",
+    image:
       "https://csk-demo.netlify.app/assets/img/media_20240710_190936_2842665475252130661.png",
   },
   {
-    id: 2,
+    _id: "2",
     title: "Kurta",
-    href: "/products/Product Kurta",
-    imageUrl:
+    slug: "/products/Product Kurta",
+    image:
       "https://csk-demo.netlify.app/assets/img/media_20240710_190937_843411630433170671.png",
   },
   {
-    id: 3,
+    _id: "3",
     title: "Shirt",
-    href: "/products/Product Shirt",
-    imageUrl:
+    slug: "/products/Product Shirt",
+    image:
       "https://csk-demo.netlify.app/assets/img/media_20240710_190937_9152305180124524051.png",
   },
   {
-    id: 4,
+    _id: "4",
     title: "Black Coat",
-    href: "/products/Product Black Coat",
-    imageUrl:
+    slug: "/products/Product Black Coat",
+    image:
       "https://csk-demo.netlify.app/assets/img/media_20240710_190936_2842665475252130661.png",
   },
   {
-    id: 5,
+    _id: "5",
     title: "Kurta",
-    href: "/products/Product Kurta",
-    imageUrl:
+    slug: "/products/Product Kurta",
+    image:
       "https://csk-demo.netlify.app/assets/img/media_20240710_190937_843411630433170671.png",
   },
   {
-    id: 6,
+    _id: "6",
     title: "Shirt",
-    href: "/products/Product Shirt",
-    imageUrl:
+    slug: "/products/Product Shirt",
+    image:
       "https://csk-demo.netlify.app/assets/img/media_20240710_190937_9152305180124524051.png",
   },
 ];

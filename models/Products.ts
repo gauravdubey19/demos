@@ -8,6 +8,7 @@ const ProductSchema = new Schema(
     },
     slug: {
       type: String,
+      unique: true,
       required: true,
     },
     description: {
@@ -30,14 +31,6 @@ const ProductSchema = new Schema(
       type: Number,
       required: false,
     },
-    discount: {
-      type: Number,
-      required: false,
-    },
-    ratings: {
-      type: Number,
-      required: false,
-    },
     availableSizes: {
       type: [String],
       required: true,
@@ -46,14 +39,13 @@ const ProductSchema = new Schema(
       type: [String],
       required: true,
     },
-    categories: {
-      type: [String],
-      required: true,
-    },
-    material: {
-      type: String,
-      required: true,
-    },
+    categories: [
+      {
+        title: { type: String, required: true },
+        slug: { type: String, required: true },
+      },
+    ],
+    material: { type: String, required: true },
     fabricType: {
       type: String,
       required: false,
@@ -76,12 +68,6 @@ const ProductSchema = new Schema(
         answer: { type: String, required: true },
       },
     ],
-    reviews: [
-      {
-        userName: { type: String, required: false },
-        review: { type: String, required: false },
-      },
-    ],
   },
   { timestamps: true }
 );
@@ -89,3 +75,12 @@ const ProductSchema = new Schema(
 const Products = models.Products || model("Products", ProductSchema);
 
 export default Products;
+
+const CategorySchema = new Schema({
+  title: { type: String, required: true },
+  slug: { type: String, required: true },
+  image: { type: String, required: true },
+});
+
+export const Categories =
+  models.Categories || model("Categories", CategorySchema);

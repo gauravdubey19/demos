@@ -2,6 +2,20 @@ import { NextRequest, NextResponse } from "next/server";
 import { connectToDB } from "@/utils/db";
 import Products from "@/models/Products";
 
+const generateUniqueSlug = async (slug: string) => {
+  let uniqueSlug = slug;
+  let slugExists = await Products.findOne({ slug: uniqueSlug });
+
+  let counter = 1;
+  while (slugExists) {
+    uniqueSlug = `${slug}-${counter}`;
+    slugExists = await Products.findOne({ slug: uniqueSlug });
+    counter++;
+  }
+
+  return uniqueSlug;
+};
+
 export const POST = async (request: NextRequest) => {
   try {
     const {
@@ -12,11 +26,9 @@ export const POST = async (request: NextRequest) => {
       mainImage,
       price,
       oldPrice,
-      discount,
-      ratings,
-      reviews,
       availableSizes,
       colorOptions,
+      categories,
       material,
       fabricType,
       careInstructions,
@@ -24,41 +36,22 @@ export const POST = async (request: NextRequest) => {
       faqs,
     } = await request.json();
 
-    // console.log("Parsed product data:", {
-    //   title,
-    //   slug,
-    //   description,
-    //   images,
-    //   mainImage,
-    //   price,
-    //   oldPrice,
-    //   discount,
-    //   ratings,
-    //   reviews,
-    //   availableSizes,
-    //   colorOptions,
-    //   material,
-    //   fabricType,
-    //   careInstructions,
-    //   countryOfManufacture,
-    //   faqs,
-    // });
-
     await connectToDB();
+
+    // Generate a unique slug
+    const uniqueSlug = await generateUniqueSlug(slug);
 
     const newProduct = new Products({
       title,
-      slug,
+      slug: uniqueSlug,
       description,
       images,
       mainImage,
       price,
       oldPrice,
-      discount,
-      ratings,
-      reviews,
       availableSizes,
       colorOptions,
+      categories,
       material,
       fabricType,
       careInstructions,
@@ -70,7 +63,7 @@ export const POST = async (request: NextRequest) => {
     // console.log("Saved product:", savedProduct);
 
     return NextResponse.json(
-      { message: "Product created successfully!" },
+      { message: "Product created successfully!", product: savedProduct },
       { status: 201 }
     );
   } catch (error) {

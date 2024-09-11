@@ -14,12 +14,11 @@ export interface ProfileSectionParams {
 
 export interface ProductSectionProps {
   category: string;
-  href: string;
+  categorySlug: string;
   carousel: CardValues[];
 }
 export interface ProductCategoryProps {
   category: string;
-  products: CardValues[];
 }
 export interface LinkValues {
   id: number;
@@ -39,26 +38,28 @@ export interface CarouselProps {
 
 // Product Card types :
 export interface CardValues {
-  id: number;
-  img: string;
+  _id: string;
+  mainImage: string;
   title: string;
-  slug: string;
   description: string;
-  href: string;
+  slug: string;
   price: number;
-  oldPrice?: number;
-  discount?: number;
-  rate?: number;
-  review?: number;
+  oldPrice: number;
+  discount: number;
+  ratings: number;
+  reviews: [];
 }
 
 export interface CardDetails {
   card: CardValues;
+  category: string;
 }
 
 // Product Details types :
 export interface ProductDetailValues {
+  _id: string;
   title: string;
+  slug: string;
   images: string[];
   mainImage: string;
   description: string;
@@ -107,6 +108,12 @@ export interface AdditionalInfoProps {
       answer: string;
     }[];
   };
+}
+export interface CategoryValues {
+  _id: string;
+  title: string;
+  slug: string;
+  image: string;
 }
 
 // Profile types
