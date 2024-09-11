@@ -4,14 +4,12 @@ const UserSchema = new Schema({
     firstName: {
         type: String,
         required: true,
-        unique: true,
         trim: true,
         lowercase: true
     },
     lastName: {
         type: String,
         required: true,
-        unique: true,
         trim: true,
         lowercase: true
     },

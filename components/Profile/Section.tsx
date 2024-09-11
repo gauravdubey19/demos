@@ -1,20 +1,19 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import PersonalInformation from "./PersonalInformation";
 import { replaceHyphensWithSpaces } from "@/lib/utils";
 import { SectionProps } from "@/lib/types";
+import { useGlobalContext } from "@/context/GlobalProvider";
 
 const Section: React.FC<SectionProps> = ({ section }) => {
+
   return (
     <div className="w-full h-full flex flex-1 flex-col bg-white drop-shadow-lg overflow-hidden">
       <div className="flex-between border-b bg-background p-4 shadow-sm md:px-8 md:py-6">
         <h2 className="capitalize text-xl font-bold tracking-tight">
           {replaceHyphensWithSpaces(section)}
         </h2>
-        {section === "personal-information" && (
-          <Button className="bg-transparent text-primary border border-primary rounded-none active:translate-y-0.5">
-            Edit Profile
-          </Button>
-        )}
+
       </div>
       <div className="w-full h-full overflow-y-scroll over-x">
         {section === "personal-information" && <PersonalInformation />}

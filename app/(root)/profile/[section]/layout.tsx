@@ -9,7 +9,7 @@ export default function ProfilePage({ params, children }: ProfileParams) {
   const {data:session} = useSession();
   const router = useRouter();
   useEffect(() => {
-    if (!session?.user) {
+    if (!session?.user.id) {
       router.push("/");
     }
   }, [session, router]);
