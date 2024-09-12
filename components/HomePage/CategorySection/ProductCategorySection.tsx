@@ -8,7 +8,7 @@ const ProductCategorySection: React.FC<{ limit?: number }> = ({
   limit = 3,
 }) => {
   const [categories, setCategories] = useState<CategoryValues[]>([]);
-  console.log(categories);
+  // console.log(categories);
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -29,8 +29,8 @@ const ProductCategorySection: React.FC<{ limit?: number }> = ({
       }
     };
 
-    fetchCategories();
-  }, []);
+    if (categories.length <= 0) fetchCategories();
+  }, [categories.length]);
 
   return (
     <>

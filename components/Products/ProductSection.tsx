@@ -36,8 +36,8 @@ const ProductSection: React.FC<ProductSectionProps> = ({
       }
     };
 
-    fetchProducts();
-  }, [categorySlug]);
+    if (products.length <= 0) fetchProducts();
+  }, [categorySlug, products.length]);
 
   return (
     <>
