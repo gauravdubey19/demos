@@ -1,8 +1,9 @@
 "use client";
 
 import React, { useState, useRef, useCallback, useEffect } from "react";
-import { Button } from "@/components/ui/button";
 import Image from "next/image";
+import { calculateDiscount } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 import {
   Select,
   SelectTrigger,
@@ -23,7 +24,7 @@ import {
   ImageGalleryProps,
   ProductDetailValues,
 } from "@/lib/types";
-import { calculateDiscount } from "@/lib/utils";
+import { ThumbsUp, ThumbsDown, Send } from "lucide-react";
 
 const ProductDetail: React.FC<{ slug: string }> = ({ slug }) => {
   const [product, setProduct] = useState<ProductDetailValues | null>(null);
@@ -33,7 +34,7 @@ const ProductDetail: React.FC<{ slug: string }> = ({ slug }) => {
     const fetchProductBySlug = async () => {
       try {
         setLoading(true);
-        const res = await fetch("/api/products/read/get-by-slug", {
+        const res = await fetch("/api/products/read/get-product-by-slug", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ slug }),
@@ -66,13 +67,18 @@ const ProductDetail: React.FC<{ slug: string }> = ({ slug }) => {
   // console.log(product);
 
   return (
-    <div className="grid lg:grid-cols-2 gap-6 lg:gap-12 items-start max-w-6xl px-4 mx-auto py-4 mt-[60px]">
-      <ImageGallery
-        images={product.images}
-        initialMainImage={product.mainImage}
-      />
-      <Details product={product} />
-    </div>
+    <>
+      <section className="max-w-6xl px-4 mx-auto py-4 mt-[60px]">
+        <div className="grid lg:grid-cols-2 gap-6 lg:gap-12 items-start">
+          <ImageGallery
+            images={product.images}
+            initialMainImage={product.mainImage}
+          />
+          <Details product={product} />
+        </div>
+        <ProductReviews />
+      </section>
+    </>
   );
 };
 
@@ -157,13 +163,13 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({
 
   return (
     <div className="select-none lg:sticky top-20 w-full h-full md:h-[50vh] lg:h-[85vh] flex flex-col gap-3 md:flex-row-reverse justify-between overflow-hidden">
-       <Image
-      src={currentImage}
-      alt="Product Image"
-      width={800}
-      height={800}
-      className="h-[75%] w-full md:h-full md:w-[80%] overflow-hidden"
-    />
+      <Image
+        src={currentImage}
+        alt="Product Image"
+        width={800}
+        height={800}
+        className="h-[75%] w-full md:h-full md:w-[80%] overflow-hidden"
+      />
 
       <div className="relative w-full md:w-[20%] h-[25%] md:h-full">
         <div
@@ -388,5 +394,132 @@ const AdditionalInfo: React.FC<AdditionalInfoProps> = ({ product }) => {
         </AccordionItem>
       </Accordion>
     </>
+  );
+};
+
+interface Review {
+  _id: number;
+  user: string;
+  userAvatar: string;
+  message: string;
+  likes: number;
+  dislikes: number;
+}
+
+const ProductReviews = () => {
+  const [reviews, setReviews] = useState<Review[]>([
+    {
+      _id: 1,
+      user: "Alice",
+      userAvatar: "/assets/card.jpeg",
+      message: "Great product! Highly recommended.",
+      likes: 5,
+      dislikes: 1,
+    },
+    {
+      _id: 2,
+      user: "Bob",
+      userAvatar: "/assets/card.jpeg",
+      message: "Good quality, but a bit pricey.",
+      likes: 3,
+      dislikes: 0,
+    },
+    {
+      _id: 3,
+      user: "Charlie",
+      userAvatar: "/assets/card.jpeg",
+      message: "Exactly what I was looking for!",
+      likes: 7,
+      dislikes: 2,
+    },
+  ]);
+  const [newReview, setNewReview] = useState("");
+
+  const handleLike = (_id: number) => {
+    setReviews(
+      reviews.map((review) =>
+        review._id === _id ? { ...review, likes: review.likes + 1 } : review
+      )
+    );
+  };
+
+  const handleDislike = (_id: number) => {
+    setReviews(
+      reviews.map((review) =>
+        review._id === _id
+          ? { ...review, dislikes: review.dislikes + 1 }
+          : review
+      )
+    );
+  };
+
+  const handleSubmitReview = () => {
+    if (newReview.trim()) {
+      const newReviewObj: Review = {
+        _id: reviews.length + 1,
+        user: "You",
+        message: newReview.trim(),
+        likes: 0,
+        dislikes: 0,
+        userAvatar: "/assets/card.jpeg",
+      };
+      setReviews([...reviews, newReviewObj]);
+      setNewReview("");
+    }
+  };
+
+  return (
+    <div className="w-full mx-auto mt-5 p-4 space-y-6">
+      <h2 className="text-2xl font-bold mb-4">Product Reviews</h2>
+      <div className="space-y-4">
+        {reviews.map((review) => (
+          <div key={review._id} className="bg-white p-4 rounded-lg shadow">
+            <div className="flex items-start space-x-4">
+              <div className="w-10 h-10 rounded-full overflow-hidden">
+                <Image
+                  src={review.userAvatar}
+                  alt={review.user + " avatar"}
+                  width={200}
+                  height={200}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <div className="flex-1">
+                <h3 className="font-semibold">{review.user}</h3>
+                <p className="text-sm text-gray-600 mt-1">{review.message}</p>
+                <div className="flex items-center space-x-4 mt-2">
+                  <button
+                    onClick={() => handleLike(review._id)}
+                    className="flex items-center text-sm text-gray-500 hover:text-blue-600"
+                  >
+                    <ThumbsUp className="w-4 h-4 mr-1" />
+                    {review.likes}
+                  </button>
+                  <button
+                    onClick={() => handleDislike(review._id)}
+                    className="flex items-center text-sm text-gray-500 hover:text-red-600"
+                  >
+                    <ThumbsDown className="w-4 h-4 mr-1" />
+                    {review.dislikes}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+      <div className="mt-6 space-y-1">
+        <textarea
+          placeholder="Write your review here..."
+          value={newReview}
+          onChange={(e) => setNewReview(e.target.value)}
+          className="min-h-[100px] w-full shadow-lg p-2 outline-none"
+        />
+        <Button onClick={handleSubmitReview}>
+          <Send className="w-4 h-4 mr-2" />
+          Send Review
+        </Button>
+      </div>
+    </div>
   );
 };

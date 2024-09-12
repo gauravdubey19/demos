@@ -34,7 +34,7 @@ const ProductCategorySection: React.FC<{ limit?: number }> = ({
 
     const fetchProducts = async () => {
       try {
-        const res = await fetch("/api/products/read/get-all", {
+        const res = await fetch("/api/products/read/get-all-products", {
           method: "GET",
           headers: { "Content-Type": "application/json" },
         });
