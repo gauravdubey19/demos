@@ -112,7 +112,7 @@ export default function TestPage() {
       >
         toast test
       </button>
-      {/* <ProductCategorySection limit={1} /> */}
+      <ProductCategorySection limit={1} />
     </div>
   );
 }

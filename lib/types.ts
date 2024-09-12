@@ -52,6 +52,7 @@ export interface CardValues {
 export interface CardDetails {
   card: CardValues;
   category: string;
+  loading?: boolean;
 }
 
 // Product Details types :
