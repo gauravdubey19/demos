@@ -8,6 +8,7 @@ import { CategoryValues } from "@/lib/types";
 const CategorySection: React.FC = () => {
   const [activeSlide, setActiveSlide] = useState<number>(0);
   const [categories, setCategories] = useState<CategoryValues[]>([]);
+  const [loading,setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -23,15 +24,19 @@ const CategorySection: React.FC = () => {
 
         const data = await res.json();
         // console.log(data.categories as CategoryValues[]);
-
-        setCategories(data.categories as CategoryValues[]);
+        if (data as CategoryValues[]) {
+          setCategories(data.categories as CategoryValues[]);
+          setLoading(false)
+        }
       } catch (error) {
+        setLoading(false)
         console.error("Error fetching categories:", error);
       }
     };
 
     fetchCategories();
   }, []);
+
 
   return (
     <section className="h-[calc(100vh-60px)] flex-center flex-col p-4">
@@ -50,6 +55,7 @@ const CategorySection: React.FC = () => {
                 item={item}
                 activeSlide={activeSlide}
                 index={index}
+                loading={loading}
               />
             ))}
           </CategoryCarousel>
