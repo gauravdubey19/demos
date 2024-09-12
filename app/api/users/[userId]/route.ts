@@ -112,8 +112,7 @@ async function deleteUser(userId: string){
         
         await user.save();
 
-        return { message: 'User updated successfully',
-        user};
+        return user;
     } catch (error) {
         console.error('Error updating user:', error);
         throw new Error('Internal server error');

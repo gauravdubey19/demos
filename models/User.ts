@@ -35,10 +35,14 @@ const UserSchema = new Schema({
         type: String,
         enum: ["male","female","gay"]
     },
-    cart: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Product"
-    },
+    cart: [{
+        type: String,
+        required: true
+    }],
+    favProducts: [{
+        type: String,
+        required: true
+    }],
     // The following has to be a snapshot of the product
     orders: [{
         type: mongoose.Schema.Types.ObjectId,

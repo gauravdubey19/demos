@@ -3,7 +3,7 @@ import { Schema, model, models } from 'mongoose';
 // Define the ReviewSchema
 const ReviewSchema = new Schema(
   {
-    product_id: {
+    productId: {
       type: Schema.Types.ObjectId,
       ref: 'Products', // Reference to the Product model
       required: true,

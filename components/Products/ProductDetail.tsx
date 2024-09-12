@@ -240,7 +240,7 @@ const Details: React.FC<DetailsProps> = ({ product }) => {
 
   const defaultSize =
     sizeLabels[product.availableSizes[1].toLowerCase()] ||
-    product.availableSizes[1];
+    product.availableSizes[1]; 
 
   return (
     <div className="grid gap-6">
