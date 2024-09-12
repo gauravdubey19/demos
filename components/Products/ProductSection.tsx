@@ -6,12 +6,14 @@ import Carousel from "../ui/Carousel";
 import Card from "./Card";
 import { CardValues, ProductSectionProps } from "@/lib/types";
 import { IoIosArrowForward } from "react-icons/io";
+import { cardList } from "@/lib/data";
 
 const ProductSection: React.FC<ProductSectionProps> = ({
   category,
   categorySlug,
 }) => {
   const [products, setProducts] = useState<CardValues[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -30,8 +32,12 @@ const ProductSection: React.FC<ProductSectionProps> = ({
 
         const data = await res.json();
         // console.log(data);
-        setProducts(data as CardValues[]);
+        if (data as CardValues[]) {
+          setProducts(data as CardValues[]);
+          setLoading(false);
+        }
       } catch (error) {
+        setLoading(true);
         console.error("Error fetching product:", error);
       }
     };
@@ -59,9 +65,23 @@ const ProductSection: React.FC<ProductSectionProps> = ({
           </Link>
         </div>
         <Carousel>
-          {products.map((card, index) => (
-            <Card key={index || card._id} card={card} category={categorySlug} />
-          ))}
+          {!loading
+            ? products.map((card, index) => (
+                <Card
+                  key={index || card._id}
+                  card={card}
+                  category={categorySlug}
+                  loading={loading}
+                />
+              ))
+            : cardList.map((card, index) => (
+                <Card
+                  key={index || card._id}
+                  card={card}
+                  category={categorySlug}
+                  loading={loading}
+                />
+              ))}
         </Carousel>
       </section>
     </>
