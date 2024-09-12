@@ -3,9 +3,8 @@ import { Schema, model, models } from 'mongoose';
 // Define the ReviewSchema
 const ReviewSchema = new Schema(
   {
-    productId: {
-      type: Schema.Types.ObjectId,
-      ref: 'Products', // Reference to the Product model
+    productSlug: {
+      type:String,
       required: true,
     },
     rating: {
@@ -14,7 +13,11 @@ const ReviewSchema = new Schema(
       max: 5,
       required: true,
     },
-    review_title: {
+    username:{
+      type: String,
+      required: true,
+    },
+    userAvatar:{
       type: String,
       required: true,
     },

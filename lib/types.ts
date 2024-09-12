@@ -93,7 +93,9 @@ export interface ImageGalleryProps {
   images: string[];
   initialMainImage: string;
 }
-
+export interface ProductReviewsProps {
+  slug: string;
+}
 export interface AdditionalInfoProps {
   product: {
     material: string;
