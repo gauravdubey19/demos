@@ -11,7 +11,7 @@ const TestimonialCards = (
   { file }: TestimonialCardsI
 ) => {
 
-  console.log(file.key);
+  // console.log(file.key);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const [isPlaying, setIsPlaying] = useState<boolean>(true);
   const [isHovering, setIsHovering] = useState<boolean>(false);
@@ -69,7 +69,6 @@ const TestimonialCards = (
           src={`https://utfs.io/f/${file?.key}`}
           type="video/mp4"
         />
-        Your browser does not support the video tag.
       </video>
     </div>
   );
