@@ -23,13 +23,15 @@ import {
   DetailsProps,
   ImageGalleryProps,
   ProductDetailValues,
+  ProductReviewsProps,
 } from "@/lib/types";
-import { ThumbsUp, ThumbsDown, Send } from "lucide-react";
-
+import { ThumbsUp, ThumbsDown, Send, Star } from "lucide-react";
+import { useSession } from "next-auth/react";
+import { set } from "mongoose";
 const ProductDetail: React.FC<{ slug: string }> = ({ slug }) => {
   const [product, setProduct] = useState<ProductDetailValues | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
-
+  const {data:session} = useSession();
   useEffect(() => {
     const fetchProductBySlug = async () => {
       try {
@@ -78,7 +80,13 @@ const ProductDetail: React.FC<{ slug: string }> = ({ slug }) => {
           />
           <Details product={product} />
         </div>
-        <ProductReviews />
+        {
+          session?.user?.id ?
+        <ProductReviews slug={slug} />:
+          <div className=" text-center text-lg text-gray-500 mt-4">
+           Please login to view reviews
+          </div>
+      }
       </section>
     </>
   );
@@ -401,78 +409,117 @@ const AdditionalInfo: React.FC<AdditionalInfoProps> = ({ product }) => {
 
 interface Review {
   _id: number;
-  user: string;
+  username: string;
   userAvatar: string;
-  message: string;
-  likes: number;
-  dislikes: number;
+  review_descr: string;
+  rating: number;
+  productSlug: string;
 }
 
-const ProductReviews = () => {
+const ProductReviews:React.FC<ProductReviewsProps>= ({slug}) => {
+  const {data:session} = useSession();
+  const [loading, setLoading] = useState<boolean>(true);
   const [reviews, setReviews] = useState<Review[]>([
-    {
-      _id: 1,
-      user: "Alice",
-      userAvatar: "/assets/card.jpeg",
-      message: "Great product! Highly recommended.",
-      likes: 5,
-      dislikes: 1,
-    },
-    {
-      _id: 2,
-      user: "Bob",
-      userAvatar: "/assets/card.jpeg",
-      message: "Good quality, but a bit pricey.",
-      likes: 3,
-      dislikes: 0,
-    },
-    {
-      _id: 3,
-      user: "Charlie",
-      userAvatar: "/assets/card.jpeg",
-      message: "Exactly what I was looking for!",
-      likes: 7,
-      dislikes: 2,
-    },
+    // {
+    //   _id: 1,
+    //   username: "Alice",
+    //   userAvatar: "/assets/card.jpeg",
+    //   review_descr: "Great product! Highly recommended.",
+    //   rating: 2.4,
+    //   productSlug: slug,
+    // }
   ]);
   const [newReview, setNewReview] = useState("");
+  const [rating, setRating] = useState(5);
+  const [postingReview, setPostingReview] = useState(false);
+  useEffect(() => {
+    const fetchReviews = async () => {
+      setLoading(true);
+      try {
+        const res = await fetch(`/api/reviews/get/getReviewsProduct?productId=${slug}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
 
-  const handleLike = (_id: number) => {
-    setReviews(
-      reviews.map((review) =>
-        review._id === _id ? { ...review, likes: review.likes + 1 } : review
-      )
-    );
-  };
+        if (!res.ok) {
+          throw new Error('Failed to fetch reviews');
+        }
 
-  const handleDislike = (_id: number) => {
-    setReviews(
-      reviews.map((review) =>
-        review._id === _id
-          ? { ...review, dislikes: review.dislikes + 1 }
-          : review
-      )
-    );
-  };
+        const data = await res.json();
+        console.log("fetched reviews: ",data);
+        
+        setReviews(data.reviews);
+      } catch (error) {
+        console.error('Error fetching reviews:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  const handleSubmitReview = () => {
+    fetchReviews();
+  }, [slug]);
+  // const handleLike = (_id: number) => {
+  //   setReviews(
+  //     reviews.map((review) =>
+  //       review._id === _id ? { ...review, likes: review.likes + 1 } : review
+  //     )
+  //   );
+  // };
+
+  // const handleDislike = (_id: number) => {
+  //   setReviews(
+  //     reviews.map((review) =>
+  //       review._id === _id
+  //         ? { ...review, dislikes: review.dislikes + 1 }
+  //         : review
+  //     )
+  //   );
+  // };
+
+  const handleSubmitReview = async () => {
     if (newReview.trim()) {
-      const newReviewObj: Review = {
-        _id: reviews.length + 1,
-        user: "You",
-        message: newReview.trim(),
-        likes: 0,
-        dislikes: 0,
-        userAvatar: "/assets/card.jpeg",
+      const newReviewObj = {
+        username: session?.user?.name || "Guest",
+        review_descr: newReview.trim(),
+        userAvatar: session?.user?.image || "/assets/card.jpeg",
+        rating: rating,
+        productSlug: slug,
       };
-      setReviews([...reviews, newReviewObj]);
-      setNewReview("");
+  
+      try {
+        setPostingReview(true);
+        const response = await fetch('/api/reviews/post', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(newReviewObj),
+        });
+  
+        if (!response.ok) {
+          throw new Error('Failed to post review');
+        }
+  
+        const result: Review = await response.json();
+        setReviews([...reviews, result]);
+        setNewReview("");
+        setRating(5);
+      } catch (error) {
+        console.error('Error posting review:', error);
+      }finally{
+        setPostingReview(false);
+      }
     }
   };
 
+  
   return (
     <div className="w-full mx-auto mt-5 p-4 space-y-6">
       <h2 className="text-2xl font-bold mb-4">Product Reviews</h2>
+      {loading ? <div className="text-center">Loading reviews...</div>:
+      <>
       <div className="space-y-4">
         {reviews.map((review) => (
           <div key={review._id} className="bg-white p-4 rounded-lg shadow">
@@ -480,48 +527,71 @@ const ProductReviews = () => {
               <div className="w-10 h-10 rounded-full overflow-hidden">
                 <Image
                   src={review.userAvatar}
-                  alt={review.user + " avatar"}
+                  alt={review.username + " avatar"}
                   width={200}
                   height={200}
                   className="w-full h-full object-cover"
                 />
               </div>
               <div className="flex-1">
-                <h3 className="font-semibold">{review.user}</h3>
-                <p className="text-sm text-gray-600 mt-1">{review.message}</p>
+                <h3 className="font-semibold">{review.username}</h3>
+                <div className=" flex items-center">
+                  {Array.from({ length: 5 }, (_, index) => (
+                    <IoMdStar
+                      key={index}
+                      size={15}
+                      className={
+                        // product.ratings
+                        index < Math.round(review.rating) ? "fill-primary" : "fill-gray-500"
+                      }
+                    />
+                  ))}
+                </div>
+                <p className="text-sm text-gray-600 mt-2">{review.review_descr}</p>
                 <div className="flex items-center space-x-4 mt-2">
-                  <button
+                  {/* <button
                     onClick={() => handleLike(review._id)}
                     className="flex items-center text-sm text-gray-500 hover:text-blue-600"
                   >
                     <ThumbsUp className="w-4 h-4 mr-1" />
                     {review.likes}
-                  </button>
-                  <button
+                  </button> */}
+                  {/* <button
                     onClick={() => handleDislike(review._id)}
                     className="flex items-center text-sm text-gray-500 hover:text-red-600"
                   >
                     <ThumbsDown className="w-4 h-4 mr-1" />
                     {review.dislikes}
-                  </button>
+                  </button> */}
                 </div>
               </div>
             </div>
           </div>
         ))}
       </div>
-      <div className="mt-6 space-y-1">
+      <div className="mt-6 space-y-4">
         <textarea
           placeholder="Write your review here..."
           value={newReview}
           onChange={(e) => setNewReview(e.target.value)}
           className="min-h-[100px] w-full shadow-lg p-2 outline-none"
         />
-        <Button onClick={handleSubmitReview}>
-          <Send className="w-4 h-4 mr-2" />
-          Send Review
+        <div className="flex space-x-1">
+          <span className="">Your rating:</span>
+          {[1, 2, 3, 4, 5].map((star) => (
+            <IoMdStar
+              key={star}
+              className={`w-6 h-6 cursor-pointer ${star <= rating ? 'fill-primary' : 'fill-gray-500'}`}
+              onClick={() => setRating(star)}
+            />
+          ))}
+        </div>
+        <Button onClick={handleSubmitReview} className="mt-4" disabled={postingReview}>
+          <Send className="w-4 h-4 mr-2" />{postingReview ? "Posting review..." : "Post Review"}
         </Button>
       </div>
+      </>
+      }
     </div>
   );
 };
