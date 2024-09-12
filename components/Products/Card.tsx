@@ -9,6 +9,7 @@ import { IoMdStar } from "react-icons/io";
 import { GoHeart, GoHeartFill } from "react-icons/go";
 import { MdOutlineAddShoppingCart } from "react-icons/md";
 import { calculateDiscount } from "@/lib/utils";
+import CardSkeleton from "./CardSkeleton";
 
 const Card: React.FC<CardDetails> = ({ card, category }) => {
   // console.log(card);

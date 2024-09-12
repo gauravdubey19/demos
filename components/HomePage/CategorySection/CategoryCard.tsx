@@ -2,6 +2,7 @@ import React from "react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+// 
 
 interface CategoryCardProps {
   item: {
@@ -29,13 +30,20 @@ const CategoryCard: React.FC<CategoryCardProps> = ({
             : "opacity-50 scale-90 sm:scale-50"
         }`}
       >
-        <Image
-          src={item.image}
+          <Image
+            src={item.image}
+            alt={`Slide ${index + 1}`}
+            width={400}
+            height={400}
+            className="w-full h-auto max-h-[20rem] object-contain transition-all duration-300"
+          /> 
+        {/* <Image
+          src={item.image }
           alt={`Slide ${index + 1}`}
           width={400}
           height={400}
           className="w-full h-auto max-h-[20rem] object-contain transition-all duration-300"
-        />
+        />  */}
         <div className="flex items-center flex-col gap-3 w-full sm:w-[70%] mt-4">
           <div className="flex items-center flex-col text-center">
             <h1 className="text-lg font-semibold">{item?.title}</h1>

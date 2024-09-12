@@ -1,5 +1,6 @@
 "use client";
 
+
 import ProductSection from "@/components/Products/ProductSection";
 import { cardList } from "@/lib/data";
 import { CardValues, CategoryValues } from "@/lib/types";
@@ -54,6 +55,8 @@ const ProductCategorySection: React.FC<{ limit?: number }> = ({
     fetchProducts();
     fetchCategories();
   }, []);
+
+
 
   return (
     <>

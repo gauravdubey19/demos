@@ -5,9 +5,11 @@ import { CardValues, ProductCategoryProps } from "@/lib/types";
 import MobileFilter from "./MobileFilter";
 import Card from "./Card";
 import { reverseSlug } from "@/lib/utils";
+import CardSkeleton from "./CardSkeleton";
 
 const ProductCategory: React.FC<ProductCategoryProps> = ({ category }) => {
   const [products, setProducts] = useState<CardValues[]>([]);
+  const [loading, setLoading] = useState<boolean>(true); // Add loading state
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -18,19 +20,21 @@ const ProductCategory: React.FC<ProductCategoryProps> = ({ category }) => {
         });
 
         if (!res.ok) {
-          throw new Error("Failed to fetch product");
+          throw new Error("Failed to fetch products");
         }
 
         const data = await res.json();
-        // console.log(data.products);
         setProducts(data.products as CardValues[]);
       } catch (error) {
-        console.error("Error fetching product:", error);
+        console.error("Error fetching products:", error);
+      } finally {
+        setLoading(false); // Set loading to false when fetch is complete
       }
     };
 
     fetchProducts();
   }, []);
+
   return (
     <>
       <section className="relative w-full mt-[60px] py-4 overflow-hidden">
@@ -40,9 +44,13 @@ const ProductCategory: React.FC<ProductCategoryProps> = ({ category }) => {
             {reverseSlug(category)}
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-1 md:gap-6">
-            {products.map((card, index) => (
-              <Card key={index} card={card} category={category} />
-            ))}
+            {loading
+              ? Array.from({ length: 8 }).map((_, index) => (
+                <CardSkeleton key={index} />
+              ))
+              : products.map((card, index) => (
+                <Card key={index} card={card} category={category} />
+              ))}
           </div>
         </div>
       </section>
