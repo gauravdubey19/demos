@@ -76,11 +76,3 @@ const Products = models.Products || model("Products", ProductSchema);
 
 export default Products;
 
-const CategorySchema = new Schema({
-  title: { type: String, required: true },
-  slug: { type: String, required: true },
-  image: { type: String, required: true },
-});
-
-export const Categories =
-  models.Categories || model("Categories", CategorySchema);

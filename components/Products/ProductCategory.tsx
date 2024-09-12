@@ -5,7 +5,6 @@ import { CardValues, ProductCategoryProps } from "@/lib/types";
 import MobileFilter from "./MobileFilter";
 import Card from "./Card";
 import { reverseSlug } from "@/lib/utils";
-import CardSkeleton from "./CardSkeleton";
 
 const ProductCategory: React.FC<ProductCategoryProps> = ({ category }) => {
   const [products, setProducts] = useState<CardValues[]>([]);
@@ -14,17 +13,21 @@ const ProductCategory: React.FC<ProductCategoryProps> = ({ category }) => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const res = await fetch("/api/products/read/get-all", {
-          method: "GET",
-          headers: { "Content-Type": "application/json" },
-        });
+        const res = await fetch(
+          `/api/products/read/get-products-by-category/${category}`,
+          {
+            method: "GET",
+            headers: { "Content-Type": "application/json" },
+          }
+        );
 
         if (!res.ok) {
           throw new Error("Failed to fetch products");
         }
 
         const data = await res.json();
-        setProducts(data.products as CardValues[]);
+        // console.log(data);
+        setProducts(data as CardValues[]);
       } catch (error) {
         console.error("Error fetching products:", error);
       } finally {
@@ -33,22 +36,17 @@ const ProductCategory: React.FC<ProductCategoryProps> = ({ category }) => {
     };
 
     fetchProducts();
-  }, []);
-
+  }, [category]);
   return (
     <>
       <section className="relative w-full mt-[60px] py-4 overflow-hidden">
-        <Filter />
+        {/* <Filter /> */}
         <div className="mt-6 md:mt-0 md:w-[80%] w-full px-2 md:px-6 lg:px-8">
           <div className="text-xl lg:text-2xl font-bold">
             {reverseSlug(category)}
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-1 md:gap-6">
-            {loading
-              ? Array.from({ length: 8 }).map((_, index) => (
-                <CardSkeleton key={index} />
-              ))
-              : products.map((card, index) => (
+              { products.map((card, index) => (
                 <Card key={index} card={card} category={category} />
               ))}
           </div>

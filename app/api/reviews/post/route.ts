@@ -1,17 +1,35 @@
 import { NextRequest, NextResponse } from "next/server";
-// import { connectToDB } from "@/utils/db";
-// import Review from "@/models/Review";
+import { connectToDB } from "@/utils/db";
+import Review from "@/models/Reviews";
 
-export const POST = async (request: NextRequest) => {
-  try {
-    // await connectToDB();
+//creating a review based on productSlug, rating, review_descr
+export async function POST(req: NextRequest) {
+    try {
+        await connectToDB();
+        const { productSlug, rating, review_descr,username,userAvatar } = await req.json(); // Extract productSlug, rating, review_descr from the request body
 
-    return NextResponse.json({ status: 200 });
-  } catch (error) {
-    console.error("Error fetching product by slug:", error);
-    return NextResponse.json(
-      { error: "Failed to fetch product" },
-      { status: 500 }
-    );
-  }
-};
+        if (!productSlug || !rating || !review_descr||!username||!userAvatar) {
+            return NextResponse.json({ error: 'productSlug, rating, review_descr,username,userAvatar are required' }, { status: 400 });
+        }
+
+        const review = await createReview(productSlug, rating, review_descr,username,userAvatar);
+        return NextResponse.json(review, { status: 200 });
+    } catch (error) {
+        return NextResponse.json({ error: 'error creating' }, { status: 500 });
+    }
+}
+
+// Create review based on productSlug, rating, review_descr
+async function createReview(productSlug: string, rating: number, review_descr: string,username:string,userAvatar:string) {
+    if (typeof productSlug !== 'string' || typeof rating !== 'number' || typeof review_descr !== 'string') {
+        throw new Error('Invalid input');
+    }
+
+    try {
+        const review = await Review.create({ productSlug, rating, review_descr,username,userAvatar });
+        return review;
+    } catch (error) {
+        console.error('Error creating review:', error);
+        throw new Error('Error creating review');
+    }
+}

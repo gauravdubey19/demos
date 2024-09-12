@@ -2,13 +2,14 @@ import { NextRequest, NextResponse } from "next/server";
 import { connectToDB } from "@/utils/db";
 import Products from "@/models/Products";
 
-export const POST = async (request: NextRequest) => {
+export const GET = async (
+  request: NextRequest,
+  { params }: { params: { slug: string } }
+) => {
   try {
-    const { slug } = await request.json();
-
     await connectToDB();
 
-    const product = await Products.findOne({ slug });
+    const product = await Products.findOne({ slug: params.slug });
 
     if (!product) {
       return NextResponse.json({ error: "Product not found" }, { status: 404 });

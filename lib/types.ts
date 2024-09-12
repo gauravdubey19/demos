@@ -15,7 +15,6 @@ export interface ProfileSectionParams {
 export interface ProductSectionProps {
   category: string;
   categorySlug: string;
-  carousel: CardValues[];
 }
 export interface ProductCategoryProps {
   category: string;
@@ -53,6 +52,7 @@ export interface CardValues {
 export interface CardDetails {
   card: CardValues;
   category: string;
+  loading?: boolean;
 }
 
 // Product Details types :
@@ -93,7 +93,9 @@ export interface ImageGalleryProps {
   images: string[];
   initialMainImage: string;
 }
-
+export interface ProductReviewsProps {
+  slug: string;
+}
 export interface AdditionalInfoProps {
   product: {
     material: string;

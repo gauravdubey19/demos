@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { connectToDB } from "@/utils/db";
-import { Categories } from "@/models/Products";
+import { Categories } from "@/models/Categories";
 
 export const GET = async () => {
   try {

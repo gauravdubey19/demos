@@ -2,7 +2,6 @@ import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import User from "@/models/User";
 import { connectToDB } from "@/utils/db";
-import { NextRequest, NextResponse } from "next/server";
 
 const googleClientId = process.env.GOOGLE_ID;
 const googleClientSecret = process.env.GOOGLE_CLIENT_SECRET;
