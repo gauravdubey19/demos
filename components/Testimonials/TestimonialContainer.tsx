@@ -1,5 +1,3 @@
-
-
 "use client";
 
 import React, { useEffect, useState } from "react";
@@ -11,22 +9,22 @@ const TestimonialContainer = () => {
   useEffect(() => {
     const getData = async () => {
       try {
-        const response = await fetch('/api/Testimonials/getThings');
+        const response = await fetch("/api/Testimonials/getThings");
         if (!response.ok) {
-          throw new Error('Failed to fetch files');
+          throw new Error("Failed to fetch files");
         }
         const data = await response.json();
         console.log(data.files.files);
         setFiles(data.files.files);
       } catch (error) {
-        console.error('Error fetching files:', error);
+        console.error("Error fetching files:", error);
       }
     };
     getData();
   }, []);
 
   return (
-    <div className="md:px-20 p-6">
+    <div className="w-full h-full md:px-20 p-6 overflow-hidden">
       <h1 className="text-4xl font-bold text-center mb-10">Our Testimonies</h1>
 
       <div className="relative w-full overflow-hidden">

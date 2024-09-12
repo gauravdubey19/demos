@@ -17,7 +17,7 @@ const Card: React.FC<CardDetails> = ({ card, category, loading = false }) => {
   return (
     <>
       {/* Link href={"#"} */}
-      <div className="h-[405px] md:h-[390px] lg:h-[508px] w-full max-w-[198px] md:max-w-[260px] group bg-white border border-[#E9D7D7] scale-90 hover:scale-95 hover:shadow-lg ease-in-out duration-300 overflow-hidden">
+      <div className="h-fit w-full max-w-[198px] md:max-w-[260px] group bg-white border border-[#E9D7D7] scale-90 hover:scale-95 hover:shadow-lg ease-in-out duration-300 overflow-hidden">
         <div className="relative h-[240px] sm:h-[240px] md:h-[220px] lg:h-[340px] w-full flex-center select-none overflow-hidden">
           {!loading && (
             <div
@@ -51,7 +51,7 @@ const Card: React.FC<CardDetails> = ({ card, category, loading = false }) => {
             )}
           </Link>
         </div>
-        <div className="h-auto w-full flex justify-between flex-col gap-1 p-1.5 md:px-2.5 overflow-hidden">
+        <div className="h-auto w-full flex justify-between flex-col gap-1 p-1.5 md:px-2.5 mb-0.5 md:mb-1 overflow-hidden">
           <div className="">
             <div
               className={`${
@@ -95,7 +95,7 @@ const Card: React.FC<CardDetails> = ({ card, category, loading = false }) => {
               {!loading && card.description}
             </div>
           </div>
-          <div className="flex gap-2 items-end">
+          <div className="flex flex-col lg:flex-row lg:gap-2 lg:items-end">
             <span
               className={`${
                 loading && "w-20 h-5 md:h-7 bg-gray-200 animate-pulse"
@@ -103,26 +103,23 @@ const Card: React.FC<CardDetails> = ({ card, category, loading = false }) => {
             >
               {!loading && "₹" + card.price}
             </span>
-            <div
-              className={`relative text-sm md:text-md text-gray-400 ${
-                loading && "w-14 h-3 md:h-5 bg-gray-200 animate-pulse"
-              }`}
-            >
-              {!loading && (
-                <>
-                  <span className="absolute top-[50%] w-full h-[1px] bg-gray-500"></span>
-                  {"₹" + card.oldPrice}
-                </>
-              )}
+            <div className="flex gap-2">
+              <span
+                className={`text-sm md:text-md line-through text-gray-400 ${
+                  loading && "mt-1 lg:mt-0 w-14 h-3 md:h-5 bg-gray-200 animate-pulse"
+                }`}
+              >
+                {!loading && "₹" + card.oldPrice}
+              </span>
+              <span
+                className={`text-xs md:text-sm text-[#2CD396] ${
+                  loading && "mt-1 lg:mt-0 w-14 h-3 md:h-5 bg-gray-200 animate-pulse"
+                }`}
+              >
+                {!loading &&
+                  "(" + calculateDiscount(card.price, card.oldPrice) + "% off)"}
+              </span>
             </div>
-            <span
-              className={`text-sm md:text-md text-[#2CD396] ${
-                loading && "w-14 h-3 md:h-5 bg-gray-200 animate-pulse"
-              }`}
-            >
-              {!loading &&
-                "(" + calculateDiscount(card.price, card.oldPrice) + "% off)"}
-            </span>
           </div>
           {/* <div className="w-full flex gap-2"> */}
           {/* <Link href={`/products/category/${card.head}`} className="w-full">
