@@ -2,9 +2,9 @@ import { Schema, model, models } from "mongoose";
 
 const OutfitSchema = new Schema(
   {
-    title: { type: String, required: true },
-    slug: { type: String, required: true },
-    image: { type: String, required: true },
+    outfitTitle: { type: String, required: true },
+    outfitSlug: { type: String, required: true, unique: true },
+    outfitImage: { type: String, required: true },
     productCollection: [
       {
         title: { type: String, required: true },

@@ -49,13 +49,15 @@ const ProductSection: React.FC<ProductSectionProps> = ({
     <>
       <section className="w-full lg:h-[calc(100vh-60px)] bg-white flex justify-center flex-col pt-3 px-2 md:px-6 lg:px-8 overflow-hidden">
         <div className="w-full flex-between">
-          <div className="text-xl lg:text-2xl font-bold">{category}</div>
+          <div className="text-md md:text-lg lg:text-2xl font-bold">
+            {category}
+          </div>
           <Link
             href={`/products/${categorySlug}`}
-            className="group w-fit flex-center gap-2 p-1 px-3 md:p-1.5 md:px-4 rounded-3xl cursor-pointer lg:hover:bg-primary active:scale-95 ease-in-out duration-300"
+            className="group w-fit flex-center md:gap-1 lg:gap-2 p-1 px-3 md:p-1.5 md:px-4 rounded-3xl cursor-pointer lg:hover:bg-primary active:scale-95 ease-in-out duration-300"
           >
             {/* bg-primary md:bg-transparent active:bg-primary*/}
-            <span className="text-md md:text-lg font-medium translate-x-0.5">
+            <span className="text-sm md:text-md lg:text-xl font-medium translate-x-0.5">
               View More
             </span>
             <IoIosArrowForward

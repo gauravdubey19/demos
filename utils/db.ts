@@ -7,6 +7,7 @@ export const connectToDB = async () => {
 
   if (isConnected) {
     console.log("MongoDB is already connected");
+    return;
   }
 
   const mongoUri = process.env.MONGODB_URI;
@@ -23,9 +24,16 @@ export const connectToDB = async () => {
     });
 
     isConnected = true;
-
     console.log("MongoDB connected");
   } catch (error) {
-    console.log(error);
+    console.error("Failed to connect to MongoDB:", error);
   }
+  // finally {
+  //   // closing the connection in case of any issues or after successful connection
+  //   if (mongoose.connection.readyState !== 0) {
+  //     await mongoose.disconnect();
+  //     isConnected = false;
+  //     console.log("MongoDB connection closed");
+  //   }
+  // }
 };

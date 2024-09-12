@@ -7,7 +7,7 @@ import TestimonialContainer from "../Testimonials/TestimonialContainer";
 const Home = () => {
   return (
     <>
-      <main>
+      <main className="w-full h-full">
         <GsapHero />
         <CategorySection />
         <GridCards />

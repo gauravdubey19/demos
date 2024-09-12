@@ -34,7 +34,7 @@ const CategorySection: React.FC = () => {
   }, []);
 
   return (
-    <section className="h-[calc(100vh-60px)] flex-center flex-col p-4">
+    <section className="h-[calc(100vh-60px)] w-full flex-center flex-col p-4 overflow-hidden">
       <div className="w-full max-w-3xl mb-5">
         <div className="h-[2px] bg-black w-full mb-5" />
         <h1 className="md:text-4xl text-2xl font-bold text-center">
