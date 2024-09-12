@@ -1,11 +1,11 @@
 "use client";
 
 import ProductCategorySection from "@/components/HomePage/CategorySection/ProductCategorySection";
+import { toast } from "@/hooks/use-toast";
 import { generateSlug } from "@/lib/utils";
 import React, { useState } from "react";
 
 export default function TestPage() {
-  const [responseMessage, setResponseMessage] = useState<string>("");
   const [image, setImage] = useState<string>("");
   const [category, setCategory] = useState<string>("");
 
@@ -19,11 +19,21 @@ export default function TestPage() {
 
       const data = await res.json();
       // console.log("res -> ", data);
-      setResponseMessage(data.message || "Failed to create product");
-      setInterval(() => setResponseMessage(""), 2000);
+      // ------------------     take the ref from here for response message       -----------------
+      toast({
+        title: data.message || data.error,
+        description: data.message
+          ? "Now you view the product"
+          : "Please try again later...",
+        variant: data.error && "destructive",
+      });
     } catch (error) {
       console.error("Error creating product:", error);
-      setResponseMessage("Error creating product");
+      toast({
+        title: "Error creating category",
+        description: "Please try again later...",
+        variant: "destructive",
+      });
     }
   };
   const createCategory = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -31,7 +41,7 @@ export default function TestPage() {
 
     const categorySlug = generateSlug(category);
     try {
-      console.log(category, categorySlug, image);
+      // console.log(category, categorySlug, image);
 
       const res = await fetch("/api/products/create/create-category", {
         method: "POST",
@@ -40,15 +50,31 @@ export default function TestPage() {
       });
 
       const data = await res.json();
-      console.log("res -> ", data);
-      setResponseMessage(data.message || "Failed to create category");
-      setInterval(() => setResponseMessage(""), 2000);
+      // console.log("res -> ", data);
+      toast({
+        title: data.message || data.error,
+        description: data.message
+          ? "Now you view the product"
+          : "Please try again later...",
+        variant: data.error && "destructive",
+      });
     } catch (error) {
+      toast({
+        title: "Error creating category",
+        description: "Please try again later...",
+        variant: "destructive",
+      });
       console.error("Error creating category:", error);
-      setResponseMessage("Error creating category");
     }
   };
 
+  const showToast = () => {
+    toast({
+      title: "Scheduled: Catch up",
+      description: "Friday, February 10, 2023 at 5:57 PM",
+      variant: "destructive",
+    });
+  };
   return (
     <div className="p-10">
       <div className="">Testing - Create Product</div>
@@ -58,7 +84,6 @@ export default function TestPage() {
       >
         Create Product
       </button>
-      <div className="mt-4">Response: {responseMessage}</div>
 
       <form onSubmit={createCategory}>
         <input
@@ -81,7 +106,13 @@ export default function TestPage() {
           Add Category
         </button>
       </form>
-      <ProductCategorySection limit={1} />
+      <button
+        onClick={showToast}
+        className="bg-blue-500 text-white p-2 rounded"
+      >
+        toast test
+      </button>
+      {/* <ProductCategorySection limit={1} /> */}
     </div>
   );
 }
@@ -99,7 +130,6 @@ const sampleProduct = {
   title: "Soft Cotton T-Shirt",
   slug: "soft-cotton-t-shirt",
   description: "A soft and comfortable cotton t-shirt perfect for casual wear.",
-  price: 24.99,
   oldPrice: 29.99,
   availableSizes: ["S", "M", "L", "XL"],
   colorOptions: ["White", "Grey", "Navy"],
@@ -120,3 +150,5 @@ const sampleProduct = {
     },
   ],
 };
+
+// price: 24.99,

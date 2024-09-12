@@ -7,7 +7,7 @@ import SessionProviderC from "@/context/SessionProviderC";
 import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
 import { extractRouterConfig } from "uploadthing/server";
 import { ourFileRouter } from "@/app/api/uploadthing/core";
-
+import { Toaster } from "@/components/ui/toaster";
 
 const inter = Montserrat({ subsets: ["latin"] });
 
@@ -25,12 +25,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <SessionProviderC>
       <body className={inter.className}>
-        <NextSSRPlugin routerConfig={extractRouterConfig(ourFileRouter)}/>
-        {children}
+        <SessionProviderC>
+          <NextSSRPlugin routerConfig={extractRouterConfig(ourFileRouter)} />
+          {children}
+          <Toaster />
+        </SessionProviderC>
       </body>
-      </SessionProviderC>
     </html>
   );
 }
