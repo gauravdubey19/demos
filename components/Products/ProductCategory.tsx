@@ -12,29 +12,32 @@ const ProductCategory: React.FC<ProductCategoryProps> = ({ category }) => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const res = await fetch("/api/products/read/get-all-products", {
-          method: "GET",
-          headers: { "Content-Type": "application/json" },
-        });
+        const res = await fetch(
+          `/api/products/read/get-products-by-category/${category}`,
+          {
+            method: "GET",
+            headers: { "Content-Type": "application/json" },
+          }
+        );
 
         if (!res.ok) {
           throw new Error("Failed to fetch product");
         }
 
         const data = await res.json();
-        // console.log(data.products);
-        setProducts(data.products as CardValues[]);
+        // console.log(data);
+        setProducts(data as CardValues[]);
       } catch (error) {
         console.error("Error fetching product:", error);
       }
     };
 
     fetchProducts();
-  }, []);
+  }, [category]);
   return (
     <>
       <section className="relative w-full mt-[60px] py-4 overflow-hidden">
-        <Filter />
+        {/* <Filter /> */}
         <div className="mt-6 md:mt-0 md:w-[80%] w-full px-2 md:px-6 lg:px-8">
           <div className="text-xl lg:text-2xl font-bold">
             {reverseSlug(category)}

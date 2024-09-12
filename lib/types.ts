@@ -15,7 +15,6 @@ export interface ProfileSectionParams {
 export interface ProductSectionProps {
   category: string;
   categorySlug: string;
-  carousel: CardValues[];
 }
 export interface ProductCategoryProps {
   category: string;

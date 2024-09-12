@@ -34,11 +34,13 @@ const ProductDetail: React.FC<{ slug: string }> = ({ slug }) => {
     const fetchProductBySlug = async () => {
       try {
         setLoading(true);
-        const res = await fetch("/api/products/read/get-product-by-slug", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ slug }),
-        });
+        const res = await fetch(
+          `/api/products/read/get-product-by-slug/${slug}`,
+          {
+            method: "GET",
+            headers: { "Content-Type": "application/json" },
+          }
+        );
 
         if (!res.ok) {
           throw new Error("Failed to fetch product");

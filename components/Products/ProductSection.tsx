@@ -1,16 +1,43 @@
-import React from "react";
+"use client";
+
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import Carousel from "../ui/Carousel";
 import Card from "./Card";
-import { ProductSectionProps } from "@/lib/types";
+import { CardValues, ProductSectionProps } from "@/lib/types";
 import { IoIosArrowForward } from "react-icons/io";
 
 const ProductSection: React.FC<ProductSectionProps> = ({
   category,
   categorySlug,
-  carousel,
 }) => {
-  // console.log(carousel);
+  const [products, setProducts] = useState<CardValues[]>([]);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const res = await fetch(
+          `/api/products/read/get-products-by-category/${categorySlug}`,
+          {
+            method: "GET",
+            headers: { "Content-Type": "application/json" },
+          }
+        );
+
+        if (!res.ok) {
+          throw new Error("Failed to fetch product");
+        }
+
+        const data = await res.json();
+        // console.log(data);
+        setProducts(data as CardValues[]);
+      } catch (error) {
+        console.error("Error fetching product:", error);
+      }
+    };
+
+    fetchProducts();
+  }, [categorySlug]);
 
   return (
     <>
@@ -32,7 +59,7 @@ const ProductSection: React.FC<ProductSectionProps> = ({
           </Link>
         </div>
         <Carousel>
-          {carousel.map((card, index) => (
+          {products.map((card, index) => (
             <Card key={index || card._id} card={card} category={categorySlug} />
           ))}
         </Carousel>
