@@ -69,9 +69,6 @@
 
 
 
-
-
-
 "use client"
 import React, { useEffect, useState, useRef } from "react";
 import CategoryCarousel from "@/components/ui/category/CategoryCarousel";
@@ -89,7 +86,7 @@ const CategorySection: React.FC = () => {
   const [categories, setCategories] = useState<CategoryValues[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
-  const categoryRef = useRef<HTMLDivElement>(null);
+  const sectionRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -118,39 +115,41 @@ const CategorySection: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    if (categoryRef.current && !loading) {
-      const elements = gsap.utils.toArray(".category-item") as Element[];
-
-      elements.forEach((item) => {
-        gsap.fromTo(
-          item,
-          { opacity: 0, y: 0 },
-          {
-            opacity: 1,
-            y: 0,
-            duration: 0.9,
-            ease: "power2.out",
-            scrollTrigger: {
-              trigger: item,
-              start: 'top 80%',
-              end: 'top 20%',
-              toggleActions: "play none none reverse",
-            },
-          }
-        );
-      });
+    if (sectionRef.current) {
+      gsap.fromTo(
+        sectionRef.current,
+        {
+          y: 0,
+          opacity:0
+        },
+        {
+          y: -60, // Move up by 50px
+          ease: "none",
+          duration:.1,
+          delay:1,
+          opacity:100,
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: "top bottom",
+            end: "bottom top",
+            scrub: true,
+            
+          },
+        }
+      );
     }
-  }, [loading]);
+  }, []);
 
   const renderContent = () => {
     if (loading) {
       return (
         <CategoryCarousel setActiveSlide={setActiveSlide}>
           {[...Array(3)].map((_, index) => (
-            <div key={index} className="category-item p-10 category-item">
-              <Skeleton className="h-64 w-full mb-2 bg-slate-200 " />
-              {/* <Skeleton className="h-4 w-full mb-2 bg-slate-200 " />
-              <Skeleton className="h-4 w-full bg-slate-200 " /> */}
+            <div key={index} className="category-item p-10 flex flex-col items-center">
+              <Skeleton className="h-64 w-full mb-2 bg-slate-200" />
+              <Skeleton className="h-2 w-full mb-2 bg-slate-200" />
+              <Skeleton className="h-2 w-full mb-2 bg-slate-200" />
+              <Skeleton className="h-5 w-full mb-2 bg-slate-200" />
             </div>
           ))}
         </CategoryCarousel>
@@ -166,7 +165,6 @@ const CategorySection: React.FC = () => {
             activeSlide={activeSlide}
             index={index}
             loading={loading}
-            className="category-item"
           />
         ))}
       </CategoryCarousel>
@@ -174,18 +172,18 @@ const CategorySection: React.FC = () => {
   };
 
   return (
-    <section className="h-[calc(100vh-60px)] w-full flex-center flex-col p-4 overflow-hidden">
+    <section  className="min-h-screen w-full flex-center flex-col p-4 overflow-hidden">
       <div className="w-full max-w-3xl mb-5">
         <div className="h-[2px] bg-black w-full mb-5" />
         <h1 className="md:text-4xl text-2xl font-bold text-center">
           Choose Your Style
         </h1>
       </div>
-      <div className="w-full flex justify-center">
-        <div className="slider-container max-w-6xl w-full" ref={categoryRef}>
+      <section ref={sectionRef} className="w-full flex justify-center">
+        <div className="slider-container max-w-6xl w-full">
           {renderContent()}
         </div>
-      </div>
+      </section>
     </section>
   );
 };

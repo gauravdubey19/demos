@@ -88,7 +88,7 @@ interface CategoryCardProps {
   activeSlide: number;
   index: number;
   loading: boolean;
-  className:string;
+  className?:string;
 }
 
 const CategoryCard: React.FC<CategoryCardProps> = ({
