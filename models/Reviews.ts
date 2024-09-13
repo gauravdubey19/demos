@@ -13,6 +13,10 @@ const ReviewSchema = new Schema(
       max: 5,
       required: true,
     },
+    userId:{
+      type: String,
+      required: true,
+    },
     username:{
       type: String,
       required: true,

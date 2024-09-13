@@ -6,7 +6,8 @@ import Review from "@/models/Reviews";
 export async function DELETE(req: NextRequest) {
     try {
         await connectToDB();
-        const { reviewId } = await req.json(); // Extract reviewId from the request body
+       const {searchParams} = new URL(req.url);
+        const reviewId = searchParams.get('reviewId');
 
         if (!reviewId) {
             return NextResponse.json({ error: 'reviewId is required' }, { status: 400 });

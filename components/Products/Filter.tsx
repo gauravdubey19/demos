@@ -53,7 +53,7 @@ const Filter: React.FC = () => {
       </DrawerTrigger>
 
       {/* Drawer Content */}
-      <DrawerContent className="bottom-0 z-50 w-full h-fit rounded-t-3xl text-white backdrop-blur-[5px] bg-white/20 border-none outline-none shadow-lg p-4 overflow-x-hidden overflow-y-scroll">
+      <DrawerContent className="bottom-0 z-50 w-full h-fit max-h-[80vh] md:max-h-[50vh] rounded-t-3xl text-white backdrop-blur-sm bg-white/20 border-none outline-none shadow-lg p-4 overflow-hidden">
         <DrawerHeader>
           <DrawerTitle className="text-2xl md:text-3xl font-semibold">
             Filter

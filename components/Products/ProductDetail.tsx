@@ -28,6 +28,9 @@ import {
 import { ThumbsUp, ThumbsDown, Send, Star } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { set } from "mongoose";
+import { MdDeleteOutline } from "react-icons/md";
+import { RiDeleteBin6Line } from "react-icons/ri";
+import { BiEditAlt } from "react-icons/bi";
 const ProductDetail: React.FC<{ slug: string }> = ({ slug }) => {
   const [product, setProduct] = useState<ProductDetailValues | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
@@ -408,30 +411,26 @@ const AdditionalInfo: React.FC<AdditionalInfoProps> = ({ product }) => {
 };
 
 interface Review {
-  _id: number;
+  _id: string;
   username: string;
   userAvatar: string;
   review_descr: string;
   rating: number;
   productSlug: string;
+  userId: string;
 }
 
 const ProductReviews:React.FC<ProductReviewsProps>= ({slug}) => {
   const {data:session} = useSession();
   const [loading, setLoading] = useState<boolean>(true);
-  const [reviews, setReviews] = useState<Review[]>([
-    // {
-    //   _id: 1,
-    //   username: "Alice",
-    //   userAvatar: "/assets/card.jpeg",
-    //   review_descr: "Great product! Highly recommended.",
-    //   rating: 2.4,
-    //   productSlug: slug,
-    // }
-  ]);
+  const [reviews, setReviews] = useState<Review[]>([]);
   const [newReview, setNewReview] = useState("");
   const [rating, setRating] = useState(5);
   const [postingReview, setPostingReview] = useState(false);
+  const [deletingReview, setDeletingReview] = useState(false);
+  const [editingReview, setEditingReview] = useState(false);
+  const [handleEditId, setHandleEditId] = useState<string | null>(null);
+  const [editRating, setEditRating] = useState<number>(5);
   useEffect(() => {
     const fetchReviews = async () => {
       setLoading(true);
@@ -486,8 +485,9 @@ const ProductReviews:React.FC<ProductReviewsProps>= ({slug}) => {
         userAvatar: session?.user?.image || "/assets/card.jpeg",
         rating: rating,
         productSlug: slug,
+        userId: session?.user?.id
       };
-  
+  console.log("new review: ",newReviewObj);
       try {
         setPostingReview(true);
         const response = await fetch('/api/reviews/post', {
@@ -513,8 +513,60 @@ const ProductReviews:React.FC<ProductReviewsProps>= ({slug}) => {
       }
     }
   };
+  const handledelete = async (_id: string) => {
+    try {
+      setDeletingReview(true);
+      const response = await fetch(`/api/reviews/delete/deleteReview?reviewId=${_id}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
 
+      if (!response.ok) {
+        throw new Error('Failed to delete review');
+      }
+
+      await response.json();
+      console.log("deleting review: ",_id);
+      setReviews(reviews.filter((review) => review._id !== _id));
+    } catch (error) {
+      console.error('Error deleting review:', error);
+    } finally {
+      setDeletingReview(false);
+    }
+  };
+  const handleEdit = async (_id: string, review_descr: string, rating: number) => {
+    console.log("editing review: ", _id);
+    console.log("editing review_descr: ", review_descr);
+    console.log("editing rating: ", rating);
   
+    try {
+      setEditingReview(true);
+      const response = await fetch('/api/reviews/put', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ reviewId: _id, rating, review_descr }),
+      });
+  
+      if (!response.ok) {
+        throw new Error('Failed to update review');
+      }
+  
+      const updatedReview = await response.json();
+      console.log('Updated review:', updatedReview);
+  
+      setHandleEditId(null);
+      setRating(5);
+    } catch (error) {
+      console.error('Error updating review:', error);
+    } finally {
+      setEditingReview(false);
+    }
+  };
+const [editReview, setEditReview] = useState("");
   return (
     <div className="w-full mx-auto mt-5 p-4 space-y-6">
       <h2 className="text-2xl font-bold mb-4">Product Reviews</h2>
@@ -534,20 +586,75 @@ const ProductReviews:React.FC<ProductReviewsProps>= ({slug}) => {
                 />
               </div>
               <div className="flex-1">
-                <h3 className="font-semibold">{review.username}</h3>
-                <div className=" flex items-center">
-                  {Array.from({ length: 5 }, (_, index) => (
-                    <IoMdStar
-                      key={index}
-                      size={15}
-                      className={
-                        // product.ratings
-                        index < Math.round(review.rating) ? "fill-primary" : "fill-gray-500"
-                      }
-                    />
-                  ))}
+                <div className="flex flex-row justify-between items-center">
+                <h3 className="font-semibold ">{review.username}</h3>
+                <div className="flex flex-row gap-x-1">
+                  { review._id === handleEditId ?
+                    <button
+                    disabled={editingReview}
+                      onClick={() => {
+                        review.review_descr = editReview;
+                        review.rating = editRating;
+                        handleEdit(review._id,editReview,editRating);
+                      }}
+                      className={`flex items-center text-sm px-4 py-2 hover:bg-blue-500 transition-all duration-300 hover:text-white text-blue-500 rounded-lg ${review.userId !==session?.user?.id && "hidden"} `}>
+                    {
+                      editingReview ? "Updating..." : "Update"
+                    }
+                  </button>
+                    :
+                  <button
+                      onClick={() => {
+                        setEditRating(review.rating);
+                        setEditReview(review.review_descr);
+                        setHandleEditId(review._id)}}
+                      className={`flex items-center text-sm px-4 py-2 hover:bg-blue-500 transition-all duration-300 hover:text-white text-blue-500 rounded-lg ${review.userId !==session?.user?.id && "hidden"} `}
+                    >
+                    <BiEditAlt size={20} />
+                  </button>
+                  }
+                  <button
+                      disabled={deletingReview}
+                      onClick={() => handledelete(review._id)}
+                      className={`flex items-center text-sm px-4 py-2 hover:bg-red-500 transition-all duration-300 hover:text-white text-red-500 rounded-lg ${review.userId !==session?.user?.id && "hidden"} `}
+                    >
+                    {
+                      deletingReview ? "Deleting..." : 
+                    <RiDeleteBin6Line size={20} />
+                    }
+                  </button>
                 </div>
-                <p className="text-sm text-gray-600 mt-2">{review.review_descr}</p>
+                </div>
+                {
+                  handleEditId === review._id.toString() ?
+                  <div className=" flex items-center">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <IoMdStar
+                        key={star}
+                        className={`w-6 h-6 cursor-pointer ${star <= editRating ? 'fill-primary' : 'fill-gray-500'}`}
+                        onClick={() => setEditRating(star)}
+                      />
+                    ))}
+                  </div>
+                  :
+                  <div className=" flex items-center">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <IoMdStar
+                        key={star}
+                        className={`w-4 h-4 ${star <= review.rating ? 'fill-primary' : 'fill-gray-500'}`}
+                      />
+                    ))}
+                  </div>
+                }
+                {handleEditId === review._id.toString() ? (
+                  <textarea
+                    value={editReview}
+                    onChange={(e) => setEditReview(e.target.value)}
+                    className="min-h-[100px] w-full shadow-lg p-2 outline-none"
+                  />
+                ) : (
+                  <p className="text-sm text-gray-600 mt-2">{review.review_descr}</p>
+                )}
                 <div className="flex items-center space-x-4 mt-2">
                   {/* <button
                     onClick={() => handleLike(review._id)}
