@@ -14,7 +14,7 @@ const TestimonialContainer = () => {
           throw new Error("Failed to fetch files");
         }
         const data = await response.json();
-        console.log(data.files.files);
+        // console.log(data.files.files);
         setFiles(data.files.files);
       } catch (error) {
         console.error("Error fetching files:", error);

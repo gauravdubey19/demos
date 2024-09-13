@@ -1,10 +1,11 @@
 "use client";
 
-import GridCards from "@/components/Grids/GridCards";
+import GridCards from "@/components/HomePage/Grids/GridCards";
 import ProductCategorySection from "@/components/HomePage/CategorySection/ProductCategorySection";
 import { toast } from "@/hooks/use-toast";
 import { generateSlug } from "@/lib/utils";
 import React, { useState } from "react";
+import ImageMagnify from "@/components/ui/ImageMagnify";
 
 export default function TestPage() {
   const [image, setImage] = useState<string>("");
@@ -105,9 +106,21 @@ export default function TestPage() {
       variant: "destructive",
     });
   };
+  // console.log(MOUSE_ACTIVATION.DOUBLE_CLICK);
+
   return (
     <>
-      <div className="p-10 space-x-5 space-y-4">
+      <div className="relative w-full h-screen p-10">
+        <ImageMagnify
+          src="/textile.png" // Replace with your image path
+          alt="Product Image"
+          zoomFactor={3} // Optional, default is 2
+          width="400px" // Optional, default is 300px
+          height="400px" // Optional, default is 300px
+        />
+      </div>
+
+      {/* <div className="p-10 space-x-5 space-y-4">
         <div className="">Testing - Create Product</div>
         <button
           onClick={createProduct}
@@ -149,8 +162,8 @@ export default function TestPage() {
         >
           toast test
         </button>
-      </div>
-      <ProductCategorySection limit={1} />
+      </div> */}
+      {/* <ProductCategorySection limit={1} /> */}
       {/* <GridCards /> */}
     </>
   );

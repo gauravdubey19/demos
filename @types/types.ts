@@ -1,2 +1,3 @@
 // declare module "react-video-scroll";
-// decgit 
+// decgit
+// declare module "react-image-magnifiers";

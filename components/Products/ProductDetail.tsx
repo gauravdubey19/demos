@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useRef, useCallback, useEffect } from "react";
+import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { calculateDiscount } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -26,12 +27,15 @@ import {
   ProductReviewsProps,
 } from "@/lib/types";
 import { ThumbsUp, ThumbsDown, Send, Star } from "lucide-react";
-import { useSession } from "next-auth/react";
-import { set } from "mongoose";
+import ImageMagnify from "../ui/ImageMagnify";
+import Goback from "../ui/Goback";
+import Loader from "../ui/Loader";
+
 const ProductDetail: React.FC<{ slug: string }> = ({ slug }) => {
   const [product, setProduct] = useState<ProductDetailValues | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
-  const {data:session} = useSession();
+  const { data: session } = useSession();
+
   useEffect(() => {
     const fetchProductBySlug = async () => {
       try {
@@ -57,12 +61,11 @@ const ProductDetail: React.FC<{ slug: string }> = ({ slug }) => {
       }
     };
 
+    // if (!product)
     fetchProductBySlug();
   }, [slug]);
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
+  if (loading) return <Loader />;
 
   if (!product) {
     return <div>Product not found</div>;
@@ -73,6 +76,7 @@ const ProductDetail: React.FC<{ slug: string }> = ({ slug }) => {
   return (
     <>
       <section className="max-w-6xl px-4 mx-auto py-4 mt-[60px]">
+        <Goback />
         <div className="grid lg:grid-cols-2 gap-6 lg:gap-12 items-start">
           <ImageGallery
             images={product.images}
@@ -80,13 +84,13 @@ const ProductDetail: React.FC<{ slug: string }> = ({ slug }) => {
           />
           <Details product={product} />
         </div>
-        {
-          session?.user?.id ?
-        <ProductReviews slug={slug} />:
+        {session?.user?.id ? (
+          <ProductReviews slug={slug} />
+        ) : (
           <div className=" text-center text-lg text-gray-500 mt-4">
-           Please login to view reviews
+            Please login to view reviews
           </div>
-      }
+        )}
       </section>
     </>
   );
@@ -166,19 +170,31 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({
     }
     return () => {
       if (thumbnailRef.current) {
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         thumbnailRef.current.removeEventListener("scroll", handleScroll);
       }
     };
   }, [handleScroll]);
 
   return (
-    <div className="select-none lg:sticky top-20 w-full h-full md:h-[50vh] lg:h-[85vh] flex flex-col gap-3 md:flex-row-reverse justify-between overflow-hidden">
+    <div className="select-none lg:sticky top-20 w-full h-full md:h-[50vh] lg:h-[85vh] flex flex-col gap-3 md:flex-row-reverse justify-between overflow-hidden lg:overflow-visible">
       <Image
         src={currentImage}
         alt="Product Image"
         width={800}
         height={800}
-        className="h-[75%] w-full md:h-full md:w-[80%] overflow-hidden"
+        objectFit="contain"
+        className="md:hidden h-[75%] w-full md:h-full md:w-[80%] object-contain overflow-hidden"
+      />
+
+      <ImageMagnify
+        src={currentImage}
+        alt="Product Image"
+        zoomFactor={3}
+        imageFit="cover"
+        width="100%"
+        height="100%"
+        className="hidden lg:block md:w-[80%] h-full"
       />
 
       <div className="relative w-full md:w-[20%] h-[25%] md:h-full">
@@ -197,7 +213,10 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({
               aria-label={`View Image ${index + 1}`}
               width={200}
               height={200}
-              className="cursor-pointer w-full h-full"
+              className={`cursor-pointer w-full h-full ${
+                currentImage === image &&
+                "border border-primary shadow-md shadow-primary"
+              }`}
             />
           ))}
         </div>
@@ -416,8 +435,8 @@ interface Review {
   productSlug: string;
 }
 
-const ProductReviews:React.FC<ProductReviewsProps>= ({slug}) => {
-  const {data:session} = useSession();
+const ProductReviews: React.FC<ProductReviewsProps> = ({ slug }) => {
+  const { data: session } = useSession();
   const [loading, setLoading] = useState<boolean>(true);
   const [reviews, setReviews] = useState<Review[]>([
     // {
@@ -436,23 +455,26 @@ const ProductReviews:React.FC<ProductReviewsProps>= ({slug}) => {
     const fetchReviews = async () => {
       setLoading(true);
       try {
-        const res = await fetch(`/api/reviews/get/getReviewsProduct?productId=${slug}`, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
+        const res = await fetch(
+          `/api/reviews/get/getReviewsProduct?productId=${slug}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
 
         if (!res.ok) {
-          throw new Error('Failed to fetch reviews');
+          throw new Error("Failed to fetch reviews");
         }
 
         const data = await res.json();
-        console.log("fetched reviews: ",data);
-        
+        console.log("fetched reviews: ", data);
+
         setReviews(data.reviews);
       } catch (error) {
-        console.error('Error fetching reviews:', error);
+        console.error("Error fetching reviews:", error);
       } finally {
         setLoading(false);
       }
@@ -487,111 +509,123 @@ const ProductReviews:React.FC<ProductReviewsProps>= ({slug}) => {
         rating: rating,
         productSlug: slug,
       };
-  
+
       try {
         setPostingReview(true);
-        const response = await fetch('/api/reviews/post', {
-          method: 'POST',
+        const response = await fetch("/api/reviews/post", {
+          method: "POST",
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
           body: JSON.stringify(newReviewObj),
         });
-  
+
         if (!response.ok) {
-          throw new Error('Failed to post review');
+          throw new Error("Failed to post review");
         }
-  
+
         const result: Review = await response.json();
         setReviews([...reviews, result]);
         setNewReview("");
         setRating(5);
       } catch (error) {
-        console.error('Error posting review:', error);
-      }finally{
+        console.error("Error posting review:", error);
+      } finally {
         setPostingReview(false);
       }
     }
   };
 
-  
   return (
     <div className="w-full mx-auto mt-5 p-4 space-y-6">
       <h2 className="text-2xl font-bold mb-4">Product Reviews</h2>
-      {loading ? <div className="text-center">Loading reviews...</div>:
-      <>
-      <div className="space-y-4">
-        {reviews.map((review) => (
-          <div key={review._id} className="bg-white p-4 rounded-lg shadow">
-            <div className="flex items-start space-x-4">
-              <div className="w-10 h-10 rounded-full overflow-hidden">
-                <Image
-                  src={review.userAvatar}
-                  alt={review.username + " avatar"}
-                  width={200}
-                  height={200}
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              <div className="flex-1">
-                <h3 className="font-semibold">{review.username}</h3>
-                <div className=" flex items-center">
-                  {Array.from({ length: 5 }, (_, index) => (
-                    <IoMdStar
-                      key={index}
-                      size={15}
-                      className={
-                        // product.ratings
-                        index < Math.round(review.rating) ? "fill-primary" : "fill-gray-500"
-                      }
+      {loading ? (
+        <div className="text-center">Loading reviews...</div>
+      ) : (
+        <>
+          <div className="space-y-4">
+            {reviews.map((review) => (
+              <div key={review._id} className="bg-white p-4 rounded-lg shadow">
+                <div className="flex items-start space-x-4">
+                  <div className="w-10 h-10 rounded-full overflow-hidden">
+                    <Image
+                      src={review.userAvatar}
+                      alt={review.username + " avatar"}
+                      width={200}
+                      height={200}
+                      className="w-full h-full object-cover"
                     />
-                  ))}
-                </div>
-                <p className="text-sm text-gray-600 mt-2">{review.review_descr}</p>
-                <div className="flex items-center space-x-4 mt-2">
-                  {/* <button
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="font-semibold">{review.username}</h3>
+                    <div className=" flex items-center">
+                      {Array.from({ length: 5 }, (_, index) => (
+                        <IoMdStar
+                          key={index}
+                          size={15}
+                          className={
+                            // product.ratings
+                            index < Math.round(review.rating)
+                              ? "fill-primary"
+                              : "fill-gray-500"
+                          }
+                        />
+                      ))}
+                    </div>
+                    <p className="text-sm text-gray-600 mt-2">
+                      {review.review_descr}
+                    </p>
+                    <div className="flex items-center space-x-4 mt-2">
+                      {/* <button
                     onClick={() => handleLike(review._id)}
                     className="flex items-center text-sm text-gray-500 hover:text-blue-600"
                   >
                     <ThumbsUp className="w-4 h-4 mr-1" />
                     {review.likes}
                   </button> */}
-                  {/* <button
+                      {/* <button
                     onClick={() => handleDislike(review._id)}
                     className="flex items-center text-sm text-gray-500 hover:text-red-600"
                   >
                     <ThumbsDown className="w-4 h-4 mr-1" />
                     {review.dislikes}
                   </button> */}
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
+            ))}
           </div>
-        ))}
-      </div>
-      <div className="mt-6 space-y-4">
-        <textarea
-          placeholder="Write your review here..."
-          value={newReview}
-          onChange={(e) => setNewReview(e.target.value)}
-          className="min-h-[100px] w-full shadow-lg p-2 outline-none"
-        />
-        <div className="flex space-x-1">
-          <span className="">Your rating:</span>
-          {[1, 2, 3, 4, 5].map((star) => (
-            <IoMdStar
-              key={star}
-              className={`w-6 h-6 cursor-pointer ${star <= rating ? 'fill-primary' : 'fill-gray-500'}`}
-              onClick={() => setRating(star)}
+          <div className="mt-6 space-y-4">
+            <textarea
+              placeholder="Write your review here..."
+              value={newReview}
+              onChange={(e) => setNewReview(e.target.value)}
+              className="min-h-[100px] w-full shadow-lg p-2 outline-none"
             />
-          ))}
-        </div>
-        <Button onClick={handleSubmitReview} className="mt-4" disabled={postingReview}>
-          <Send className="w-4 h-4 mr-2" />{postingReview ? "Posting review..." : "Post Review"}
-        </Button>
-      </div>
-      </>
-      }
+            <div className="flex space-x-1">
+              <span className="">Your rating:</span>
+              {[1, 2, 3, 4, 5].map((star) => (
+                <IoMdStar
+                  key={star}
+                  className={`w-6 h-6 cursor-pointer ${
+                    star <= rating ? "fill-primary" : "fill-gray-500"
+                  }`}
+                  onClick={() => setRating(star)}
+                />
+              ))}
+            </div>
+            <Button
+              onClick={handleSubmitReview}
+              className="mt-4"
+              disabled={postingReview}
+            >
+              <Send className="w-4 h-4 mr-2" />
+              {postingReview ? "Posting review..." : "Post Review"}
+            </Button>
+          </div>
+        </>
+      )}
     </div>
   );
 };
