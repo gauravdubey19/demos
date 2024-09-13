@@ -7,17 +7,18 @@ import { RiMoneyDollarCircleLine, RiUserSettingsLine } from "react-icons/ri";
 import { PiWarningCircleThin } from "react-icons/pi";
 import Link from "next/link";
 import { SectionProps, SectionValues } from "@/lib/types";
+import { useSession } from "next-auth/react";
 
 const Sidebar: React.FC<SectionProps> = ({ section }) => {
   // console.log(section);
-
+const {data: session} = useSession();
   return (
     <>
       <aside className="hidden h-full w-fit flex-col border-r bg-background p-4 md:flex drop-shadow-lg overflow-hidden">
         <div className="flex items-center space-x-4 bg-[#ffb43327] text-sm text-primary text-justify p-2">
           <div className="w-10 h-10 rounded-full overflow-hidden">
             <Image
-              src="/assets/card.jpeg"
+              src={session?.user?.image || "/profile.png"}
               alt="profile"
               width={200}
               height={200}

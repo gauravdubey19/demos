@@ -13,12 +13,14 @@ import {
 } from "@/components/ui/sheet";
 import { links } from "@/lib/data";
 import { IoCart } from "react-icons/io5";
+import { useSession } from "next-auth/react";
 
 const MobileNav = () => {
   const [isOpen, setOpen] = useState<boolean>(false);
   const [windowWidth, setWindowWidth] = useState<number>(
     typeof window !== "undefined" ? window.innerWidth : 0
   );
+  const { data: session } = useSession();
   const pathname = usePathname();
 
   const handleMenuClick = () => setOpen(!isOpen);
@@ -75,7 +77,7 @@ const MobileNav = () => {
               className="w-12 h-12 rounded-full overflow-hidden"
             >
               <Image
-                src="/assets/card.jpeg"
+                src={session?.user?.image || "/profile.png"}
                 alt="profile"
                 width={200}
                 height={200}
