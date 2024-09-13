@@ -26,14 +26,14 @@ const SocialsLogin = () => {
   }, []);
 
   return (
-    <div className="w-full mt-10">
+    <div className="w-full mt-7">
       <div className="flex flex-row items-center gap-2 px-10">
         <div className="h-[1px] w-full bg-black" />
         <h1 className="text-black ">OR</h1>
         <div className="h-[1px] w-full bg-black" />
       </div>
 
-      <div className="flex flex-row items-center justify-center gap-10 mt-10">
+      <div className="flex flex-row items-center justify-center gap-10 mt-7">
         {providers &&
           Object.values(providers).map((provider) => (
             <button
