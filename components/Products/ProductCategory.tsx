@@ -41,7 +41,7 @@ const ProductCategory: React.FC<ProductCategoryProps> = ({ category }) => {
     <>
       <section className="relative w-full mt-[60px] py-4 overflow-hidden">
         <Filter />
-        <div className="mt-6 md:mt-0 lg:w-[80%] w-full px-2 md:px-6 lg:px-8">
+        <div className=" mt-6 md:mt-0 lg:w-[80%] w-full px-2 md:px-6 lg:px-8">
           <div className="text-xl lg:text-2xl font-bold">
             {reverseSlug(category)}
           </div>

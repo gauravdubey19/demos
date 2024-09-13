@@ -120,13 +120,15 @@ const CategorySection: React.FC = () => {
         sectionRef.current,
         {
           y: 0,
-          opacity:0
+          opacity:0,
+          scale:.7
         },
         {
-          y: -60, // Move up by 50px
+          y: -80, // Move up by 50px
           ease: "none",
-          duration:.1,
-          delay:1,
+          scale:1.4,
+          duration:.3,
+          delay:0,
           opacity:100,
           scrollTrigger: {
             trigger: sectionRef.current,
@@ -143,16 +145,19 @@ const CategorySection: React.FC = () => {
   const renderContent = () => {
     if (loading) {
       return (
+        <section ref={sectionRef}>
         <CategoryCarousel setActiveSlide={setActiveSlide}>
           {[...Array(3)].map((_, index) => (
-            <div key={index} className="category-item p-10 flex flex-col items-center">
+            <div key={index}  className="category-item p-10 flex flex-col items-center">
               <Skeleton className="h-64 w-full mb-2 bg-slate-200" />
               <Skeleton className="h-2 w-full mb-2 bg-slate-200" />
               <Skeleton className="h-2 w-full mb-2 bg-slate-200" />
               <Skeleton className="h-5 w-full mb-2 bg-slate-200" />
             </div>
+           
           ))}
         </CategoryCarousel>
+         </section>
       );
     }
 
