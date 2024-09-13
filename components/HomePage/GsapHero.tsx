@@ -184,7 +184,7 @@ const GsapHero: React.FC = () => {
               id="left-section"
               className="h-full w-full md:w-[30vw] lg:w-[35vw] transition-transform duration-300 overflow-hidden"
             >
-              <ScrollVideo videoUrl="/macpro.mp4" />
+              <ScrollVideo videoUrl="/videos/sample.mp4" />
             </div>
 
             <div
@@ -198,7 +198,7 @@ const GsapHero: React.FC = () => {
               id="right-section"
               className="h-full w-full md:w-[30vw] lg:w-[35vw] transition-transform duration-300 overflow-hidden"
             >
-              <ScrollVideo videoUrl="/macpro.mp4" />
+              <ScrollVideo videoUrl="/videos/sample.mp4" />
             </div>
           </>
         </div>
@@ -271,4 +271,3 @@ const RightContainer: React.FC<{ showRight: boolean }> = ({ showRight }) => {
     </div>
   );
 };
-
