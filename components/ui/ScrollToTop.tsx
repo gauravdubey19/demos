@@ -1,20 +1,21 @@
 "use client";
 
+import { usePathname } from "next/navigation";
 import React, { useEffect, useState } from "react";
-import { MdPostAdd } from "react-icons/md";
 import { FaArrowUp } from "react-icons/fa";
-import Link from "next/link";
 
 export default function ScrollToTop() {
+  const pathname = usePathname();
   const [isVisible, setIsVisible] = useState(false);
 
   const goToBtn = () => {
-    globalThis.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+    const targetPosition = pathname === "/" ? 1890 : 0;
+    globalThis.scrollTo({ top: targetPosition, left: 0, behavior: "smooth" });
   };
 
   useEffect(() => {
     const listenToScroll = () => {
-      const hidden = 500;
+      const hidden = pathname === "/" ? 2500 : 500;
       const winScroll =
         document.body.scrollTop || document.documentElement.scrollTop;
       if (winScroll > hidden) {
@@ -30,7 +31,7 @@ export default function ScrollToTop() {
         globalThis.removeEventListener("scroll", listenToScroll);
       };
     }
-  }, []);
+  }, [pathname]);
 
   return (
     <>

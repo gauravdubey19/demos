@@ -4,12 +4,11 @@ import React, { useEffect, useState } from "react";
 import { LiaFilterSolid } from "react-icons/lia";
 import { FaArrowDownShortWide, FaArrowUpShortWide } from "react-icons/fa6";
 import {
-  Sheet,
-  SheetClose,
-  SheetContent,
-  SheetTitle,
-  SheetTrigger,
-} from "../ui/sheet";
+  Drawer,
+  DrawerContent,
+  DrawerTitle,
+  DrawerTrigger,
+} from "../ui/drawer";
 
 const MobileFilter = () => {
   // "inc" | "dec"
@@ -40,7 +39,7 @@ const MobileFilter = () => {
   return (
     <>
       <div className="md:hidden">
-        <Sheet open={isOpen} onOpenChange={setOpen}>
+        <Drawer open={isOpen} onOpenChange={setOpen}>
           <div className="fixed bottom-0 left-0 right-0 z-10 w-full bg-zinc-700 flex-between text-white py-2 divide-x-1">
             <div
               onClick={() => setShort(!short)}
@@ -53,27 +52,20 @@ const MobileFilter = () => {
                 <FaArrowDownShortWide size={18} />
               )}
             </div>
-            <SheetTrigger
+            <DrawerTrigger
               asChild
-              className=" active:translate-y-1 ease-in-out duration-300"
+              className="active:translate-y-1 ease-in-out duration-300"
             >
               <div className="w-1/2 flex-center gap-1">
                 <span>Filter</span>
                 <LiaFilterSolid size={18} />
               </div>
-            </SheetTrigger>
+            </DrawerTrigger>
           </div>
-          <SheetContent
-            side="bottom"
-            className="md:hidden bottom-0 z-50 w-full h-[70vh] rounded-t-3xl backdrop-blur-lg bg-transparent border-none outline-none shadow-[0_0_20px_rgba(0,0,0,0.5)] p-4 overflow-x-hidden overflow-y-scroll"
-            closeIcon={false}
-          >
-            <SheetTitle className="w-full flex-between text-xl text-white font-normal">
+          <DrawerContent className="md:hidden bottom-0 z-50 w-full h-[70vh] rounded-t-3xl backdrop-blur-lg bg-transparent border-none outline-none shadow-[0_0_20px_rgba(0,0,0,0.5)] p-4 overflow-x-hidden overflow-y-scroll">
+            <DrawerTitle className="w-full flex-between text-xl text-white font-normal">
               Filter
-              <SheetClose className="w-fit outline-none border-none pr-1 active:scale-90 ease-in-out duration-300">
-                X
-              </SheetClose>
-            </SheetTitle>
+            </DrawerTitle>
 
             <div className="flex-col space-y-4 text-white">
               <div>
@@ -164,8 +156,8 @@ const MobileFilter = () => {
                 </div>
               </div>
             </div>
-          </SheetContent>
-        </Sheet>
+          </DrawerContent>
+        </Drawer>
       </div>
     </>
   );
