@@ -59,7 +59,7 @@ const MobileNav = () => {
         </SheetTrigger>
         <SheetContent
           side={"right"}
-          className="top-[3.7rem] backdrop-blur-lg bg-transparent z-50 border-none outline-none p-4 shadow-[0_0_20px_rgba(0,0,0,0.5)]"
+          className="top-[3.7rem] backdrop-blur-sm bg-white/20 z-50 border-none outline-none p-4 shadow-[0_0_20px_rgba(0,0,0,0.5)]"
           closeIcon={false}
         >
           <SheetTitle className="w-full flex justify-end gap-6">
