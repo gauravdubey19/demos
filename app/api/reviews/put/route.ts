@@ -7,12 +7,12 @@ import Review from "@/models/Reviews";
 export async function PUT(req: NextRequest) {
     try {
         await connectToDB();
-        const { reviewId, rating, review_title, review_descr } = await req.json(); 
+        const { reviewId, rating, review_descr } = await req.json(); 
 
         if(!reviewId){
           return NextResponse.json({ error: 'reviewId is required' }, { status: 400 });
         }
-        const review = await updateReview(reviewId, rating, review_title, review_descr);
+        const review = await updateReview(reviewId, rating, review_descr);
         return NextResponse.json(review, { status: 200 });
     } catch (error) {
         return NextResponse.json({ error: 'error updating' }, { status: 500 });
@@ -20,7 +20,7 @@ export async function PUT(req: NextRequest) {
 }
 
 // Update review based on reviewId
-async function updateReview(reviewId: string, rating: number, review_title: string, review_descr: string) {
+async function updateReview(reviewId: string, rating: number,  review_descr: string) {
     if(!reviewId){
       throw new Error('Review ID is required');
     }
@@ -31,7 +31,6 @@ async function updateReview(reviewId: string, rating: number, review_title: stri
         throw new Error('Review not found');
       }
       review.rating = rating ?? review.rating;
-      review.review_title = review_title ?? review.review_title;
       review.review_descr = review_descr ?? review.review_descr;
       await review.save();
       return review;
