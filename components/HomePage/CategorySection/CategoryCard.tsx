@@ -88,16 +88,18 @@ interface CategoryCardProps {
   activeSlide: number;
   index: number;
   loading: boolean;
+  className:string;
 }
 
 const CategoryCard: React.FC<CategoryCardProps> = ({
   item,
   activeSlide,
   index,
+  className,
   loading = true
 }) => {
   return (
-    <div className="px-2 sm:px-4 py-10">
+    <div className={`px-2 sm:px-4 py-10 ${className}`}>
       <div
         className={`relative transition-all flex items-center justify-center flex-col duration-300 ${activeSlide === index
             ? "opacity-100 scale-100 sm:scale-100"

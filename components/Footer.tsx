@@ -4,13 +4,25 @@ import Link from "next/link";
 import Image from "next/image";
 import { footer } from "@/lib/data";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FormStatus } from "@/lib/types";
 import MagneticDiv from "./ui/MagnaticDiv";
+import { usePathname } from "next/navigation";
+
 
 const Footer: React.FC<{ appName?: string }> = ({ appName = "LOGO" }) => {
+  const [filterSize,setFilterSize] = useState(false)
+  const pathname = usePathname();
+  console.log(pathname.startsWith("/products/"));
+  useEffect(()=>{
+    if (pathname.startsWith("/products/")){
+      setFilterSize(true);
+    }else{
+      setFilterSize(false);
+    }
+  }, [ pathname])
   return (
-    <footer className="bg-background text-foreground py-12 border-t border-border space-y-4 sm:space-y-6 md:space-y-8 lg:space-y-10 overflow-hidden">
+    <footer className={`bg-background ${filterSize ?"md:w-[80%]":"md:w-full"} text-foreground py-12 border-t border-border space-y-4 sm:space-y-6 md:space-y-8 lg:space-y-10 overflow-hidden`}>
       <div className="container max-w-7xl w-full h-fit">
         {/* Logo */}
         <MagneticDiv className="w-fit ease-in-out duration-1000">
