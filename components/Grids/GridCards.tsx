@@ -278,11 +278,12 @@ const GridCards = () => {
     if (containerRef.current) {
       gsap.fromTo(
         containerRef.current,
-        { opacity: 0, y: 0 }, 
+        { opacity: 0, y: 0 ,scale:.8}, 
         {
           opacity: 1,
-          y: 0,
+          y: -20,
           duration: 2,
+          scale:1,
           ease: "power3.out",
           scrollTrigger: {
             trigger: containerRef.current, // Animate the container when it enters the viewport
