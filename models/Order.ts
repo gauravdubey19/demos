@@ -1,102 +1,78 @@
-import mongoose, { Schema, model, models, mongo } from "mongoose";
+import { Schema, model, models } from "mongoose";
 
-const OrderSchema = new Schema({
-  user: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
-    required: true,
-  },
-  productInfo: {
+const OrderItemSchema = new Schema(
+  {
     productId: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: Schema.Types.ObjectId,
       ref: "Product",
     },
-    productName: {
+    title: {
       type: String,
       required: true,
     },
-    productDescr: {
+    slug: {
+      type: String,
+      unique: true,
+      required: true,
+    },
+    description: {
       type: String,
       required: true,
     },
-    productImages: {
-      type: [String], // Array of strings for image URLs
-      required: true,
-    },
-    categories: {
-      type: [String], // Array of strings for categories
-      required: true,
-    },
-    productMP: {
-      type: Number, // Market price
-      required: true,
-    },
-    productSP: {
-      type: Number, // Selling price
-      required: true,
-    },
-    varieties: {
-      colors: {
-        type: [String], // Array of strings for colors
-        required: true,
-      },
-      sizes: {
-        type: [String], // Array of strings for sizes
-        required: true,
-      },
-    },
-    productFAQs: {
-      type: [String], // Array of strings for FAQs
-      required: false,
-    },
-    productDetails: {
-      material: {
-        type: String,
-        required: false,
-      },
-      origin: {
-        type: String,
-        required: false,
-      },
-      fabric: {
-        type: String,
-        required: false,
-      },
-    },
-  },
-  orderInfo: {
-    orderDate: {
-      type: Date,
-      required: true,
-    },
-    shippingDate: {
-      type: Date,
-      required: true,
-    },
-    deliveryDate: {
-      type: Date,
-      required: true,
-    },
-    orderStatus: {
+    image: {
       type: String,
-      enum: ["pending", "shipped", "delivered"],
+      required: true,
+    },
+    price: {
+      type: Number,
       required: true,
     },
     quantity: {
       type: Number,
       required: true,
-      min: 1,
-    },
-    totalPrice: {
-      type: Number,
-      required: true,
-    },
-    shippingAddress: {
-      type: String,
-      required: true,
     },
   },
-});
+  { timestamps: true }
+);
+
+const OrderSchema = new Schema(
+  {
+    userId: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
+    orderedProducts: [OrderItemSchema],
+    orderInfo: {
+      orderStatus: {
+        type: String,
+        enum: ["pending", "shipped", "delivered"],
+        required: true,
+      },
+      totalPrice: {
+        type: Number,
+        required: true,
+      },
+      orderDate: {
+        type: Date,
+        required: true,
+      },
+      deliveryDate: {
+        type: Date,
+        required: true,
+      },
+      shippingDate: {
+        type: Date,
+        required: true,
+      },
+      shippingAddress: {
+        type: String,
+        required: true,
+      },
+    },
+  },
+  { timestamps: true }
+);
 
 const Order = models.Order || model("Order", OrderSchema);
 

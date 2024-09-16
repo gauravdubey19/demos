@@ -19,7 +19,7 @@ export async function DELETE(req: NextRequest, { params }: { params: { userId: s
         // Delete the contact based on userId and optional _id
         const deletedContact = await Contact.findOneAndDelete(
             { userId, _id }, // Filter by userId and optionally _id
-        ).exec();
+        );
 
         if (!deletedContact) {
             return NextResponse.json({ error: 'Contact not found' }, { status: 404 });

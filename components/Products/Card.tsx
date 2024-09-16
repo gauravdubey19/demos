@@ -7,7 +7,6 @@ import { CardDetails } from "@/lib/types";
 import { Button } from "../ui/button";
 import { IoMdStar } from "react-icons/io";
 import { GoHeart, GoHeartFill } from "react-icons/go";
-import { MdOutlineAddShoppingCart } from "react-icons/md";
 import { calculateDiscount } from "@/lib/utils";
 import { useCart } from "@/context/CartProvider";
 
@@ -117,7 +116,7 @@ const Card: React.FC<CardDetails> = ({ card, category, loading = false }) => {
             >
               {!loading && "₹" + card.price}
             </span>
-            <div className="flex gap-2">
+            <div className="flex flex-wrap gap-2">
               <span
                 className={`text-sm md:text-md line-through text-gray-400 ${
                   loading &&
@@ -137,15 +136,6 @@ const Card: React.FC<CardDetails> = ({ card, category, loading = false }) => {
               </span>
             </div>
           </div>
-          {/* <div className="w-full flex gap-2"> */}
-          {/* <Link href={`/products/category/${card.head}`} className="w-full">
-              <Button
-                size="sm"
-                className="w-full bg-transparent border border-primary text-primary font-light rounded-none hover:shadow-md transition-transform duration-300"
-              >
-                View More
-              </Button>
-            </Link> */}
           <Button
             onClick={handleAddToCartBtn}
             disabled={itemExistInCart(card._id)}
@@ -158,10 +148,6 @@ const Card: React.FC<CardDetails> = ({ card, category, loading = false }) => {
           >
             {itemExistInCart(card._id) ? "Added to cart" : "Add to cart"}
           </Button>
-          {/* <div className="lg:hidden flex items-center">
-              <MdOutlineAddShoppingCart size={25} className="text-primary" />
-            </div>
-          </div> */}
         </div>
       </div>
     </>

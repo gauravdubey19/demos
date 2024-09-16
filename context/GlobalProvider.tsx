@@ -14,6 +14,17 @@ interface User {
     gender?: string;
     cart?: string[];
     orders?: string[];
+    address?: string;
+    city?: {
+      name?: string;
+      code?: string
+    };
+    state?: {
+      name?: string;
+      code?: string;
+    };
+    zip?: string
+    country?: string;
   }
 
   interface GlobalState {
@@ -62,8 +73,22 @@ const GlobalProvider = ({ children }: { children: ReactNode }) => {
     }
     try {
       const response = await fetch(`/api/users/${extendedSession.user.id}`);
+      const contactResponse = await fetch(`/api/contact/${extendedSession.user.id}`);
+      if (!response.ok) {
+        setError('Error fetching user');
+        return;
+      }
+      if (!contactResponse.ok) {
+        setError('Error fetching contact');
+        return;
+      }
       const userData = await response.json();
-      setUser(userData);
+      const contactData = await contactResponse.json();
+      const userDataObj = {
+        ...userData,
+        ...contactData
+      }
+      setUser(userDataObj);
     } catch (error) {
       console.error('Error fetching user:', error);
       setError('Error fetching user');

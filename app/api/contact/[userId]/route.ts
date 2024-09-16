@@ -18,7 +18,7 @@ export async function GET(req: NextRequest, { params }: { params: { userId: stri
     }
 
     try {
-        const contacts = await getContacts(userId);
+        const contacts = await getContact(userId);
         return NextResponse.json(contacts, { status: 200 });
     } catch (error) {
         return NextResponse.json({ error: 'Error fetching contacts' }, { status: 500 });
@@ -26,13 +26,13 @@ export async function GET(req: NextRequest, { params }: { params: { userId: stri
 }
 
 // Fetch contacts based on userId
-async function getContacts(userId: string) {
+async function getContact(userId: string) {
     if (typeof userId !== 'string') {
         throw new Error('Invalid userId');
     }
 
     try {
-        const contacts = await Contact.find({ userId }).exec();
+        const contacts = await Contact.findOne({ userId })
         return contacts;
     } catch (error) {
         console.error('Error fetching contacts:', error);

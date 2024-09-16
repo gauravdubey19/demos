@@ -7,9 +7,10 @@ import Image from "next/image";
 import { gsap } from "gsap";
 import { useCursor } from "@/context/CursorProvider";
 import { links } from "@/lib/data";
-import MobileNav, { Cart } from "./MobileNav";
+import MobileNav from "./MobileNav";
 // import { IoCart } from "react-icons/io5";
 import { useSession } from "next-auth/react";
+import Cart from "./CartSheet";
 
 const Navbar: React.FC<{ appName?: string }> = ({ appName = "LOGO" }) => {
   const [isVisible, setIsVisible] = useState<boolean>(false);
@@ -99,20 +100,14 @@ const Navbar: React.FC<{ appName?: string }> = ({ appName = "LOGO" }) => {
           );
         })}
         <div className="ml-2 flex md:gap-4 lg:gap-6">
-          {/* <Link
-          
-            href={"/#cart"}
-            className="relative w-10 h-10 rounded-full border border-[#D3D3D3] flex-center"
-          >
-            <div className="absolute top-0.5 right-0.5 w-1.5 h-1.5 bg-primary rounded-full"></div>
-            <IoCart size={25} className="fill-[#717171]" />
-          </Link> */}
           {session?.user ? (
             <>
               <Cart />
               <Link
                 href={"/profile/personal-information"}
-                className="w-10 h-10 rounded-full overflow-hidden"
+                className={`w-10 h-10 rounded-full ${
+                  pathname.includes("/profile") && "border-2 border-primary"
+                } overflow-hidden`}
               >
                 <Image
                   src={session?.user?.image || "/profile.png"}

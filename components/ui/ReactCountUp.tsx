@@ -8,7 +8,7 @@ const ReactCountUp = ({
   children,
 }: {
   amt: number;
-  className: string;
+  className?: string;
   prefix?: string;
   decimals?: boolean;
   children?: React.ReactNode;

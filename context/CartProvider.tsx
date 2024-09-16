@@ -120,6 +120,7 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
         if (res.ok) {
           setCart((prevCart) => [...prevCart, newItem]);
           toast({
+            imgSrc: image,
             title: data.message || "Product added to cart.",
             description: "You can view the product in your cart.",
           });
@@ -165,11 +166,26 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
         const data = await res.json();
 
         if (res.ok) {
-          setCart((prevCart) =>
-            prevCart.filter((item) => item.productId !== productId)
-          );
-          toast({
-            title: data.message || "Product removed successfully.",
+          setCart((prevCart) => {
+            const updatedCart = prevCart.filter(
+              (item) => item.productId !== productId
+            );
+
+            const removedItem = prevCart.find(
+              (item) => item.productId === productId
+            );
+            if (removedItem) {
+              toast({
+                imgSrc: removedItem.image,
+                title: data.message || "Product removed successfully.",
+                variant: "destructive",
+              });
+            } else {
+              toast({
+                title: data.message || "Product removed successfully.",
+              });
+            }
+            return updatedCart;
           });
         } else {
           toast({

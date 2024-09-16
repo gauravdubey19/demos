@@ -1,38 +1,37 @@
+// api/order/route.ts
 import { NextRequest, NextResponse } from "next/server";
-import { getServerSession } from "next-auth";
 import { connectToDB } from "@/utils/db";
-import Orders from "@/models/Orders";
+import Order from "@/models/Order";
 
 export const POST = async (request: NextRequest) => {
   try {
-    const { addToCartProductData } = await request.json();
-    console.log(addToCartProductData);
+    const { userId, orderedProducts, orderInfo } = await request.json();
 
-    const session = await getServerSession();
-    console.log(session);
+    if (!userId || !orderedProducts || !orderInfo) {
+      return NextResponse.json(
+        { error: "Missing required fields" },
+        { status: 400 }
+      );
+    }
 
-    // await connectToDB();
+    await connectToDB();
 
-    // const newCart = new Orders({
-    //   title,
-    //   slug,
-    //   description,
-    //   price,
-    //   quantity: 1,
-    //   image,
-    // });
+    const newOrder = new Order({
+      userId,
+      orderedProducts,
+      orderInfo,
+    });
 
-    // const savedCart = await newCart.save();
-    // console.log("Saved cart:", savedCart);
+    const savedOrder = await newOrder.save();
 
     return NextResponse.json(
-      { message: "Product added to the cart successfully!" },
+      { message: "Order created successfully!", order: savedOrder },
       { status: 201 }
     );
   } catch (error) {
-    console.error("Error adding product to cart:", error);
+    console.error("Error creating order:", error);
     return NextResponse.json(
-      { error: "Something went wrong while adding product to cart" },
+      { error: "Something went wrong while creating the order" },
       { status: 500 }
     );
   }

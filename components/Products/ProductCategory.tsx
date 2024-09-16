@@ -49,7 +49,7 @@ const ProductCategory: React.FC<ProductCategoryProps> = ({ category }) => {
           <div className="md:ml-2 text-xl lg:text-2xl font-bold px-2 md:px-0">
             {reverseSlug(category)}
           </div>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-1 md:gap-6">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-1 md:gap-6">
             {products.map((card, index) => (
               <Card key={index} card={card} category={category} />
             ))}

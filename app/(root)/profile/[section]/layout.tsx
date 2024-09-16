@@ -3,13 +3,13 @@ import Sidebar from "@/components/Profile/Sidebar";
 import { ProfileParams } from "@/lib/types";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { use, useEffect } from "react";
+import { useEffect } from "react";
 
 export default function ProfilePage({ params, children }: ProfileParams) {
-  const {data:session} = useSession();
+  const { data: session } = useSession();
   const router = useRouter();
   useEffect(() => {
-    if (!session?.user.id) {
+    if (!session) {
       router.push("/");
     }
   }, [session, router]);
