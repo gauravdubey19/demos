@@ -36,7 +36,6 @@ import { BiEditAlt } from "react-icons/bi";
 const ProductDetail: React.FC<{ slug: string }> = ({ slug }) => {
   const [product, setProduct] = useState<ProductDetailValues | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
-  const { data: session } = useSession();
 
   useEffect(() => {
     const fetchProductBySlug = async () => {
@@ -86,13 +85,7 @@ const ProductDetail: React.FC<{ slug: string }> = ({ slug }) => {
           />
           <Details product={product} />
         </div>
-        {session?.user?.id ? (
           <ProductReviews slug={slug} />
-        ) : (
-          <div className=" text-center text-lg text-gray-500 mt-4">
-            Please login to view reviews
-          </div>
-        )}
       </section>
     </>
   );
@@ -479,25 +472,12 @@ const ProductReviews: React.FC<ProductReviewsProps> = ({ slug }) => {
 
     fetchReviews();
   }, [slug]);
-  // const handleLike = (_id: number) => {
-  //   setReviews(
-  //     reviews.map((review) =>
-  //       review._id === _id ? { ...review, likes: review.likes + 1 } : review
-  //     )
-  //   );
-  // };
-
-  // const handleDislike = (_id: number) => {
-  //   setReviews(
-  //     reviews.map((review) =>
-  //       review._id === _id
-  //         ? { ...review, dislikes: review.dislikes + 1 }
-  //         : review
-  //     )
-  //   );
-  // };
 
   const handleSubmitReview = async () => {
+    if(!session){
+      alert('Please login to post a review');
+      return;
+    }
     if (newReview.trim()) {
       const newReviewObj = {
         username: session?.user?.name || "Guest",

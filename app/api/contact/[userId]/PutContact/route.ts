@@ -11,23 +11,29 @@ export async function PUT(req: NextRequest, { params }: { params: { userId: stri
     if (!userId) {
         return NextResponse.json({ error: 'User ID is required' }, { status: 400 });
     }
-
-    const {_id, email, phoneNo, shippingAddress, country, city, pincode } = await req.json();
-
-    if (!_id && !email && !phoneNo && !shippingAddress && !country && !city && !pincode) {
-        return NextResponse.json({ error: 'At least one field is required to update' }, { status: 400 });
-    }
+    const {  address, country, city, zip, state } = await req.json();
+    console.log("state in backend: ", state);
+    const alreadyExists = await Contact.findOne({ userId});
+    const updateFields = {
+        address: address ?? alreadyExists?.address,
+        country: country ?? alreadyExists?.country,
+        city: {
+            name: city?.name ?? alreadyExists?.city.name,
+            code: city?.code ?? alreadyExists?.city.code
+        },
+        zip: zip ?? alreadyExists?.zip,
+        state: {
+            name: state?.name ?? alreadyExists?.state.name,
+            code: state?.code ?? alreadyExists?.state.code
+        }
+    };
 
     try {
         const updatedContact = await Contact.findOneAndUpdate(
-            { userId,_id }, // Filter by userId
-            { email, phoneNo, shippingAddress, country, city, pincode }, // Update fields
-            { new: true, runValidators: true } // Return the updated document and run validators
-        ).exec();
-
-        if (!updatedContact) {
-            return NextResponse.json({ error: 'Contact not found' }, { status: 404 });
-        }
+            { userId },
+            { $set: updateFields },
+            { new: true, runValidators: true, upsert: true } // Added upsert option
+        );
 
         return NextResponse.json(updatedContact, { status: 200 });
     } catch (error) {
