@@ -165,7 +165,6 @@ const PersonalSection = () => {
     });
  
     if (response.ok) {
-      console.log('userData:', userDataObj);
     } else {
       const errorData = await response.json();
       alert(`Error: ${errorData.message}`);
@@ -282,7 +281,6 @@ const ContactSection = () => {
           code: state.isoCode,
         }
         });
-      console.log('Indian states:', stateNames);
       setStates([{
         name: 'Select a state',
         code: '',
@@ -296,10 +294,8 @@ const ContactSection = () => {
     if (!userData || !userData.state) {
       return;
     }
-    console.log('userData:', userData);
     if(userData.state.code){
      const cities = City.getCitiesOfState('IN', userData.state.code);
-     console.log('Cities:', cities);
       if (cities) {
         const cityNames = cities.map(city => {
           return {
@@ -342,7 +338,6 @@ const ContactSection = () => {
       zip: userData.zip,
       country: userData.country,
     };
-    console.log('contactObj:', contactObj);
     try{
     const extendedSession = session as SessionExtended;
     const response = await fetch(`/api/contact/${extendedSession.user.id}/PutContact`, {
