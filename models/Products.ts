@@ -76,3 +76,23 @@ const Products = models.Products || model("Products", ProductSchema);
 
 export default Products;
 
+// warrantyInformation: {
+//   type: String,
+//   required: false,
+// },
+// availabilityStatus: {
+//   type: String,
+//   required: false,
+// },
+// minimumOrderQuantity: {
+//   type: String,
+//   required: false,
+// },
+// stock: {
+//   type: String,
+//   required: false,
+// },
+// brand: {
+//   type: String,
+//   required: false,
+// },

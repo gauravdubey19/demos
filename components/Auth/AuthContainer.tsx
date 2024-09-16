@@ -11,10 +11,10 @@ const AuthContainer: React.FC<{ children?: React.ReactNode }> = ({
 }) => {
   const pathname = usePathname();
   return (
-    <div className="h-screen w-full flex bg-[#F5F5F5] relative animate-slide-up">
+    <div className="h-screen w-full flex bg-[#F5F5F5] relative">
       <div className="w-[40%] bg-[#f0d464]" />
       <div className="absolute h-full w-full bg-red flex items-center justify-center sm:p-11 xl:p-10 xl:px-40">
-        <div className="relative h-full w-full flex md:flex-row flex-col sm:rounded-3xl bg-white shadow-2xl shadow-neutral-900 overflow-hidden">
+        <div className="relative h-full w-full flex md:flex-row flex-col sm:rounded-3xl bg-white shadow-2xl shadow-neutral-900 animate-slide-up overflow-hidden">
           <div className="relative md:w-[50%] w-full h-full md:block hidden">
             <Image
               src="/textile.png"

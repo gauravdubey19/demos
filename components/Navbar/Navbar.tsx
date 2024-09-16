@@ -7,8 +7,8 @@ import Image from "next/image";
 import { gsap } from "gsap";
 import { useCursor } from "@/context/CursorProvider";
 import { links } from "@/lib/data";
-import MobileNav from "./MobileNav";
-import { IoCart } from "react-icons/io5";
+import MobileNav, { Cart } from "./MobileNav";
+// import { IoCart } from "react-icons/io5";
 import { useSession } from "next-auth/react";
 
 const Navbar: React.FC<{ appName?: string }> = ({ appName = "LOGO" }) => {
@@ -64,11 +64,10 @@ const Navbar: React.FC<{ appName?: string }> = ({ appName = "LOGO" }) => {
   return (
     <div
       ref={navbarRef}
-      className="fixed top-0 z-[9999] h-[60px] w-full flex-between bg-white text-black p-2 px-3 md:p-4 lg:px-12 overflow-hidden shadow-lg transition-all"
+      className="fixed top-0 z-[9999] h-[60px] w-full select-none flex-between bg-white text-black p-2 px-3 md:p-4 lg:px-12 overflow-hidden shadow-lg transition-all"
       style={{ transform: "translateY(-100px)", opacity: 0 }}
     >
       <Link
-      
         href="/"
         className="flex-between gap-1 text-2xl lg:text-3xl font-black overflow-hidden"
       >
@@ -87,7 +86,6 @@ const Navbar: React.FC<{ appName?: string }> = ({ appName = "LOGO" }) => {
           const isActive = pathname === link.href;
           return (
             <Link
-            
               href={link.href}
               key={index}
               className={`capitalize cursor-pointer ${
@@ -100,32 +98,33 @@ const Navbar: React.FC<{ appName?: string }> = ({ appName = "LOGO" }) => {
             </Link>
           );
         })}
-        <div className="ml-2 flex gap-3">
-          <Link
+        <div className="ml-2 flex md:gap-4 lg:gap-6">
+          {/* <Link
           
             href={"/#cart"}
             className="relative w-10 h-10 rounded-full border border-[#D3D3D3] flex-center"
           >
             <div className="absolute top-0.5 right-0.5 w-1.5 h-1.5 bg-primary rounded-full"></div>
             <IoCart size={25} className="fill-[#717171]" />
-          </Link>
+          </Link> */}
           {session?.user ? (
-            <Link
-            
-              href={"/profile/personal-information"}
-              className="w-10 h-10 rounded-full overflow-hidden"
-            >
-              <Image
-                src={session?.user?.image || "/profile.png"} 
-                alt="profile"
-                width={200}
-                height={200}
-                className="w-full h-full object-cover"
-              />
-            </Link>
+            <>
+              <Cart />
+              <Link
+                href={"/profile/personal-information"}
+                className="w-10 h-10 rounded-full overflow-hidden"
+              >
+                <Image
+                  src={session?.user?.image || "/profile.png"}
+                  alt="profile"
+                  width={200}
+                  height={200}
+                  className="w-full h-full object-cover"
+                />
+              </Link>
+            </>
           ) : (
             <Link
-            
               href={"/sign-in"}
               className="capitalize cursor-pointer flex-center px-4 rounded ring-1 ring-primary shadow-md text-black hover:text-white hover:bg-primary ease-in-out duration-300"
             >

@@ -32,6 +32,8 @@ import {
 import { ThumbsUp, ThumbsDown, Send, Star } from "lucide-react";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { BiEditAlt } from "react-icons/bi";
+import { useCart } from "@/context/CartProvider";
+import ReactCountUp from "../ui/ReactCountUp";
 
 const ProductDetail: React.FC<{ slug: string }> = ({ slug }) => {
   const [product, setProduct] = useState<ProductDetailValues | null>(null);
@@ -179,7 +181,7 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({
   }, [handleScroll]);
 
   return (
-    <div className="select-none lg:sticky top-20 w-full h-full md:h-[50vh] lg:h-[85vh] flex flex-col gap-3 md:flex-row-reverse justify-between overflow-hidden lg:overflow-visible">
+    <div className="relative z-50 select-none lg:sticky top-20 w-full h-full md:h-[50vh] lg:h-[85vh] flex flex-col gap-3 md:flex-row-reverse justify-between overflow-hidden lg:overflow-visible">
       <Image
         src={currentImage}
         alt="Product Image"
@@ -196,7 +198,7 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({
         imageFit="cover"
         width="100%"
         height="100%"
-        className="hidden lg:block md:w-[80%] h-full"
+        className="hidden lg:block md:w-[80%] h-full relative"
       />
 
       <div className="relative w-full md:w-[20%] h-[25%] md:h-full">
@@ -267,6 +269,19 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({
   );
 };
 const Details: React.FC<DetailsProps> = ({ product }) => {
+  const { handleAddToCart, itemExistInCart, isOpen, setOpen } = useCart();
+
+  const handleAddToCartBtn = () => {
+    handleAddToCart(
+      product._id,
+      product.title,
+      product.slug,
+      product.description,
+      product.price,
+      product.mainImage
+    );
+  };
+
   const sizeLabels: { [key: string]: string } = {
     S: "Small",
     M: "Medium",
@@ -287,10 +302,18 @@ const Details: React.FC<DetailsProps> = ({ product }) => {
 
       {/* Pricing and Discount */}
       <div className="flex items-end gap-2">
-        <span className="text-4xl font-bold">₹{product.price.toFixed(2)}</span>
-        <span className="text-md text-green-500 font-medium">
-          {calculateDiscount(product.price, product.oldPrice)}% off
-        </span>
+        <ReactCountUp
+          prefix="₹"
+          amt={product.price}
+          decimals={true}
+          className="text-4xl font-bold"
+        />
+        <ReactCountUp
+          amt={calculateDiscount(product.price, product.oldPrice)}
+          className="text-md text-green-500 font-medium"
+        >
+          % off
+        </ReactCountUp>
       </div>
 
       {/* Ratings and Reviews */}
@@ -338,12 +361,23 @@ const Details: React.FC<DetailsProps> = ({ product }) => {
         {/* Action Buttons */}
         <div className="grid gap-2">
           <Button
+            disabled={itemExistInCart(product._id)}
             size="lg"
-            className="w-full flex gap-1 bg-transparent text-lg text-primary border border-primary rounded-none hover:shadow-md active:translate-y-0.5 ease-in-out duration-300"
+            className="w-full select-none z-10 flex gap-1 bg-transparent text-lg text-primary border border-primary rounded-none hover:shadow-md active:translate-y-0.5 ease-in-out duration-300"
           >
-            Add to cart <span className="text-2xl">+</span>
+            {itemExistInCart(product._id) ? (
+              "Added to cart"
+            ) : (
+              <>
+                Add to cart <span className="text-2xl">+</span>
+              </>
+            )}
           </Button>
           <Button
+            onClick={() => {
+              setOpen(!isOpen);
+              handleAddToCartBtn();
+            }}
             size="lg"
             className="w-full text-lg rounded-none hover:shadow-md active:translate-y-0.5 ease-in-out duration-300"
           >

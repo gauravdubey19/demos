@@ -175,3 +175,15 @@ export interface FormStatus {
   status?: string;
   message?: string;
 }
+
+// Cart
+
+export interface CartItem {
+  productId: string;
+  title: string;
+  slug: string;
+  description: string;
+  price: number;
+  quantity: number;
+  image: string;
+}

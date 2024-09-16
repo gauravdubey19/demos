@@ -9,11 +9,25 @@ import { IoMdStar } from "react-icons/io";
 import { GoHeart, GoHeartFill } from "react-icons/go";
 import { MdOutlineAddShoppingCart } from "react-icons/md";
 import { calculateDiscount } from "@/lib/utils";
+import { useCart } from "@/context/CartProvider";
 
 const Card: React.FC<CardDetails> = ({ card, category, loading = false }) => {
   // console.log(card);
-
   const [fav, setFav] = useState<boolean>(false);
+
+  const { handleAddToCart, itemExistInCart } = useCart();
+
+  const handleAddToCartBtn = () => {
+    handleAddToCart(
+      card._id,
+      card.title,
+      card.slug,
+      card.description,
+      card.price,
+      card.mainImage
+    );
+  };
+
   return (
     <>
       {/* Link href={"#"} */}
@@ -106,14 +120,16 @@ const Card: React.FC<CardDetails> = ({ card, category, loading = false }) => {
             <div className="flex gap-2">
               <span
                 className={`text-sm md:text-md line-through text-gray-400 ${
-                  loading && "mt-1 lg:mt-0 w-14 h-3 md:h-5 bg-gray-200 animate-pulse"
+                  loading &&
+                  "mt-1 lg:mt-0 w-14 h-3 md:h-5 bg-gray-200 animate-pulse"
                 }`}
               >
                 {!loading && "₹" + card.oldPrice}
               </span>
               <span
                 className={`text-xs md:text-sm text-[#2CD396] ${
-                  loading && "mt-1 lg:mt-0 w-14 h-3 md:h-5 bg-gray-200 animate-pulse"
+                  loading &&
+                  "mt-1 lg:mt-0 w-14 h-3 md:h-5 bg-gray-200 animate-pulse"
                 }`}
               >
                 {!loading &&
@@ -131,14 +147,16 @@ const Card: React.FC<CardDetails> = ({ card, category, loading = false }) => {
               </Button>
             </Link> */}
           <Button
+            onClick={handleAddToCartBtn}
+            disabled={itemExistInCart(card._id)}
             size="sm"
-            className={`w-full font-light rounded-none hover:shadow-md active:translate-y-0.5 ${
+            className={`w-full select-none font-light rounded-none hover:shadow-md active:translate-y-0.5 ${
               loading
                 ? "bg-gray-200 animate-pulse text-gray-200"
                 : "text-white bg-primary duration-300"
             } ease-in-out`}
           >
-            Add to cart
+            {itemExistInCart(card._id) ? "Added to cart" : "Add to cart"}
           </Button>
           {/* <div className="lg:hidden flex items-center">
               <MdOutlineAddShoppingCart size={25} className="text-primary" />

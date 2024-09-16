@@ -104,7 +104,7 @@ const ImageMagnify: React.FC<ImageMagnifyProps> = ({
       {/* zoomed-in image */}
       {isHovering && (
         <div
-          className="absolute top-0 left-full ml-4 backdrop-blur-sm overflow-hidden"
+          className="absolute top-0 z-50 left-full ml-4 backdrop-blur-sm overflow-hidden"
           style={{
             width,
             height,
