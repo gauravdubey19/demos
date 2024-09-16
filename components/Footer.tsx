@@ -180,14 +180,9 @@ export default Footer;
 
 
 
-// import { useState } from "react";
-import axios from "axios";
-// import Button from "./Button"; // Assuming you're using a Button component
 
-// type FormStatus = {
-//   status: "error" | "success" | "";
-//   message: string;
-// };
+import axios from "axios";
+
 
 const Form = () => {
   const [email, setEmail] = useState<string>("");
