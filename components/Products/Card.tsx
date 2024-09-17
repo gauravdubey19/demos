@@ -17,14 +17,15 @@ const Card: React.FC<CardDetails> = ({ card, category, loading = false }) => {
   const { handleAddToCart, itemExistInCart } = useCart();
 
   const handleAddToCartBtn = () => {
-    handleAddToCart(
-      card._id,
-      card.title,
-      card.slug,
-      card.description,
-      card.price,
-      card.mainImage
-    );
+    // handleAddToCart(
+    //   card._id,
+    //   card.title,
+    //   card.slug,
+    //   card.description,
+    //   card.price,
+    //   card.mainImage,
+    //   card.mainImage,
+    // );
   };
 
   return (
@@ -136,7 +137,7 @@ const Card: React.FC<CardDetails> = ({ card, category, loading = false }) => {
               </span>
             </div>
           </div>
-          <Button
+          {/* <Button
             onClick={handleAddToCartBtn}
             disabled={itemExistInCart(card._id)}
             size="sm"
@@ -147,7 +148,7 @@ const Card: React.FC<CardDetails> = ({ card, category, loading = false }) => {
             } ease-in-out`}
           >
             {itemExistInCart(card._id) ? "Added to cart" : "Add to cart"}
-          </Button>
+          </Button> */}
         </div>
       </div>
     </>

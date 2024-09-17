@@ -1,6 +1,5 @@
 // "use client";
 
-
 // import ProductSection from "@/components/Products/ProductSection";
 // import { CategoryValues } from "@/lib/types";
 // import React, { useEffect, useState } from "react";
@@ -81,8 +80,6 @@
 
 // export default ProductCategorySection;
 
-
-
 "use client";
 
 import ProductSection from "@/components/Products/ProductSection";
@@ -122,8 +119,8 @@ const ProductCategorySection: React.FC<{ limit?: number }> = ({
       }
     };
 
-    if (categories.length === 0) fetchCategories();
-  }, [categories.length]);
+    fetchCategories();
+  }, []);
 
   // GSAP animation for fade-in from left on scroll
   useEffect(() => {

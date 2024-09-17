@@ -37,7 +37,6 @@
 //     fetchCategories();
 //   }, []);
 
-
 //   return (
 //     <section className="h-[calc(100vh-60px)] w-full flex-center flex-col p-4 overflow-hidden">
 //       <div className="w-full max-w-3xl mb-5">
@@ -67,9 +66,7 @@
 
 // export default CategorySection;
 
-
-
-"use client"
+"use client";
 import React, { useEffect, useState, useRef } from "react";
 import CategoryCarousel from "@/components/ui/category/CategoryCarousel";
 import CategoryCard from "./CategoryCard";
@@ -106,13 +103,13 @@ const CategorySection: React.FC = () => {
           setLoading(false);
         }
       } catch (error) {
-        setLoading(false);
+        setLoading(true);
         console.error("Error fetching categories:", error);
       }
     };
 
-    fetchCategories();
-  }, []);
+    if (categories.length === 0) fetchCategories();
+  }, [categories]);
 
   useEffect(() => {
     if (sectionRef.current) {
@@ -120,22 +117,21 @@ const CategorySection: React.FC = () => {
         sectionRef.current,
         {
           y: 0,
-          opacity:0,
-          scale:.7
+          opacity: 0,
+          scale: 0.7,
         },
         {
           y: -80, // Move up by 50px
           ease: "none",
-          scale:1.4,
-          duration:.3,
-          delay:0,
-          opacity:100,
+          scale: 1.4,
+          duration: 0.3,
+          delay: 0,
+          opacity: 100,
           scrollTrigger: {
             trigger: sectionRef.current,
             start: "top bottom",
             end: "bottom top",
             scrub: true,
-            
           },
         }
       );
@@ -146,18 +142,20 @@ const CategorySection: React.FC = () => {
     if (loading) {
       return (
         <section ref={sectionRef}>
-        <CategoryCarousel setActiveSlide={setActiveSlide}>
-          {[...Array(3)].map((_, index) => (
-            <div key={index}  className="category-item p-10 flex flex-col items-center">
-              <Skeleton className="h-64 w-full mb-2 bg-slate-200" />
-              <Skeleton className="h-2 w-full mb-2 bg-slate-200" />
-              <Skeleton className="h-2 w-full mb-2 bg-slate-200" />
-              <Skeleton className="h-5 w-full mb-2 bg-slate-200" />
-            </div>
-           
-          ))}
-        </CategoryCarousel>
-         </section>
+          <CategoryCarousel setActiveSlide={setActiveSlide}>
+            {[...Array(3)].map((_, index) => (
+              <div
+                key={index}
+                className="category-item p-10 flex flex-col items-center"
+              >
+                <Skeleton className="h-64 w-full mb-2 bg-slate-200" />
+                <Skeleton className="h-2 w-full mb-2 bg-slate-200" />
+                <Skeleton className="h-2 w-full mb-2 bg-slate-200" />
+                <Skeleton className="h-5 w-full mb-2 bg-slate-200" />
+              </div>
+            ))}
+          </CategoryCarousel>
+        </section>
       );
     }
 
@@ -177,7 +175,7 @@ const CategorySection: React.FC = () => {
   };
 
   return (
-    <section  className="min-h-screen w-full flex-center flex-col p-4 overflow-hidden">
+    <section className="min-h-screen w-full flex-center flex-col p-4 overflow-hidden">
       <div className="w-full max-w-3xl mb-5">
         <div className="h-[2px] bg-black w-full mb-5" />
         <h1 className="md:text-4xl text-2xl font-bold text-center">

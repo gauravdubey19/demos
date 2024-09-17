@@ -263,17 +263,36 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({
 };
 
 const Details: React.FC<DetailsProps> = ({ product }) => {
+  const [size, setSize] = useState<string>("");
+  const [color, setColor] = useState<string>("");
+  const [isValuesSelected, setIsValuesSelected] = useState<{
+    size: boolean;
+    color: boolean;
+  }>({
+    size: false,
+    color: false,
+  });
+
   const { handleAddToCart, itemExistInCart, isOpen, setOpen } = useCart();
 
   const handleAddToCartBtn = () => {
-    handleAddToCart(
-      product._id,
-      product.title,
-      product.slug,
-      product.description,
-      product.price,
-      product.mainImage
-    );
+    setIsValuesSelected({
+      size: size.trim() === "",
+      color: color.trim() === "",
+    });
+
+    if (size.trim() !== "" && color.trim() !== "") {
+      handleAddToCart(
+        product._id,
+        product.title,
+        product.slug,
+        product.description,
+        product.price,
+        product.mainImage,
+        size,
+        color
+      );
+    }
   };
 
   const sizeLabels: { [key: string]: string } = {
@@ -286,6 +305,12 @@ const Details: React.FC<DetailsProps> = ({ product }) => {
   const defaultSize =
     sizeLabels[product.availableSizes[1].toLowerCase()] ||
     product.availableSizes[1];
+
+  const colorOptions = [
+    { _id: 1, title: "light gray", color: "bg-gray-200" },
+    { _id: 2, title: "gray", color: "bg-gray-500" },
+    { _id: 3, title: "dark gray", color: "bg-gray-800" },
+  ];
 
   return (
     <div className="grid gap-6">
@@ -317,17 +342,13 @@ const Details: React.FC<DetailsProps> = ({ product }) => {
             <IoMdStar
               key={index}
               size={15}
-              className={
-                // product.ratings
-                index < 3 ? "fill-primary" : "fill-gray-500"
-              }
+              className={index < 3 ? "fill-primary" : "fill-gray-500"}
             />
           ))}
         </div>
         |{" "}
         <div>
           <span className="text-primary">0</span> reviews
-          {/* <span className="text-primary">{product.reviews.length}</span> reviews */}
         </div>
       </div>
 
@@ -335,27 +356,79 @@ const Details: React.FC<DetailsProps> = ({ product }) => {
       <div className="grid gap-4">
         {/* Size Selection */}
         <div className="grid gap-2">
-          <label htmlFor="size" className="text-base font-medium">
-            Size
+          <label
+            htmlFor="color"
+            className={`text-base font-medium ${
+              isValuesSelected.color && "text-[red]"
+            } ease-in-out duration-200`}
+          >
+            {!isValuesSelected.color ? "Select color" : "Please select color!"}
           </label>
-          <Select defaultValue={defaultSize}>
-            <SelectTrigger className="w-full bg-transparent border border-primary rounded-none">
-              <SelectValue placeholder="Select size" />
-            </SelectTrigger>
-            <SelectContent>
-              {product.availableSizes.map((size) => (
-                <SelectItem key={size} value={size}>
-                  {sizeLabels[size] || size}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          <div
+            id="color-option"
+            className={`w-full h-fit flex gap-2 ${
+              isValuesSelected.color && "animate-shake"
+            }`}
+          >
+            {colorOptions.map((c) => (
+              <div
+                key={c._id}
+                title={c.title}
+                onClick={() => {
+                  setColor(c.title);
+                  setIsValuesSelected((prev) => ({ ...prev, color: false }));
+                }}
+                className={`w-10 h-10 rounded-full flex-center cursor-pointer border-2 hover:border-primary ${
+                  c.color
+                } ${
+                  color === c.title && "border-primary shadow-lg scale-105"
+                } ${
+                  isValuesSelected.color && "border-[red]"
+                } ease-in-out duration-300`}
+              ></div>
+            ))}
+          </div>
+        </div>
+        <div className="grid gap-2">
+          <label
+            htmlFor="size"
+            className={`text-base font-medium ${
+              isValuesSelected.size && "text-[red]"
+            } ease-in-out duration-200`}
+          >
+            {!isValuesSelected.size ? "Select size" : "Please select size!"}
+          </label>
+
+          <div
+            id="size-option"
+            className={`w-full h-fit flex gap-2 ${
+              isValuesSelected.size && "animate-shake"
+            }`}
+          >
+            {product.availableSizes.map((s) => (
+              <div
+                key={s}
+                onClick={() => {
+                  setSize(s);
+                  setIsValuesSelected((prev) => ({ ...prev, size: false }));
+                }}
+                className={`w-10 h-10 rounded-full flex-center cursor-pointer border hover:border-primary ${
+                  size === s && "border-primary shadow-lg scale-105"
+                } ${
+                  isValuesSelected.size && "border-[red]"
+                } ease-in-out duration-300`}
+              >
+                {s}
+              </div>
+            ))}
+          </div>
         </div>
 
         {/* Action Buttons */}
         <div className="grid gap-2">
           <Button
             disabled={itemExistInCart(product._id)}
+            onClick={handleAddToCartBtn}
             size="lg"
             className="w-full select-none z-10 flex gap-1 bg-transparent text-lg text-primary border border-primary rounded-none hover:shadow-md active:translate-y-0.5 ease-in-out duration-300"
           >
@@ -369,8 +442,10 @@ const Details: React.FC<DetailsProps> = ({ product }) => {
           </Button>
           <Button
             onClick={() => {
-              setOpen(!isOpen);
               handleAddToCartBtn();
+              if (color.trim() !== "" && size.trim() !== "") {
+                setOpen(!isOpen);
+              }
             }}
             size="lg"
             className="w-full text-lg rounded-none hover:shadow-md active:translate-y-0.5 ease-in-out duration-300"

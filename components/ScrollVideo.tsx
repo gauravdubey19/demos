@@ -71,7 +71,7 @@ const ScrollVideo: React.FC<VideoProps> = ({
         src={videoUrl}
         playsInline
         muted
-        className="h-screen w-auto object-fill md:object-cover"
+        className="h-screen w-auto object-fill md:object-fill"
       />
     </div>
   );

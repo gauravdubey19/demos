@@ -27,7 +27,9 @@ interface CartContextType {
     slug: string,
     description: string,
     price: number,
-    image: string
+    image: string,
+    size: string,
+    color: string
   ) => void;
 }
 
@@ -58,11 +60,11 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
         const data = await res.json();
         setCart(data || []);
       } catch (error) {
-        toast({
-          title: "Error fetching cart",
-          description: "Please try again later.",
-          variant: "destructive",
-        });
+        // toast({
+        //   title: "Error fetching cart",
+        //   description: "Please try again later.",
+        //   variant: "destructive",
+        // });
       }
     }
   }, [status, session?.user?.id]);
@@ -81,7 +83,9 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
       slug: string,
       description: string,
       price: number,
-      image: string
+      image: string,
+      size: string,
+      color: string
     ) => {
       if (status !== "authenticated") {
         router.replace("/sign-in");
@@ -103,6 +107,8 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
         price,
         image,
         quantity: 1,
+        size,
+        color,
       };
 
       try {
@@ -240,9 +246,9 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
                 : item
             )
           );
-          toast({
-            title: data.message || "Quantity incremented successfully.",
-          });
+          // toast({
+          //   title: data.message || "Quantity incremented successfully.",
+          // });
         } else {
           toast({
             title: data.error || "Failed to increment quantity.",
@@ -300,9 +306,9 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
         const data = await res.json();
 
         if (res.ok) {
-          toast({
-            title: data.message || "Quantity decremented successfully.",
-          });
+          // toast({
+          //   title: data.message || "Quantity decremented successfully.",
+          // });
         } else {
           setCart((prevCart) =>
             prevCart.map((item) =>

@@ -588,3 +588,16 @@ export const a = "b";
 "https://www.textale.tech/cdn/shop/files/Tee_1efc19c3-e426-46c5-a315-e27b9bd9c241.jpg?v=1714473708&width=1200"
 4
 "https://www.textale.tech/cdn/shop/files/Tee_c4a29b07-e4e0-43b1-a20f-98a57d4dbbdb.jpg?v=1714473708&width=1200"
+
+{/* <Select defaultValue={defaultSize}>
+            <SelectTrigger className="w-full bg-transparent border border-primary rounded-none">
+              <SelectValue placeholder="Select size" />
+            </SelectTrigger>
+            <SelectContent>
+              {product.availableSizes.map((size) => (
+                <SelectItem key={size} value={size}>
+                  {sizeLabels[size] || size}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select> */}

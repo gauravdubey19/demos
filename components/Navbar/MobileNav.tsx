@@ -14,10 +14,12 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { IoCart } from "react-icons/io5";
 import Cart from "./CartSheet";
+import { CategoriesListProps } from "./Navbar";
+import ReactCountUp from "../ui/ReactCountUp";
+import { GoHeart } from "react-icons/go";
 
-const MobileNav = () => {
+const MobileNav: React.FC<CategoriesListProps> = ({ categories }) => {
   const [isOpen, setOpen] = useState<boolean>(false);
   const [windowWidth, setWindowWidth] = useState<number>(
     typeof window !== "undefined" ? window.innerWidth : 0
@@ -69,6 +71,20 @@ const MobileNav = () => {
           {session?.user && (
             <SheetTitle className="w-full flex justify-end gap-6">
               <SheetClose>
+                <Link href="/profile/wishlist" className="relative mr-1">
+                  <GoHeart
+                    size={25}
+                    color="black"
+                    className="hover:fill-[#FF6464] cursor-pointer ease-in-out duration-300"
+                  />
+                  <ReactCountUp
+                    className="absolute -top-1.5 -right-1.5 md:-top-2.5 md:-right-2.5 w-5 h-5 flex-center bg-red-500 text-white text-sm md:text-xs rounded-full p-1"
+                    amt={10}
+                    // amt={fav?.length}
+                  />
+                </Link>
+              </SheetClose>
+              <SheetClose>
                 <Cart />
               </SheetClose>
               <SheetClose>
@@ -109,6 +125,32 @@ const MobileNav = () => {
                       }`}
                     >
                       {link.head}
+                    </Link>
+                  </SheetClose>
+                </div>
+              );
+            })}
+          </div>
+          <div className="h-fit flex flex-col gap-6 pt-5 overflow-hidden">
+            {categories.slice(0, 5).map((link, index) => {
+              const isActive = pathname === `/products/${link.slug}`;
+
+              return (
+                <div
+                  key={index}
+                  className="cursor-pointer z-50"
+                  onClick={handleLinkClick}
+                >
+                  <SheetClose>
+                    <Link
+                      href={`/products/${link.slug}`}
+                      className={`w-full capitalize text-2xl font-semibold ${
+                        isActive
+                          ? "text-primary font-semibold"
+                          : "text-white active:translate-y-0.5 w-fit hover-underline-lr"
+                      }`}
+                    >
+                      {link.title}
                     </Link>
                   </SheetClose>
                 </div>

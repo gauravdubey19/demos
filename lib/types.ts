@@ -186,4 +186,6 @@ export interface CartItem {
   price: number;
   quantity: number;
   image: string;
+  size: string;
+  color: string;
 }

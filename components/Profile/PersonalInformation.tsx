@@ -7,7 +7,7 @@ import { getSession, signOut, useSession } from "next-auth/react";
 import { Session } from "next-auth";
 import { useGlobalContext } from "@/context/GlobalProvider";
 import { BiSolidEditAlt } from "react-icons/bi";
-import { State,City } from 'country-state-city';
+import { State, City } from "country-state-city";
 
 interface SessionExtended extends Session {
   user: {
@@ -49,7 +49,7 @@ interface DropdownProps {
   setValue: (value: string) => void;
 }
 const PersonalInformation = () => {
-  const {data:session} = useSession();
+  const { data: session } = useSession();
   const handleDeleteAccount = async () => {
     if (!session) {
       alert("You need to be logged in to delete your account.");
@@ -67,14 +67,14 @@ const PersonalInformation = () => {
       return;
     }
 
-      try {
+    try {
       const response = await fetch(`/api/users/${extendedSession.user.id}`, {
-        method: 'DELETE',
+        method: "DELETE",
         headers: {
           "Content-Type": "application/json",
         },
       });
-    
+
       if (response.ok) {
         signOut();
         alert("Account deleted successfully.");
@@ -120,9 +120,10 @@ const PersonalInformation = () => {
 export default PersonalInformation;
 
 const PersonalSection = () => {
-  const {error,isProfileEditing,setProfileEditing,userData, setUserData} = useGlobalContext();
+  const { error, isProfileEditing, setProfileEditing, userData, setUserData } =
+    useGlobalContext();
   const [saving, setSaving] = useState(false);
-  const {data:session} = useSession();
+  const { data: session } = useSession();
   if (error) {
     return <div>Error: {error}</div>;
   }
@@ -135,16 +136,20 @@ const PersonalSection = () => {
     if (!userData) {
       return;
     }
-    if(userData.phone && userData.phone.length < 10 && userData.phone.length > 0){
-      alert('Phone number must be 10 digits');
+    if (
+      userData.phone &&
+      userData.phone.length < 10 &&
+      userData.phone.length > 0
+    ) {
+      alert("Phone number must be 10 digits");
       return;
     }
-    if(!userData.firstName){
-      alert('First Name is required');
+    if (!userData.firstName) {
+      alert("First Name is required");
       return;
     }
-    if(!userData.lastName){
-      alert('Last Name is required');
+    if (!userData.lastName) {
+      alert("Last Name is required");
       return;
     }
     const userDataObj = {
@@ -152,33 +157,35 @@ const PersonalSection = () => {
       lastName: userData.lastName,
       phone: userData.phone,
       gender: userData.gender,
+    };
+    try {
+      setSaving(true);
+      const extendedSession = session as SessionExtended;
+      const response = await fetch(`/api/users/${extendedSession.user.id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(userDataObj),
+      });
+
+      if (response.ok) {
+      } else {
+        const errorData = await response.json();
+        alert(`Error: ${errorData.message}`);
+      }
+    } catch (error) {
+      console.error("Error updating user:", error);
+      alert(
+        "An error occurred while updating user information. Please try again later."
+      );
+    } finally {
+      setSaving(false);
+      setProfileEditing(false);
     }
-    try{
-    setSaving(true);
-    const extendedSession = session as SessionExtended;
-    const response = await fetch(`/api/users/${extendedSession.user.id}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(userDataObj),
-    });
- 
-    if (response.ok) {
-    } else {
-      const errorData = await response.json();
-      alert(`Error: ${errorData.message}`);
-    }
-  } catch (error) {
-    console.error('Error updating user:', error);
-    alert('An error occurred while updating user information. Please try again later.');
-  } finally{
-    setSaving(false);
-    setProfileEditing(false);
-  }
   };
-   const handleInputChange = (field: keyof User, value: string) => {
-    setUserData((prevData:any) => {
+  const handleInputChange = (field: keyof User, value: string) => {
+    setUserData((prevData: any) => {
       if (!prevData) {
         return prevData; // Return the previous data if it's null
       }
@@ -188,37 +195,39 @@ const PersonalSection = () => {
       };
     });
   };
- return (
-  <section className="">
-    <div className="justify-between flex flex-row  items-center mb-6">
-    <h3 className="text-xl font-semibold ">Personal Information</h3>
-    { isProfileEditing ? (
-            <Button className="bg-primary text-white border border-primary rounded-none active:translate-y-0.5 hover:bg-transparent hover:text-primary
+  return (
+    <section className="">
+      <div className="justify-between flex flex-row  items-center mb-6">
+        <h3 className="text-xl font-semibold ">Personal Information</h3>
+        {isProfileEditing ? (
+          <Button
+            className="bg-primary text-white border border-primary rounded-none active:translate-y-0.5 hover:bg-transparent hover:text-primary
             disabled:opacity-80 disabled:cursor-not-allowed
             "
-              onClick={handleEditProfile}
-              disabled={saving}
-            >
-              {saving ? 'Saving...' : 'Save'}
-            </Button>
-          ) :
-          <Button className="bg-transparent text-primary rounded-none active:translate-y-0.5  hover:bg-yellow-500 hover:text-white"
-          onClick={() => setProfileEditing(true)}
+            onClick={handleEditProfile}
+            disabled={saving}
+          >
+            {saving ? "Saving..." : "Save"}
+          </Button>
+        ) : (
+          <Button
+            className="bg-transparent text-primary rounded-none active:translate-y-0.5  hover:bg-yellow-500 hover:text-white"
+            onClick={() => setProfileEditing(true)}
           >
             <BiSolidEditAlt size={24} />
           </Button>
-        }
-        </div>
-    <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-    <InputField
+        )}
+      </div>
+      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+        <InputField
           id="firstName"
           label="First Name"
           value={userData?.firstName}
           isDisabled={!isProfileEditing}
           capitalize
           setValue={(value) => {
-            const noSpacesValue = value.replace(/\s+/g, '');
-            handleInputChange('firstName', noSpacesValue);
+            const noSpacesValue = value.replace(/\s+/g, "");
+            handleInputChange("firstName", noSpacesValue);
           }}
         />
         <InputField
@@ -227,7 +236,7 @@ const PersonalSection = () => {
           value={userData?.lastName}
           isDisabled={!isProfileEditing}
           capitalize
-          setValue={(value) => handleInputChange('lastName', value)}
+          setValue={(value) => handleInputChange("lastName", value)}
         />
         <InputField
           id="email"
@@ -243,50 +252,55 @@ const PersonalSection = () => {
           value={userData?.phone}
           isDisabled={!isProfileEditing}
           setValue={(value) => {
-            let numericValue = value.replace(/[^0-9]/g, '');
+            let numericValue = value.replace(/[^0-9]/g, "");
             if (numericValue.length > 10) {
               numericValue = numericValue.slice(0, 10);
             }
-            
-            handleInputChange('phone', numericValue);
+
+            handleInputChange("phone", numericValue);
           }}
         />
         <Dropdown
           id="gender"
           label="Gender"
           value={userData?.gender}
-          options={['male', 'female', 'other']}
+          options={["male", "female", "other"]}
           isDisabled={!isProfileEditing}
           setValue={(value) => {
-            handleInputChange('gender', value);
+            handleInputChange("gender", value);
           }}
         />
-    </div>
-  </section>
-)}
+      </div>
+    </section>
+  );
+};
 
 const ContactSection = () => {
-  const { userData, error, isContactEditing, setContactEditing, setUserData } = useGlobalContext();
+  const { userData, error, isContactEditing, setContactEditing, setUserData } =
+    useGlobalContext();
   const [saving, setSaving] = useState(false);
   const { data: session } = useSession();
   const [states, setStates] = useState<{ name: string; code: string }[]>([]);
-  const [cities, setCities] =  useState<{ name: string; code: string }[]>([]);
-   useEffect(() => {
+  const [cities, setCities] = useState<{ name: string; code: string }[]>([]);
+  useEffect(() => {
     // Fetch all cities of India
-    const indianStates = State.getStatesOfCountry('IN');
+    const indianStates = State.getStatesOfCountry("IN");
     if (indianStates) {
-      const stateNames = indianStates.map(state => {
+      const stateNames = indianStates.map((state) => {
         return {
           name: state.name,
           code: state.isoCode,
-        }
-        });
-      setStates([{
-        name: 'Select a state',
-        code: '',
-      }, ...stateNames]);
+        };
+      });
+      setStates([
+        {
+          name: "Select a state",
+          code: "",
+        },
+        ...stateNames,
+      ]);
     } else {
-      console.error('No cities found for the given country code.');
+      console.error("No cities found for the given country code.");
     }
   }, []);
 
@@ -294,30 +308,35 @@ const ContactSection = () => {
     if (!userData || !userData.state) {
       return;
     }
-    if(userData.state.code){
-     const cities = City.getCitiesOfState('IN', userData.state.code);
+    if (userData.state.code) {
+      const cities = City.getCitiesOfState("IN", userData.state.code);
       if (cities) {
-        const cityNames = cities.map(city => {
+        const cityNames = cities.map((city) => {
           return {
             name: city.name,
             code: city.stateCode,
-          }
+          };
         });
-        setCities([{
-          name: 'Select a city',
-          code: '',
-        }, ...cityNames]);
+        setCities([
+          {
+            name: "Select a city",
+            code: "",
+          },
+          ...cityNames,
+        ]);
       } else {
-        console.error('No cities found for the given state code.');
-        setCities([])
+        console.error("No cities found for the given state code.");
+        setCities([]);
       }
     } else {
-      setCities([{
-        name: 'Select a state first',
-        code: '',
-      }]);
+      setCities([
+        {
+          name: "Select a state first",
+          code: "",
+        },
+      ]);
     }
-  },[userData]);
+  }, [userData]);
   if (error) {
     return <div>Error: {error}</div>;
   }
@@ -338,33 +357,37 @@ const ContactSection = () => {
       zip: userData.zip,
       country: userData.country,
     };
-    try{
-    const extendedSession = session as SessionExtended;
-    const response = await fetch(`/api/contact/${extendedSession.user.id}/PutContact`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(contactObj),
-    });
+    try {
+      const extendedSession = session as SessionExtended;
+      const response = await fetch(
+        `/api/contact/${extendedSession.user.id}/PutContact`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(contactObj),
+        }
+      );
 
-    if (response.ok) {
-     
-    } else {
-      const errorData = await response.json();
-      alert(`Error: ${errorData.message}`);
+      if (response.ok) {
+      } else {
+        const errorData = await response.json();
+        alert(`Error: ${errorData.message}`);
+      }
+    } catch (error) {
+      console.error("Error updating contact:", error);
+      alert(
+        "An error occurred while updating contact information. Please try again later."
+      );
+    } finally {
+      setContactEditing(false);
+      setSaving(false);
     }
-  } catch (error) {
-    console.error('Error updating contact:', error);
-    alert('An error occurred while updating contact information. Please try again later.');
-  } finally{
-    setContactEditing(false);
-    setSaving(false);
-  }
   };
 
-   const handleInputChange = (field: keyof User, value: any) => {
-    setUserData((prevData:any) => {
+  const handleInputChange = (field: keyof User, value: any) => {
+    setUserData((prevData: any) => {
       if (!prevData) {
         return prevData;
       }
@@ -405,19 +428,19 @@ const ContactSection = () => {
           label="Address 1"
           value={userData?.address}
           isDisabled={!isContactEditing}
-          setValue={(value) => handleInputChange('address', value)}
+          setValue={(value) => handleInputChange("address", value)}
         />
-        
+
         <Dropdown
           id="state"
           label="State"
           value={userData?.state?.name}
-          options={states.map(state => state.name)}
+          options={states.map((state) => state.name)}
           isDisabled={!isContactEditing}
           setValue={(value) => {
-            const selectedState = states.find(state => state.name === value);
+            const selectedState = states.find((state) => state.name === value);
             if (selectedState) {
-              handleInputChange('state', selectedState);
+              handleInputChange("state", selectedState);
             }
           }}
         />
@@ -425,27 +448,28 @@ const ContactSection = () => {
           id="city"
           label="City"
           value={userData?.city?.name}
-          options={cities.map(city => city.name)}
+          options={cities.map((city) => city.name)}
           isDisabled={!isContactEditing}
-          setValue={(value) =>{
-            const selectedCity = cities.find(city => city.name === value);
-            if(selectedCity){
-              handleInputChange('city', selectedCity);
+          setValue={(value) => {
+            const selectedCity = cities.find((city) => city.name === value);
+            if (selectedCity) {
+              handleInputChange("city", selectedCity);
             }
           }}
-          />
-      <InputField
-        id="zip"
-        label="Zip"
-        value={userData?.zip}
-        isDisabled={!isContactEditing}
-        setValue={(value) => {
-          let numericValue = value.replace(/[^0-9]/g, '');
-          if (numericValue.length > 6) {
-            numericValue = numericValue.slice(0, 6);
-          }
-          handleInputChange('zip', numericValue)}}
-      />
+        />
+        <InputField
+          id="zip"
+          label="Zip"
+          value={userData?.zip}
+          isDisabled={!isContactEditing}
+          setValue={(value) => {
+            let numericValue = value.replace(/[^0-9]/g, "");
+            if (numericValue.length > 6) {
+              numericValue = numericValue.slice(0, 6);
+            }
+            handleInputChange("zip", numericValue);
+          }}
+        />
       </div>
     </section>
   );
@@ -469,15 +493,26 @@ const InputField: React.FC<InputFieldProps> = ({
     defaultValue={defaultValue}
     value={value !== undefined ? value : ""}
     onChange={
-      setValue ? (e) => {
-        let newValue = e.target.value;
-        setValue(newValue);
-      } : () => {}
+      setValue
+        ? (e) => {
+            let newValue = e.target.value;
+            setValue(newValue);
+          }
+        : () => {}
     }
-    className={`text-md p-2 px-4 bg-transparent border-b hover:border-b-primary focus:border-b-primary outline-none ${isDisabled ? "text-gray-600": "text-black border-b-primary"}  ${capitalize ? "capitalize" : ""}`}
+    className={`text-md p-2 px-4 bg-transparent border-b hover:border-b-primary focus:border-b-primary outline-none ${
+      isDisabled ? "text-gray-600" : "text-black border-b-primary"
+    }  ${capitalize ? "capitalize" : ""}`}
   />
 );
-const Dropdown: React.FC<DropdownProps> = ({ id, label, value, options, isDisabled, setValue }) => {
+const Dropdown: React.FC<DropdownProps> = ({
+  id,
+  label,
+  value,
+  options,
+  isDisabled,
+  setValue,
+}) => {
   return (
     <div className="dropdown">
       <select

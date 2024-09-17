@@ -1,8 +1,8 @@
-import { IoCart } from "react-icons/io5";
+import Image from "next/image";
 import ReactCountUp from "../ui/ReactCountUp";
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "../ui/sheet";
 import { useCart } from "@/context/CartProvider";
-import Image from "next/image";
+import { BsHandbag } from "react-icons/bs";
 import { AiOutlineMinus, AiOutlinePlus } from "react-icons/ai";
 import { Button } from "../ui/button";
 
@@ -23,15 +23,17 @@ const Cart = () => {
         <SheetTrigger asChild>
           <div
             onClick={handleCartClick}
-            className="relative w-12 h-12 md:w-10 md:h-10 rounded-full border border-[#D3D3D3] flex-center group cursor-pointer"
+            className="relative w-12 h-12 md:w-8 md:h-8 rounded-full border border-[#D3D3D3] flex-center group cursor-pointer"
           >
-            <ReactCountUp
-              className="absolute -top-2 -right-2 md:-top-1.5 md:-right-1.5 w-1.5 h-1.5 text-primary rounded-full text-md md:text-sm"
-              amt={cart?.length}
-            />
-            <IoCart
-              size={25}
-              className="fill-primary lg:fill-[#717171] group-hover:fill-primary ease-in-out duration-300"
+            {cart?.length > 0 && (
+              <ReactCountUp
+                className="absolute -top-1.5 -right-1.5 md:-top-2.5 md:-right-2.5 w-5 h-5 flex-center bg-red-500 text-white text-sm md:text-xs rounded-full p-1"
+                amt={cart?.length}
+              />
+            )}
+            <BsHandbag
+              size={20}
+              className="fill-primary scale-125 md:scale-100 lg:fill-[#717171] group-hover:fill-primary ease-in-out duration-300"
             />
           </div>
         </SheetTrigger>
@@ -68,7 +70,7 @@ const Cart = () => {
               </Button>
             </div>
             <div className="p-2">
-              <SheetTitle className="text-white p-2">Cart Items</SheetTitle>
+              <SheetTitle className="text-white p-2">Your Bag Items</SheetTitle>
               <CartItems />
             </div>
           </div>
@@ -83,7 +85,7 @@ const CartItems = () => {
     useCart();
 
   return (
-    <div className="relative mt-2 w-full h-[68vh] text-white overflow-hidden">
+    <div className="relative mt-2 w-full h-[64vh] text-white overflow-hidden">
       <div className="w-full h-full space-y-4 overflow-y-scroll overflow-x-hidden">
         {cart.map((item) => (
           <div
