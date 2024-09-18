@@ -33,7 +33,9 @@ const Cart = () => {
             )}
             <BsHandbag
               size={20}
-              className="fill-primary scale-125 md:scale-100 lg:fill-[#717171] group-hover:fill-primary ease-in-out duration-300"
+              className={`${
+                isOpen && "fill-primary"
+              } fill-primary scale-125 md:scale-100 lg:fill-[#717171] group-hover:fill-primary ease-in-out duration-300`}
             />
           </div>
         </SheetTrigger>
