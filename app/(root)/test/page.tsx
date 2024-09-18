@@ -119,52 +119,6 @@ export default function TestPage() {
           height="400px" // Optional, default is 300px
         />
       </div>
-
-      {/* <div className="p-10 space-x-5 space-y-4">
-        <div className="">Testing - Create Product</div>
-        <button
-          onClick={createProduct}
-          className="bg-blue-500 text-white p-2 rounded"
-        >
-          Create Product
-        </button>
-        <button
-          onClick={createOutfit}
-          className="bg-blue-500 text-white p-2 rounded"
-        >
-          Create Outfit
-        </button>
-
-        <form onSubmit={createCategory}>
-          <input
-            type="text"
-            name="category"
-            placeholder="Enter category"
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-            className="p-2 bg-transparent border-b"
-          />
-          <input
-            type="text"
-            name="image"
-            placeholder="Enter Image"
-            value={image}
-            onChange={(e) => setImage(e.target.value)}
-            className="p-2 bg-transparent border-b"
-          />
-          <button type="submit" className="bg-blue-500 text-white p-2 rounded">
-            Add Category
-          </button>
-        </form>
-        <button
-          onClick={showToast}
-          className="bg-blue-500 text-white p-2 rounded"
-        >
-          toast test
-        </button>
-      </div> */}
-      {/* <ProductCategorySection limit={1} /> */}
-      {/* <GridCards /> */}
     </>
   );
 }

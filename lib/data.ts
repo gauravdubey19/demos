@@ -1,11 +1,7 @@
 import { CardValues, FooterSection, LinkValues } from "./types";
 import { FaFacebookF, FaInstagram, FaYoutube } from "react-icons/fa";
 
-{
-  /* <span>Shervanis</span>
-     <span>Kurtis</span>
-     <span>Shirts</span> */
-}
+
 
 export const links: LinkValues[] = [
   { id: 0, head: "Home", href: "/" },
