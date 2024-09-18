@@ -95,87 +95,10 @@ const Footer: React.FC<{ appName?: string }> = ({ appName = "LOGO" }) => {
 
 export default Footer;
 
-// const Form = () => {
-//   const [email, setEmail] = useState<string>("");
-//   const [status, setStatus] = useState<FormStatus>({
-//     status: "error",
-//     message: "",
-//   });
 
-//   const validateEmail = (email: string): boolean => {
-//     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-//     return emailPattern.test(email);
-//   };
 
-//   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-//     const input = e.target.value.replace(/\s+/g, "");
 
-//     if (input.trim() === "") {
-//       setStatus({
-//         status: "",
-//         message: "",
-//       });
-//     } else if (!validateEmail(input)) {
-//       setStatus({
-//         status: "error",
-//         message: "Invalid email format...",
-//       });
-//     } else if (validateEmail(input)) {
-//       setStatus({
-//         status: "",
-//         message: "",
-//       });
-//     }
-//     setEmail(input);
-//   };
-//   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-//     e.preventDefault();
-//     if (email.trim() === "") {
-//       return setStatus({
-//         status: "error",
-//         message: "Email is required!",
-//       });
-//     }
-//     return setStatus({
-//       status: "success",
-//       message: "Email sent successfully!",
-//     });
-//   };
-
-//   return (
-//     <>
-//       <form onSubmit={handleSubmit} className="w-full space-y-1">
-//         <div className="w-full flex flex-col md:flex-row gap-2">
-//           <input
-//             type="email"
-//             value={email}
-//             onChange={handleEmailChange}
-//             placeholder="Email"
-//             className="w-full flex-1 border border-primary outline-none rounded-none p-2 px-4"
-//           />
-//           <Button
-//             type="submit"
-//             className="bg-primary text-white rounded-none px-6"
-//           >
-//             Subscribe Now
-//           </Button>
-//         </div>
-//         <div className="w-full h-5 overflow-hidden">
-//           {status.message && (
-//             <span
-//               className={`animate-slide-down ${
-//                 status.status === "error" ? "text-red-600" : "text-green-600"
-//               }`}
-//             >
-//               {status.message}
-//             </span>
-//           )}
-//         </div>
-//       </form>
-//     </>
-//   );
-// };
-
+// 
 const Form = () => {
   const [email, setEmail] = useState<string>("");
   const [status, setStatus] = useState<FormStatus>({
@@ -225,7 +148,7 @@ const Form = () => {
     setIsLoading(true);
 
     try {
-      // const response = await axios.post("/api/newsletter/add-newsletter", { email });
+
       const response = await fetch("/api/newsletter/add-newsletter", {
         method: "POST",
         headers: { "Content-Type": "application/json" },

@@ -601,3 +601,184 @@ export const a = "b";
               ))}
             </SelectContent>
           </Select> */}
+
+
+
+
+
+{/* <div className="p-10 space-x-5 space-y-4">
+        <div className="">Testing - Create Product</div>
+        <button
+          onClick={createProduct}
+          className="bg-blue-500 text-white p-2 rounded"
+        >
+          Create Product
+        </button>
+        <button
+          onClick={createOutfit}
+          className="bg-blue-500 text-white p-2 rounded"
+        >
+          Create Outfit
+        </button>
+
+        <form onSubmit={createCategory}>
+          <input
+            type="text"
+            name="category"
+            placeholder="Enter category"
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+            className="p-2 bg-transparent border-b"
+          />
+          <input
+            type="text"
+            name="image"
+            placeholder="Enter Image"
+            value={image}
+            onChange={(e) => setImage(e.target.value)}
+            className="p-2 bg-transparent border-b"
+          />
+          <button type="submit" className="bg-blue-500 text-white p-2 rounded">
+            Add Category
+          </button>
+        </form>
+        <button
+          onClick={showToast}
+          className="bg-blue-500 text-white p-2 rounded"
+        >
+          toast test
+        </button>
+      </div> */}
+{/* <ProductCategorySection limit={1} /> */ }
+{/* <GridCards /> */ }
+// 
+{/* <div className='mb-4 w-full flex items-center '>
+                            <input
+                                type='checkbox'
+                                id='rememberMe'
+                                name='rememberMe'
+                                checked={rememberMe}
+                                onChange={() => setRememberMe(prevState => !prevState)}
+                                className='mr-2  '
+                            />
+                            <label htmlFor='rememberMe' className='text-black text-sm text-nowrap'>
+                                Remember Me
+                            </label>
+                        </div> */}
+
+
+
+//
+
+// warrantyInformation: {
+//   type: String,
+//   required: false,
+// },
+// availabilityStatus: {
+//   type: String,
+//   required: false,
+// },
+// minimumOrderQuantity: {
+//   type: String,
+//   required: false,
+// },
+// stock: {
+//   type: String,
+//   required: false,
+// },
+// brand: {
+//   type: String,
+//   required: false,
+// },
+
+// 
+
+{
+  /* <span>Shervanis</span>
+     <span>Kurtis</span>
+     <span>Shirts</span> */
+}
+
+// 
+
+
+// const Form = () => {
+//   const [email, setEmail] = useState<string>("");
+//   const [status, setStatus] = useState<FormStatus>({
+//     status: "error",
+//     message: "",
+//   });
+
+//   const validateEmail = (email: string): boolean => {
+//     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+//     return emailPattern.test(email);
+//   };
+
+//   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+//     const input = e.target.value.replace(/\s+/g, "");
+
+//     if (input.trim() === "") {
+//       setStatus({
+//         status: "",
+//         message: "",
+//       });
+//     } else if (!validateEmail(input)) {
+//       setStatus({
+//         status: "error",
+//         message: "Invalid email format...",
+//       });
+//     } else if (validateEmail(input)) {
+//       setStatus({
+//         status: "",
+//         message: "",
+//       });
+//     }
+//     setEmail(input);
+//   };
+//   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+//     e.preventDefault();
+//     if (email.trim() === "") {
+//       return setStatus({
+//         status: "error",
+//         message: "Email is required!",
+//       });
+//     }
+//     return setStatus({
+//       status: "success",
+//       message: "Email sent successfully!",
+//     });
+//   };
+
+//   return (
+//     <>
+//       <form onSubmit={handleSubmit} className="w-full space-y-1">
+//         <div className="w-full flex flex-col md:flex-row gap-2">
+//           <input
+//             type="email"
+//             value={email}
+//             onChange={handleEmailChange}
+//             placeholder="Email"
+//             className="w-full flex-1 border border-primary outline-none rounded-none p-2 px-4"
+//           />
+//           <Button
+//             type="submit"
+//             className="bg-primary text-white rounded-none px-6"
+//           >
+//             Subscribe Now
+//           </Button>
+//         </div>
+//         <div className="w-full h-5 overflow-hidden">
+//           {status.message && (
+//             <span
+//               className={`animate-slide-down ${
+//                 status.status === "error" ? "text-red-600" : "text-green-600"
+//               }`}
+//             >
+//               {status.message}
+//             </span>
+//           )}
+//         </div>
+//       </form>
+//     </>
+//   );
+// };

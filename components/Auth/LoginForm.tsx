@@ -82,19 +82,7 @@ export default function LoginForm() {
             </button>
           </div>
           <div className="w-full flex flex-row justify-end items-center">
-            {/* <div className='mb-4 w-full flex items-center '>
-                            <input
-                                type='checkbox'
-                                id='rememberMe'
-                                name='rememberMe'
-                                checked={rememberMe}
-                                onChange={() => setRememberMe(prevState => !prevState)}
-                                className='mr-2  '
-                            />
-                            <label htmlFor='rememberMe' className='text-black text-sm text-nowrap'>
-                                Remember Me
-                            </label>
-                        </div> */}
+           
             <button
               type="button"
               onClick={handleForgotPassword}
