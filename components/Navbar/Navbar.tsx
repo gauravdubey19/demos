@@ -326,7 +326,7 @@ import { CategoryValues } from "@/lib/types";
 import MobileNav from "./MobileNav";
 import Cart from "./CartSheet";
 import ReactCountUp from "../ui/ReactCountUp";
-import { GoHeart } from "react-icons/go";
+import { GoHeart, GoHeartFill } from "react-icons/go";
 import { IoSearchOutline } from "react-icons/io5";
 import { Button } from "../ui/button";
 
@@ -568,11 +568,19 @@ const Navbar: React.FC<{ appName?: string }> = ({ appName = "LOGO" }) => {
         {session?.user ? (
           <>
             <Link href="/profile/wishlist" className="relative mr-1">
-              <GoHeart
-                size={25}
-                color="black"
-                className="hover:fill-[#FF6464] cursor-pointer ease-in-out duration-300"
-              />
+              {pathname.includes("/profile/wishlist") ? (
+                <GoHeartFill
+                  size={25}
+                  color="#FF6464"
+                  className="cursor-pointer"
+                />
+              ) : (
+                <GoHeart
+                  size={25}
+                  color="black"
+                  className="hover:fill-[#FF6464] cursor-pointer ease-in-out duration-300"
+                />
+              )}
               <ReactCountUp
                 className="absolute -top-1.5 -right-1.5 md:-top-2.5 md:-right-2.5 w-5 h-5 flex-center bg-red-500 text-white text-sm md:text-xs rounded-full p-1"
                 amt={0}
@@ -583,13 +591,34 @@ const Navbar: React.FC<{ appName?: string }> = ({ appName = "LOGO" }) => {
               <NavigationMenuList>
                 <NavigationMenuItem>
                   <NavigationMenuTrigger className="w-full cursor-pointer bg-transparent border-none outline-none p-1">
-                    <Image
-                      src={session.user.image || "/avatar.png"}
-                      alt="User"
-                      width={30}
-                      height={30}
-                      className="rounded-full"
-                    />
+                    <Link
+                      href={"/profile/personal-information"}
+                      className="flex-center gap-2 group"
+                    >
+                      <div
+                        className={`w-8 h-8 rounded-full ${
+                          pathname.includes("/profile/personal-information") &&
+                          "border border-primary"
+                        } overflow-hidden`}
+                      >
+                        <Image
+                          src={session?.user?.image || "/profile.png"}
+                          alt="profile"
+                          width={200}
+                          height={200}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                      <span
+                        className={`font-semibold ${
+                          pathname.includes("/profile/personal-information") &&
+                          "text-primary"
+                        } group-hover:text-primary ease-in-out duration-300`}
+                      >
+                        {session?.user?.name &&
+                          session?.user?.name.split(" ")[0]}
+                      </span>
+                    </Link>
                   </NavigationMenuTrigger>
                   <NavigationMenuContent className="w-fit space-y-2 p-2 animate-slide-down">
                     {profileOption.map((option) => (

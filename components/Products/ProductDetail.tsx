@@ -6,13 +6,6 @@ import Image from "next/image";
 import { calculateDiscount } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectItem,
-} from "@/components/ui/select";
-import {
   Accordion,
   AccordionContent,
   AccordionItem,
@@ -78,9 +71,9 @@ const ProductDetail: React.FC<{ slug: string }> = ({ slug }) => {
 
   return (
     <>
-      <section className="max-w-6xl px-4 mx-auto py-4 mt-[60px]">
+      <section className="max-w-6xl px-4 py-10 mx-auto lg:mt-[80px] xl:mt-[60px]">
         <Goback />
-        <div className="grid lg:grid-cols-2 gap-6 lg:gap-12 items-start">
+        <div className="w-full h-full grid grid-cols-1 lg:grid-cols-[1fr_1fr] gap-6 lg:gap-12 items-start">
           <ImageGallery
             images={product.images}
             initialMainImage={product.mainImage}
@@ -181,7 +174,7 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({
         width={800}
         height={800}
         objectFit="contain"
-        className="md:hidden h-[75%] w-full md:h-full md:w-[80%] object-contain overflow-hidden"
+        className="lg:hidden h-[75%] w-full md:h-full md:w-[80%] object-contain overflow-hidden"
       />
 
       <ImageMagnify
@@ -191,10 +184,10 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({
         imageFit="cover"
         width="100%"
         height="100%"
-        className="hidden lg:block md:w-[80%] h-full relative"
+        className="hidden lg:block lg:w-[80%] h-full relative"
       />
 
-      <div className="relative w-full md:w-[20%] h-[25%] md:h-full">
+      <div className="relative w-full md:w-[20%] h-[20%] md:h-full">
         <div
           ref={thumbnailRef}
           className={`absolute h-full flex ${
@@ -313,149 +306,153 @@ const Details: React.FC<DetailsProps> = ({ product }) => {
   ];
 
   return (
-    <div className="grid gap-6">
-      <div>
-        <h1 className="text-3xl font-bold">{product.title}</h1>
-        <p className="text-muted-foreground mt-2">{product.description}</p>
-      </div>
-
-      {/* Pricing and Discount */}
-      <div className="flex items-end gap-2">
-        <ReactCountUp
-          prefix="₹"
-          amt={product.price}
-          decimals={true}
-          className="text-4xl font-bold"
-        />
-        <ReactCountUp
-          amt={calculateDiscount(product.price, product.oldPrice)}
-          className="text-md text-green-500 font-medium"
-        >
-          % off
-        </ReactCountUp>
-      </div>
-
-      {/* Ratings and Reviews */}
-      <div className="flex items-center gap-1 md:gap-4">
-        <div className="flex items-center gap-0.5">
-          {Array.from({ length: 5 }, (_, index) => (
-            <IoMdStar
-              key={index}
-              size={15}
-              className={index < 3 ? "fill-primary" : "fill-gray-500"}
-            />
-          ))}
-        </div>
-        |{" "}
+    <>
+      <div className="w-full h-full grid gap-6">
         <div>
-          <span className="text-primary">0</span> reviews
+          <h1 className="text-3xl font-bold">{product.title}</h1>
+          <p className="text-muted-foreground mt-2">{product.description}</p>
         </div>
-      </div>
 
-      {/* Size Selection and Buttons */}
-      <div className="grid gap-4">
-        {/* Size Selection */}
-        <div className="grid gap-2">
-          <label
-            htmlFor="color"
-            className={`text-base font-medium ${
-              isValuesSelected.color && "text-[red]"
-            } ease-in-out duration-200`}
+        {/* Pricing and Discount */}
+        <div className="flex items-end gap-2">
+          <ReactCountUp
+            prefix="₹"
+            amt={product.price}
+            decimals={true}
+            className="text-4xl font-bold"
+          />
+          <ReactCountUp
+            amt={calculateDiscount(product.price, product.oldPrice)}
+            className="text-md text-green-500 font-medium"
           >
-            {!isValuesSelected.color ? "Select color" : "Please select color!"}
-          </label>
-          <div
-            id="color-option"
-            className={`w-full h-fit flex gap-2 ${
-              isValuesSelected.color && "animate-shake"
-            }`}
-          >
-            {colorOptions.map((c) => (
-              <div
-                key={c._id}
-                title={c.title}
-                onClick={() => {
-                  setColor(c.title);
-                  setIsValuesSelected((prev) => ({ ...prev, color: false }));
-                }}
-                className={`w-10 h-10 rounded-full flex-center cursor-pointer border-2 hover:border-primary ${
-                  c.color
-                } ${
-                  color === c.title && "border-primary shadow-lg scale-105"
-                } ${
-                  isValuesSelected.color && "border-[red]"
-                } ease-in-out duration-300`}
-              ></div>
+            % off
+          </ReactCountUp>
+        </div>
+
+        {/* Ratings and Reviews */}
+        <div className="flex items-center gap-1 md:gap-4">
+          <div className="flex items-center gap-0.5">
+            {Array.from({ length: 5 }, (_, index) => (
+              <IoMdStar
+                key={index}
+                size={15}
+                className={index < 3 ? "fill-primary" : "fill-gray-500"}
+              />
             ))}
           </div>
-        </div>
-        <div className="grid gap-2">
-          <label
-            htmlFor="size"
-            className={`text-base font-medium ${
-              isValuesSelected.size && "text-[red]"
-            } ease-in-out duration-200`}
-          >
-            {!isValuesSelected.size ? "Select size" : "Please select size!"}
-          </label>
-
-          <div
-            id="size-option"
-            className={`w-full h-fit flex gap-2 ${
-              isValuesSelected.size && "animate-shake"
-            }`}
-          >
-            {product.availableSizes.map((s) => (
-              <div
-                key={s}
-                onClick={() => {
-                  setSize(s);
-                  setIsValuesSelected((prev) => ({ ...prev, size: false }));
-                }}
-                className={`w-10 h-10 rounded-full flex-center cursor-pointer border hover:border-primary ${
-                  size === s && "border-primary shadow-lg scale-105"
-                } ${
-                  isValuesSelected.size && "border-[red]"
-                } ease-in-out duration-300`}
-              >
-                {s}
-              </div>
-            ))}
+          |{" "}
+          <div>
+            <span className="text-primary">0</span> reviews
           </div>
         </div>
 
-        {/* Action Buttons */}
-        <div className="grid gap-2">
-          <Button
-            disabled={itemExistInCart(product._id)}
-            onClick={handleAddToCartBtn}
-            size="lg"
-            className="w-full select-none z-10 flex gap-1 bg-transparent text-lg text-primary border border-primary rounded-none hover:shadow-md active:translate-y-0.5 ease-in-out duration-300"
-          >
-            {itemExistInCart(product._id) ? (
-              "Added to cart"
-            ) : (
-              <>
-                Add to cart <span className="text-2xl">+</span>
-              </>
-            )}
-          </Button>
-          <Button
-            onClick={() => {
-              handleAddToCartBtn();
-              if (color.trim() !== "" && size.trim() !== "") {
-                setOpen(!isOpen);
-              }
-            }}
-            size="lg"
-            className="w-full text-lg rounded-none hover:shadow-md active:translate-y-0.5 ease-in-out duration-300"
-          >
-            Buy now
-          </Button>
+        {/* Size Selection and Buttons */}
+        <div className="grid gap-4">
+          {/* Size Selection */}
+          <div className="grid gap-2">
+            <label
+              htmlFor="color"
+              className={`text-base font-medium ${
+                isValuesSelected.color && "text-[red]"
+              } ease-in-out duration-200`}
+            >
+              {!isValuesSelected.color
+                ? "Select color"
+                : "Please select color!"}
+            </label>
+            <div
+              id="color-option"
+              className={`w-full h-fit flex gap-2 ${
+                isValuesSelected.color && "animate-shake"
+              }`}
+            >
+              {colorOptions.map((c) => (
+                <div
+                  key={c._id}
+                  title={c.title}
+                  onClick={() => {
+                    setColor(c.title);
+                    setIsValuesSelected((prev) => ({ ...prev, color: false }));
+                  }}
+                  className={`w-10 h-10 rounded-full flex-center cursor-pointer border-2 hover:border-primary ${
+                    c.color
+                  } ${
+                    color === c.title && "border-primary shadow-lg scale-105"
+                  } ${
+                    isValuesSelected.color && "border-[red]"
+                  } ease-in-out duration-300`}
+                ></div>
+              ))}
+            </div>
+          </div>
+          <div className="grid gap-2">
+            <label
+              htmlFor="size"
+              className={`text-base font-medium ${
+                isValuesSelected.size && "text-[red]"
+              } ease-in-out duration-200`}
+            >
+              {!isValuesSelected.size ? "Select size" : "Please select size!"}
+            </label>
+
+            <div
+              id="size-option"
+              className={`w-full h-fit flex gap-2 ${
+                isValuesSelected.size && "animate-shake"
+              }`}
+            >
+              {product.availableSizes.map((s) => (
+                <div
+                  key={s}
+                  onClick={() => {
+                    setSize(s);
+                    setIsValuesSelected((prev) => ({ ...prev, size: false }));
+                  }}
+                  className={`w-10 h-10 rounded-full flex-center cursor-pointer border hover:border-primary ${
+                    size === s && "border-primary shadow-lg scale-105"
+                  } ${
+                    isValuesSelected.size && "border-[red]"
+                  } ease-in-out duration-300`}
+                >
+                  {s}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Action Buttons */}
+          <div className="grid gap-2">
+            <Button
+              disabled={itemExistInCart(product._id)}
+              onClick={handleAddToCartBtn}
+              size="lg"
+              className="w-full select-none z-10 flex gap-1 bg-transparent text-lg text-primary border border-primary rounded-none hover:shadow-md active:translate-y-0.5 ease-in-out duration-300"
+            >
+              {itemExistInCart(product._id) ? (
+                "Added to cart"
+              ) : (
+                <>
+                  Add to cart <span className="text-2xl">+</span>
+                </>
+              )}
+            </Button>
+            <Button
+              onClick={() => {
+                handleAddToCartBtn();
+                if (color.trim() !== "" && size.trim() !== "") {
+                  setOpen(!isOpen);
+                }
+              }}
+              size="lg"
+              className="w-full text-lg rounded-none hover:shadow-md active:translate-y-0.5 ease-in-out duration-300"
+            >
+              Buy now
+            </Button>
+          </div>
         </div>
+        <AdditionalInfo product={product} />
       </div>
-      <AdditionalInfo product={product} />
-    </div>
+    </>
   );
 };
 
@@ -570,8 +567,7 @@ const ProductReviews: React.FC<ProductReviewsProps> = ({ slug }) => {
         }
 
         const data = await res.json();
-        console.log("fetched reviews: ", data);
-
+        // console.log("fetched reviews: ", data);
         setReviews(data.reviews);
       } catch (error) {
         console.error("Error fetching reviews:", error);

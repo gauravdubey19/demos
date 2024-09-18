@@ -100,7 +100,7 @@ const config = {
         "accordion-up": "accordion-up 0.2s ease-out",
         "slide-up": "slide-up 0.5s ease-in-out",
         "slide-down": "slide-down 0.5s ease-in-out",
-        shake: "shake 0.5s ease-in-out",
+        shake: "shake 0.3s ease-in-out",
       },
     },
   },

@@ -9,7 +9,7 @@ const Goback = () => {
     <>
       <div
         onClick={() => navigate.back()}
-        className="fixed group left-3 top-[70px] backdrop-blur-md p-2 rounded-full cursor-pointer shadow-[0_0_5px_rgba(0,0,0,0.5)] overflow-hidden"
+        className="fixed group left-3 top-[70px] z-50 backdrop-blur-md p-2 rounded-full cursor-pointer shadow-[0_0_5px_rgba(0,0,0,0.5)] overflow-hidden"
       >
         <IoMdArrowRoundBack
           size={25}
