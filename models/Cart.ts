@@ -12,7 +12,7 @@ const CartItemSchema = new Schema(
     },
     slug: {
       type: String,
-      unique: true,
+      // unique: true,
       required: true,
     },
     description: {

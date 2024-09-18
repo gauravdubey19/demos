@@ -17,32 +17,32 @@ export const POST = async (request: NextRequest) => {
       return NextResponse.json({ error: "User not found!" }, { status: 404 });
     }
 
-    let cart = await Cart.findOne({ userId });
+    let existingCart = await Cart.findOne({ userId });
 
-    if (cart) {
-      const existingProductIds = cart.cartItems.map((cartItem: CartItem) =>
-        cartItem.productId.toString()
-      );
-
-      const isProductInCart = existingProductIds.includes(
-        newCartItem.productId.toString()
+    if (existingCart) {
+      console.log("existingCart -> ", existingCart);
+      // checking if the product with the same slug already exists in the cart
+      const isProductInCart = existingCart.cartItems.some(
+        (cartItem: CartItem) => cartItem.slug === newCartItem.slug
       );
 
       if (!isProductInCart) {
-        cart.cartItems.push(newCartItem);
-        await cart.save();
+        // if not -> add the new item
+        existingCart.cartItems.push(newCartItem);
+        await existingCart.save();
         return NextResponse.json(
           { message: "Item added to the cart successfully!" },
           { status: 200 }
         );
       } else {
+        // else cheching if the product is already in the cart -> return a message
         return NextResponse.json(
           { message: "Item already exists in the cart." },
           { status: 400 }
         );
       }
     } else {
-      // creating a new cart if none exists
+      // if no cart exists for the user -> create a new one and add the item
       const newCart = new Cart({
         userId,
         cartItems: [newCartItem],

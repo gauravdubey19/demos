@@ -7,7 +7,8 @@ import { AiOutlineMinus, AiOutlinePlus } from "react-icons/ai";
 import { Button } from "../ui/button";
 
 const Cart = () => {
-  const { cart, isOpen, setOpen } = useCart();
+  const { cart, isOpen, setOpen } = useCart(); //console.log(isOpen);
+
   const handleCartClick = () => setOpen(!isOpen);
 
   // calculating the total price and total quantity of the cart
@@ -34,8 +35,8 @@ const Cart = () => {
             <BsHandbag
               size={20}
               className={`${
-                isOpen && "fill-primary"
-              } fill-primary scale-125 md:scale-100 lg:fill-[#717171] group-hover:fill-primary ease-in-out duration-300`}
+                isOpen ? "lg:fill-primary" : "lg:fill-[#717171]"
+              } fill-primary scale-125 md:scale-100 group-hover:fill-primary ease-in-out duration-300`}
             />
           </div>
         </SheetTrigger>
