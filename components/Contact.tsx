@@ -3,8 +3,11 @@
 import { useState } from 'react';
 import { Mail } from 'lucide-react';
 import { ChevronRight } from 'lucide-react';
+import { usePathname } from 'next/navigation';
 
 const Contact = () => {
+  const pathname = usePathname();
+  console.log(pathname)
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -58,7 +61,7 @@ const Contact = () => {
     }
 
     try {
-      const response = await fetch("/api/contactUs", {
+      await fetch("/api/contactUs", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
@@ -106,7 +109,7 @@ const Contact = () => {
       </div>
 
       {/* Left (Form Section) */}
-      <div className="bg-white mt-10 lg:mt-0 scale-100 md:scale-110 lg:scale-125 w-full flex flex-col lg:w-1/2 max-w-md rounded-lg shadow-sm p-5 space-y-5">
+      <div className="bg-white mt-10 lg:mt-0 scale-100 md:scale-110 lg:scale-125 w-full flex flex-col lg:w-1/2 max-w-md rounded-lg  p-5 space-y-5 drop-shadow-[0_10px_30px_rgba(255,94,0,0.25)]">
         <h3 className="font-semibold text-lg sm:text-xl">Ask A Query</h3>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-4">

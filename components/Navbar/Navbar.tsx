@@ -620,12 +620,12 @@ const Navbar: React.FC<{ appName?: string }> = ({ appName = "LOGO" }) => {
                       </span>
                     </Link>
                   </NavigationMenuTrigger>
-                  <NavigationMenuContent className="w-fit space-y-2 p-2 animate-slide-down">
+                  <NavigationMenuContent className="w-fit px-2  space-y-2  animate-slide-down">
                     {profileOption.map((option) => (
                       <Link
                         key={option._id}
                         href={option.href}
-                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        className="block w-full  py-2 px-2  text-sm text-gray-700 hover:bg-gray-100"
                       >
                         {option.title}
                       </Link>
