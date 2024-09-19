@@ -6,6 +6,7 @@ export const GET = async (
   request: NextRequest,
   { params }: { params: { slug: string } }
 ) => {
+  console.log(params)
   try {
     await connectToDB();
 
