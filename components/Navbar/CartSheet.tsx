@@ -16,7 +16,8 @@ const Cart = () => {
     (acc, item) => acc + item.price * item.quantity,
     0
   );
-  const totalProducts = cart.reduce((acc, item) => acc + item.quantity, 0);
+  // const totalProducts = cart.reduce((acc, item) => acc, 0);
+  const totalProducts = cart.length;
 
   return (
     <>
@@ -42,38 +43,38 @@ const Cart = () => {
         </SheetTrigger>
         <SheetContent
           side={"right"}
-          className="top-[3.7rem] text-white backdrop-blur-sm bg-white/20 z-50 border-none outline-none p-0 shadow-[0_0_20px_rgba(0,0,0,0.5)]"
+          className="top-[3.7rem] text-black backdrop-blur-sm bg-white z-50 border-none outline-none p-0 shadow-[0_0_20px_rgba(0,0,0,0.5)]"
           closeIcon={true}
         >
           <div className="relative w-full h-full">
             <div
               id="checkout-panel"
-              className="absolute bottom-[3.7rem] left-0 right-0 h-fit w-full rounded-t-2xl z-50 bg-white/10 space-y-1 p-2"
+              className="absolute bottom-[3.7rem] left-0 right-0 h-fit w-full rounded-t-2xl z-50 bg-[#ffb43327] space-y-1 p-2"
             >
               <p>Total</p>
-              <div className="w-full mb-2 px-1 flex-between text-white select-none">
+              <div className="w-full mb-2 px-1 flex-between text-black select-none">
                 <span>
                   Products:{" "}
                   <ReactCountUp amt={totalProducts} className="text-primary" />
                 </span>
-                <span>
+                {/* <span>
                   <ReactCountUp
                     prefix="₹"
                     amt={totalPrice}
                     decimals={true}
                     // className="text-primary"
                   />
-                </span>
+                </span> */}
               </div>
               <Button
                 size="sm"
-                className="w-full select-none text-lg rounded-none hover:shadow-md active:translate-y-0.5 ease-in-out duration-300"
+                className="w-full select-none text-lg rounded-none hover:shadow-md active:translate-y-0.5 border-none outline-none ease-in-out duration-300"
               >
                 Checkout
               </Button>
             </div>
             <div className="p-2">
-              <SheetTitle className="text-white p-2">Your Bag Items</SheetTitle>
+              <SheetTitle className="text-black p-2">Your Bag Items</SheetTitle>
               <CartItems />
             </div>
           </div>
@@ -88,7 +89,7 @@ const CartItems = () => {
     useCart();
 
   return (
-    <div className="relative mt-2 w-full h-[64vh] text-white overflow-hidden">
+    <div className="relative mt-2 w-full h-[64vh] text-black overflow-hidden">
       <div className="w-full h-full space-y-4 overflow-y-scroll overflow-x-hidden">
         {cart.map((item) => (
           <div
@@ -99,7 +100,7 @@ const CartItems = () => {
               onClick={() => handleRemoveFromCart(item.productId)}
               className={`absolute right-2 top-0 z-10 cursor-pointer opacity-0 group-hover:opacity-100 ${
                 item.quantity !== 1
-                  ? "text-zinc-300 hover:text-primary"
+                  ? "text-gray-400 hover:text-primary"
                   : "text-primary"
               }`}
             >
@@ -117,7 +118,7 @@ const CartItems = () => {
             </div>
             <div className="details relative w-[80%] h-full">
               <h3 className="w-[95%] text-md line-clamp-1">{item.title}</h3>
-              <p className="text-xs text-zinc-200 line-clamp-1 select-none">
+              <p className="text-xs text-gray-400 line-clamp-1 select-none">
                 {item.description}
               </p>
 

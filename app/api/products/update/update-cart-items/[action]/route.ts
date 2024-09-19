@@ -11,7 +11,7 @@ export const POST = async (
   try {
     const { action } = params;
     const { userId, productId } = await request.json();
-    console.log(action, userId, productId);
+    // console.log(action, userId, productId);
 
     if (!["increment", "decrement", "remove"].includes(action)) {
       return NextResponse.json({ error: "Invalid action" }, { status: 400 });

@@ -45,7 +45,10 @@ const ProductSchema = new Schema(
         slug: { type: String, required: true },
       },
     ],
-    material: { type: String, required: true },
+    material: {
+      type: String,
+      required: true,
+    },
     fabricType: {
       type: String,
       required: false,
@@ -54,13 +57,19 @@ const ProductSchema = new Schema(
       type: String,
       required: false,
     },
-    countryOfManufacture: {
-      type: String,
-      required: false,
-    },
     origin: {
       type: String,
       required: false,
+    },
+    quantityInStock: {
+      type: Number,
+      required: true,
+      min: 0,
+    },
+    brand: {
+      type: String,
+      required: true,
+      default: "Chimanlal Suresh Kumar (CSK) Textiles",
     },
     faqs: [
       {
