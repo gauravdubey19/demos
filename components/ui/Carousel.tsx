@@ -15,6 +15,7 @@ const Carousel: React.FC<CarouselProps> = ({
   pauseOnHover = true,
   slidesToShow = 5,
   arrows = false,
+  className,
 }) => {
   const settings = {
     dots: false,
@@ -72,7 +73,7 @@ const Carousel: React.FC<CarouselProps> = ({
     <>
       <Slider
         {...settings}
-        className={`cursor-grab active:cursor-grabbing bg-white ${
+        className={`${className} cursor-grab active:cursor-grabbing bg-white ${
           arrows && "md:py-2"
         }`}
       >

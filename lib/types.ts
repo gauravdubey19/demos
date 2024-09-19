@@ -33,6 +33,7 @@ export interface CarouselProps {
   pauseOnHover?: boolean;
   slidesToShow?: number;
   arrows?: boolean;
+  className?: string;
 }
 
 // Product Card types :
