@@ -40,7 +40,7 @@ const Carousel: React.FC<CarouselProps> = ({
         breakpoint: 1280,
         settings: {
           arrows: arrows || true,
-          slidesToShow: 5,
+          slidesToShow: slidesToShow,
         },
       },
       {

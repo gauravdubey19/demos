@@ -1,5 +1,8 @@
 import Image from "next/image";
 import Carousel from "./ui/Carousel";
+import { FiLinkedin } from "react-icons/fi";
+import { FaXTwitter } from "react-icons/fa6";
+import { IoLogoInstagram } from "react-icons/io5";
 
 const About = () => {
   return (
@@ -108,22 +111,33 @@ const OurExecutives = () => {
             Our Executives
           </h2>
         </div>
-        <Carousel slidesToShow={4} className="px-4 md:px-8 lg:px-12">
+        <Carousel slidesToShow={4} className="px-4 md:px-8 lg:px-28">
           {executives.map((p, index) => (
             <div
               key={index}
-              className="max-w-[190px] md:max-w-[240px] h-fit bg-[#FFF4E0] space-y-2 md:space-y-4 p-2 md:p-4 overflow-hidden br"
+              title={p.name}
+              className="max-w-[190px] md:max-w-[240px] h-fit bg-[#FFF4E0] space-y-1 md:space-y-2 p-2 md:p-4 rounded-md scale-95 hover:scale-100 ease-in-out duration-300 overflow-hidden"
             >
               <Image
                 key={index}
                 src={p.img}
                 alt={p.name}
-                title={p.name}
                 width={400}
                 height={300}
                 objectFit="contain"
-                className="w-fit h-[240px] sm:h-[240px] md:h-[220px] lg:h-[340px] object-contain cursor-default"
+                className="w-fit h-[240px] sm:h-[240px] md:h-[220px] lg:h-[340px] object-cover cursor-default"
               />
+              <div className="w-full h-fit space-y-1">
+                <h3 className="">{p.name}</h3>
+                <span className="text-gray-400 text-xs md:text-sm">
+                  {p.position}
+                </span>
+                <div className="flex gap-2">
+                  {p.socials.map((s, index) => (
+                    <s.icon key={index} title={s.label} />
+                  ))}
+                </div>
+              </div>
             </div>
           ))}
         </Carousel>
@@ -136,45 +150,85 @@ const executives = [
   {
     _id: 1,
     name: "Mr. Rajiv",
-    position: "Mr. Rajiv",
+    position: "Founder & Chairman",
     img: "https://img.freepik.com/free-photo/closeup-confident-middle-aged-business-leader_1262-4820.jpg",
     socials: [
-      { id: 1, label: "LinkedIn", icon: "linkedIn", herf: "" },
-      { id: 2, label: "X", icon: "x", herf: "" },
-      { id: 3, label: "Instagram", icon: "instagram", herf: "" },
+      {
+        id: 1,
+        label: "LinkedIn",
+        icon: FiLinkedin,
+        herf: "https://www.linkedin.com/",
+      },
+      { id: 2, label: "X", icon: FaXTwitter, herf: "https://x.com/" },
+      {
+        id: 3,
+        label: "Instagram",
+        icon: IoLogoInstagram,
+        herf: "https://www.instagram.com/",
+      },
     ],
   },
   {
     _id: 2,
     name: "Mr. Rhoit",
-    position: "Mr. Rhoit",
+    position: "Executive director",
     img: "https://thumbs.dreamstime.com/b/attractive-confident-happy-successful-ceo-business-man-corporate-executive-isolated-white-people-office-concept-portrait-137916489.jpg",
     socials: [
-      { id: 1, label: "LinkedIn", icon: "linkedIn", herf: "" },
-      { id: 2, label: "X", icon: "x", herf: "" },
-      { id: 3, label: "Instagram", icon: "instagram", herf: "" },
+      {
+        id: 1,
+        label: "LinkedIn",
+        icon: FiLinkedin,
+        herf: "https://www.linkedin.com/",
+      },
+      { id: 2, label: "X", icon: FaXTwitter, herf: "https://x.com/" },
+      {
+        id: 3,
+        label: "Instagram",
+        icon: IoLogoInstagram,
+        herf: "https://www.instagram.com/",
+      },
     ],
   },
   {
     _id: 3,
     name: "Mr. Viraj",
-    position: "Mr. Viraj",
+    position: "Product Manager",
     img: "https://st.depositphotos.com/1743476/1276/i/450/depositphotos_12765264-stock-photo-smiling-business-man.jpg",
     socials: [
-      { id: 1, label: "LinkedIn", icon: "linkedIn", herf: "" },
-      { id: 2, label: "X", icon: "x", herf: "" },
-      { id: 3, label: "Instagram", icon: "instagram", herf: "" },
+      {
+        id: 1,
+        label: "LinkedIn",
+        icon: FiLinkedin,
+        herf: "https://www.linkedin.com/",
+      },
+      { id: 2, label: "X", icon: FaXTwitter, herf: "https://x.com/" },
+      {
+        id: 3,
+        label: "Instagram",
+        icon: IoLogoInstagram,
+        herf: "https://www.instagram.com/",
+      },
     ],
   },
   {
     _id: 4,
     name: "Mr. Ganesh",
-    position: "Mr. Ganesh",
+    position: "Jr. Product Manager",
     img: "https://images.pexels.com/photos/17498579/pexels-photo-17498579/free-photo-of-black-and-white-portrait-of-a-man-wearing-eyeglasses.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
     socials: [
-      { id: 1, label: "LinkedIn", icon: "linkedIn", herf: "" },
-      { id: 2, label: "X", icon: "x", herf: "" },
-      { id: 3, label: "Instagram", icon: "instagram", herf: "" },
+      {
+        id: 1,
+        label: "LinkedIn",
+        icon: FiLinkedin,
+        herf: "https://www.linkedin.com/",
+      },
+      { id: 2, label: "X", icon: FaXTwitter, herf: "https://x.com/" },
+      {
+        id: 3,
+        label: "Instagram",
+        icon: IoLogoInstagram,
+        herf: "https://www.instagram.com/",
+      },
     ],
   },
 ];
