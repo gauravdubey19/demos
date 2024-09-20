@@ -1,17 +1,13 @@
-import Image from "next/image";
 import React from "react";
-import { RxPerson } from "react-icons/rx";
-import { CiShoppingBasket } from "react-icons/ci";
-import { LuFileHeart } from "react-icons/lu";
-import { RiMoneyDollarCircleLine, RiUserSettingsLine } from "react-icons/ri";
-import { PiWarningCircleThin } from "react-icons/pi";
-import Link from "next/link";
-import { SectionProps, SectionValues } from "@/lib/types";
 import { useSession } from "next-auth/react";
+import Link from "next/link";
+import Image from "next/image";
+import { SectionProps } from "@/lib/types";
+import { profileSections } from "@/lib/data";
 
 const Sidebar: React.FC<SectionProps> = ({ section }) => {
   // console.log(section);
-const {data: session} = useSession();
+  const { data: session } = useSession();
   return (
     <>
       <aside className="hidden h-full w-fit flex-col border-r bg-background p-4 md:flex drop-shadow-lg overflow-hidden">
@@ -33,10 +29,10 @@ const {data: session} = useSession();
           </div>
         </div>
         <nav className="mt-6 flex flex-1 flex-col space-y-1">
-          {sections.map((sec) => (
+          {profileSections.map((sec, index) => (
             <Link
               href={`/profile/${sec.id}`}
-              key={sec.id}
+              key={index || sec.id}
               className={`flex items-center gap-3 px-3 py-2 text-md font-medium transition-colors hover:text-primary ${
                 section === sec.id
                   ? "text-primary fill-primary underline underline-offset-8"
@@ -44,7 +40,7 @@ const {data: session} = useSession();
               } ease-in-out duration-200`}
               // onClick={() => setSection(sec.id)}
             >
-              {sec.icon}
+              <sec.icon size={20} />
               <span>{sec.head}</span>
             </Link>
           ))}
@@ -55,32 +51,3 @@ const {data: session} = useSession();
 };
 
 export default Sidebar;
-
-const sections: SectionValues[] = [
-  {
-    id: "personal-information",
-    head: "Personal Information",
-    icon: <RxPerson size={20} />,
-  },
-  {
-    id: "order-history",
-    head: "Order History",
-    icon: <CiShoppingBasket size={20} />,
-  },
-  { id: "wishlist", head: "Wishlist", icon: <LuFileHeart size={20} /> },
-  {
-    id: "payment-methods",
-    head: "Payment Methods",
-    icon: <RiMoneyDollarCircleLine size={20} />,
-  },
-  {
-    id: "account-settings",
-    head: "Account Settings",
-    icon: <RiUserSettingsLine size={20} />,
-  },
-  {
-    id: "customer-support-&-help",
-    head: "Customer Support & Help",
-    icon: <PiWarningCircleThin size={20} />,
-  },
-];

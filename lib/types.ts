@@ -1,3 +1,5 @@
+import { IconType } from "react-icons/lib";
+
 // Product types
 export interface ProductCategoryDetailParams {
   params: {
@@ -33,6 +35,7 @@ export interface CarouselProps {
   pauseOnHover?: boolean;
   slidesToShow?: number;
   arrows?: boolean;
+  dots?: boolean;
   className?: string;
 }
 
@@ -149,7 +152,8 @@ export interface SectionValues {
     | "customer-support-&-help"
     | string;
   head: string;
-  icon: React.ReactNode;
+  icon: IconType;
+  sectionNode: () => React.JSX.Element;
 }
 
 export interface SectionProps {

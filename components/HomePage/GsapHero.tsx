@@ -233,12 +233,12 @@ const MiddleContainer: React.FC = () => {
           made
         </span>
       </div>
-      <Button
+      {/* <Button
         onClick={handleScrollDown}
         className="w-fit h-fit select-none bg-white text-primary text-xl font-semibold tracking-[6px] p-2 px-3 rounded-none hover:shadow-xl ease-in-out duration-300"
       >
         SHOP NOW
-      </Button>
+      </Button> */}
     </div>
   );
 };

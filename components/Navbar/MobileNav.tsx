@@ -91,7 +91,7 @@ const MobileNav: React.FC<CategoriesListProps> = ({ categories }) => {
                 </SheetClose>
                 <SheetClose>
                   <Link
-                    href={"/profile/personal-information"}
+                    href={"/profile/my-profile"}
                     className={`w-10 h-10 rounded-full ${
                       pathname.includes("/profile") && "border-2 border-primary"
                     } overflow-hidden`}

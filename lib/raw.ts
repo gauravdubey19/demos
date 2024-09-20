@@ -1,5 +1,14 @@
 export const a = "b";
 
+// section.tsx
+{
+  /* {section === "my-profile" && <MyProfile />}
+        {section === "order-history" && <OrderHistory />}
+        {section === "shipping-addresses" && <ShippingAddresses />}
+        {section === "payment-methods" && <PaymentMethods />}
+        {section === "delete-my-account" && <DeleteMyAccount />} */
+}
+
 // "use client";
 
 // import { VideoScroll } from "react-video-scroll";
@@ -534,7 +543,6 @@ export const a = "b";
 // 4
 // "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSLFYkB4nzTYB-deGXdB2NH_Z3IaVA6cjUapy6Dkh7l9I5HCy9_4tDXnngrSAGJEH-P2Pk&usqp=CAU"
 
-
 // // 2
 // 0
 // "https://adamoonline.com/cdn/shop/files/DSC06662.jpg?v=1722584839&width=2800"
@@ -548,48 +556,48 @@ export const a = "b";
 // 3
 // "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRkCLdrnNJLEy57VD3yof4N3b1jlmBPUIKFzNRAwQq6fSSWPkK4-s7kztQiU-mrHn340gg&usqp=CAU"
 
-
 // 4
 // "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSC-O35cMgDf1I1bihH7sWxce3Ne4KFWcPhftk1_E1SDKulfNVX8a4qpX_pTB6dZwrTe1Y&usqp=CAU"
 
 // 3
 
-0
-"https://www.chinaecofiber.com/uploads/image/20210126/13/mens-corduroy-shirts.jpg"
-1
-"https://www.chinaecofiber.com/uploads/image/20210126/13/mens-corduroy-shirts_1611640617.jpg"
-2
-"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQNSx47n8C5DatSa5C--uW8isy3wX6_5PQTcdNUvbaMFoumr57eKMe_YQ9LKfm-4mGM13Y&usqp=CAU"
-3
-"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQI7wMMrsJedyZE9i0QGsBy0ADE6EQWFcmV6-OXHRSnBr27oPH_UWz4c7Ow4Yj3qBR-yIo&usqp=CAU"
+0;
+("https://www.chinaecofiber.com/uploads/image/20210126/13/mens-corduroy-shirts.jpg");
+1;
+("https://www.chinaecofiber.com/uploads/image/20210126/13/mens-corduroy-shirts_1611640617.jpg");
+2;
+("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQNSx47n8C5DatSa5C--uW8isy3wX6_5PQTcdNUvbaMFoumr57eKMe_YQ9LKfm-4mGM13Y&usqp=CAU");
+3;
+("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQI7wMMrsJedyZE9i0QGsBy0ADE6EQWFcmV6-OXHRSnBr27oPH_UWz4c7Ow4Yj3qBR-yIo&usqp=CAU");
 
 // 4
 
-0
-"https://www.green-shirts.com/media/image/9c/a6/4f/W-GB1340-PAM-Hemd-aus-Leinen-Nachhaltige-Mode-Frauen-MASVIDE-Beige-Vorne2_1280x1280.jpg"
-1
-"https://www.green-shirts.com/media/image/c3/d0/8c/W-GB1340-PAM-Hemd-aus-Leinen-Nachhaltige-Mode-Frauen-MASVIDE-Beige-Detail2_1280x1280.jpg"
-2
-"https://www.green-shirts.com/media/image/12/c7/99/W-GB1340-PAM-Hemd-aus-Leinen-Nachhaltige-Mode-Frauen-MASVIDE-Beige-Vorne_1280x1280.jpg"
-3
-"https://www.green-shirts.com/media/image/bb/e5/5f/W-GB1340-PAM-Hemd-aus-Leinen-Nachhaltige-Mode-Frauen-MASVIDE-Beige-Hinten_600x600.jpg"
-4
-"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQKN8RODNAqK6CH5GgT0bAgO2TMpkyAnUjxkxQ3oIxPZglyIvX8R7_ZT9tt8f_UFITGmCE&usqp=CAU"
+0;
+("https://www.green-shirts.com/media/image/9c/a6/4f/W-GB1340-PAM-Hemd-aus-Leinen-Nachhaltige-Mode-Frauen-MASVIDE-Beige-Vorne2_1280x1280.jpg");
+1;
+("https://www.green-shirts.com/media/image/c3/d0/8c/W-GB1340-PAM-Hemd-aus-Leinen-Nachhaltige-Mode-Frauen-MASVIDE-Beige-Detail2_1280x1280.jpg");
+2;
+("https://www.green-shirts.com/media/image/12/c7/99/W-GB1340-PAM-Hemd-aus-Leinen-Nachhaltige-Mode-Frauen-MASVIDE-Beige-Vorne_1280x1280.jpg");
+3;
+("https://www.green-shirts.com/media/image/bb/e5/5f/W-GB1340-PAM-Hemd-aus-Leinen-Nachhaltige-Mode-Frauen-MASVIDE-Beige-Hinten_600x600.jpg");
+4;
+("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQKN8RODNAqK6CH5GgT0bAgO2TMpkyAnUjxkxQ3oIxPZglyIvX8R7_ZT9tt8f_UFITGmCE&usqp=CAU");
 
 // 5
 
-0
-"https://www.textale.tech/cdn/shop/files/FRESH_Stain-Repel_Tee_Relaxed_Fit__textale_LR.jpg?v=1698207711&width=720"
-1
-"https://static.wixstatic.com/media/bf39a3_a7a0f5b26bb14870b1f5e07f8b9dcbcc~mv2.jpg/v1/fill/w_980,h_1225,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/bf39a3_a7a0f5b26bb14870b1f5e07f8b9dcbcc~mv2.jpg"
-2
-"https://heyupnow.com/cdn/shop/products/tex_tale_tee_600x.png?v=1679563774"
-3
-"https://www.textale.tech/cdn/shop/files/Tee_1efc19c3-e426-46c5-a315-e27b9bd9c241.jpg?v=1714473708&width=1200"
-4
-"https://www.textale.tech/cdn/shop/files/Tee_c4a29b07-e4e0-43b1-a20f-98a57d4dbbdb.jpg?v=1714473708&width=1200"
+0;
+("https://www.textale.tech/cdn/shop/files/FRESH_Stain-Repel_Tee_Relaxed_Fit__textale_LR.jpg?v=1698207711&width=720");
+1;
+("https://static.wixstatic.com/media/bf39a3_a7a0f5b26bb14870b1f5e07f8b9dcbcc~mv2.jpg/v1/fill/w_980,h_1225,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/bf39a3_a7a0f5b26bb14870b1f5e07f8b9dcbcc~mv2.jpg");
+2;
+("https://heyupnow.com/cdn/shop/products/tex_tale_tee_600x.png?v=1679563774");
+3;
+("https://www.textale.tech/cdn/shop/files/Tee_1efc19c3-e426-46c5-a315-e27b9bd9c241.jpg?v=1714473708&width=1200");
+4;
+("https://www.textale.tech/cdn/shop/files/Tee_c4a29b07-e4e0-43b1-a20f-98a57d4dbbdb.jpg?v=1714473708&width=1200");
 
-{/* <Select defaultValue={defaultSize}>
+{
+  /* <Select defaultValue={defaultSize}>
             <SelectTrigger className="w-full bg-transparent border border-primary rounded-none">
               <SelectValue placeholder="Select size" />
             </SelectTrigger>
@@ -600,13 +608,11 @@ export const a = "b";
                 </SelectItem>
               ))}
             </SelectContent>
-          </Select> */}
+          </Select> */
+}
 
-
-
-
-
-{/* <div className="p-10 space-x-5 space-y-4">
+{
+  /* <div className="p-10 space-x-5 space-y-4">
         <div className="">Testing - Create Product</div>
         <button
           onClick={createProduct}
@@ -648,11 +654,17 @@ export const a = "b";
         >
           toast test
         </button>
-      </div> */}
-{/* <ProductCategorySection limit={1} /> */ }
-{/* <GridCards /> */ }
-// 
-{/* <div className='mb-4 w-full flex items-center '>
+      </div> */
+}
+{
+  /* <ProductCategorySection limit={1} /> */
+}
+{
+  /* <GridCards /> */
+}
+//
+{
+  /* <div className='mb-4 w-full flex items-center '>
                             <input
                                 type='checkbox'
                                 id='rememberMe'
@@ -664,9 +676,8 @@ export const a = "b";
                             <label htmlFor='rememberMe' className='text-black text-sm text-nowrap'>
                                 Remember Me
                             </label>
-                        </div> */}
-
-
+                        </div> */
+}
 
 //
 
@@ -691,7 +702,7 @@ export const a = "b";
 //   required: false,
 // },
 
-// 
+//
 
 {
   /* <span>Shervanis</span>
@@ -699,8 +710,7 @@ export const a = "b";
      <span>Shirts</span> */
 }
 
-// 
-
+//
 
 // const Form = () => {
 //   const [email, setEmail] = useState<string>("");
@@ -779,6 +789,313 @@ export const a = "b";
 //           )}
 //         </div>
 //       </form>
+//     </>
+//   );
+// };
+
+// Navbar.tsx
+
+// "use client";
+
+// import React, { useState, useEffect, useRef } from "react";
+// import Link from "next/link";
+// import { usePathname } from "next/navigation";
+// import { signOut, useSession } from "next-auth/react";
+// import Image from "next/image";
+// import { gsap } from "gsap";
+// import { useCursor } from "@/context/CursorProvider";
+// // import { links } from "@/lib/data";
+// import {
+//   NavigationMenu,
+//   NavigationMenuContent,
+//   NavigationMenuItem,
+//   NavigationMenuList,
+//   NavigationMenuTrigger,
+// } from "../ui/navigation-menu";
+// import { CategoryValues } from "@/lib/types";
+// import MobileNav from "./MobileNav";
+// import Cart from "./CartSheet";
+// import ReactCountUp from "../ui/ReactCountUp";
+// import { GoHeart } from "react-icons/go";
+// import { IoSearchOutline } from "react-icons/io5";
+// import { Button } from "../ui/button";
+
+// const profileOption = [
+//   { _id: 1, title: "Order History", href: "/profile/order-history" },
+//   { _id: 2, title: "Payment Methods", href: "/profile/payment-methods" },
+//   { _id: 3, title: "Account Settings", href: "/profile/account-settings" },
+//   {
+//     _id: 4,
+//     title: "Customer Support & Help",
+//     href: "/profile/customer-support-&-help",
+//   },
+// ];
+
+// const Navbar: React.FC<{ appName?: string }> = ({ appName = "LOGO" }) => {
+//   const pathname = usePathname();
+//   const [isVisible, setIsVisible] = useState<boolean>(false);
+//   const { data: session } = useSession();
+//   const navbarRef = useRef<HTMLDivElement>(null);
+//   const { showLeft, showRight } = useCursor();
+//   const visible = showLeft || showRight;
+
+//   const [categories, setCategories] = useState<CategoryValues[]>([]);
+
+//   //
+//   const [searchQuery, setSearchQuery] = useState<string>("");
+//   const [suggestions, setSuggestions] = useState<string[]>([]); // To hold search suggestions
+//   const [showSuggestions, setShowSuggestions] = useState<boolean>(false);
+
+//   useEffect(() => {
+//     const fetchSuggestions = async () => {
+//       if (searchQuery.trim()) {
+//         try {
+//           const response = await fetch(`/api/products/read/get-products-by-name?q=${encodeURIComponent(searchQuery)}`);
+
+//           if (!response.ok) {
+//             throw new Error('Failed to fetch products');
+//           }
+
+//           const data = await response.json();
+//           console.log(data)
+//           setSuggestions(data.products);
+//           setShowSuggestions(true);
+//           // const res = await fetch(`/api/products/search?query=${searchQuery}`);
+//           // const data = await res.json();
+//           // setSuggestions(data.suggestions); // Assuming API returns a `suggestions` array
+//           // setShowSuggestions(true);
+
+//           // console.log(searchQuery);
+//           // setSuggestions(["kjahdjf","kjasdjkh","kjdhfkj"]);
+//           // setShowSuggestions(true);
+//         } catch (error) {
+//           console.error("Error fetching suggestions:", error);
+//           setShowSuggestions(false);
+//         }
+//       } else {
+//         setShowSuggestions(false);
+//       }
+//     };
+
+//     fetchSuggestions();
+//   }, [searchQuery]);
+//   //
+
+//   useEffect(() => {
+//     const fetchCategories = async () => {
+//       try {
+//         const res = await fetch("/api/products/read/get-categories", {
+//           method: "GET",
+//           headers: { "Content-Type": "application/json" },
+//         });
+
+//         if (!res.ok) {
+//           throw new Error("Failed to fetch categories");
+//         }
+
+//         const data = await res.json();
+//         if (data as CategoryValues[]) {
+//           setCategories(data.categories as CategoryValues[]);
+//         }
+//       } catch (error) {
+//         console.error("Error fetching categories:", error);
+//       }
+//     };
+
+//     if (categories.length === 0) fetchCategories();
+//   }, [categories]);
+
+//   useEffect(() => {
+//     const handleScroll = () => {
+//       if (window.scrollY > window.innerHeight * 2.9 && pathname === "/") {
+//         setIsVisible(true);
+//       } else if (pathname !== "/") {
+//         setIsVisible(true);
+//       } else if (visible) {
+//         setIsVisible(true);
+//       } else {
+//         setIsVisible(false);
+//       }
+//     };
+
+//     window.addEventListener("scroll", handleScroll);
+
+//     handleScroll();
+
+//     return () => {
+//       window.removeEventListener("scroll", handleScroll);
+//     };
+//   }, [pathname, visible]);
+
+//   useEffect(() => {
+//     if (navbarRef.current) {
+//       if (isVisible) {
+//         gsap.to(navbarRef.current, {
+//           y: 0,
+//           opacity: 1,
+//           duration: 1,
+//           ease: "power3.out",
+//         });
+//       } else {
+//         gsap.to(navbarRef.current, {
+//           y: -100,
+//           opacity: 0,
+//           duration: 1,
+//           ease: "power3.out",
+//         });
+//       }
+//     }
+//   }, [isVisible]);
+
+//   return (
+//     <div
+//       ref={navbarRef}
+//       className="fixed top-0 z-[9999] max-h-[60px] w-full select-none flex-between bg-white text-black p-2 px-3 md:p-4 lg:px-12 shadow-lg transition-all"
+//       style={{ transform: "translateY(-100px)", opacity: 0 }}
+//     >
+//       <div className="flex-center gap-4 md:gap-6">
+//         <Link
+//           href="/"
+//           className="flex-between gap-1 text-2xl lg:text-3xl font-black overflow-hidden"
+//         >
+//           <Image
+//             src="/logo.png"
+//             alt="LoGo"
+//             width={400}
+//             height={400}
+//             className="w-14 h-14"
+//           />
+//         </Link>
+//         <div>
+//           <NavigationMenu className="hidden md:block">
+//             <NavigationMenuList className="flex items-center gap-2 lg:gap-4">
+//               <NavigationMenuItem>
+//                 <NavigationMenuTrigger className="w-full cursor-pointer bg-transparent border-none outline-none p-1">
+//                   Categories
+//                 </NavigationMenuTrigger>
+//                 <NavigationMenuContent className="w-fit space-y-2 p-2 animate-slide-down">
+//                   <CategoriesList categories={categories} />
+//                 </NavigationMenuContent>
+//               </NavigationMenuItem>
+//               {categories.slice(0, 3).map((link, index) => {
+//                 const isActive = pathname === `/products/${link.slug}`;
+//                 return (
+//                   <NavigationMenuItem key={index}>
+//                     <Link
+//                       href={`/products/${link.slug}`}
+//                       className={`capitalize cursor-pointer ${isActive
+//                           ? "text-primary font-semibold"
+//                           : "w-fit hover-underline-lr active:translate-y-0.5"
+//                         } ease-in-out duration-200`}
+//                     >
+//                       {link.title.split(" ")[0]}
+//                     </Link>
+//                   </NavigationMenuItem>
+//                 );
+//               })}
+//             </NavigationMenuList>
+//           </NavigationMenu>
+//         </div>
+//       </div>
+//       <MobileNav categories={categories} />
+
+//       <div className="hidden md:flex-center md:gap-4 lg:gap-6 relative">
+//         <div className="flex-center relative">
+//           <div
+//             id="search"
+//             className="flex-center lg:bg-zinc-100 rounded-md px-2"
+//           >
+//             <IoSearchOutline
+//               size={20}
+//               className="text-zinc-400 scale-150 lg:scale-100"
+//             />
+//             <input
+//               type="text"
+//               placeholder="Search for products, categories & more"
+//               className="hidden lg:block xl:w-96 bg-transparent border-none outline-none p-2"
+//               value={searchQuery}
+//               onChange={(e) => setSearchQuery(e.target.value)}
+//               onFocus={() => setShowSuggestions(true)}
+//               onBlur={() => setTimeout(() => setShowSuggestions(false), 200)} // Hide dropdown after delay to allow click
+//             />
+//           </div>
+
+//           {showSuggestions && suggestions.length > 0 && (
+//             <ul className="absolute top-full left-0 mt-1 w-full bg-white shadow-md z-10 border rounded-md p-2 space-y-2">
+//               {suggestions.map((suggestion, index) => (
+//                 <li
+//                   key={index}
+//                   className="hover:bg-gray-100 p-2 cursor-pointer"
+//                   onClick={() => {
+//                     setSearchQuery(suggestion);
+//                     setShowSuggestions(false);
+//                   }}
+//                 >
+//                   {suggestion}
+//                 </li>
+//               ))}
+//             </ul>
+//           )}
+//         </div>
+//         {session?.user ? (
+//           <>
+//             <Link href="/profile/wishlist" className="relative mr-1">
+//               <GoHeart
+//                 size={25}
+//                 color="black"
+//                 className="hover:fill-[#FF6464] cursor-pointer ease-in-out duration-300"
+//               />
+//               <ReactCountUp
+//                 className="absolute -top-1.5 -right-1.5 md:-top-2.5 md:-right-2.5 w-5 h-5 flex-center bg-red-500 text-white text-sm md:text-xs rounded-full p-1"
+//                 amt={0}
+//               />
+//             </Link>
+//             <Cart />
+//             <NavigationMenu className="hidden md:block">
+//               {/* Profile dropdown */}
+//             </NavigationMenu>
+//           </>
+//         ) : (
+//           <Link
+//             href={"/sign-in"}
+//             className="bg-zinc-50 border border-gray-300 text-black p-1 rounded-full cursor-pointer text-sm font-semibold hover:bg-gray-100 hover:shadow-sm transition-all duration-300 ease-in-out"
+//           >
+//             Sign In
+//           </Link>
+//         )}
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default Navbar;
+
+// export interface CategoriesListProps {
+//   categories: CategoryValues[];
+// }
+
+// const CategoriesList: React.FC<CategoriesListProps> = ({ categories }) => {
+//   const pathname = usePathname();
+//   // if (categories.length === 0) return;
+//   return (
+//     <>
+//       <div className="w-[40vw] h-fit grid grid-cols-4 gap-2 p-2">
+//         {categories.map((category, index) => {
+//           const isActive = pathname === `/products/${category.slug}`;
+
+//           return (
+//             <Link
+//               href={`/products/${category.slug}`}
+//               key={category._id}
+//               className={`w-fit hover-underline-lr hover:text-primary text-xs ${
+//                 isActive && "text-primary"
+//               }`}
+//             >
+//               {category.title}
+//             </Link>
+//           );
+//         })}
+//       </div>
 //     </>
 //   );
 // };
