@@ -258,12 +258,15 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({
 const Details: React.FC<DetailsProps> = ({ product }) => {
   const [size, setSize] = useState<string>("");
   const [color, setColor] = useState<string>("");
+  const [colorTitle, setColorTitle] = useState<string>("");
   const [isValuesSelected, setIsValuesSelected] = useState<{
     size: boolean;
     color: boolean;
+    colorTitle: boolean;
   }>({
     size: false,
     color: false,
+    colorTitle: false,
   });
 
   const { handleAddToCart, itemExistInCart, isOpen, setOpen } = useCart();
@@ -272,6 +275,7 @@ const Details: React.FC<DetailsProps> = ({ product }) => {
     setIsValuesSelected({
       size: size.trim() === "",
       color: color.trim() === "",
+      colorTitle: colorTitle.trim() === "",
     });
 
     if (size.trim() !== "" && color.trim() !== "") {
@@ -282,29 +286,14 @@ const Details: React.FC<DetailsProps> = ({ product }) => {
         product.description,
         product.price,
         product.mainImage,
+        product.availableSizes,
         size,
+        product.colorOptions,
+        colorTitle,
         color
       );
     }
   };
-
-  const sizeLabels: { [key: string]: string } = {
-    S: "Small",
-    M: "Medium",
-    L: "Large",
-    XL: "Extra Large",
-  };
-
-  const defaultSize =
-    sizeLabels[product.availableSizes[1].toLowerCase()] ||
-    product.availableSizes[1];
-
-  const colorOptions = [
-    { _id: 1, title: "light gray", color: "bg-gray-200" },
-    { _id: 2, title: "gray", color: "bg-gray-500" },
-    { _id: 3, title: "dark gray", color: "bg-gray-800" },
-  ];
-
   return (
     <>
       <div className="w-full h-full grid gap-6">
@@ -321,12 +310,14 @@ const Details: React.FC<DetailsProps> = ({ product }) => {
             decimals={true}
             className="text-4xl font-bold"
           />
-          <ReactCountUp
-            amt={calculateDiscount(product.price, product.oldPrice)}
-            className="text-md text-green-500 font-medium"
-          >
-            % off
-          </ReactCountUp>
+          {product.oldPrice && (
+            <ReactCountUp
+              amt={calculateDiscount(product.price, product.oldPrice)}
+              className="text-md text-green-500 font-medium"
+            >
+              % off
+            </ReactCountUp>
+          )}
         </div>
 
         {/* Ratings and Reviews */}
@@ -346,9 +337,9 @@ const Details: React.FC<DetailsProps> = ({ product }) => {
           </div>
         </div>
 
-        {/* Size Selection and Buttons */}
+        {/* Color & Size Selection and Buttons */}
         <div className="grid gap-4">
-          {/* Size Selection */}
+          {/* Color Selection */}
           <div className="grid gap-2">
             <label
               htmlFor="color"
@@ -366,18 +357,19 @@ const Details: React.FC<DetailsProps> = ({ product }) => {
                 isValuesSelected.color && "animate-shake"
               }`}
             >
-              {colorOptions.map((c) => (
+              {product.colorOptions.map((c) => (
                 <div
                   key={c._id}
                   title={c.title}
                   onClick={() => {
-                    setColor(c.title);
+                    setColorTitle(c.title);
+                    setColor(c.color);
                     setIsValuesSelected((prev) => ({ ...prev, color: false }));
                   }}
+                  style={{ backgroundColor: c.color }}
                   className={`w-10 h-10 rounded-full flex-center cursor-pointer border-2 hover:border-primary ${
-                    c.color
-                  } ${
-                    color === c.title && "border-primary shadow-lg scale-105"
+                    colorTitle === c.title &&
+                    "border-primary shadow-lg scale-105"
                   } ${
                     isValuesSelected.color && "border-[red]"
                   } ease-in-out duration-300`}
@@ -385,6 +377,7 @@ const Details: React.FC<DetailsProps> = ({ product }) => {
               ))}
             </div>
           </div>
+          {/* Size Selection */}
           <div className="grid gap-2">
             <label
               htmlFor="size"
@@ -439,7 +432,11 @@ const Details: React.FC<DetailsProps> = ({ product }) => {
             <Button
               onClick={() => {
                 handleAddToCartBtn();
-                if (color.trim() !== "" && size.trim() !== "") {
+                if (
+                  colorTitle.trim() !== "" &&
+                  color.trim() !== "" &&
+                  size.trim() !== ""
+                ) {
                   setOpen(!isOpen);
                 }
               }}
@@ -450,7 +447,7 @@ const Details: React.FC<DetailsProps> = ({ product }) => {
             </Button>
           </div>
         </div>
-        <AdditionalInfo product={product} />
+        {product && <AdditionalInfo product={product} />}
       </div>
     </>
   );
@@ -475,12 +472,16 @@ const AdditionalInfo: React.FC<AdditionalInfoProps> = ({ product }) => {
               <li>
                 <strong>Material:</strong> {product.material}
               </li>
-              <li>
-                <strong>Fabric Type:</strong> {product.fabricType}
-              </li>
-              <li>
-                <strong>Care Instructions:</strong> {product.careInstructions}
-              </li>
+              {product.fabricType && (
+                <li>
+                  <strong>Fabric Type:</strong> {product.fabricType}
+                </li>
+              )}
+              {product.careInstructions && (
+                <li>
+                  <strong>Care Instructions:</strong> {product.careInstructions}
+                </li>
+              )}
               <li>
                 <strong>Origin:</strong> {product.origin}
               </li>

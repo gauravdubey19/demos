@@ -561,40 +561,40 @@ export const a = "b";
 
 // 3
 
-0;
-("https://www.chinaecofiber.com/uploads/image/20210126/13/mens-corduroy-shirts.jpg");
-1;
-("https://www.chinaecofiber.com/uploads/image/20210126/13/mens-corduroy-shirts_1611640617.jpg");
-2;
-("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQNSx47n8C5DatSa5C--uW8isy3wX6_5PQTcdNUvbaMFoumr57eKMe_YQ9LKfm-4mGM13Y&usqp=CAU");
-3;
-("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQI7wMMrsJedyZE9i0QGsBy0ADE6EQWFcmV6-OXHRSnBr27oPH_UWz4c7Ow4Yj3qBR-yIo&usqp=CAU");
+// 0;
+// "https://www.chinaecofiber.com/uploads/image/20210126/13/mens-corduroy-shirts.jpg"
+// 1;
+// "https://www.chinaecofiber.com/uploads/image/20210126/13/mens-corduroy-shirts_1611640617.jpg"
+// 2;
+// "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQNSx47n8C5DatSa5C--uW8isy3wX6_5PQTcdNUvbaMFoumr57eKMe_YQ9LKfm-4mGM13Y&usqp=CAU"
+// 3;
+// "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQI7wMMrsJedyZE9i0QGsBy0ADE6EQWFcmV6-OXHRSnBr27oPH_UWz4c7Ow4Yj3qBR-yIo&usqp=CAU"
 
 // 4
 
-0;
-("https://www.green-shirts.com/media/image/9c/a6/4f/W-GB1340-PAM-Hemd-aus-Leinen-Nachhaltige-Mode-Frauen-MASVIDE-Beige-Vorne2_1280x1280.jpg");
-1;
-("https://www.green-shirts.com/media/image/c3/d0/8c/W-GB1340-PAM-Hemd-aus-Leinen-Nachhaltige-Mode-Frauen-MASVIDE-Beige-Detail2_1280x1280.jpg");
-2;
-("https://www.green-shirts.com/media/image/12/c7/99/W-GB1340-PAM-Hemd-aus-Leinen-Nachhaltige-Mode-Frauen-MASVIDE-Beige-Vorne_1280x1280.jpg");
-3;
-("https://www.green-shirts.com/media/image/bb/e5/5f/W-GB1340-PAM-Hemd-aus-Leinen-Nachhaltige-Mode-Frauen-MASVIDE-Beige-Hinten_600x600.jpg");
-4;
-("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQKN8RODNAqK6CH5GgT0bAgO2TMpkyAnUjxkxQ3oIxPZglyIvX8R7_ZT9tt8f_UFITGmCE&usqp=CAU");
+// 0;
+// "https://www.green-shirts.com/media/image/9c/a6/4f/W-GB1340-PAM-Hemd-aus-Leinen-Nachhaltige-Mode-Frauen-MASVIDE-Beige-Vorne2_1280x1280.jpg"
+// 1;
+// "https://www.green-shirts.com/media/image/c3/d0/8c/W-GB1340-PAM-Hemd-aus-Leinen-Nachhaltige-Mode-Frauen-MASVIDE-Beige-Detail2_1280x1280.jpg"
+// 2;
+// "https://www.green-shirts.com/media/image/12/c7/99/W-GB1340-PAM-Hemd-aus-Leinen-Nachhaltige-Mode-Frauen-MASVIDE-Beige-Vorne_1280x1280.jpg"
+// 3;
+// "https://www.green-shirts.com/media/image/bb/e5/5f/W-GB1340-PAM-Hemd-aus-Leinen-Nachhaltige-Mode-Frauen-MASVIDE-Beige-Hinten_600x600.jpg"
+// 4;
+// "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQKN8RODNAqK6CH5GgT0bAgO2TMpkyAnUjxkxQ3oIxPZglyIvX8R7_ZT9tt8f_UFITGmCE&usqp=CAU"
 
 // 5
 
-0;
-("https://www.textale.tech/cdn/shop/files/FRESH_Stain-Repel_Tee_Relaxed_Fit__textale_LR.jpg?v=1698207711&width=720");
-1;
-("https://static.wixstatic.com/media/bf39a3_a7a0f5b26bb14870b1f5e07f8b9dcbcc~mv2.jpg/v1/fill/w_980,h_1225,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/bf39a3_a7a0f5b26bb14870b1f5e07f8b9dcbcc~mv2.jpg");
-2;
-("https://heyupnow.com/cdn/shop/products/tex_tale_tee_600x.png?v=1679563774");
-3;
-("https://www.textale.tech/cdn/shop/files/Tee_1efc19c3-e426-46c5-a315-e27b9bd9c241.jpg?v=1714473708&width=1200");
-4;
-("https://www.textale.tech/cdn/shop/files/Tee_c4a29b07-e4e0-43b1-a20f-98a57d4dbbdb.jpg?v=1714473708&width=1200");
+// 0;
+// "https://www.textale.tech/cdn/shop/files/FRESH_Stain-Repel_Tee_Relaxed_Fit__textale_LR.jpg?v=1698207711&width=720"
+// 1;
+// "https://static.wixstatic.com/media/bf39a3_a7a0f5b26bb14870b1f5e07f8b9dcbcc~mv2.jpg/v1/fill/w_980,h_1225,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/bf39a3_a7a0f5b26bb14870b1f5e07f8b9dcbcc~mv2.jpg"
+// 2;
+// "https://heyupnow.com/cdn/shop/products/tex_tale_tee_600x.png?v=1679563774"
+// 3;
+// "https://www.textale.tech/cdn/shop/files/Tee_1efc19c3-e426-46c5-a315-e27b9bd9c241.jpg?v=1714473708&width=1200"
+// 4;
+// "https://www.textale.tech/cdn/shop/files/Tee_c4a29b07-e4e0-43b1-a20f-98a57d4dbbdb.jpg?v=1714473708&width=1200"
 
 {
   /* <Select defaultValue={defaultSize}>
@@ -1099,3 +1099,49 @@ export const a = "b";
 //     </>
 //   );
 // };
+
+// data
+// export const carouselItems = [
+//   {
+//     _id: "1",
+//     title: "Black Coat",
+//     slug: "/products/Product Black Coat",
+//     image:
+//       "https://csk-demo.netlify.app/assets/img/media_20240710_190936_2842665475252130661.png",
+//   },
+//   {
+//     _id: "2",
+//     title: "Kurta",
+//     slug: "/products/Product Kurta",
+//     image:
+//       "https://csk-demo.netlify.app/assets/img/media_20240710_190937_843411630433170671.png",
+//   },
+//   {
+//     _id: "3",
+//     title: "Shirt",
+//     slug: "/products/Product Shirt",
+//     image:
+//       "https://csk-demo.netlify.app/assets/img/media_20240710_190937_9152305180124524051.png",
+//   },
+//   {
+//     _id: "4",
+//     title: "Black Coat",
+//     slug: "/products/Product Black Coat",
+//     image:
+//       "https://csk-demo.netlify.app/assets/img/media_20240710_190936_2842665475252130661.png",
+//   },
+//   {
+//     _id: "5",
+//     title: "Kurta",
+//     slug: "/products/Product Kurta",
+//     image:
+//       "https://csk-demo.netlify.app/assets/img/media_20240710_190937_843411630433170671.png",
+//   },
+//   {
+//     _id: "6",
+//     title: "Shirt",
+//     slug: "/products/Product Shirt",
+//     image:
+//       "https://csk-demo.netlify.app/assets/img/media_20240710_190937_9152305180124524051.png",
+//   },
+// ];

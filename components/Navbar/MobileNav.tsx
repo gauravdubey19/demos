@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
@@ -17,8 +17,9 @@ import {
 import Cart from "./CartSheet";
 import { CategoriesListProps } from "./Navbar";
 import ReactCountUp from "../ui/ReactCountUp";
-import { GoHeart } from "react-icons/go";
+import { GoHeart, GoHeartFill } from "react-icons/go";
 import { DialogTitle } from "@radix-ui/react-dialog";
+import { Button } from "../ui/button";
 
 const MobileNav: React.FC<CategoriesListProps> = ({ categories }) => {
   const [isOpen, setOpen] = useState<boolean>(false);
@@ -71,31 +72,34 @@ const MobileNav: React.FC<CategoriesListProps> = ({ categories }) => {
         >
           {session?.user && (
             <DialogTitle>
-              <SheetTitle className="w-full h-fit flex justify-end gap-6">
-                <SheetClose>
-                  <Link href="/profile/wishlist" className="relative mr-1">
-                    <GoHeart
-                      size={25}
-                      color="black"
-                      className="hover:fill-[#FF6464] cursor-pointer ease-in-out duration-300"
-                    />
+              <SheetTitle className="w-full h-fit flex-between gap-6 overflow-hidden">
+                <Link
+                  href="/profile/wishlist"
+                  className="relative flex-center mr-1"
+                >
+                  <SheetClose>
+                    {pathname.includes("/profile/wishlist") ? (
+                      <GoHeartFill size={40} color="#FF6464" />
+                    ) : (
+                      <GoHeart size={40} color="#FF6464" />
+                    )}
                     <ReactCountUp
                       className="absolute -top-1.5 -right-1.5 md:-top-2.5 md:-right-2.5 w-5 h-5 flex-center bg-red-500 text-white text-sm md:text-xs rounded-full p-1"
                       amt={10}
                       // amt={fav?.length}
                     />
-                  </Link>
-                </SheetClose>
+                  </SheetClose>
+                </Link>
                 <SheetClose>
                   <Cart />
                 </SheetClose>
-                <SheetClose>
-                  <Link
-                    href={"/profile/my-profile"}
-                    className={`w-10 h-10 rounded-full ${
-                      pathname.includes("/profile") && "border-2 border-primary"
-                    } overflow-hidden`}
-                  >
+                <Link
+                  href={"/profile/my-profile"}
+                  className={`w-10 h-10 rounded-full ${
+                    pathname.includes("/profile") && "border-2 border-primary"
+                  } overflow-hidden`}
+                >
+                  <SheetClose>
                     <Image
                       src={session?.user?.image || "/profile.png"}
                       alt="profile"
@@ -103,8 +107,8 @@ const MobileNav: React.FC<CategoriesListProps> = ({ categories }) => {
                       height={200}
                       className="w-full h-full rounded-full overflow-hidden"
                     />
-                  </Link>
-                </SheetClose>
+                  </SheetClose>
+                </Link>
               </SheetTitle>
             </DialogTitle>
           )}
@@ -161,16 +165,28 @@ const MobileNav: React.FC<CategoriesListProps> = ({ categories }) => {
                 );
               })}
             </div>
-            {!session?.user && (
-              <div className="absolute bottom-3 left-0 right-0">
+            <div
+              className={`absolute ${
+                !session?.user ? "bottom-3" : "bottom-14"
+              }  left-0 right-0`}
+            >
+              {!session?.user ? (
                 <Link
                   href={"/sign-in"}
                   className="capitalize cursor-pointer flex-center text-xl font-semibold p-2 rounded ring-1 ring-primary shadow-md text-white bg-primary"
                 >
                   login
                 </Link>
-              </div>
-            )}
+              ) : (
+                <Button
+                  size="lg"
+                  onClick={() => signOut()}
+                  className="w-full capitalize text-xl text-white font-semibold p-2 rounded shadow-md"
+                >
+                  Logout
+                </Button>
+              )}
+            </div>
           </div>
         </SheetContent>
       </Sheet>

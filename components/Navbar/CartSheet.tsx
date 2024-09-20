@@ -1,3 +1,5 @@
+"use client";
+
 import Image from "next/image";
 import ReactCountUp from "../ui/ReactCountUp";
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "../ui/sheet";
@@ -5,6 +7,14 @@ import { useCart } from "@/context/CartProvider";
 import { BsHandbag } from "react-icons/bs";
 import { AiOutlineMinus, AiOutlinePlus } from "react-icons/ai";
 import { Button } from "../ui/button";
+import { useState } from "react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
 
 const Cart = () => {
   const { cart, isOpen, setOpen } = useCart(); //console.log(isOpen);
@@ -84,75 +94,162 @@ const Cart = () => {
   );
 };
 
+export default Cart;
+
+interface CartItem {
+  slug: string;
+  productId: string;
+  image: string;
+  title: string;
+  description: string;
+  price: number;
+  quantity: number;
+  availableSizes: string[];
+  selectedSize: string;
+  colorOptions: {
+    _id: string;
+    title: string;
+    color: string;
+  }[];
+  selectedColor: {
+    title: string;
+    color: string;
+  };
+}
+
 const CartItems = () => {
-  const { cart, handleIncrement, handleDecrement, handleRemoveFromCart } =
-    useCart();
+  const { cart } = useCart();
+  // console.log(cart);
 
   return (
     <div className="relative mt-2 w-full h-[64vh] text-black overflow-hidden">
       <div className="w-full h-full space-y-4 overflow-y-scroll overflow-x-hidden">
-        {cart.map((item) => (
-          <div
-            key={item.slug}
-            className="relative w-full h-20 group flex gap-2 bg-white/20 rounded-md p-1 shadow-md hover:shadow-lg scale-95 hover:scale-100 ease-in-out duration-300"
-          >
-            <div
-              onClick={() => handleRemoveFromCart(item.productId)}
-              className={`absolute right-2 top-0 z-10 cursor-pointer opacity-0 group-hover:opacity-100 ${
-                item.quantity !== 1
-                  ? "text-gray-400 hover:text-primary"
-                  : "text-primary"
-              }`}
-            >
-              x
-            </div>
-
-            <div className="img w-[20%] h-full flex-center select-none">
-              <Image
-                src={item.image}
-                alt={item.title}
-                width={200}
-                height={200}
-                className="w-full h-full object-contain"
-              />
-            </div>
-            <div className="details relative w-[80%] h-full">
-              <h3 className="w-[95%] text-md line-clamp-1">{item.title}</h3>
-              <p className="text-xs text-gray-400 line-clamp-1 select-none">
-                {item.description}
-              </p>
-
-              <div className="absolute bottom-0 right-0 w-full h-fit flex-between gap-2 p-1">
-                <ReactCountUp
-                  className="text-primary"
-                  prefix="₹"
-                  amt={item.price * item.quantity}
-                  decimals={true}
-                />
-                <div className="flex-center gap-2 select-none">
-                  <AiOutlineMinus
-                    onClick={() => handleDecrement(item.productId)}
-                    className={
-                      item.quantity !== 1
-                        ? "cursor-pointer"
-                        : "cursor-not-allowed"
-                    }
-                  />
-                  <span className="text-sm text-primary select-none">
-                    {item.quantity}
-                  </span>
-                  <AiOutlinePlus
-                    onClick={() => handleIncrement(item.productId)}
-                    className="cursor-pointer"
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
+        {cart.map((item: CartItem) => (
+          <CartItemCard key={item.slug} item={item} />
         ))}
       </div>
     </div>
   );
 };
 
-export default Cart;
+const CartItemCard: React.FC<{ item: CartItem }> = ({ item }) => {
+  const { handleIncrement, handleDecrement, handleRemoveFromCart } = useCart();
+  const [size, setSize] = useState<string>(item?.selectedSize);
+  const [color, setColor] = useState<{ title: string; color: string }>(
+    item?.selectedColor
+  );
+  // console.log(size);
+
+  const sizeLabels: { [key: string]: string } = {
+    S: "Small",
+    M: "Medium",
+    L: "Large",
+    XL: "Extra Large",
+  };
+
+  return (
+    <div className="relative w-full h-fit group bg-white/20 rounded-md p-1 shadow-md hover:shadow-lg scale-95 hover:scale-100 ease-in-out duration-300">
+      <div
+        onClick={() => handleRemoveFromCart(item.productId)}
+        className={`absolute right-2 top-0 z-10 cursor-pointer opacity-0 group-hover:opacity-100 ${
+          item.quantity !== 1
+            ? "text-gray-400 hover:text-primary"
+            : "text-primary"
+        }`}
+      >
+        x
+      </div>
+
+      <div className="flex gap-2">
+        <div className="img w-[20%] h-fit flex-center select-none">
+          <Image
+            src={item.image}
+            alt={item.title}
+            width={200}
+            height={200}
+            className="w-full h-full object-contain"
+          />
+        </div>
+        <div className="details relative w-[80%] h-full">
+          <h3 className="w-[95%] text-md line-clamp-1">{item.title}</h3>
+          <p className="text-xs text-gray-400 line-clamp-1 select-none">
+            {item.description}
+          </p>
+          <div
+            id="color-&-size-selection"
+            className="w-full h-fit mt-1 rounded-lg flex-between gap-1 overflow-hidden"
+          >
+            <Select defaultValue={size}>
+              <SelectTrigger className="w-full bg-transparent border border-primary rounded-r-none rounded-l-lg ">
+                <SelectValue placeholder="Select size" />
+              </SelectTrigger>
+              <SelectContent>
+                {item.availableSizes.map((size) => (
+                  <SelectItem
+                    key={size}
+                    value={size}
+                    className="cursor-pointer"
+                  >
+                    {sizeLabels[size] || size}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <Select defaultValue={color?.title}>
+              <SelectTrigger className="w-full bg-transparent border border-primary rounded-l-none rounded-r-lg ">
+                <SelectValue placeholder="Select size" />
+              </SelectTrigger>
+              <SelectContent>
+                {item.colorOptions.map((c) => (
+                  <SelectItem
+                    key={c._id}
+                    value={c?.title}
+                    className="cursor-pointer"
+                  >
+                    {c?.title}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+      </div>
+      <div className="w-full h-fit space-y-1 p-1">
+        <div className="w-full h-fit flex-between gap-2">
+          <div className="flex-between gap-2">
+            <ReactCountUp
+              className="text-sm"
+              prefix="₹"
+              amt={item.price}
+              decimals={true}
+            />
+            <span className="text-xs select-none text-primary">x</span>
+            <span className="text-sm select-none">{item.quantity}</span>
+          </div>
+          <div className="flex-center gap-2 select-none">
+            <AiOutlineMinus
+              onClick={() => handleDecrement(item.productId)}
+              className={
+                item.quantity !== 1 ? "cursor-pointer" : "cursor-not-allowed"
+              }
+            />
+            <span className="text-sm text-primary select-none">
+              {item.quantity}
+            </span>
+            <AiOutlinePlus
+              onClick={() => handleIncrement(item.productId)}
+              className="cursor-pointer"
+            />
+          </div>
+        </div>
+        {/* total */}={" "}
+        <ReactCountUp
+          className="text-primary text-md"
+          prefix="₹"
+          amt={item.price * item.quantity}
+          decimals={true}
+        />
+      </div>
+    </div>
+  );
+};

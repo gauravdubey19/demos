@@ -64,27 +64,31 @@ export interface ProductDetailValues {
   _id: string;
   title: string;
   slug: string;
+  description: string;
   images: string[];
   mainImage: string;
-  description: string;
   price: number;
-  oldPrice: number;
-  discount: number;
-  ratings: number;
-  reviews: [];
-  colors: string[];
-  material: string;
-  fabricType: string;
-  careInstructions: string;
-  origin: string;
+  oldPrice?: number;
   availableSizes: string[];
-  colorOptions: string[];
-  countryOfManufacture: string;
+  colorOptions: {
+    _id: string;
+    title: string;
+    color: string;
+  }[];
+  material: string;
+  fabricType?: string;
+  careInstructions?: string;
+  origin: string;
+  quantityInStock: number;
+  brand: string;
   faqs: {
     question: string;
     answer: string;
   }[];
+  type: string;
+  countryOfManufacture: string;
 }
+
 export interface ProductDetailProps {
   product: ProductDetailValues;
 }
@@ -103,11 +107,15 @@ export interface ProductReviewsProps {
 export interface AdditionalInfoProps {
   product: {
     material: string;
-    fabricType: string;
-    careInstructions: string;
+    fabricType?: string;
+    careInstructions?: string;
     origin: string;
     availableSizes: string[];
-    colorOptions: string[];
+    colorOptions: {
+      _id: string;
+      title: string;
+      color: string;
+    }[];
     countryOfManufacture: string;
     faqs: {
       question: string;
@@ -115,6 +123,7 @@ export interface AdditionalInfoProps {
     }[];
   };
 }
+
 export interface CategoryValues {
   _id: string;
   title: string;
@@ -191,6 +200,15 @@ export interface CartItem {
   price: number;
   quantity: number;
   image: string;
-  size: string;
-  color: string;
+  availableSizes: string[];
+  selectedSize: string;
+  colorOptions: {
+    _id: string;
+    title: string;
+    color: string;
+  }[];
+  selectedColor: {
+    title: string;
+    color: string;
+  };
 }
