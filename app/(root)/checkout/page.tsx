@@ -15,12 +15,12 @@ const CheckoutPage = () => {
         </div>
         {/* info container */}
         <div className='pt-7 px-2 w-full  flex justify-between flex-row gap-3 pb-5 '>
-            {/* right */}
+            {/* left */}
             <div className='w-[75%] p-5 min-h-60 max-h-max   border border-[#8888] rounded-lg '>
                   <h1 className='text-3xl  text-black'>Shopping Cart</h1>
                   <ShoppingCart/>
             </div>
-            {/* left */}
+            {/* right */}
               <div className='w-[25%] h-max border border-[#8888] rounded-lg text-[#888888] py-5 sticky top-20 '>
                 <h1 className='text-3xl pl-5 text-black'>Subtotal details</h1>
                 {/* price details */}
