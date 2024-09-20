@@ -1,4 +1,3 @@
-
 "use client"
 import { useState, useEffect } from 'react';
 import { ChevronDown, ChevronUp } from 'lucide-react';
@@ -39,7 +38,7 @@ const FAQ = () => {
     };
 
     return (
-        <div className="bg-[#fff9ef] px-2 py-20  sm:px-4 md:px-8 lg:px-20 md:py-40 lg:py-40 min-h-screen">
+        <div className="bg-[#fff9ef] px-2 py-20  sm:px-4 md:px-8 lg:px-20 md:py-32 lg:py-32 min-h-screen">
             <h1 className='font-semibold text-xl sm:text-3xl mb-6 md:mb-8 '>Frequently Asked Questions</h1>
 
             <div className="flex flex-col md:flex-row  ">
