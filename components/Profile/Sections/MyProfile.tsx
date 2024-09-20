@@ -1,13 +1,13 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Button } from "../ui/button";
-import { InputFieldProps } from "@/lib/types";
-import { getSession, signOut, useSession } from "next-auth/react";
 import { Session } from "next-auth";
-import { useGlobalContext } from "@/context/GlobalProvider";
-import { BiSolidEditAlt } from "react-icons/bi";
+import { signOut, useSession } from "next-auth/react";
 import { State, City } from "country-state-city";
+import { InputFieldProps } from "@/lib/types";
+import { useGlobalContext } from "@/context/GlobalProvider";
+import { Button } from "@/components/ui/button";
+import { BiSolidEditAlt } from "react-icons/bi";
 
 interface SessionExtended extends Session {
   user: {
@@ -48,7 +48,7 @@ interface DropdownProps {
   isDisabled: boolean;
   setValue: (value: string) => void;
 }
-const PersonalInformation = () => {
+const MyProfile = () => {
   const { data: session } = useSession();
   const handleDeleteAccount = async () => {
     if (!session) {
@@ -117,7 +117,7 @@ const PersonalInformation = () => {
   );
 };
 
-export default PersonalInformation;
+export default MyProfile;
 
 const PersonalSection = () => {
   const { error, isProfileEditing, setProfileEditing, userData, setUserData } =

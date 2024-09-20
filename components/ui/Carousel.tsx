@@ -15,10 +15,11 @@ const Carousel: React.FC<CarouselProps> = ({
   pauseOnHover = true,
   slidesToShow = 5,
   arrows = false,
+  dots = false,
   className,
 }) => {
   const settings = {
-    dots: false,
+    dots: dots,
     draggable: true,
     swipe: true,
     swipeToSlide: true,

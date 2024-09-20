@@ -11,6 +11,7 @@ const About = () => {
         <Hero />
         <OurPartners />
         <OurExecutives />
+        <OurGoals />
       </section>
     </>
   );
@@ -20,8 +21,8 @@ export default About;
 
 const Hero = () => {
   return (
-    <div className="w-full h-full md:h-[calc(100vh-60px)] flex-between flex-col md:flex-row gap-2 md:gap-6 px-4 md:px-0 py-5 md:py-8 overflow-hidden">
-      <div className="w-full h-52 md:h-full bg-[url('/assets/rightImage.png')] bg-cover bg-no-repeat rounded-xl md:rounded-r-xl overflow-hidden"></div>
+    <div className="w-full h-full lg:h-[calc(100vh-60px)] flex-between flex-col md:flex-row gap-2 md:gap-6 px-4 md:px-0 py-5 md:py-8 overflow-hidden">
+      <div className="w-full h-52 md:h-full bg-[url('/assets/rightImage.png')] bg-cover bg-no-repeat rounded-xl md:rounded-l-none md:rounded-r-xl overflow-hidden"></div>
       <div className="w-full h-full flex items-center justify-start p-2 overflow-hidden">
         <div className="w-full lg:max-w-xl h-fit space-y-4 md:pr-3 lg:pr-5">
           <div className="">
@@ -56,7 +57,7 @@ const OurPartners = () => {
     <>
       <div className="w-full h-fit space-y-2 md:space-y-4 py-4 overflow-hidden">
         <div className="w-full h-fit px-4 md:px-6 lg:px-8">
-          <h2 className="text-md md:text-lg lg:text-xl xl:text-2xl font-bold">
+          <h2 className="text-lg md:text-xl lg:text-2xl xl:text-3xl font-bold">
             Our Partners
           </h2>
         </div>
@@ -76,6 +77,97 @@ const OurPartners = () => {
         </Carousel>
       </div>
     </>
+  );
+};
+
+const OurExecutives = () => {
+  return (
+    <>
+      <div className="w-full h-fit space-y-2 md:space-y-4 py-4 overflow-hidden">
+        <div className="w-full h-fit px-4 md:px-6 lg:px-8">
+          <h2 className="text-lg md:text-xl lg:text-2xl xl:text-3xl font-bold">
+            Our Executives
+          </h2>
+        </div>
+        <div className="px-4 md:px-16 lg:px-32 overflow-hidden">
+          <Carousel slidesToShow={4} dots={true} className="mb-5">
+            {executives.map((p, index) => (
+              <div
+                key={index}
+                title={p.name}
+                className="max-w-[190px] md:max-w-[240px] h-fit bg-[#FFF4E0] space-y-1 md:space-y-2 p-2 md:p-4 rounded-lg scale-95 hover:scale-100 shadow-sm hover:shadow-lg ease-in-out duration-300 overflow-hidden"
+              >
+                <Image
+                  key={index}
+                  src={p.img}
+                  alt={p.name}
+                  width={400}
+                  height={300}
+                  objectFit="contain"
+                  className="w-fit h-[240px] sm:h-[240px] md:h-[220px] lg:h-[340px] object-cover cursor-default"
+                />
+                <div className="w-full h-fit space-y-1">
+                  <h3 className="text-black">{p.name}</h3>
+                  <span className="text-gray-600 text-xs md:text-sm">
+                    {p.position}
+                  </span>
+                  <div className="flex gap-2">
+                    {p.socials.map((s, index) => (
+                      <s.icon
+                        key={index}
+                        title={s.label}
+                        className="text-gray-600"
+                      />
+                    ))}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </Carousel>
+        </div>
+      </div>
+    </>
+  );
+};
+
+const OurGoals = () => {
+  return (
+    <div className="w-full h-full lg:h-[calc(100vh-60px)] px-4 md:px-0 py-5 md:py-8 overflow-hidden">
+      <div className="w-full h-fit px-4 md:px-6 lg:px-8">
+        <h2 className="text-lg md:text-xl lg:text-2xl xl:text-3xl font-bold">
+          Our Goals
+        </h2>
+      </div>
+      <div className="w-full h-full flex-between flex-col md:flex-row gap-2 md:gap-6">
+        <div className="w-full h-full flex items-center justify-end p-2 overflow-hidden">
+          <div className="w-full lg:max-w-xl h-fit space-y-4 md:pr-3 lg:pr-5">
+            {ourGoals.map((goal, index) => (
+              <div key={index} className="flex-center gap-2 md:gap-4">
+                <div className="max-w-[20%] w-12 h-12 md:w-14 md:h-14 lg:w-16 lg:h-16 rounded-full bg-primary flex-center p-2 md:p-3 overflow-hidden">
+                  <Image
+                    src={goal.img}
+                    alt={`goal - ${goal.id}`}
+                    width={200}
+                    height={200}
+                    className="w-full h-full object-contain"
+                  />
+                </div>
+                <div className="w-[80%] h-fit text-balanc">{goal.para}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+        <div className="w-full h-52 md:h-full rounded-xl md:rounded-l-xl md:rounded-r-none overflow-hidden">
+          <Image
+            src="/textile.png"
+            alt="our goals"
+            width={400}
+            height={400}
+            className="w-full h-full object-cover"
+          />
+        </div>
+      </div>
+    </div>
   );
 };
 
@@ -101,50 +193,6 @@ const partners = [
     img: "https://cdn.freebiesupply.com/logos/thumbs/1x/vogue-logo.png",
   },
 ];
-
-const OurExecutives = () => {
-  return (
-    <>
-      <div className="w-full h-fit space-y-2 md:space-y-4 py-4 overflow-hidden">
-        <div className="w-full h-fit px-4 md:px-6 lg:px-8">
-          <h2 className="text-md md:text-lg lg:text-xl xl:text-2xl font-bold">
-            Our Executives
-          </h2>
-        </div>
-        <Carousel slidesToShow={4} className="px-4 md:px-8 lg:px-28">
-          {executives.map((p, index) => (
-            <div
-              key={index}
-              title={p.name}
-              className="max-w-[190px] md:max-w-[240px] h-fit bg-[#FFF4E0] space-y-1 md:space-y-2 p-2 md:p-4 rounded-md scale-95 hover:scale-100 ease-in-out duration-300 overflow-hidden"
-            >
-              <Image
-                key={index}
-                src={p.img}
-                alt={p.name}
-                width={400}
-                height={300}
-                objectFit="contain"
-                className="w-fit h-[240px] sm:h-[240px] md:h-[220px] lg:h-[340px] object-cover cursor-default"
-              />
-              <div className="w-full h-fit space-y-1">
-                <h3 className="">{p.name}</h3>
-                <span className="text-gray-400 text-xs md:text-sm">
-                  {p.position}
-                </span>
-                <div className="flex gap-2">
-                  {p.socials.map((s, index) => (
-                    <s.icon key={index} title={s.label} />
-                  ))}
-                </div>
-              </div>
-            </div>
-          ))}
-        </Carousel>
-      </div>
-    </>
-  );
-};
 
 const executives = [
   {
@@ -230,5 +278,23 @@ const executives = [
         herf: "https://www.instagram.com/",
       },
     ],
+  },
+];
+
+const ourGoals = [
+  {
+    id: 1,
+    para: "Our primary goal is to provide customers with top-quality textiles at the most affordable prices.",
+    img: "/assets/pngs/award.png",
+  },
+  {
+    id: 2,
+    para: "We aim to bring premium, affordable textiles to every corner of India.",
+    img: "/assets/pngs/bharat.png",
+  },
+  {
+    id: 3,
+    para: "We strive to make the process of ordering and receiving textiles as seamless as possible.",
+    img: "/assets/pngs/truck.png",
   },
 ];
