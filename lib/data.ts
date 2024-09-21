@@ -118,6 +118,9 @@ export const cardList: CardValues[] = [
     discount: 25,
     ratings: 5,
     reviews: [],
+    type: [],
+    availableSizes: [""],
+    colorOptions: [],
   },
   {
     _id: "1",
@@ -132,6 +135,9 @@ export const cardList: CardValues[] = [
     discount: 5,
     ratings: 2,
     reviews: [],
+    type: [],
+    availableSizes: [""],
+    colorOptions: [],
   },
   {
     _id: "2",
@@ -146,6 +152,9 @@ export const cardList: CardValues[] = [
     discount: 25,
     ratings: 5,
     reviews: [],
+    type: [],
+    availableSizes: [""],
+    colorOptions: [],
   },
   {
     _id: "3",
@@ -160,6 +169,9 @@ export const cardList: CardValues[] = [
     discount: 5,
     ratings: 2,
     reviews: [],
+    type: [],
+    availableSizes: [""],
+    colorOptions: [],
   },
   {
     _id: "4",
@@ -174,6 +186,9 @@ export const cardList: CardValues[] = [
     discount: 25,
     ratings: 5,
     reviews: [],
+    type: [],
+    availableSizes: [""],
+    colorOptions: [],
   },
   {
     _id: "5",
@@ -188,6 +203,9 @@ export const cardList: CardValues[] = [
     discount: 5,
     ratings: 2,
     reviews: [],
+    type: [],
+    availableSizes: [""],
+    colorOptions: [],
   },
   {
     _id: "6",
@@ -202,6 +220,9 @@ export const cardList: CardValues[] = [
     discount: 25,
     ratings: 5,
     reviews: [],
+    type: [],
+    availableSizes: [""],
+    colorOptions: [],
   },
   {
     _id: "7",
@@ -216,6 +237,9 @@ export const cardList: CardValues[] = [
     discount: 5,
     ratings: 2,
     reviews: [],
+    type: [],
+    availableSizes: [""],
+    colorOptions: [],
   },
 ];
 

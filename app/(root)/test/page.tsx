@@ -116,7 +116,7 @@ export default function TestPage() {
     <div className="mt-[60px] w-full h-screen bg-zinc-200 p-10">
       {/* un-comment this below for creating sample data */}
       {/* <CreateCategories /> */}
-      {/* <CreateProducts /> */}
+      <CreateProducts />
     </div>
   );
 }
@@ -207,8 +207,11 @@ const sampleProducts = [
       { title: "Blue", color: "#0000FF" },
       { title: "White", color: "#FFFFFF" },
     ],
-    categories: [{ title: "Kurta", slug: "kurta" }],
-    type: "cotton-kurta",
+    categories: [
+      { title: "Kurta", slug: "kurta" },
+      { title: "Sherwani", slug: "sherwani" },
+    ],
+    type: ["cotton-kurta", "designer-sherwani"],
     material: "Cotton",
     fabricType: "Regular",
     careInstructions: "Machine wash cold.",
@@ -241,8 +244,11 @@ const sampleProducts = [
       { title: "Gold", color: "#FFD700" },
       { title: "Red", color: "#FF0000" },
     ],
-    categories: [{ title: "Sherwani", slug: "sherwani" }],
-    type: "designer-sherwani",
+    categories: [
+      { title: "Sherwani", slug: "sherwani" },
+      { title: "Pathani Suit", slug: "pathani-suit" },
+    ],
+    type: ["designer-sherwani", "designer-pathani"],
     material: "Silk",
     fabricType: "Luxury",
     careInstructions: "Dry clean only.",
@@ -280,7 +286,7 @@ const sampleProducts = [
       { title: "Maroon", color: "#800000" },
     ],
     categories: [{ title: "Dhoti", slug: "dhoti" }],
-    type: "silk-dhoti",
+    type: ["silk-dhoti", "cotton-dhoti"],
     material: "Silk",
     fabricType: "Luxury",
     careInstructions: "Dry clean only.",
@@ -317,7 +323,7 @@ const sampleProducts = [
       { title: "Black", color: "#000000" },
     ],
     categories: [{ title: "Pajama", slug: "pajama" }],
-    type: "cotton-pajama",
+    type: ["cotton-pajama"],
     material: "Cotton",
     fabricType: "Regular",
     careInstructions: "Machine wash cold.",
@@ -355,7 +361,7 @@ const sampleProducts = [
       { title: "Black", color: "#000000" },
     ],
     categories: [{ title: "Jacket", slug: "jacket" }],
-    type: "denim-jacket",
+    type: ["denim-jacket"],
     material: "Denim",
     fabricType: "Regular",
     careInstructions: "Machine wash cold.",
@@ -390,7 +396,7 @@ const sampleProducts = [
       { title: "Black", color: "#000000" },
     ],
     categories: [{ title: "Shirt", slug: "shirt" }],
-    type: "graphic-shirt",
+    type: ["graphic-shirt"],
     material: "Cotton",
     fabricType: "Regular",
     careInstructions: "Machine wash cold.",
@@ -428,8 +434,11 @@ const sampleProducts = [
       { title: "Gray", color: "#808080" },
       { title: "Navy", color: "#000080" },
     ],
-    categories: [{ title: "Sweater", slug: "sweater" }],
-    type: "graphic-sweater",
+    categories: [
+      { title: "Sweater", slug: "sweater" },
+      { title: "Shirt", slug: "shirt" },
+    ],
+    type: ["graphic-sweater", "graphic-shirt"],
     material: "Acrylic",
     fabricType: "Warm",
     careInstructions: "Hand wash recommended.",
@@ -466,8 +475,11 @@ const sampleProducts = [
       { title: "Black", color: "#000000" },
       { title: "Navy", color: "#000080" },
     ],
-    categories: [{ title: "Blazer", slug: "blazer" }],
-    type: "cotton-blazer",
+    categories: [
+      { title: "Blazer", slug: "blazer" },
+      { title: "Jacket", slug: "jacket" },
+    ],
+    type: ["cotton-blazer", "denim-jacket"],
     material: "Cotton",
     fabricType: "Regular",
     careInstructions: "Dry clean only.",
@@ -505,7 +517,7 @@ const sampleProducts = [
       { title: "White", color: "#FFFFFF" },
     ],
     categories: [{ title: "Pathani Suit", slug: "pathani-suit" }],
-    type: "designer-pathani",
+    type: ["designer-pathani"],
     material: "Cotton",
     fabricType: "Regular",
     careInstructions: "Machine wash cold.",
@@ -543,7 +555,7 @@ const sampleProducts = [
       { title: "Navy", color: "#000080" },
     ],
     categories: [{ title: "Trousers", slug: "trousers" }],
-    type: "formal-trousers",
+    type: ["formal-trousers"],
     material: "Polyester",
     fabricType: "Regular",
     careInstructions: "Machine wash cold.",

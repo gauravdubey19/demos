@@ -6,6 +6,7 @@ export interface ProductCategoryDetailParams {
     category: string;
     slug: string;
   };
+  searchParams?: { [type: string]: string };
 }
 
 export interface ProfileSectionParams {
@@ -20,6 +21,7 @@ export interface ProductSectionProps {
 }
 export interface ProductCategoryProps {
   category: string;
+  type?: string;
 }
 export interface LinkValues {
   id: number;
@@ -49,8 +51,15 @@ export interface CardValues {
   price: number;
   oldPrice: number;
   discount: number;
+  type: string[];
   ratings: number;
   reviews: [];
+  availableSizes: [string];
+  colorOptions: {
+    _id: string;
+    title: string;
+    color: string;
+  }[];
 }
 
 export interface CardDetails {
@@ -95,6 +104,7 @@ export interface ProductDetailProps {
 
 export interface DetailsProps {
   product: ProductDetailValues;
+  categorySlug: string;
 }
 
 export interface ImageGalleryProps {
@@ -129,6 +139,8 @@ export interface CategoryValues {
   title: string;
   slug: string;
   image: string;
+  description: string;
+  types: { _id: string; title: string; slug: string }[];
 }
 
 // Profile types
@@ -211,4 +223,5 @@ export interface CartItem {
     title: string;
     color: string;
   };
+  categorySlug: string;
 }

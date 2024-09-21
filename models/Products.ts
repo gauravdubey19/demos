@@ -48,7 +48,7 @@ const ProductSchema = new Schema(
       },
     ],
     type: {
-      type: String,
+      type: [String],
       required: true,
     },
     material: {
@@ -115,4 +115,11 @@ export default Products;
 //   "plain-shirt",
 //   "graphic-sweater",
 //   "plain-sweater",
+// ],
+
+// categories: [
+//   {
+//     type: Schema.Types.ObjectId,
+//     ref: "Categories",
+//   },
 // ],

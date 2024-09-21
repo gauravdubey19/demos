@@ -19,11 +19,12 @@ const handler = NextAuth({
     GoogleProvider({
       clientId: googleClientId,
       clientSecret: googleClientSecret,
-      authorization:{
-        params:{
-          scope: "openid email profile https://www.googleapis.com/auth/user.birthday.read https://www.googleapis.com/auth/user.phonenumbers.read https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/user.gender.read",
-        }
-      }
+      authorization: {
+        params: {
+          scope:
+            "openid email profile https://www.googleapis.com/auth/user.birthday.read https://www.googleapis.com/auth/user.phonenumbers.read https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/user.gender.read",
+        },
+      },
     }),
   ],
   secret: process.env.NEXTAUTH_SECRET,
@@ -35,8 +36,10 @@ const handler = NextAuth({
           return session;
         }
         const sessionUser = await User.findOne({ email: session.user.email });
-        if(sessionUser._id)
-        session.user.id = sessionUser._id.toString();
+        if (sessionUser._id) {
+          session.user.id = sessionUser._id.toString();
+          session.user.favProducts = sessionUser.favProducts;
+        }
       } catch (error) {
         console.error("Error fetching user session:", error);
       }
@@ -67,7 +70,7 @@ const handler = NextAuth({
             profile: extendedProfile.image,
             phone: extendedProfile.phone_number,
             dob: extendedProfile.birthday,
-            gender: extendedProfile.gender, 
+            gender: extendedProfile.gender,
           });
         }
         console.log("User logged In: ", user);
@@ -80,5 +83,4 @@ const handler = NextAuth({
   },
 });
 
-export { handler as GET, handler as POST};
-
+export { handler as GET, handler as POST };

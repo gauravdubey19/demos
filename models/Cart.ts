@@ -55,6 +55,10 @@ const CartItemSchema = new Schema(
         required: true,
       },
     },
+    categorySlug: {
+      type: String,
+      required: true,
+    },
   },
   { timestamps: true }
 );

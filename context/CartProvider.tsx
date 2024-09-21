@@ -36,8 +36,19 @@ interface CartContextType {
       color: string;
     }[],
     colorTitle: string,
-    color: string
+    color: string,
+    categorySlug: string
   ) => void;
+  handleColorSize: (
+    action: string,
+    productId: string,
+    color?: { title: string; color: string },
+    size?: string
+  ) => void;
+  favProducts: string[];
+  handleAddProductToWhistlist: (productId: string) => void;
+  handleRemoveProductFromWishlist: (productId: string) => void;
+  productExistInWishlist: (productId: string) => boolean;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -50,6 +61,9 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
 
   const [isOpen, setOpen] = useState<boolean>(false);
   const [cart, setCart] = useState<CartItem[]>([]);
+  const [favProducts, setFavProducts] = useState<string[]>(
+    session?.user?.favProducts || []
+  );
 
   const fetchCart = useCallback(async () => {
     if (status === "authenticated" && session?.user?.id) {
@@ -99,7 +113,8 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
         color: string;
       }[],
       colorTitle: string,
-      color: string
+      color: string,
+      categorySlug: string
     ) => {
       if (status !== "authenticated") {
         router.replace("/sign-in");
@@ -128,6 +143,7 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
           title: colorTitle,
           color,
         },
+        categorySlug,
       };
 
       try {
@@ -361,6 +377,170 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
     [status, cart, router, session]
   );
 
+  const handleColorSize = useCallback(
+    async (
+      action: string,
+      productId: string,
+      color?: { title: string; color: string },
+      size?: string
+    ) => {
+      if (status !== "authenticated") {
+        router.replace("/sign-in");
+        return;
+      }
+
+      const item = cart.find((item) => item.productId === productId);
+
+      if (!item) {
+        return;
+      }
+
+      try {
+        const res = await fetch(
+          `/api/products/update/update-cart-items/${action}`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              userId: session.user.id,
+              productId: item.productId,
+              color,
+              size,
+            }),
+          }
+        );
+
+        const data = await res.json();
+
+        if (res.ok) {
+          // toast({
+          //   title: data.message || "Updated Size or Color successfully.",
+          // });
+          setCart((prevCart) =>
+            prevCart.map((cartItem) =>
+              cartItem.productId === productId
+                ? {
+                    ...cartItem,
+                    selectedColor:
+                      action === "upd-color" && color
+                        ? color
+                        : cartItem.selectedColor,
+                    selectedSize:
+                      action === "upd-size" && size
+                        ? size
+                        : cartItem.selectedSize,
+                  }
+                : cartItem
+            )
+          );
+        } else {
+          toast({
+            title: data.error || "Failed to update fields.",
+            description: "Please try again later.",
+            variant: "destructive",
+          });
+        }
+      } catch (error) {
+        console.error("Error updating color or size:", error);
+        toast({
+          title: "Something went wrong",
+          description: "Please try again later.",
+          variant: "destructive",
+        });
+      }
+    },
+    [status, cart, router, session]
+  );
+
+  const handleAddProductToWhistlist = async (productId: string) => {
+    if (status !== "authenticated") {
+      router.replace("/sign-in");
+      return;
+    }
+
+    try {
+      const res = await fetch("/api/products/create/create-wishlist", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userId: session.user.id,
+          productId,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        setFavProducts((prevFavProducts) => [...prevFavProducts, productId]);
+        toast({
+          title: data.message || "Added to wishlist successfully!",
+        });
+      } else {
+        toast({
+          title: data.error || "Failed to add to wishlist.",
+          description: "Please try again later.",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      console.error("Error adding to wishlist:", error);
+      toast({
+        title: "Something went wrong",
+        description: "Please try again later.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleRemoveProductFromWishlist = async (productId: string) => {
+    if (status !== "authenticated") {
+      router.replace("/sign-in");
+      return;
+    }
+
+    try {
+      const res = await fetch("/api/products/delete/remove-from-wishlist", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userId: session.user.id,
+          productId,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        setFavProducts((prevFavProducts) =>
+          prevFavProducts.filter((id) => id !== productId)
+        );
+        toast({
+          title: data.message || "Removed from wishlist successfully!",
+        });
+      } else {
+        toast({
+          title: data.error || "Failed to remove from wishlist.",
+          description: "Please try again later.",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      console.error("Error removing from wishlist:", error);
+      toast({
+        title: "Something went wrong",
+        description: "Please try again later.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const productExistInWishlist = useCallback(
+    (productId: string): boolean => {
+      return favProducts.includes(productId);
+    },
+    [favProducts]
+  );
+
   useEffect(() => {
     if (status === "authenticated") fetchCart();
   }, [status, fetchCart]);
@@ -376,6 +556,11 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
         handleAddToCart,
         itemExistInCart,
         handleRemoveFromCart,
+        handleColorSize,
+        favProducts,
+        handleAddProductToWhistlist,
+        handleRemoveProductFromWishlist,
+        productExistInWishlist,
       }}
     >
       {children}
