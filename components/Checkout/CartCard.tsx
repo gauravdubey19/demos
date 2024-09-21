@@ -41,11 +41,11 @@ const CartCard = () => {
                       <div>
                           <h1 className='text-xl '>Product heading</h1>
                           {/* stars and reviews */}
-                          <div className='flex flex-row items-center gap-4 text-sm'>
+                          {/* <div className='flex flex-row items-center gap-4 text-sm'>
                               <ReactStars value={4} count={5} edit={false} size={12} color2={'#ffd700'} />
                               {'|'}
                               <p className='text-[#8888]'>7.5k reviews</p>
-                          </div>
+                          </div> */}
                       </div>
                       {/* size and color */}
                       <div className='space-y-2 pt-3'>
@@ -53,7 +53,7 @@ const CartCard = () => {
                               <Dropdown title='Size' option={sizeOptions} selected={selectedSize} setSelected={setSelectedSize} />
                               <Dropdown title='Quantity' option={QuantityOptions} selected={selectedQuantity} setSelected={setSelectedQuantity} />
                           </div>
-                          <ColorSelector colors={colors} selectedColor={selectedColor} setSelectedColor={setSelectedColor} />
+                          {/* <ColorSelector colors={colors} selectedColor={selectedColor} setSelectedColor={setSelectedColor} /> */}
                       </div>
                       {/* price */}
                       <div className='flex items-center gap-2 text-lg pt-3'>
