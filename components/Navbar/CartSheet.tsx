@@ -15,8 +15,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
+import { useRouter } from "next/navigation";
 
 const Cart = () => {
+  const router = useRouter();
   const { cart, isOpen, setOpen } = useCart(); //console.log(isOpen);
 
   const handleCartClick = () => setOpen(!isOpen);
@@ -77,6 +79,7 @@ const Cart = () => {
                 </span> */}
               </div>
               <Button
+                onClick={()=>router.push('/checkout')}
                 size="sm"
                 className="w-full select-none text-lg rounded-none hover:shadow-md active:translate-y-0.5 border-none outline-none ease-in-out duration-300"
               >
