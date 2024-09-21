@@ -20,6 +20,11 @@ const UserSchema = new Schema({
     trim: true,
     lowercase: true,
   },
+  role: {
+    type: String,
+    required: true,
+    default: "user",
+  },
   profile: {
     type: String,
   },

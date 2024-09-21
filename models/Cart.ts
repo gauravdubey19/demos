@@ -31,13 +31,29 @@ const CartItemSchema = new Schema(
       type: Number,
       required: true,
     },
-    size: {
+    availableSizes: {
+      type: [String],
+      required: true,
+    },
+    selectedSize: {
       type: String,
       required: true,
     },
-    color: {
-      type: String,
-      required: true,
+    colorOptions: [
+      {
+        title: { type: String, required: true },
+        color: { type: String, required: true },
+      },
+    ],
+    selectedColor: {
+      title: {
+        type: String,
+        required: true,
+      },
+      color: {
+        type: String,
+        required: true,
+      },
     },
   },
   { timestamps: true }

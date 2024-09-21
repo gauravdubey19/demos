@@ -99,9 +99,7 @@ const MyProfile = () => {
       <div className="flex flex-row justify-end p-2 md:p-4 gap-x-2">
         <Button
           className="font-bold text-sm md:text-base active:translate-y-0.5 border-red-500 text-red-500 bg-white border-1 border rounded-none hover:bg-red-600 hover:text-white"
-          onClick={() => {
-            signOut();
-          }}
+          onClick={() => signOut()}
         >
           Logout
         </Button>

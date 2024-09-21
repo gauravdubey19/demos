@@ -1,9 +1,9 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
+import { usePathname } from "next/navigation";
+import Link from "next/link";
 import Image from "next/image";
 import { gsap } from "gsap";
 import { useCursor } from "@/context/CursorProvider";
@@ -18,10 +18,9 @@ import { CategoryValues } from "@/lib/types";
 import MobileNav from "./MobileNav";
 import Cart from "./CartSheet";
 import ReactCountUp from "../ui/ReactCountUp";
-import { GoHeart, GoHeartFill } from "react-icons/go";
-import { IoSearchOutline } from "react-icons/io5";
-import { Button } from "../ui/button";
 import Search from "./Search";
+import { GoHeart, GoHeartFill } from "react-icons/go";
+import { Button } from "../ui/button";
 
 const profileOption = [
   { _id: 1, title: "My Profile", href: "/profile/my-profile" },
@@ -237,11 +236,11 @@ const Navbar: React.FC<{ appName?: string }> = ({ appName = "LOGO" }) => {
                     ))}
                     <Button
                       size="sm"
+                      onClick={() => signOut()}
                       className="w-full h-fit capitalize rounded-none py-1 border border-primary text-black hover:text-white bg-transparent hover:bg-primary ease-in-out duration-300"
                     >
                       Logout
-                      {/* <Link href={"/sign-in"}>Sign In</Link> */}
-                    </Button>
+                      </Button>
                   </NavigationMenuContent>
                 </NavigationMenuItem>
               </NavigationMenuList>

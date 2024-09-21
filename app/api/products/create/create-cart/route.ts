@@ -8,7 +8,7 @@ export const POST = async (request: NextRequest) => {
   try {
     const { userId, newCartItem }: { userId: string; newCartItem: CartItem } =
       await request.json();
-    console.log(newCartItem);
+    // console.log(newCartItem);
 
     await connectToDB();
 

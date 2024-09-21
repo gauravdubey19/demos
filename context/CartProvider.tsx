@@ -28,7 +28,14 @@ interface CartContextType {
     description: string,
     price: number,
     image: string,
-    size: string,
+    availableSizes: string[],
+    selectedSize: string,
+    colorOptions: {
+      _id: string;
+      title: string;
+      color: string;
+    }[],
+    colorTitle: string,
     color: string
   ) => void;
 }
@@ -84,7 +91,14 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
       description: string,
       price: number,
       image: string,
-      size: string,
+      availableSizes: string[],
+      selectedSize: string,
+      colorOptions: {
+        _id: string;
+        title: string;
+        color: string;
+      }[],
+      colorTitle: string,
       color: string
     ) => {
       if (status !== "authenticated") {
@@ -107,8 +121,13 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
         price,
         image,
         quantity: 1,
-        size,
-        color,
+        availableSizes,
+        selectedSize,
+        colorOptions,
+        selectedColor: {
+          title: colorTitle,
+          color,
+        },
       };
 
       try {

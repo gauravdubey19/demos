@@ -35,16 +35,22 @@ const ProductSchema = new Schema(
       type: [String],
       required: true,
     },
-    colorOptions: {
-      type: [String],
-      required: true,
-    },
+    colorOptions: [
+      {
+        title: { type: String, required: true },
+        color: { type: String, required: true },
+      },
+    ],
     categories: [
       {
         title: { type: String, required: true },
         slug: { type: String, required: true },
       },
     ],
+    type: {
+      type: String,
+      required: true,
+    },
     material: {
       type: String,
       required: true,
@@ -59,7 +65,8 @@ const ProductSchema = new Schema(
     },
     origin: {
       type: String,
-      required: false,
+      required: true,
+      default: "India",
     },
     quantityInStock: {
       type: Number,
@@ -84,3 +91,28 @@ const ProductSchema = new Schema(
 const Products = models.Products || model("Products", ProductSchema);
 
 export default Products;
+
+// enum: [
+//   "cotton-kurta",
+//   "silk-kurta",
+//   "embroidered-sherwani",
+//   "designer-sherwani",
+//   "cotton-dhoti",
+//   "silk-dhoti",
+//   "cotton-nehru-jacket",
+//   "silk-nehru-jacket",
+//   "chinos",
+//   "formal-trousers",
+//   "cotton-pajama",
+//   "silk-pajama",
+//   "cotton-pathani",
+//   "designer-pathani",
+//   "denim-jacket",
+//   "cotton-jacket",
+//   "denim-blazer",
+//   "cotton-blazer",
+//   "graphic-shirt",
+//   "plain-shirt",
+//   "graphic-sweater",
+//   "plain-sweater",
+// ],
