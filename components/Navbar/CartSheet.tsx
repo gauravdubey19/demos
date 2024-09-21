@@ -133,18 +133,36 @@ const CartItems = () => {
 };
 
 const CartItemCard: React.FC<{ item: CartItem }> = ({ item }) => {
-  const { handleIncrement, handleDecrement, handleRemoveFromCart } = useCart();
+  const {
+    handleIncrement,
+    handleDecrement,
+    handleRemoveFromCart,
+    handleColorSize,
+  } = useCart();
+
   const [size, setSize] = useState<string>(item?.selectedSize);
   const [color, setColor] = useState<{ title: string; color: string }>(
     item?.selectedColor
   );
-  // console.log(size);
 
   const sizeLabels: { [key: string]: string } = {
     S: "Small",
     M: "Medium",
     L: "Large",
     XL: "Extra Large",
+  };
+
+  const handleSizeChange = (selectedSize: string) => {
+    setSize(selectedSize);
+    handleColorSize("upd-size", item.productId, undefined, selectedSize);
+  };
+
+  const handleColorChange = (selectedColor: {
+    title: string;
+    color: string;
+  }) => {
+    setColor(selectedColor);
+    handleColorSize("upd-color", item.productId, selectedColor);
   };
 
   return (
@@ -179,7 +197,7 @@ const CartItemCard: React.FC<{ item: CartItem }> = ({ item }) => {
             id="color-&-size-selection"
             className="w-full h-fit mt-1 rounded-lg flex-between gap-1 overflow-hidden"
           >
-            <Select defaultValue={size}>
+            <Select defaultValue={size} onValueChange={handleSizeChange}>
               <SelectTrigger className="w-full bg-transparent border border-primary rounded-r-none rounded-l-lg ">
                 <SelectValue placeholder="Select size" />
               </SelectTrigger>
@@ -195,9 +213,17 @@ const CartItemCard: React.FC<{ item: CartItem }> = ({ item }) => {
                 ))}
               </SelectContent>
             </Select>
-            <Select defaultValue={color?.title}>
+            <Select
+              defaultValue={color?.title}
+              onValueChange={(selectedColor) => {
+                const selected = item.colorOptions.find(
+                  (c) => c.title === selectedColor
+                );
+                if (selected) handleColorChange(selected);
+              }}
+            >
               <SelectTrigger className="w-full bg-transparent border border-primary rounded-l-none rounded-r-lg ">
-                <SelectValue placeholder="Select size" />
+                <SelectValue placeholder="Select color" />
               </SelectTrigger>
               <SelectContent>
                 {item.colorOptions.map((c) => (
@@ -242,7 +268,6 @@ const CartItemCard: React.FC<{ item: CartItem }> = ({ item }) => {
             />
           </div>
         </div>
-        {/* total */}={" "}
         <ReactCountUp
           className="text-primary text-md"
           prefix="₹"

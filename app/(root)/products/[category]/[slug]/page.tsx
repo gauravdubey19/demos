@@ -4,5 +4,10 @@ import ProductDetail from "@/components/Products/ProductDetail";
 export default function ProductDetailPage({
   params,
 }: ProductCategoryDetailParams) {
-  return <ProductDetail slug={params.slug} />;
+  return (
+    <ProductDetail
+      slug={params.slug}
+      categorySlug={decodeURIComponent(params.category)}
+    />
+  );
 }

@@ -10,10 +10,13 @@ export const POST = async (
 ) => {
   try {
     const { action } = params;
-    const { userId, productId } = await request.json();
-    // console.log(action, userId, productId);
+    const { userId, productId, color, size } = await request.json();
 
-    if (!["increment", "decrement", "remove"].includes(action)) {
+    if (
+      !["increment", "decrement", "remove", "upd-color", "upd-size"].includes(
+        action
+      )
+    ) {
       return NextResponse.json({ error: "Invalid action" }, { status: 400 });
     }
 
@@ -52,7 +55,16 @@ export const POST = async (
         );
       }
     } else if (action === "remove") {
-      cart.cartItems.splice(itemIndex, 1); // removing item from the cart
+      cart.cartItems.splice(itemIndex, 1);
+    } else if (action === "upd-color" && color) {
+      cart.cartItems[itemIndex].selectedColor = color;
+    } else if (action === "upd-size" && size) {
+      cart.cartItems[itemIndex].selectedSize = size;
+    } else {
+      return NextResponse.json(
+        { error: "Invalid parameters" },
+        { status: 400 }
+      );
     }
 
     await cart.save();

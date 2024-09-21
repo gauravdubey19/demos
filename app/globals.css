@@ -114,4 +114,7 @@ body {
   .hover-link {
     @apply no-underline inline-block relative after:content-[''] after:block after:h-0.5 after:absolute after:w-0 after:bg-current after:left-2/4 after:-bottom-1 after:transition-all after:duration-300 hover:after:w-full hover:after:left-0 active:after:w-full active:after:left-0;
   }
+  .range-input-style {
+    @apply appearance-none bg-transparent [&::-webkit-slider-runnable-track]:rounded-full [&::-webkit-slider-runnable-track]:bg-black/25 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-primary cursor-pointer;
+  }
 }

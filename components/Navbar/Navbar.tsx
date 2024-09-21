@@ -240,7 +240,7 @@ const Navbar: React.FC<{ appName?: string }> = ({ appName = "LOGO" }) => {
                       className="w-full h-fit capitalize rounded-none py-1 border border-primary text-black hover:text-white bg-transparent hover:bg-primary ease-in-out duration-300"
                     >
                       Logout
-                      </Button>
+                    </Button>
                   </NavigationMenuContent>
                 </NavigationMenuItem>
               </NavigationMenuList>
@@ -267,22 +267,40 @@ export interface CategoriesListProps {
 
 const CategoriesList: React.FC<CategoriesListProps> = ({ categories }) => {
   const pathname = usePathname();
+  // console.log(categories);
+
   return (
     <>
-      <div className="w-[40vw] h-fit grid grid-cols-4 gap-2 p-2">
+      <div className="w-[70vw] h-fit grid grid-cols-4 gap-2 items-center justify-center p-2">
         {categories.map((category, index) => {
           const isActive = pathname === `/products/${category.slug}`;
 
           return (
-            <Link
-              href={`/products/${category.slug}`}
-              key={category._id}
-              className={`w-fit hover-underline-lr hover:text-primary text-xs ${
-                isActive && "text-primary"
-              }`}
-            >
-              {category.title}
-            </Link>
+            <div key={category._id} className="w-fit h-fit">
+              <Link
+                href={`/products/${category.slug}`}
+                className={`w-fit hover-underline-lr text-primary text-md ${
+                  isActive && "text-primary"
+                }`}
+              >
+                {category.title}
+              </Link>
+              <div className="text-xs grid grid-cols-1 gap-1 pl-3">
+                {category.types.map((type) => (
+                  <Link
+                    href={{
+                      pathname: `/products/${category.slug}`,
+                      query: { type: type.slug },
+                    }}
+                    // href={`/products/${category.slug}?type=${type.slug}`}
+                    key={type._id}
+                    className="hover:text-primary ease-in-out duration-300"
+                  >
+                    {type.title}
+                  </Link>
+                ))}
+              </div>
+            </div>
           );
         })}
       </div>

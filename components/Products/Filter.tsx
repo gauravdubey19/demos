@@ -1,8 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
-import { LiaFilterSolid } from "react-icons/lia";
-import { FaArrowDownShortWide, FaArrowUpShortWide } from "react-icons/fa6";
+import React, { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import {
   Drawer,
@@ -11,11 +9,74 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "../ui/drawer";
+import { CategoryValues } from "@/lib/types";
+import { LiaFilterSolid } from "react-icons/lia";
+import { FaArrowDownShortWide, FaArrowUpShortWide } from "react-icons/fa6";
+import { GrClear } from "react-icons/gr";
 
-const Filter: React.FC = () => {
+interface FilterProps {
+  categorySlug: string;
+  selectedType: string;
+  setSelectedType: (type: string) => void;
+  colorOptions: { _id: string; title: string; color: string }[];
+  selectedColor: string;
+  setSelectedColor: (color: string) => void;
+  availableSizes: string[];
+  selectedSize: string;
+  setSelectedSize: (size: string) => void;
+
+  priceRange: { min: number; max: number };
+  setPriceRange: (priceRange: { min: number; max: number }) => void;
+}
+
+const Filter: React.FC<FilterProps> = ({
+  categorySlug,
+  selectedType,
+  setSelectedType,
+  colorOptions,
+  selectedColor,
+  setSelectedColor,
+  availableSizes,
+  selectedSize,
+  setSelectedSize,
+  priceRange,
+  setPriceRange,
+}) => {
   const [isShort, setIsShort] = useState(false);
 
   const toggleShort = () => setIsShort((prev) => !prev);
+
+  const [categoryList, setCategoryList] = useState<CategoryValues | null>(null);
+
+  useEffect(() => {
+    const fetchCategoryList = async () => {
+      try {
+        const res = await fetch("/api/products/read/get-categories", {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+        });
+
+        if (!res.ok) {
+          throw new Error("Failed to fetch categories");
+        }
+
+        const data = await res.json();
+        if (data as CategoryValues[]) {
+          const categories: CategoryValues[] = data.categories;
+          const filteredCategory: CategoryValues[] = categories.filter(
+            (cat) => cat.slug === categorySlug
+          );
+          // console.log(filteredCategory);
+
+          setCategoryList(filteredCategory[0]);
+        }
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      }
+    };
+
+    if (!categoryList) fetchCategoryList();
+  }, [categoryList, categorySlug]);
 
   return (
     <Drawer>
@@ -53,18 +114,49 @@ const Filter: React.FC = () => {
       </DrawerTrigger>
 
       {/* Drawer Content */}
+
       <DrawerContent className="bottom-0 z-50 w-full h-fit max-h-[80vh] md:max-h-[50vh] rounded-t-3xl text-white backdrop-blur-sm bg-white/20 border-none outline-none shadow-lg p-4 overflow-hidden">
         <DrawerHeader>
           <DrawerTitle className="text-2xl md:text-3xl font-semibold">
             Filter
           </DrawerTitle>
         </DrawerHeader>
-        <div className="md:hidden space-y-4">
-          <FilterContent />
-        </div>
-        <div className="hidden md:grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 bg-transparent p-4 h-fit overflow-y-auto">
-          <FilterContent />
-        </div>
+        {categoryList && (
+          <>
+            <div className="md:hidden space-y-4">
+              <FilterContent
+                categorySlug={categorySlug}
+                categoryList={categoryList}
+                selectedType={selectedType}
+                setSelectedType={setSelectedType}
+                colorOptions={colorOptions}
+                selectedColor={selectedColor}
+                setSelectedColor={setSelectedColor}
+                availableSizes={availableSizes}
+                selectedSize={selectedSize}
+                setSelectedSize={setSelectedSize}
+                priceRange={priceRange}
+                setPriceRange={setPriceRange}
+              />
+            </div>
+            <div className="hidden md:grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 bg-transparent p-4 h-fit overflow-y-auto">
+              <FilterContent
+                categorySlug={categorySlug}
+                categoryList={categoryList}
+                selectedType={selectedType}
+                setSelectedType={setSelectedType}
+                selectedColor={selectedColor}
+                setSelectedColor={setSelectedColor}
+                colorOptions={colorOptions}
+                availableSizes={availableSizes}
+                selectedSize={selectedSize}
+                setSelectedSize={setSelectedSize}
+                priceRange={priceRange}
+                setPriceRange={setPriceRange}
+              />
+            </div>
+          </>
+        )}
       </DrawerContent>
     </Drawer>
   );
@@ -72,86 +164,234 @@ const Filter: React.FC = () => {
 
 export default Filter;
 
-const FilterContent = () => (
+interface FilterContentProps {
+  categorySlug?: string;
+  selectedType: string;
+  setSelectedType: (type: string) => void;
+  colorOptions: { _id: string; title: string; color: string }[];
+  selectedColor: string;
+  setSelectedColor: (color: string) => void;
+  categoryList: CategoryValues;
+  availableSizes: string[];
+  selectedSize: string;
+  setSelectedSize: (size: string) => void;
+  priceRange: { min: number; max: number };
+  setPriceRange: (priceRange: { min: number; max: number }) => void;
+}
+
+const FilterContent: React.FC<FilterContentProps> = ({
+  selectedType,
+  setSelectedType,
+  colorOptions,
+  selectedColor,
+  setSelectedColor,
+  categoryList,
+  availableSizes,
+  selectedSize,
+  setSelectedSize,
+  priceRange,
+  setPriceRange,
+}) => (
   <>
-    <CategoryFilter />
-    <ColorFilter />
-    <SizeFilter />
-    <PriceFilter />
+    <CategoryFilter
+      categoryList={categoryList}
+      selectedType={selectedType}
+      setSelectedType={setSelectedType}
+    />
+    <ColorFilter
+      colorOptions={colorOptions}
+      selectedColor={selectedColor}
+      setSelectedColor={setSelectedColor}
+    />
+    <SizeFilter
+      availableSizes={availableSizes}
+      selectedSize={selectedSize}
+      setSelectedSize={setSelectedSize}
+    />
+    <PriceFilter priceRange={priceRange} setPriceRange={setPriceRange} />
   </>
 );
 
-const CategoryFilter = () => (
-  <div className="space-y-4">
-    <h3 className="text-xl font-medium">Categories</h3>
-    <ul className="space-y-2">
-      {["Shirts", "Pants", "Dresses"].map((category) => (
-        <li key={category}>
+interface CategoryFilterProps {
+  categoryList: CategoryValues;
+  selectedType: string;
+  setSelectedType: (type: string) => void;
+}
+
+const CategoryFilter: React.FC<CategoryFilterProps> = ({
+  categoryList,
+  selectedType,
+  setSelectedType,
+}) => {
+  return (
+    <div className="space-y-4 animate-slide-up">
+      <h3 className="text-xl font-medium">Category types</h3>
+      <ul className="space-y-2">
+        <li>
           <label className="flex items-center space-x-2">
-            <input type="checkbox" className="form-checkbox" />
-            <span>{category}</span>
+            <input
+              type="checkbox"
+              className="form-checkbox"
+              checked={selectedType.trim() === ""}
+              onChange={() => setSelectedType("")}
+            />
+            <span>All</span>
           </label>
         </li>
-      ))}
-    </ul>
-  </div>
-);
-
-const ColorFilter = () => (
-  <div className="space-y-4">
-    <h3 className="text-xl font-medium">Colors</h3>
-    <div className="flex flex-wrap gap-2">
-      {[
-        { name: "Light Gray", colorClass: "bg-gray-200" },
-        { name: "Gray", colorClass: "bg-gray-400" },
-        { name: "Dark Gray", colorClass: "bg-gray-600" },
-      ].map(({ name, colorClass }) => (
-        <button
-          key={name}
-          className={`w-8 h-8 rounded-full ${colorClass}`}
-          title={name}
-        />
-      ))}
+        {categoryList?.types.map((type) => (
+          <li key={type._id}>
+            <label className="flex items-center space-x-2">
+              <input
+                type="checkbox"
+                className="form-checkbox"
+                checked={selectedType === type.slug}
+                onChange={() => setSelectedType(type.slug)}
+              />
+              <span>{type.title}</span>
+            </label>
+          </li>
+        ))}
+      </ul>
     </div>
-  </div>
-);
+  );
+};
 
-const SizeFilter = () => (
-  <div className="space-y-4">
-    <h3 className="text-xl font-medium">Sizes</h3>
-    <ul className="space-y-2">
-      {["Small", "Medium", "Large"].map((size) => (
-        <li key={size}>
-          <label className="flex items-center space-x-2">
-            <input type="checkbox" className="form-checkbox" />
-            <span>{size}</span>
-          </label>
-        </li>
-      ))}
-    </ul>
-  </div>
-);
+interface ColorFilterProps {
+  colorOptions: { _id: string; title: string; color: string }[];
+  selectedColor: string;
+  setSelectedColor: (color: string) => void;
+}
 
-const PriceFilter = () => (
-  <div className="space-y-4">
-    <h3 className="text-xl font-medium">Price Range</h3>
-    <div className="flex flex-col gap-2">
-      <label className="flex items-center space-x-2">
-        <span>Min:</span>
-        <input
-          type="number"
-          className="form-input w-24 bg-transparent"
-          placeholder="0"
-        />
-      </label>
-      <label className="flex items-center space-x-2">
-        <span>Max:</span>
-        <input
-          type="number"
-          className="form-input w-24 bg-transparent"
-          placeholder="1000"
-        />
-      </label>
+const ColorFilter: React.FC<ColorFilterProps> = ({
+  colorOptions,
+  selectedColor,
+  setSelectedColor,
+}) => {
+  // console.log(colorOptions);
+
+  return (
+    <div className="space-y-4 animate-slide-up">
+      <h3 className="text-xl font-medium">Colors</h3>
+      <div className="flex flex-wrap gap-2">
+        {colorOptions.map(({ _id, title, color }) => (
+          <button
+            key={_id}
+            title={title}
+            onClick={() => setSelectedColor(title)}
+            className={`w-8 h-8 rounded-full ${
+              selectedColor === title
+                ? "border border-primary shadow-lg scale-110 opacity-100"
+                : selectedColor.trim() !== "" && "opacity-40"
+            }`}
+            style={{ backgroundColor: color }}
+          />
+        ))}
+        {selectedColor.trim() !== "" && (
+          <GrClear
+            title="Select none"
+            onClick={() => setSelectedColor("")}
+            size={30}
+            className="w-8 h-8 cursor-pointer"
+          />
+        )}
+      </div>
     </div>
-  </div>
-);
+  );
+};
+
+interface SizeFilterProps {
+  availableSizes: string[];
+  selectedSize: string;
+  setSelectedSize: (size: string) => void;
+}
+
+const SizeFilter: React.FC<SizeFilterProps> = ({
+  availableSizes,
+  selectedSize,
+  setSelectedSize,
+}) => {
+  return (
+    <div className="space-y-4 animate-slide-up">
+      <h3 className="text-xl font-medium">Sizes</h3>
+      <div className="flex flex-wrap gap-2">
+        {availableSizes.map((size, index) => (
+          <div key={index} className="">
+            <button
+              title={size}
+              onClick={() => setSelectedSize(size)}
+              className={`w-8 h-8 rounded-full flex-center ${
+                selectedSize === size
+                  ? "border border-primary shadow-lg scale-110 opacity-100"
+                  : selectedSize.trim() !== "" && "opacity-40 bg-black/30"
+              }`}
+            >
+              {size}
+            </button>
+          </div>
+        ))}
+        {selectedSize.trim() !== "" && (
+          <GrClear
+            title="Select none"
+            onClick={() => setSelectedSize("")}
+            size={30}
+            className="w-8 h-8 cursor-pointer"
+          />
+        )}
+      </div>
+    </div>
+  );
+};
+
+interface PriceFilterProps {
+  priceRange: { min: number; max: number };
+  setPriceRange: (priceRange: { min: number; max: number }) => void;
+}
+
+const PriceFilter: React.FC<PriceFilterProps> = ({
+  priceRange,
+  setPriceRange,
+}) => {
+  const handleMinChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newMin = Number(e.target.value);
+    setPriceRange({ ...priceRange, min: newMin });
+  };
+
+  const handleMaxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newMax = Number(e.target.value);
+    setPriceRange({ ...priceRange, max: newMax });
+  };
+
+  return (
+    <div className="space-y-4 animate-slide-up">
+      <h3 className="text-xl font-medium">Price Range</h3>
+
+      <div className="flex flex-col gap-2">
+        <label className="flex items-center space-x-2">
+          <span>Min:</span>
+          <input
+            type="range"
+            min={0}
+            max={priceRange.max}
+            value={priceRange.min}
+            onChange={handleMinChange}
+            className="range-input-style accent-primary"
+          />
+          <span>{priceRange.min}</span>
+        </label>
+
+        <label className="flex items-center space-x-2">
+          <span>Max:</span>
+          <input
+            type="range"
+            min={priceRange.min}
+            max={1000}
+            value={priceRange.max}
+            onChange={handleMaxChange}
+            className="range-input-style"
+          />
+          <span>{priceRange.max}</span>
+        </label>
+      </div>
+    </div>
+  );
+};

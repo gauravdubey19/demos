@@ -1,3 +1,4 @@
+// ProductCategory.tsx
 "use client";
 
 import React, { useEffect, useState } from "react";
@@ -8,12 +9,30 @@ import Filter from "./Filter";
 import Goback from "../ui/Goback";
 import Loader from "../ui/Loader";
 
-const ProductCategory: React.FC<ProductCategoryProps> = ({ category }) => {
+const ProductCategory: React.FC<ProductCategoryProps> = ({
+  category,
+  type,
+}) => {
+  const [allProducts, setAllProducts] = useState<CardValues[]>([]);
   const [products, setProducts] = useState<CardValues[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [colorOptions, setColorOptions] = useState<
+    { _id: string; title: string; color: string }[]
+  >([]);
+  const [availableSizes, setAvailableSizes] = useState<string[]>([]);
+
+  const [selectedType, setSelectedType] = useState<string>(type || "");
+  const [selectedColor, setSelectedColor] = useState<string>("");
+  const [selectedSize, setSelectedSize] = useState<string>("");
+
+  const [priceRange, setPriceRange] = useState<{ min: number; max: number }>({
+    min: 0,
+    max: 1000,
+  });
 
   useEffect(() => {
     const fetchProducts = async () => {
+      setLoading(true);
       try {
         const res = await fetch(
           `/api/products/read/get-products-by-category/${category}`,
@@ -27,36 +46,97 @@ const ProductCategory: React.FC<ProductCategoryProps> = ({ category }) => {
           throw new Error("Failed to fetch products");
         }
 
-        const data = await res.json();
-        // console.log(data);
-        setProducts(data as CardValues[]);
-        setLoading(false);
+        const data: CardValues[] = await res.json();
+        setAllProducts(data);
+        setProducts(data);
+
+        // Extracting color options & sizes from the fetched products
+        const allColorOptions = data.flatMap((product) => product.colorOptions);
+        const uniqueColorOptions = Array.from(
+          new Set(allColorOptions.map((option) => JSON.stringify(option)))
+        ).map((option) => JSON.parse(option));
+
+        setColorOptions(uniqueColorOptions);
+
+        const allSizes = data.flatMap((product) => product.availableSizes);
+        const uniqueAvailableSizes = Array.from(new Set(allSizes));
+
+        setAvailableSizes(uniqueAvailableSizes);
       } catch (error) {
         console.error("Error fetching products:", error);
+      } finally {
+        setLoading(false);
       }
     };
 
-    if (products.length === 0) fetchProducts();
-  }, [category, products]);
+    fetchProducts();
+  }, [category]);
+
+  // Function to filter products based on selectedType, selectedColor, selectedSize, and price range
+  useEffect(() => {
+    const filteredProducts = allProducts.filter((product) => {
+      // Filter based on type
+      const matchesType = selectedType
+        ? product.type.includes(selectedType)
+        : true;
+
+      // Filter based on color
+      const matchesColor = selectedColor
+        ? product.colorOptions.some((color) => color.title === selectedColor)
+        : true;
+
+      // Filter based on size
+      const matchesSize = selectedSize
+        ? product.availableSizes.includes(selectedSize)
+        : true;
+
+      // Filter based on price range
+      const matchesPrice =
+        product.price >= priceRange.min && product.price <= priceRange.max;
+
+      return matchesType && matchesColor && matchesSize && matchesPrice;
+    });
+
+    setProducts(filteredProducts);
+  }, [selectedType, selectedColor, selectedSize, priceRange, allProducts]);
 
   if (loading) return <Loader />;
+
   return (
-    <>
-      <section className="relative w-full mt-[60px] py-4 overflow-hidden">
+    <section className="w-full h-full overflow-hidden">
+      <div className="relative w-full mt-[60px] py-4 overflow-hidden">
         <Goback />
-        <Filter />
+        <Filter
+          categorySlug={category}
+          selectedType={selectedType}
+          setSelectedType={setSelectedType}
+          selectedColor={selectedColor}
+          setSelectedColor={setSelectedColor}
+          colorOptions={colorOptions}
+          availableSizes={availableSizes}
+          selectedSize={selectedSize}
+          setSelectedSize={setSelectedSize}
+          priceRange={priceRange}
+          setPriceRange={setPriceRange}
+        />
         <div className="mt-10 md:mt-0 w-full px-2 md:px-10 lg:px-14">
-          <div className="md:ml-2 text-xl lg:text-2xl font-bold px-2 md:px-0">
+          <h2 className="md:ml-2 text-xl lg:text-2xl font-bold px-2 md:px-0 animate-slide-down">
             {reverseSlug(category)}
-          </div>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-1 md:gap-6">
-            {products.map((card, index) => (
-              <Card key={index} card={card} category={category} />
-            ))}
-          </div>
+          </h2>
+          {products.length > 0 ? (
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-1 md:gap-6 animate-slide-up">
+              {products.map((card) => (
+                <Card key={card._id} card={card} category={category} />
+              ))}
+            </div>
+          ) : (
+            <div className="w-full h-[calc(100vh-120px)] text-center">
+              <span className="mt-4 text-xl">No Products found</span>
+            </div>
+          )}
         </div>
-      </section>
-    </>
+      </div>
+    </section>
   );
 };
 

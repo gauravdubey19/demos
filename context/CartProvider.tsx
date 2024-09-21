@@ -36,7 +36,14 @@ interface CartContextType {
       color: string;
     }[],
     colorTitle: string,
-    color: string
+    color: string,
+    categorySlug: string
+  ) => void;
+  handleColorSize: (
+    action: string,
+    productId: string,
+    color?: { title: string; color: string },
+    size?: string
   ) => void;
 }
 
@@ -99,7 +106,8 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
         color: string;
       }[],
       colorTitle: string,
-      color: string
+      color: string,
+      categorySlug: string
     ) => {
       if (status !== "authenticated") {
         router.replace("/sign-in");
@@ -128,6 +136,7 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
           title: colorTitle,
           color,
         },
+        categorySlug,
       };
 
       try {
@@ -361,6 +370,81 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
     [status, cart, router, session]
   );
 
+  const handleColorSize = useCallback(
+    async (
+      action: string,
+      productId: string,
+      color?: { title: string; color: string },
+      size?: string
+    ) => {
+      if (status !== "authenticated") {
+        router.replace("/sign-in");
+        return;
+      }
+
+      const item = cart.find((item) => item.productId === productId);
+
+      if (!item) {
+        return;
+      }
+
+      try {
+        const res = await fetch(
+          `/api/products/update/update-cart-items/${action}`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              userId: session.user.id,
+              productId: item.productId,
+              color,
+              size,
+            }),
+          }
+        );
+
+        const data = await res.json();
+
+        if (res.ok) {
+          // toast({
+          //   title: data.message || "Updated Size or Color successfully.",
+          // });
+          setCart((prevCart) =>
+            prevCart.map((cartItem) =>
+              cartItem.productId === productId
+                ? {
+                    ...cartItem,
+                    selectedColor:
+                      action === "upd-color" && color
+                        ? color
+                        : cartItem.selectedColor,
+                    selectedSize:
+                      action === "upd-size" && size
+                        ? size
+                        : cartItem.selectedSize,
+                  }
+                : cartItem
+            )
+          );
+        } else {
+          toast({
+            title: data.error || "Failed to update fields.",
+            description: "Please try again later.",
+            variant: "destructive",
+          });
+        }
+      } catch (error) {
+        console.error("Error updating color or size:", error);
+        toast({
+          title: "Something went wrong",
+          description: "Please try again later.",
+          variant: "destructive",
+        });
+      }
+    },
+    [status, cart, router, session]
+  );
+
   useEffect(() => {
     if (status === "authenticated") fetchCart();
   }, [status, fetchCart]);
@@ -376,6 +460,7 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
         handleAddToCart,
         itemExistInCart,
         handleRemoveFromCart,
+        handleColorSize,
       }}
     >
       {children}

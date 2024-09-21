@@ -28,7 +28,10 @@ import { BiEditAlt } from "react-icons/bi";
 import { useCart } from "@/context/CartProvider";
 import ReactCountUp from "../ui/ReactCountUp";
 
-const ProductDetail: React.FC<{ slug: string }> = ({ slug }) => {
+const ProductDetail: React.FC<{ slug: string; categorySlug: string }> = ({
+  slug,
+  categorySlug,
+}) => {
   const [product, setProduct] = useState<ProductDetailValues | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -71,16 +74,18 @@ const ProductDetail: React.FC<{ slug: string }> = ({ slug }) => {
 
   return (
     <>
-      <section className="max-w-6xl px-4 py-10 mx-auto lg:mt-[80px] xl:mt-[60px]">
-        <Goback />
-        <div className="w-full h-full grid grid-cols-1 lg:grid-cols-[1fr_1fr] gap-6 lg:gap-12 items-start">
-          <ImageGallery
-            images={product.images}
-            initialMainImage={product.mainImage}
-          />
-          <Details product={product} />
+      <section className="w-full h-full max-w-6xl px-4 py-10 mx-auto ">
+        <div className="w-full h-full lg:mt-[80px] xl:mt-10">
+          <Goback />
+          <div className="w-full h-full grid grid-cols-1 lg:grid-cols-[1fr_1fr] gap-6 lg:gap-12 items-start">
+            <ImageGallery
+              images={product.images}
+              initialMainImage={product.mainImage}
+            />
+            <Details product={product} categorySlug={categorySlug} />
+          </div>
+          <ProductReviews slug={slug} />
         </div>
-        <ProductReviews slug={slug} />
       </section>
     </>
   );
@@ -255,7 +260,7 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({
   );
 };
 
-const Details: React.FC<DetailsProps> = ({ product }) => {
+const Details: React.FC<DetailsProps> = ({ product, categorySlug }) => {
   const [size, setSize] = useState<string>("");
   const [color, setColor] = useState<string>("");
   const [colorTitle, setColorTitle] = useState<string>("");
@@ -290,8 +295,24 @@ const Details: React.FC<DetailsProps> = ({ product }) => {
         size,
         product.colorOptions,
         colorTitle,
-        color
+        color,
+        categorySlug
       );
+    }
+  };
+
+  const handleBuyNowBtn = () => {
+    if (!itemExistInCart(product._id)) {
+      if (
+        colorTitle.trim() !== "" &&
+        color.trim() !== "" &&
+        size.trim() !== ""
+      ) {
+        setOpen(!isOpen);
+      }
+      handleAddToCartBtn();
+    } else {
+      setOpen(!isOpen);
     }
   };
   return (
@@ -367,9 +388,12 @@ const Details: React.FC<DetailsProps> = ({ product }) => {
                     setIsValuesSelected((prev) => ({ ...prev, color: false }));
                   }}
                   style={{ backgroundColor: c.color }}
-                  className={`w-10 h-10 rounded-full flex-center cursor-pointer border-2 hover:border-primary ${
-                    colorTitle === c.title &&
-                    "border-primary shadow-lg scale-105"
+                  className={`w-10 h-10 rounded-full flex-center border-2 select-none ${
+                    itemExistInCart(product._id)
+                      ? "cursor-not-allowed opacity-40"
+                      : colorTitle === c.title
+                      ? "border-primary shadow-lg scale-105 cursor-not-allowed"
+                      : "hover:border-primary cursor-pointer"
                   } ${
                     isValuesSelected.color && "border-[red]"
                   } ease-in-out duration-300`}
@@ -398,11 +422,17 @@ const Details: React.FC<DetailsProps> = ({ product }) => {
                 <div
                   key={s}
                   onClick={() => {
-                    setSize(s);
-                    setIsValuesSelected((prev) => ({ ...prev, size: false }));
+                    if (!itemExistInCart(product._id)) {
+                      setSize(s);
+                      setIsValuesSelected((prev) => ({ ...prev, size: false }));
+                    }
                   }}
-                  className={`w-10 h-10 rounded-full flex-center cursor-pointer border hover:border-primary ${
-                    size === s && "border-primary shadow-lg scale-105"
+                  className={`w-10 h-10 rounded-full flex-center border select-none ${
+                    itemExistInCart(product._id)
+                      ? "cursor-not-allowed opacity-40"
+                      : size === s
+                      ? "border-primary shadow-lg scale-105 cursor-not-allowed"
+                      : "hover:border-primary cursor-pointer"
                   } ${
                     isValuesSelected.size && "border-[red]"
                   } ease-in-out duration-300`}
@@ -430,16 +460,7 @@ const Details: React.FC<DetailsProps> = ({ product }) => {
               )}
             </Button>
             <Button
-              onClick={() => {
-                handleAddToCartBtn();
-                if (
-                  colorTitle.trim() !== "" &&
-                  color.trim() !== "" &&
-                  size.trim() !== ""
-                ) {
-                  setOpen(!isOpen);
-                }
-              }}
+              onClick={handleBuyNowBtn}
               size="lg"
               className="w-full text-lg rounded-none hover:shadow-md active:translate-y-0.5 ease-in-out duration-300"
             >
