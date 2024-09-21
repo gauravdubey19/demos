@@ -20,6 +20,7 @@ import ReactCountUp from "../ui/ReactCountUp";
 import { GoHeart, GoHeartFill } from "react-icons/go";
 import { DialogTitle } from "@radix-ui/react-dialog";
 import { Button } from "../ui/button";
+import { useCart } from "@/context/CartProvider";
 
 const MobileNav: React.FC<CategoriesListProps> = ({ categories }) => {
   const [isOpen, setOpen] = useState<boolean>(false);
@@ -28,6 +29,7 @@ const MobileNav: React.FC<CategoriesListProps> = ({ categories }) => {
   );
   const { data: session } = useSession();
   const pathname = usePathname();
+  const { favProducts } = useCart();
 
   const handleMenuClick = () => setOpen(!isOpen);
 
@@ -83,11 +85,13 @@ const MobileNav: React.FC<CategoriesListProps> = ({ categories }) => {
                     ) : (
                       <GoHeart size={40} color="#FF6464" />
                     )}
-                    <ReactCountUp
-                      className="absolute -top-1.5 -right-1.5 md:-top-2.5 md:-right-2.5 w-5 h-5 flex-center bg-red-500 text-white text-sm md:text-xs rounded-full p-1"
-                      amt={10}
-                      // amt={fav?.length}
-                    />
+                    {favProducts.length > 0 && (
+                      <ReactCountUp
+                        className="absolute -top-1.5 -right-1.5 md:-top-2.5 md:-right-2.5 w-5 h-5 flex-center bg-red-500 text-white text-sm md:text-xs rounded-full p-1"
+                        amt={favProducts.length}
+                        // amt={fav?.length}
+                      />
+                    )}
                   </SheetClose>
                 </Link>
                 <SheetClose>

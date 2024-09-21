@@ -1,4 +1,3 @@
-// api/order/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import { connectToDB } from "@/utils/db";
 import Order from "@/models/Order";

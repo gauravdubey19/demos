@@ -27,6 +27,7 @@ import { RiDeleteBin6Line } from "react-icons/ri";
 import { BiEditAlt } from "react-icons/bi";
 import { useCart } from "@/context/CartProvider";
 import ReactCountUp from "../ui/ReactCountUp";
+import { GoHeart, GoHeartFill } from "react-icons/go";
 
 const ProductDetail: React.FC<{ slug: string; categorySlug: string }> = ({
   slug,
@@ -274,7 +275,15 @@ const Details: React.FC<DetailsProps> = ({ product, categorySlug }) => {
     colorTitle: false,
   });
 
-  const { handleAddToCart, itemExistInCart, isOpen, setOpen } = useCart();
+  const {
+    handleAddToCart,
+    itemExistInCart,
+    isOpen,
+    setOpen,
+    handleAddProductToWhistlist,
+    handleRemoveProductFromWishlist,
+    productExistInWishlist,
+  } = useCart();
 
   const handleAddToCartBtn = () => {
     setIsValuesSelected({
@@ -317,7 +326,29 @@ const Details: React.FC<DetailsProps> = ({ product, categorySlug }) => {
   };
   return (
     <>
-      <div className="w-full h-full grid gap-6">
+      <div className="relative w-full h-full grid gap-6">
+        <div
+          onClick={() =>
+            !productExistInWishlist(product._id)
+              ? handleAddProductToWhistlist(product._id)
+              : handleRemoveProductFromWishlist(product._id)
+          }
+          className="absolute group top-1 right-1 z-10 cursor-pointer w-8 h-8 flex-center bg-white/50 backdrop-blur-md p-1 rounded-full shadow-[0_0_1.5px_black] ease-in-out duration-300"
+        >
+          {!productExistInWishlist(product._id) ? (
+            <GoHeart
+              size={20}
+              color="#FF6464"
+              className="group-hover:scale-110"
+            />
+          ) : (
+            <GoHeartFill
+              size={20}
+              color="#FF6464"
+              className="group-hover:scale-110"
+            />
+          )}
+        </div>
         <div>
           <h1 className="text-3xl font-bold">{product.title}</h1>
           <p className="text-muted-foreground mt-2">{product.description}</p>

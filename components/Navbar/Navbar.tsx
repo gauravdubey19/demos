@@ -21,6 +21,7 @@ import ReactCountUp from "../ui/ReactCountUp";
 import Search from "./Search";
 import { GoHeart, GoHeartFill } from "react-icons/go";
 import { Button } from "../ui/button";
+import { useCart } from "@/context/CartProvider";
 
 const profileOption = [
   { _id: 1, title: "My Profile", href: "/profile/my-profile" },
@@ -43,6 +44,8 @@ const Navbar: React.FC<{ appName?: string }> = ({ appName = "LOGO" }) => {
   const visible = showLeft || showRight;
 
   const [categories, setCategories] = useState<CategoryValues[]>([]);
+
+  const { favProducts } = useCart();
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -182,10 +185,12 @@ const Navbar: React.FC<{ appName?: string }> = ({ appName = "LOGO" }) => {
                   className="hover:fill-[#FF6464] cursor-pointer ease-in-out duration-300"
                 />
               )}
-              <ReactCountUp
-                className="absolute -top-1.5 -right-1.5 md:-top-2.5 md:-right-2.5 w-5 h-5 flex-center bg-red-500 text-white text-sm md:text-xs rounded-full p-1"
-                amt={0}
-              />
+              {favProducts.length > 0 && (
+                <ReactCountUp
+                  className="absolute -top-1.5 -right-1.5 md:-top-2.5 md:-right-2.5 w-5 h-5 flex-center bg-red-500 text-white text-sm md:text-xs rounded-full p-1"
+                  amt={favProducts.length}
+                />
+              )}
             </Link>
             <Cart />
             <NavigationMenu className="hidden md:block">

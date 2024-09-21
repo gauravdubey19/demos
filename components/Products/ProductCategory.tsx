@@ -30,6 +30,8 @@ const ProductCategory: React.FC<ProductCategoryProps> = ({
     max: 1000,
   });
 
+  const [isAscending, setIsAscending] = useState<boolean>(true);
+
   useEffect(() => {
     const fetchProducts = async () => {
       setLoading(true);
@@ -97,8 +99,19 @@ const ProductCategory: React.FC<ProductCategoryProps> = ({
       return matchesType && matchesColor && matchesSize && matchesPrice;
     });
 
-    setProducts(filteredProducts);
-  }, [selectedType, selectedColor, selectedSize, priceRange, allProducts]);
+    const sortedProducts = filteredProducts.sort((a, b) =>
+      isAscending ? a.price - b.price : b.price - a.price
+    );
+
+    setProducts(sortedProducts);
+  }, [
+    selectedType,
+    selectedColor,
+    selectedSize,
+    priceRange,
+    allProducts,
+    isAscending,
+  ]);
 
   if (loading) return <Loader />;
 
@@ -118,6 +131,8 @@ const ProductCategory: React.FC<ProductCategoryProps> = ({
           setSelectedSize={setSelectedSize}
           priceRange={priceRange}
           setPriceRange={setPriceRange}
+          isAscending={isAscending} // Pass the sorting state
+          setIsAscending={setIsAscending}
         />
         <div className="mt-10 md:mt-0 w-full px-2 md:px-10 lg:px-14">
           <h2 className="md:ml-2 text-xl lg:text-2xl font-bold px-2 md:px-0 animate-slide-down">

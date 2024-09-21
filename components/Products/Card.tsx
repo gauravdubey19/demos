@@ -12,21 +12,11 @@ import { useCart } from "@/context/CartProvider";
 
 const Card: React.FC<CardDetails> = ({ card, category, loading = false }) => {
   // console.log(card);
-  const [fav, setFav] = useState<boolean>(false);
-
-  const { handleAddToCart, itemExistInCart } = useCart();
-
-  const handleAddToCartBtn = () => {
-    // handleAddToCart(
-    //   card._id,
-    //   card.title,
-    //   card.slug,
-    //   card.description,
-    //   card.price,
-    //   card.mainImage,
-    //   card.mainImage,
-    // );
-  };
+  const {
+    handleAddProductToWhistlist,
+    handleRemoveProductFromWishlist,
+    productExistInWishlist,
+  } = useCart();
 
   return (
     <>
@@ -35,13 +25,25 @@ const Card: React.FC<CardDetails> = ({ card, category, loading = false }) => {
         <div className="relative h-[240px] sm:h-[240px] md:h-[220px] lg:h-[340px] w-full flex-center select-none overflow-hidden">
           {!loading && (
             <div
-              onClick={() => setFav(!fav)}
-              className="absolute top-1 right-1 z-10 cursor-pointer w-8 h-8 flex-center bg-white/50 backdrop-blur-md p-1 rounded-full shadow-[0_0_1.5px_black] hover:scale-105 ease-in-out duration-300"
+              onClick={() =>
+                !productExistInWishlist(card._id)
+                  ? handleAddProductToWhistlist(card._id)
+                  : handleRemoveProductFromWishlist(card._id)
+              }
+              className="absolute group top-1 right-1 z-10 cursor-pointer w-8 h-8 flex-center bg-white/50 backdrop-blur-md p-1 rounded-full shadow-[0_0_1.5px_black] ease-in-out duration-300"
             >
-              {!fav ? (
-                <GoHeart size={20} color="#FF6464" />
+              {!productExistInWishlist(card._id) ? (
+                <GoHeart
+                  size={20}
+                  color="#FF6464"
+                  className="group-hover:scale-110"
+                />
               ) : (
-                <GoHeartFill size={20} color="#FF6464" />
+                <GoHeartFill
+                  size={20}
+                  color="#FF6464"
+                  className="group-hover:scale-110"
+                />
               )}
             </div>
           )}

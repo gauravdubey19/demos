@@ -24,9 +24,10 @@ interface FilterProps {
   availableSizes: string[];
   selectedSize: string;
   setSelectedSize: (size: string) => void;
-
   priceRange: { min: number; max: number };
   setPriceRange: (priceRange: { min: number; max: number }) => void;
+  isAscending: boolean;
+  setIsAscending: (isAscending: boolean) => void;
 }
 
 const Filter: React.FC<FilterProps> = ({
@@ -41,10 +42,10 @@ const Filter: React.FC<FilterProps> = ({
   setSelectedSize,
   priceRange,
   setPriceRange,
+  isAscending,
+  setIsAscending,
 }) => {
-  const [isShort, setIsShort] = useState(false);
-
-  const toggleShort = () => setIsShort((prev) => !prev);
+  const toggleShort = () => setIsAscending(!isAscending);
 
   const [categoryList, setCategoryList] = useState<CategoryValues | null>(null);
 
@@ -86,10 +87,10 @@ const Filter: React.FC<FilterProps> = ({
           className="w-1/2 flex items-center justify-center gap-1 active:translate-y-1 transition-transform duration-300"
         >
           <span>Short</span>
-          {isShort ? (
-            <FaArrowUpShortWide size={18} />
-          ) : (
+          {isAscending ? (
             <FaArrowDownShortWide size={18} />
+          ) : (
+            <FaArrowUpShortWide size={18} />
           )}
         </div>
         <DrawerTrigger
