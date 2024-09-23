@@ -1,15 +1,5 @@
-import { CardValues, FooterSection, LinkValues, SectionValues } from "./types";
+import { CardValues, FooterSection, LinkValues} from "./types";
 import { FaFacebookF, FaInstagram, FaYoutube } from "react-icons/fa";
-import { RxPerson } from "react-icons/rx";
-import { CiShoppingBasket } from "react-icons/ci";
-import { RiMoneyDollarCircleLine, RiUserSettingsLine } from "react-icons/ri";
-import { GrMapLocation } from "react-icons/gr";
-import { AiTwotoneDelete } from "react-icons/ai";
-import MyProfile from "@/components/Profile/Sections/MyProfile";
-import OrderHistory from "@/components/Profile/Sections/OrderHistory";
-import ShippingAddresses from "@/components/Profile/Sections/ShippingAddresses";
-import PaymentMethods from "@/components/Profile/Sections/PaymentMethods";
-import DeleteMyAccount from "@/components/Profile/Sections/DeleteMyAccount";
 
 export const links: LinkValues[] = [
   { id: 0, head: "Home", href: "/" },
@@ -72,38 +62,6 @@ export const footer: FooterSection[] = [
   },
 ];
 
-export const profileSections: SectionValues[] = [
-  {
-    id: "my-profile",
-    head: "My Profile",
-    icon: RxPerson,
-    sectionNode: MyProfile,
-  },
-  {
-    id: "order-history",
-    head: "Order History",
-    icon: CiShoppingBasket,
-    sectionNode: OrderHistory,
-  },
-  {
-    id: "shipping-addresses",
-    head: "Shipping Addresses",
-    icon: GrMapLocation,
-    sectionNode: ShippingAddresses,
-  },
-  {
-    id: "payment-methods",
-    head: "Payment Methods",
-    icon: RiMoneyDollarCircleLine,
-    sectionNode: PaymentMethods,
-  },
-  {
-    id: "delete-my-account",
-    head: "Delete My Account",
-    icon: AiTwotoneDelete,
-    sectionNode: DeleteMyAccount,
-  },
-];
 
 export const cardList: CardValues[] = [
   {

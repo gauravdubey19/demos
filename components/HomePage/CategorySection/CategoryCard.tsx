@@ -131,7 +131,7 @@ const CategoryCard: React.FC<CategoryCardProps> = ({
             ) : (
               activeSlide === index && (
                 <p className="text-sm text-gray-600 animate-slide-up">
-                  {item?.description}
+                  {/* {item?.description} */}
                 </p>
               )
             )}
