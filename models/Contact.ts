@@ -15,17 +15,17 @@ interface IContact extends Document {
 
 const contactSchema = new Schema<IContact>({
     userId: { type: String, required: true },
-    address: { type: String, required: true },
-    country: { type: String, required: true },
+    address: { type: String },
+    country: { type: String },
     city: { 
-        name: { type: String, required: true},
-        code: { type: String, required: true}
+        name: { type: String},
+        code: { type: String}
     },
     state: {
-        name: { type: String, required: true },
-        code: { type: String, required: true }
+        name: { type: String },
+        code: { type: String }
     },
-    zip: { type: String, required: true }
+    zip: { type: String}
 });
 
 

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import { Session } from "next-auth";
 import { signOut, useSession } from "next-auth/react";
 import { State, City } from "country-state-city";
@@ -30,8 +30,8 @@ interface User {
   orders?: string[];
   address?: string;
   city?: {
-    name: string;
-    code: string;
+    name?: string;
+    code?: string;
   };
   state?: {
     name?: string;
@@ -120,6 +120,13 @@ export default MyProfile;
 const PersonalSection = () => {
   const { error, isProfileEditing, setProfileEditing, userData, setUserData } =
     useGlobalContext();
+  const [userDataCopy, setUserDataCopy] = useState<User | null>(userData ?? null);
+  useEffect(() => {
+    if(!userDataCopy && userData){
+      console.log("userDataCopy is empty and userData is not empty");
+      setUserDataCopy(userData);
+    }
+  }, [userData, userDataCopy]);
   const [saving, setSaving] = useState(false);
   const { data: session } = useSession();
   if (error) {
@@ -156,6 +163,12 @@ const PersonalSection = () => {
       phone: userData.phone,
       gender: userData.gender,
     };
+
+    if(userData.firstName === userDataCopy?.firstName && userData.lastName === userDataCopy?.lastName && userData.phone === userDataCopy?.phone && userData.gender === userData?.gender){
+      // alert("No changes made to the profile");
+      setProfileEditing(false);
+      return;
+    }
     try {
       setSaving(true);
       const extendedSession = session as SessionExtended;
@@ -168,6 +181,7 @@ const PersonalSection = () => {
       });
 
       if (response.ok) {
+        setUserDataCopy(userData);
       } else {
         const errorData = await response.json();
         alert(`Error: ${errorData.message}`);
@@ -193,11 +207,25 @@ const PersonalSection = () => {
       };
     });
   };
+  const handleResetValues = () => {
+    if (userDataCopy) {
+      setUserData(userDataCopy);
+    }
+  };
   return (
     <section className="">
       <div className="justify-between flex flex-row  items-center mb-6">
         <h3 className="text-xl font-semibold ">Personal Information</h3>
         {isProfileEditing ? (
+          <div  className="flex gap-x-2">
+          <Button
+            className="bg-white text-red-500 border border-red-500 rounded-none active:translate-y-0.5 hover:bg-red-500 hover:text-white
+            disabled:opacity-80 disabled:cursor-not-allowed
+            "
+            onClick={handleResetValues}
+          >
+            Reset
+          </Button>
           <Button
             className="bg-primary text-white border border-primary rounded-none active:translate-y-0.5 hover:bg-transparent hover:text-primary
             disabled:opacity-80 disabled:cursor-not-allowed
@@ -207,6 +235,7 @@ const PersonalSection = () => {
           >
             {saving ? "Saving..." : "Save"}
           </Button>
+          </div>
         ) : (
           <Button
             className="bg-transparent text-primary rounded-none active:translate-y-0.5  hover:bg-yellow-500 hover:text-white"
@@ -276,6 +305,13 @@ const PersonalSection = () => {
 const ContactSection = () => {
   const { userData, error, isContactEditing, setContactEditing, setUserData } =
     useGlobalContext();
+  const [userDataCopy, setUserDataCopy] = useState<User | null>(userData ?? null);
+  useEffect(() => {
+    if(!userDataCopy && userData){
+      console.log("userDataCopy is empty and userData is not empty");
+      setUserDataCopy(userData);
+    }
+  }, [userData, userDataCopy]);
   const [saving, setSaving] = useState(false);
   const { data: session } = useSession();
   const [states, setStates] = useState<{ name: string; code: string }[]>([]);
@@ -347,7 +383,6 @@ const ContactSection = () => {
     if (!userData) {
       return;
     }
-    setSaving(true);
     const contactObj = {
       address: userData.address,
       city: userData.city,
@@ -355,7 +390,14 @@ const ContactSection = () => {
       zip: userData.zip,
       country: userData.country,
     };
+    if(userData.address === userDataCopy?.address && userData.city === userDataCopy?.city && userData.state === userDataCopy?.state && userData.zip === userDataCopy?.zip){
+      // alert("No changes made to the contact information");
+      setContactEditing(false);
+      return;
+    }
     try {
+    setSaving(true);
+
       const extendedSession = session as SessionExtended;
       const response = await fetch(
         `/api/contact/${extendedSession.user.id}/PutContact`,
@@ -369,6 +411,7 @@ const ContactSection = () => {
       );
 
       if (response.ok) {
+        setUserDataCopy(userData);
       } else {
         const errorData = await response.json();
         alert(`Error: ${errorData.message}`);
@@ -395,22 +438,35 @@ const ContactSection = () => {
       };
     });
   };
-
+  const handleResetValues = () => {
+    if (userDataCopy) {
+      setUserData(userDataCopy);
+    }
+  };
   return (
     <section className="">
       <div className="justify-between flex flex-row items-center mb-6">
         <h3 className="text-xl font-semibold">Contact Information</h3>
         {isContactEditing ? (
+          <div  className="flex gap-x-2">
           <Button
-            disabled={saving}
-            className="bg-primary text-white border border-primary rounded-none active:translate-y-0.5 
-            hover:bg-transparent hover:text-primary
+            className="bg-white text-red-500 border border-red-500 rounded-none active:translate-y-0.5 hover:bg-red-500 hover:text-white
+            disabled:opacity-80 disabled:cursor-not-allowed
+            "
+            onClick={handleResetValues}
+          >
+            Reset
+          </Button>
+          <Button
+            className="bg-primary text-white border border-primary rounded-none active:translate-y-0.5 hover:bg-transparent hover:text-primary
             disabled:opacity-80 disabled:cursor-not-allowed
             "
             onClick={handleEditContact}
+            disabled={saving}
           >
             {saving ? "Saving..." : "Save"}
           </Button>
+          </div>
         ) : (
           <Button
             className="bg-transparent text-primary rounded-none active:translate-y-0.5 hover:bg-yellow-500 hover:text-white"
