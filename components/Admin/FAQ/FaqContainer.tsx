@@ -3,6 +3,7 @@ import SearchForm from './SearchBar'
 import { Button } from '@/components/ui/button';
 import { Plus } from 'lucide-react';
 import FAQ from "./FAccordian";
+import FaqModal from './FaqModal';
 
 const FaqContainer = () => {
   return (
@@ -16,9 +17,7 @@ const FaqContainer = () => {
               </div>
               <div className='flex flex-row gap-2'>
                   <SearchForm />
-                  <Button variant={'default'} className='bg-[#ffb433] hover:bg-[#9c6d1b]'>
-                      <Plus />  Add Section
-                  </Button>
+                  <FaqModal variant='create'/>
               </div>
         </div>
           <FAQ />

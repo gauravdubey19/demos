@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { ChevronDown, ChevronUp, Plus, Edit } from 'lucide-react';
 import { faqData } from '@/lib/FaqSampleData';
 import { Button } from '@/components/ui/button';
+import FaqModal from './FaqModal';
 
 const FAQ = () => {
     const [openSection, setOpenSection] = useState(null);
@@ -68,13 +69,7 @@ const FAQ = () => {
                                             >
                                                 <div className="text-sm md:text-base py-2">
                                                     <p>{faq.answer}</p>
-                                                    <button
-                                                        className="mt-2 flex items-center text-blue-600 hover:text-blue-800"
-                                                        onClick={() => handleEditAnswer(sectionIndex, faqIndex)}
-                                                    >
-                                                        <Edit className="w-4 h-4 mr-1" />
-                                                        Edit
-                                                    </button>
+                                                    <FaqModal variant='edit'/>
                                                 </div>
                                             </Accordion>
                                         );
@@ -107,7 +102,7 @@ interface AccordionProps {
 
 const Accordion = ({ id, title, children, isOpen, onClick, nested = false }: AccordionProps) => {
     return (
-        <div className={`${nested ? 'border-t border-gray-200' : ''}`}>
+        <div className={`${nested ? 'border-t border-gray-200 h-max' : ''}`}>
             <h2 id={`${id}-heading`}>
                 <button
                     type="button"
@@ -122,7 +117,7 @@ const Accordion = ({ id, title, children, isOpen, onClick, nested = false }: Acc
             </h2>
             <div
                 id={`${id}-body`}
-                className={`overflow-hidden transition-all duration-300 ease-in-out ${isOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}
+                className={`overflow-hidden transition-all duration-300 ease-in-out ${isOpen ? 'h-max opacity-100' : 'max-h-0 opacity-0'}`}
             >
                 <div className="py-4 px-4">
                     {children}
