@@ -134,16 +134,16 @@ export const adminSections: SectionValues[] = [
     sectionNode: FaqAdmin,
     subSections: [
       {
-        id: "faqs",
-        head: "FAQ’s",
-        href: "/admin/faqs",
-        sectionNode: FaqAdmin,
-      },
-      {
         id: "queries",
         head: "Queries",
         href: "/admin/queries",
         sectionNode: OrderHistory,
+      },
+      {
+        id: "faqs",
+        head: "FAQ’s",
+        href: "/admin/faqs",
+        sectionNode: FaqAdmin,
       },
     ],
   },
