@@ -65,7 +65,7 @@ const Sidebar: React.FC<SectionProps> = ({ section, sections }) => {
         )}
         <nav className="mt-6 flex flex-1 flex-col space-y-1">
           {sections.map((sec, index) => (
-            <>
+            <div key={index}>
               {!sec.subSections ? (
                 <Link
                   // key={index}
@@ -113,7 +113,7 @@ const Sidebar: React.FC<SectionProps> = ({ section, sections }) => {
                   </AccordionItem>
                 </Accordion>
               )}
-            </>
+            </div>
           ))}
         </nav>
       </aside>

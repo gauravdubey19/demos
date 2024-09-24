@@ -24,6 +24,8 @@ import AllProducts from "@/components/Admin/Products/AllProducts";
 import Customers from "@/components/Admin/Customers/Customers";
 import Orders from "@/components/Admin/Orders";
 import MyAccount from "@/components/Admin/MyAccount";
+import TestimonialsAdmin from "@/components/Profile/Sections/TestimonialsAdmin";
+import FaqAdmin from "@/components/Profile/Sections/FaqAdmin";
 
 export const profileSections: SectionValues[] = [
   {
@@ -129,7 +131,7 @@ export const adminSections: SectionValues[] = [
     head: "Querys & FAQs",
     href: "/admin/querys",
     icon: LiaQuestionSolid,
-    sectionNode: DeleteMyAccount,
+    sectionNode: FaqAdmin,
     subSections: [
       {
         id: "queries",
@@ -141,7 +143,7 @@ export const adminSections: SectionValues[] = [
         id: "faqs",
         head: "FAQ’s",
         href: "/admin/faqs",
-        sectionNode: OrderHistory,
+        sectionNode: FaqAdmin,
       },
     ],
   },
@@ -150,7 +152,7 @@ export const adminSections: SectionValues[] = [
     head: "Testimonials",
     href: "/admin/testimonials",
     icon: IoVideocamOutline,
-    sectionNode: DeleteMyAccount,
+    sectionNode: TestimonialsAdmin,
   },
   {
     id: "my-account",
