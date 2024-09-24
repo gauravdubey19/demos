@@ -39,6 +39,7 @@ const handler = NextAuth({
         if (sessionUser._id) {
           session.user.id = sessionUser._id.toString();
           session.user.favProducts = sessionUser.favProducts;
+          session.user.role = sessionUser.role;
         }
       } catch (error) {
         console.error("Error fetching user session:", error);

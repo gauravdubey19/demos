@@ -143,8 +143,8 @@ export interface CategoryValues {
   types: { _id: string; title: string; slug: string }[];
 }
 
-// Profile types
-export interface ProfileParams {
+// Profile & Admin types
+export interface ProfileAdminParams {
   params: {
     section: string;
   };
@@ -163,22 +163,30 @@ export interface InputFieldProps {
   formValidation?: (value: string) => string;
 }
 
+// | "personal-information"
+// | "order-history"
+// | "wishlist"
+// | "payment-methods"
+// | "account-settings"
+// | "customer-support-&-help"
+// |
 export interface SectionValues {
-  id:
-    | "personal-information"
-    | "order-history"
-    | "wishlist"
-    | "payment-methods"
-    | "account-settings"
-    | "customer-support-&-help"
-    | string;
+  id: string;
   head: string;
+  href: string;
   icon: IconType;
   sectionNode: () => React.JSX.Element;
+  subSections?: {
+    id: string;
+    head: string;
+    href: string;
+    sectionNode: () => React.JSX.Element;
+  }[];
 }
 
 export interface SectionProps {
   section: string;
+  sections: SectionValues[];
 }
 
 // Footer

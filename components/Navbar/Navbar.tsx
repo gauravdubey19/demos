@@ -113,6 +113,8 @@ const Navbar: React.FC<{ appName?: string }> = ({ appName = "LOGO" }) => {
     }
   }, [isVisible]);
 
+  if (pathname.includes("/admin")) return;
+
   return (
     <div
       ref={navbarRef}
@@ -215,18 +217,33 @@ const Navbar: React.FC<{ appName?: string }> = ({ appName = "LOGO" }) => {
                           className="w-full h-full object-cover"
                         />
                       </div>
-                      <span
-                        className={`font-semibold ${
-                          pathname.includes("/profile/my-profile") &&
-                          "text-primary"
-                        } group-hover:text-primary ease-in-out duration-300`}
-                      >
-                        {session?.user?.name &&
-                          session?.user?.name.split(" ")[0]}
-                      </span>
+                      <div className="flex flex-col items-start">
+                        <span
+                          className={`font-semibold ${
+                            pathname.includes("/profile/my-profile") &&
+                            "text-primary"
+                          } group-hover:text-primary ease-in-out duration-300`}
+                        >
+                          {session?.user?.name &&
+                            session?.user?.name.split(" ")[0]}
+                        </span>
+                        {session?.user?.role === "admin" && (
+                          <span className="text-xs">{session?.user?.role}</span>
+                        )}
+                      </div>
                     </Link>
                   </NavigationMenuTrigger>
                   <NavigationMenuContent className="w-fit h-fit space-y-2 p-2 animate-slide-down">
+                    {session?.user?.role === "admin" && (
+                      <Link
+                        href="/admin/dashboard"
+                        className={`w-fit text-sm hover-underline-lr hover:text-primary ${
+                          pathname.includes("/admin") && "text-primary"
+                        }`}
+                      >
+                        Admin Dashboard
+                      </Link>
+                    )}
                     {profileOption.map((option, index) => (
                       <div key={index || option._id} className="w-36">
                         <Link
