@@ -7,6 +7,8 @@ import { useSession } from "next-auth/react";
 import ProgressIndicator from '@/components/Checkout/ProgressIndicator';
 import PriceDetails from '@/components/Checkout/PriceDetails';
 import Payment from '@/components/Checkout/Payment';
+import { useCart } from "@/context/CartProvider";
+import { toast } from "@/hooks/use-toast";
 
 const CheckoutPage = () => {
   const { data: session } = useSession();
@@ -15,6 +17,9 @@ const CheckoutPage = () => {
   const [checkoutStep, setCheckoutStep] = useState<'cart' | 'address' | 'payment'>('cart');
   const [addressData, setAddressData] = useState<any[]>([]);
   const [selectedAddressId, setSelectedAddressId] = useState<string | null>(null);
+
+  const { cart, isOpen, setOpen } = useCart(); //console.log(isOpen);
+
 
   const handleSelectAddress = (id: string) => {
     setSelectedAddressId(id);
@@ -31,11 +36,12 @@ const CheckoutPage = () => {
 
 
   useEffect(() => {
+    setOpen(false);
     if (session?.user?.id) {
       getCartItems();
       getUserAddress();
     }
-  }, [session]);
+  }, [session,cart]);
 
   const getUserAddress = async () => {
     if (session) {
@@ -49,7 +55,6 @@ const CheckoutPage = () => {
           }));
           console.log(initialAddress);
           setAddressData(initialAddress);
-          // setSelectedAddress(initialAddress.length);
         } else {
           console.error('Failed to fetch address');
         }
@@ -63,86 +68,33 @@ const CheckoutPage = () => {
   const getCartItems = async () => {
     if (session) {
       try {
-        const response = await fetch(`/api/products/read/get-user-cart-items/${session.user.id}/`);
-        if (response.ok) {
-          const res = await response.json();
-          const initialCartData = res.map((item: any) => ({
+          const initialCartData = cart.map((item: any) => ({
             ...item,
             selected: true,
           }));
-          setCartData(initialCartData);
-          setSelectedItems(initialCartData.length);
-        } else {
-          console.error('Failed to fetch cart items');
-        }
+        setCartData(initialCartData);
+        setSelectedItems(initialCartData.length);
       } catch (error) {
         console.error('Error fetching cart items:', error);
       }
     }
   };
 
-  const handleRemoveCartItem = async (id: any) => {
-    try {
-      const response = await fetch(`/api/products/delete/delete-cart-item-by-id/${id}/`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(`HTTP error! status: ${response.status}, message: ${errorData.error || 'Unknown error'}`);
-      }
-
-      const result = await response.json();
-      console.log("Item removed successfully:", result);
-
-      setCartData((prevCartData) => {
-        const updatedCartData = prevCartData.filter((item) => item._id !== id);
-        setSelectedItems(updatedCartData.filter((item) => item.selected).length);
-        return updatedCartData;
-      });
-    } catch (error) {
-      console.error("Error removing cart item:", error);
-    }
-  };
-
-  const handleRemoveAllCartItems = async () => {
-    try {
-      if (session?.user?.id) {
-        const response = await fetch(`/api/products/delete/delete-users-all-cart-items/${session.user.id}/`, {
-          method: 'DELETE',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
-
-        if (!response.ok) {
-          const errorData = await response.json();
-          throw new Error(`HTTP error! status: ${response.status}, message: ${errorData.error || 'Unknown error'}`);
-        }
-
-        const result = await response.json();
-        console.log("All items removed successfully:", result);
-
-        setCartData([]);
-        setSelectedItems(0);
-      }
-    } catch (error) {
-      console.error("Error removing all cart items:", error);
-    }
-  };
 
   const handleSelectItem = (id: any, isSelected: boolean) => {
     setCartData((prevCartData) =>
       prevCartData.map((item) =>
-        item._id === id ? { ...item, selected: isSelected } : item
+        item.productId === id ? { ...item, selected: isSelected } : item
       )
     );
-    setSelectedItems((prevSelected) =>
-      isSelected ? prevSelected + 1 : prevSelected - 1
-    );
+
+    setSelectedItems((prevSelected) => {
+      if (isSelected) {
+        return prevSelected + 1;
+      } else {
+        return Math.max(prevSelected - 1, 0);
+      }
+    });
   };
 
   const handleSelectAll = (selectAll: boolean) => {
@@ -152,10 +104,36 @@ const CheckoutPage = () => {
     setSelectedItems(selectAll ? cartData.length : 0);
   };
 
+
+
+  // const handleProceed = () => {
+  //   if (checkoutStep === 'cart') {
+  //     setCheckoutStep('address');
+  //   } else if (checkoutStep === 'address') {
+  //     setCheckoutStep('payment');
+  //   }
+  // };
+
   const handleProceed = () => {
     if (checkoutStep === 'cart') {
+      if (selectedItems === 0) {
+        // alert('Please select at least one item in your cart to proceed.');
+        toast({
+          title: "No items items seclected",
+          description: "Please select at least one item in your cart to proceed.",
+          variant: "destructive",
+        });
+        return;
+      }
       setCheckoutStep('address');
     } else if (checkoutStep === 'address') {
+      if (!selectedAddressId) {
+        toast({
+          title: "Please select an address to proceed.",
+          variant: "destructive",
+        });
+        return;
+      }
       setCheckoutStep('payment');
     }
   };
@@ -178,8 +156,6 @@ const CheckoutPage = () => {
               selectedItems={selectedItems}
               setSelectedItems={setSelectedItems}
               cartData={cartData}
-              onRemoveCartItem={handleRemoveCartItem}
-              onRemoveAllItems={handleRemoveAllCartItems}
               onSelectItem={handleSelectItem}
               onSelectAll={handleSelectAll}
             />
