@@ -242,7 +242,7 @@ interface ModalI {
     variant: 'create' | 'edit'
 }
 
-const Modal = ({ variant }: ModalI) => {
+const TestimonialsModal = ({ variant }: ModalI) => {
     const [videoFile, setVideoFile] = useState<File | null>(null);
     const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
     const [currentVideoName, setCurrentVideoName] = useState("SampleVideo.mp4");
@@ -423,4 +423,4 @@ const Modal = ({ variant }: ModalI) => {
     );
 };
 
-export default Modal;
+export default TestimonialsModal;
