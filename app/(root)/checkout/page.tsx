@@ -35,14 +35,6 @@ const CheckoutPage = () => {
   }
 
 
-  useEffect(() => {
-    setOpen(false);
-    if (session?.user?.id) {
-      getCartItems();
-      getUserAddress();
-    }
-  }, [session,cart]);
-
   const getUserAddress = async () => {
     if (session) {
       try {
@@ -137,6 +129,14 @@ const CheckoutPage = () => {
       setCheckoutStep('payment');
     }
   };
+
+  useEffect(() => {
+    setOpen(false);
+    if (session?.user?.id) {
+      getCartItems();
+      getUserAddress();
+    }
+  }, [session, cart, setOpen, getCartItems]);
 
   return (
     <div className="h-max w-full pt-20">
