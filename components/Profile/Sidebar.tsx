@@ -19,11 +19,11 @@ const Sidebar: React.FC<SectionProps> = ({ section, sections }) => {
   const pathname = usePathname();
   return (
     <>
-      <aside className="hidden h-full w-fit max-w-[20%] flex-col border-r bg-[#F8F8F8] p-4 md:flex drop-shadow-lg overflow-hidden">
+      <aside className="hidden h-full w-fit lg:w-[20%] flex-col border-r bg-[#F8F8F8] p-4 md:flex drop-shadow-lg overflow-hidden">
         {pathname.includes("/admin") ? (
           <Link
             href="/"
-            className="flex-between gap-1 text-2xl lg:text-3xl font-semibold overflow-hidden"
+            className="flex-between gap-1 text-xl md:text-2xl lg:text-3xl font-semibold overflow-hidden"
           >
             <Image
               src="/logo.png"
@@ -70,7 +70,7 @@ const Sidebar: React.FC<SectionProps> = ({ section, sections }) => {
                 <Link
                   // key={index}
                   href={sec.href}
-                  className={`flex items-center gap-3 px-3 py-2 text-md font-medium transition-colors hover:text-primary ${
+                  className={`flex items-center gap-3 px-2 py-2 text-md font-medium transition-colors hover:text-primary ${
                     section === sec.id
                       ? "text-primary fill-primary underline underline-offset-8"
                       : ""
@@ -80,7 +80,7 @@ const Sidebar: React.FC<SectionProps> = ({ section, sections }) => {
                   <span>{sec.head}</span>
                 </Link>
               ) : (
-                <Accordion type="single" collapsible className="w-full px-3">
+                <Accordion type="single" collapsible className="w-full px-2">
                   <AccordionItem value="item-1" className="border-none">
                     <AccordionTrigger className="flex gap-5">
                       <Link

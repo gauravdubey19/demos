@@ -50,18 +50,20 @@ const Navbar: React.FC<{ appName?: string }> = ({ appName = "LOGO" }) => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const res = await fetch("/api/products/read/get-categories", {
-          method: "GET",
-          headers: { "Content-Type": "application/json" },
-        });
+        if (!pathname.includes("/admin")) {
+          const res = await fetch("/api/products/read/get-categories", {
+            method: "GET",
+            headers: { "Content-Type": "application/json" },
+          });
 
-        if (!res.ok) {
-          throw new Error("Failed to fetch categories");
-        }
+          if (!res.ok) {
+            throw new Error("Failed to fetch categories");
+          }
 
-        const data = await res.json();
-        if (data as CategoryValues[]) {
-          setCategories(data.categories as CategoryValues[]);
+          const data = await res.json();
+          if (data as CategoryValues[]) {
+            setCategories(data.categories as CategoryValues[]);
+          }
         }
       } catch (error) {
         console.error("Error fetching categories:", error);
@@ -69,9 +71,11 @@ const Navbar: React.FC<{ appName?: string }> = ({ appName = "LOGO" }) => {
     };
 
     if (categories.length === 0) fetchCategories();
-  }, [categories]);
+  }, [categories, pathname]);
 
   useEffect(() => {
+    if (pathname.includes("/admin")) return;
+
     const handleScroll = () => {
       if (window.scrollY > window.innerHeight * 2.9 && pathname === "/") {
         setIsVisible(true);
@@ -94,6 +98,8 @@ const Navbar: React.FC<{ appName?: string }> = ({ appName = "LOGO" }) => {
   }, [pathname, visible]);
 
   useEffect(() => {
+    if (pathname.includes("/admin")) return;
+
     if (navbarRef.current) {
       if (isVisible) {
         gsap.to(navbarRef.current, {
@@ -111,9 +117,7 @@ const Navbar: React.FC<{ appName?: string }> = ({ appName = "LOGO" }) => {
         });
       }
     }
-  }, [isVisible]);
-
-  if (pathname.includes("/admin")) return;
+  }, [isVisible, pathname]);
 
   return (
     <div

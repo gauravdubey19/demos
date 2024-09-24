@@ -21,7 +21,7 @@ import { LiaQuestionSolid } from "react-icons/lia";
 import { IoVideocamOutline } from "react-icons/io5";
 import Dashboard from "@/components/Admin/Dashboard";
 import AllProducts from "@/components/Admin/Products/AllProducts";
-import Customers from "@/components/Admin/Customers";
+import Customers from "@/components/Admin/Customers/Customers";
 import Orders from "@/components/Admin/Orders";
 import MyAccount from "@/components/Admin/MyAccount";
 
