@@ -33,10 +33,10 @@ export async function DELETE(req: NextRequest, { params }: { params: { userId: s
 // PUT handler
 export async function PUT(req: NextRequest, { params }: { params: { userId: string } }) {
     const { userId } = params;
-    const { firstName, lastName, email, profile, dateOfBirth, phone, gender } = await req.json();
+    const { firstName, lastName, email, profile, dateOfBirth, phone_number, gender } = await req.json();
 
     try {
-        const result = await updateUser(userId, firstName, lastName, email, profile, dateOfBirth, phone, gender);
+        const result = await updateUser(userId, firstName, lastName, email, profile, dateOfBirth, phone_number, gender);
         return NextResponse.json(result, { status: 200 });
     } catch (error) {
         return NextResponse.json({ error: 'error updating User' }, { status: 500 });
@@ -86,7 +86,7 @@ async function deleteUser(userId: string){
     email?: string,
     profile?: string,
     dateOfBirth?: string,
-    phone?: string,
+    phone_number?: string,
     gender?: string
 ){
     if (!userId) {
@@ -97,7 +97,7 @@ async function deleteUser(userId: string){
         await connectToDB();
 
         const user = await User.findById(userId);
-
+        
         if (!user) {
             throw new Error('User not found');
         }
@@ -107,7 +107,7 @@ async function deleteUser(userId: string){
         user.email = email ?? user.email;
         user.profile = profile ?? user.profile;
         user.dateOfBirth = dateOfBirth ?? user.dateOfBirth;
-        user.phone = phone ?? user.phone;
+        user.phone_number = phone_number ?? user.phone_number;
         user.gender = gender ?? user.gender;
         
         await user.save();

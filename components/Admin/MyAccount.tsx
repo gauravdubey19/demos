@@ -135,9 +135,9 @@ const PersonalSection = () => {
       return;
     }
     if (
-      userData.phone &&
-      userData.phone.length < 10 &&
-      userData.phone.length > 0
+      userData.phone_number &&
+      userData.phone_number.length < 10 &&
+      userData.phone_number.length > 0
     ) {
       alert("Phone number must be 10 digits");
       return;
@@ -153,7 +153,7 @@ const PersonalSection = () => {
     const userDataObj = {
       firstName: userData.firstName,
       lastName: userData.lastName,
-      phone: userData.phone,
+      phone: userData.phone_number,
       gender: userData.gender,
     };
     try {
@@ -247,7 +247,7 @@ const PersonalSection = () => {
           id="phone"
           label="Phone"
           type="tel"
-          value={userData?.phone}
+          value={userData?.phone_number}
           isDisabled={!isProfileEditing}
           setValue={(value) => {
             let numericValue = value.replace(/[^0-9]/g, "");

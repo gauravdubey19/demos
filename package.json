@@ -26,6 +26,7 @@
     "gsap": "^3.12.5",
     "hamburger-react": "^2.5.1",
     "indian-pincodes": "^1.1.0",
+    "jsonwebtoken": "^9.0.2",
     "lenis": "^1.1.9",
     "lucide-react": "^0.428.0",
     "mongoose": "^8.6.1",
@@ -47,6 +48,7 @@
     "tailwind-merge": "^2.5.2",
     "tailwindcss-animate": "^1.0.7",
     "three": "^0.168.0",
+    "twilio": "^5.3.1",
     "uploadthing": "^6.13.3",
     "vaul": "^0.9.2"
   },
@@ -56,6 +58,7 @@
     "@babel/preset-react": "^7.24.7",
     "@types/bcrypt": "^5.0.2",
     "@types/gsap": "^1.20.2",
+    "@types/jsonwebtoken": "^9.0.7",
     "@types/node": "^20",
     "@types/nodemailer": "^6.4.15",
     "@types/react": "^18",

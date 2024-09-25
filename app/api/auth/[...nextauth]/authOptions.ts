@@ -1,7 +1,7 @@
 import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import User from "@/models/User";
-import { connectToDB } from "./db";
+import { connectToDB } from "../../../../utils/db";
 
 const googleClientId = process.env.GOOGLE_ID;
 const googleClientSecret = process.env.GOOGLE_CLIENT_SECRET;
@@ -26,7 +26,10 @@ export const authOptions = NextAuth({
           return session;
         }
         const sessionUser = await User.findOne({ email: session.user.email });
-        session.user.id = sessionUser._id.toString();
+        console.log("Session User: ", sessionUser);
+        if (sessionUser) {
+          session.user.id = sessionUser._id.toString();
+        }
       } catch (error) {
         console.error("Error fetching user session:", error);
       }

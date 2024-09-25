@@ -184,7 +184,11 @@ const MobileNav: React.FC<CategoriesListProps> = ({ categories }) => {
               ) : (
                 <Button
                   size="lg"
-                  onClick={() => signOut()}
+                  onClick={() => {
+                    // remove the jwt token as well
+                    localStorage.removeItem("jwt");
+                    signOut();
+                  }}
                   className="w-full capitalize text-xl text-white font-semibold p-2 rounded shadow-md"
                 >
                   Logout
