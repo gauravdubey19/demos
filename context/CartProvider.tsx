@@ -20,6 +20,7 @@ interface CartContextType {
   handleIncrement: (productId: string) => void;
   handleDecrement: (productId: string) => void;
   handleRemoveFromCart: (productId: string) => void;
+  handleClearCart: () => void;
   itemExistInCart: (productId: string) => boolean;
   handleAddToCart: (
     productId: string,
@@ -246,7 +247,51 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
     },
     [status, router, session]
   );
+  // 
+  const handleClearCart = useCallback(
+    async () => {
+      if (status !== "authenticated") {
+        router.replace("/sign-in");
+        return;
+      }
 
+      try {
+        const res = await fetch(`/api/products/delete/delete-users-all-cart-items/${session.user.id}/`, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+
+        const data = await res.json();
+
+        if (res.ok) {
+          setCart([]);
+
+          toast({
+            title: data.message || "All items removed successfully.",
+            variant: "destructive",
+          });
+        } else {
+          toast({
+            title: data.error || "Failed to clear the cart.",
+            description: "Please try again later.",
+            variant: "destructive",
+          });
+        }
+      } catch (error) {
+        console.error("Error clearing the cart:", error);
+        toast({
+          title: "Something went wrong",
+          description: "Please try again later.",
+          variant: "destructive",
+        });
+      }
+    },
+    [status, router, session]
+  );
+
+// 
   const handleIncrement = useCallback(
     async (productId: string) => {
       if (status !== "authenticated") {
@@ -556,6 +601,7 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
         handleAddToCart,
         itemExistInCart,
         handleRemoveFromCart,
+        handleClearCart,
         handleColorSize,
         favProducts,
         handleAddProductToWhistlist,

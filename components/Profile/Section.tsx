@@ -2,9 +2,8 @@
 
 import { replaceHyphensWithSpaces } from "@/lib/utils";
 import { SectionProps } from "@/lib/types";
-import { profileSections } from "@/lib/data";
 
-const Section: React.FC<SectionProps> = ({ section }) => {
+const Section: React.FC<SectionProps> = ({ section, sections }) => {
   return (
     <div className="w-full h-full flex flex-1 flex-col bg-white drop-shadow-lg overflow-hidden">
       <div className="flex-between border-b bg-background p-4 shadow-sm md:px-8 md:py-6">
@@ -13,7 +12,7 @@ const Section: React.FC<SectionProps> = ({ section }) => {
         </h2>
       </div>
       <div className="w-full h-full overflow-y-scroll over-x">
-        {profileSections.map((sec) =>
+        {sections.map((sec) =>
           section === sec.id ? <sec.sectionNode key={sec.id} /> : null
         )}
       </div>

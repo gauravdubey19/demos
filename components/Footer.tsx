@@ -7,8 +7,11 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { FormStatus } from "@/lib/types";
 import MagneticDiv from "./ui/MagnaticDiv";
+import { usePathname } from "next/navigation";
 
 const Footer: React.FC<{ appName?: string }> = ({ appName = "LOGO" }) => {
+  const pathname = usePathname();
+  if (pathname.includes("/admin")) return;
   return (
     <footer
       className={`relative z-50 bg-background w-full text-foreground py-12 border-t border-border space-y-4 sm:space-y-6 md:space-y-8 lg:space-y-10 overflow-hidden`}
@@ -95,10 +98,7 @@ const Footer: React.FC<{ appName?: string }> = ({ appName = "LOGO" }) => {
 
 export default Footer;
 
-
-
-
-// 
+//
 const Form = () => {
   const [email, setEmail] = useState<string>("");
   const [status, setStatus] = useState<FormStatus>({
@@ -148,7 +148,6 @@ const Form = () => {
     setIsLoading(true);
 
     try {
-
       const response = await fetch("/api/newsletter/add-newsletter", {
         method: "POST",
         headers: { "Content-Type": "application/json" },

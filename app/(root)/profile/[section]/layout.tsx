@@ -1,23 +1,25 @@
-"use client";
+import { getServerSession } from "next-auth";
+import { redirect } from "next/navigation";
+import { ProfileAdminParams } from "@/lib/types";
+import { profileSections } from "@/lib/section";
 import Sidebar from "@/components/Profile/Sidebar";
-import { ProfileParams } from "@/lib/types";
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
 
-export default function ProfilePage({ params, children }: ProfileParams) {
-  const { data: session } = useSession();
-  const router = useRouter();
-  useEffect(() => {
-    if (!session) {
-      console.log("No session found");
-      router.push("/");
-    }
-  }, [session, router]);
+export default async function ProfilePage({
+  params,
+  children,
+}: ProfileAdminParams) {
+  const session = await getServerSession();
+  if (!session) {
+    redirect("/sign-in");
+  }
+
   return (
     <>
       <div className="h-[calc(100vh-60px)] mt-[60px] w-full flex gap-6 p-6 overflow-hidden">
-        <Sidebar section={decodeURIComponent(params.section)} />
+        <Sidebar
+          section={decodeURIComponent(params.section)}
+          sections={profileSections}
+        />
         {children}
       </div>
     </>

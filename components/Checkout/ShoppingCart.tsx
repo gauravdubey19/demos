@@ -1,25 +1,27 @@
 import React from 'react';
 import CartCard from './CartCard';
+import { useCart } from "@/context/CartProvider";
+
 
 interface ShoppingCartI {
     cartData: any[];
-    onRemoveCartItem: (id: any) => void;
     setSelectedItems: (count: number) => void;
     selectedItems: number;
-    onRemoveAllItems: () => void;
     onSelectItem: (id: any, isSelected: boolean) => void;
     onSelectAll: (selectAll: boolean) => void;
 }
 
 const ShoppingCart = ({
     cartData,
-    onRemoveCartItem,
-    onRemoveAllItems,
     setSelectedItems,
     selectedItems,
     onSelectItem,
     onSelectAll
 }: ShoppingCartI) => {
+
+    const { handleClearCart } = useCart(); //console.log(isOpen);
+
+
     return (
         <div>
             <div className='flex flex-col md:flex-row justify-between text-lg md:text-xl py-5'>
@@ -33,7 +35,7 @@ const ShoppingCart = ({
                     />
                     <p>{`${selectedItems}/${cartData.length} items selected`}</p>
                 </div>
-                <div className='text-red-500 cursor-pointer pt-3 md:pt-0' onClick={onRemoveAllItems}>
+                <div onClick={handleClearCart} className='text-red-500 cursor-pointer pt-3 md:pt-0' >
                     Remove all
                 </div>
             </div>
@@ -48,7 +50,6 @@ const ShoppingCart = ({
                         <CartCard
                             key={index}
                             data={data}
-                            onRemoveCartItem={onRemoveCartItem}
                             onSelectItem={onSelectItem}
                         />
                     ))

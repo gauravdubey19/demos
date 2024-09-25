@@ -2,6 +2,7 @@ import React from "react";
 import { X, Check } from "lucide-react";
 import Image from "next/image";
 import Dropdown from "./dropdownSelect";
+import { useCart } from "@/context/CartProvider";
 
 interface CartDataI {
     data: {
@@ -12,13 +13,24 @@ interface CartDataI {
         selectedColor: { title: string; color: string };
         quantity: number;
         selected: boolean;
+        productId: any;
         _id: any;
     };
-    onRemoveCartItem: (id: any) => void;
+    onRemoveCartItem?: (id: any) => void;
     onSelectItem: (id: any, isSelected: boolean) => void;
 }
 
-const CartCard = ({ data, onRemoveCartItem, onSelectItem }: CartDataI) => {
+const CartCard = ({ data, onSelectItem }: CartDataI) => {
+    console.log(data);
+
+    const { handleRemoveFromCart } = useCart(); //console.log(isOpen);
+
+    const handleRemove = async () => {
+        if (data.productId) {
+            await handleRemoveFromCart(data?.productId);
+        }
+    };
+
     return (
 
         <div className="border-t border-[#8888]">
@@ -28,12 +40,13 @@ const CartCard = ({ data, onRemoveCartItem, onSelectItem }: CartDataI) => {
                         type="checkbox"
                         className="h-4 w-4 sm:h-5 sm:w-5 rounded-xl form-checkbox accent-[#2ed396] focus:accent-[#2ed396]"
                         checked={data.selected}
-                        onChange={(e) => onSelectItem(data._id, e.target.checked)}
-                        id={`item-${data._id}`}
+                        onChange={(e) => onSelectItem(data.productId, e.target.checked)}
+                        id={`item-${data.productId}`}
                     />
                     <button
                         className="text-gray-500 hover:text-gray-700"
-                        onClick={() => onRemoveCartItem(data._id)}
+                        // onClick={() => onRemoveCartItem(data._id)}
+                        onClick={handleRemove}
                         aria-label="Remove item"
                     >
                         <X className="h-5 w-5 sm:h-6 sm:w-6" />

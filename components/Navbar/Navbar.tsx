@@ -52,18 +52,20 @@ const Navbar: React.FC<{ appName?: string }> = ({ appName = "LOGO" }) => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const res = await fetch("/api/products/read/get-categories", {
-          method: "GET",
-          headers: { "Content-Type": "application/json" },
-        });
+        if (!pathname.includes("/admin")) {
+          const res = await fetch("/api/products/read/get-categories", {
+            method: "GET",
+            headers: { "Content-Type": "application/json" },
+          });
 
-        if (!res.ok) {
-          throw new Error("Failed to fetch categories");
-        }
+          if (!res.ok) {
+            throw new Error("Failed to fetch categories");
+          }
 
-        const data = await res.json();
-        if (data as CategoryValues[]) {
-          setCategories(data.categories as CategoryValues[]);
+          const data = await res.json();
+          if (data as CategoryValues[]) {
+            setCategories(data.categories as CategoryValues[]);
+          }
         }
       } catch (error) {
         console.error("Error fetching categories:", error);
@@ -71,9 +73,11 @@ const Navbar: React.FC<{ appName?: string }> = ({ appName = "LOGO" }) => {
     };
 
     if (categories.length === 0) fetchCategories();
-  }, [categories]);
+  }, [categories, pathname]);
 
   useEffect(() => {
+    if (pathname.includes("/admin")) return;
+
     const handleScroll = () => {
       if (window.scrollY > window.innerHeight * 2.9 && pathname === "/") {
         setIsVisible(true);
@@ -96,6 +100,8 @@ const Navbar: React.FC<{ appName?: string }> = ({ appName = "LOGO" }) => {
   }, [pathname, visible]);
 
   useEffect(() => {
+    if (pathname.includes("/admin")) return;
+
     if (navbarRef.current) {
       if (isVisible) {
         gsap.to(navbarRef.current, {
@@ -113,7 +119,7 @@ const Navbar: React.FC<{ appName?: string }> = ({ appName = "LOGO" }) => {
         });
       }
     }
-  }, [isVisible]);
+  }, [isVisible, pathname]);
 
   return (
     <div
@@ -220,17 +226,32 @@ const Navbar: React.FC<{ appName?: string }> = ({ appName = "LOGO" }) => {
                           :
                           <FaUserCircle size={32} color="#000" />}
                       </div>
-                      <span
-                        className={`font-semibold ${
-                          pathname.includes("/profile/my-profile") &&
-                          "text-primary"
-                        } group-hover:text-primary ease-in-out duration-300`}
-                      >
-                        {userData?.firstName || "Profile"}
-                      </span>
+                      <div className="flex flex-col items-start">
+                        <span
+                          className={`font-semibold ${
+                            pathname.includes("/profile/my-profile") &&
+                            "text-primary"
+                          } group-hover:text-primary ease-in-out duration-300`}
+                        >
+                          {userData?.firstName || "Profile"}
+                        </span>
+                        {userData?.role === "admin" && (
+                          <span className="text-xs">{userData?.role}</span>
+                        )}
+                      </div>
                     </Link>
                   </NavigationMenuTrigger>
                   <NavigationMenuContent className="w-fit h-fit space-y-2 p-2 animate-slide-down">
+                    {session?.user?.role === "admin" && (
+                      <Link
+                        href="/admin/dashboard"
+                        className={`w-fit text-sm hover-underline-lr hover:text-primary ${
+                          pathname.includes("/admin") && "text-primary"
+                        }`}
+                      >
+                        Admin Dashboard
+                      </Link>
+                    )}
                     {profileOption.map((option, index) => (
                       <div key={index || option._id} className="w-36">
                         <Link
