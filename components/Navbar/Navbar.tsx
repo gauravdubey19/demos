@@ -44,7 +44,7 @@ const Navbar: React.FC<{ appName?: string }> = ({ appName = "LOGO" }) => {
   const navbarRef = useRef<HTMLDivElement>(null);
   const { showLeft, showRight } = useCursor();
   const visible = showLeft || showRight;
-  const {userData} = useGlobalContext();
+  const { userData } = useGlobalContext();
   const [categories, setCategories] = useState<CategoryValues[]>([]);
 
   const { favProducts } = useCart();
@@ -215,16 +215,17 @@ const Navbar: React.FC<{ appName?: string }> = ({ appName = "LOGO" }) => {
                           "border border-primary"
                         } overflow-hidden`}
                       >
-                        {userData?.profile ?
+                        {userData?.profile ? (
                           <Image
-                          src={"/" + userData?.profile || "/profile.png"}
-                          alt="profile"
-                          width={200}
-                          height={200}
-                          className="w-full h-full object-cover"
-                        />
-                          :
-                          <FaUserCircle size={32} color="#000" />}
+                            src={userData?.profile || "/profile.png"}
+                            alt="profile"
+                            width={200}
+                            height={200}
+                            className="w-full h-full object-cover"
+                          />
+                        ) : (
+                          <FaUserCircle size={32} color="#000" />
+                        )}
                       </div>
                       <div className="flex flex-col items-start">
                         <span
@@ -268,7 +269,7 @@ const Navbar: React.FC<{ appName?: string }> = ({ appName = "LOGO" }) => {
                       size="sm"
                       onClick={() => {
                         localStorage.removeItem("jwt");
-                    signOut();
+                        signOut();
                       }}
                       className="w-full h-fit capitalize rounded-none py-1 border border-primary text-black hover:text-white bg-transparent hover:bg-primary ease-in-out duration-300"
                     >
