@@ -189,9 +189,9 @@ const UserTable = () => {
   const filteredUsers = users
     .filter(
       (order) =>
-        order.firstName.includes(search) ||
-        order.lastName.includes(search) ||
-        order.email.includes(search)
+        order.firstName.includes(search.toLowerCase()) ||
+        order.lastName.includes(search.toLowerCase()) ||
+        order.email.includes(search.toLowerCase())
     )
     .sort((a, b) => {
       if (isAscending) {

@@ -239,7 +239,11 @@ const OrdersTable = () => {
   const [search, setSearch] = useState<string>("");
 
   const filteredOrders = orders
-    .filter((order) => order.orderID.includes(search))
+    .filter(
+      (order) =>
+        order.orderID.includes(search) ||
+        order.customer.includes(search.toLowerCase())
+    )
     .filter((order) => (status === "all" ? true : order.status === status))
     .sort((a, b) => {
       if (isAscending) {
@@ -258,10 +262,10 @@ const OrdersTable = () => {
             <IoSearchOutline size={20} className="text-primary" />
             <input
               type="text"
-              placeholder="Search By Order ID"
+              placeholder="Search by Order ID or Customer"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="placeholder:text-primary bg-none border-none outline-none"
+              className="w-64 placeholder:text-primary bg-none border-none outline-none"
             />
           </div>
 
@@ -320,10 +324,10 @@ const OrdersTable = () => {
                 key={index}
                 className="h-fit group border-b cursor-pointer hover:bg-[#ffb43335] ease-in-out duration-300"
               >
-                <td className="text-primary hover:underline">
+                <td>
                   <Link
-                    href={`/admin/orders/order/${order.customer}`}
-                    className="px-4 py-2"
+                    href={`/admin/orders/order/${order.orderID}`}
+                    className="text-primary px-4 py-2 hover:underline underline-offset-4"
                   >
                     {order.orderID}
                   </Link>
@@ -331,7 +335,7 @@ const OrdersTable = () => {
                 <td>
                   <Link
                     href={`/admin/customers/user/${order.customer}`}
-                    className="px-4 py-2"
+                    className="px-4 py-2 hover:underline underline-offset-4"
                   >
                     {order.customer}
                   </Link>

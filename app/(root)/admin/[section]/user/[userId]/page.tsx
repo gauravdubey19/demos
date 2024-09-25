@@ -1,6 +1,6 @@
 import CustomersDetail from "@/components/Admin/Customers/CustomersDetail";
 
-export default function SubSectionPage({
+export default function SubUserSectionPage({
   params,
 }: {
   params: { orderId: string };
