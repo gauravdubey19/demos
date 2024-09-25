@@ -13,29 +13,29 @@ export default function LoginForm() {
   const [sendingOTP, setSendingOTP] = useState(false);
   const [verifyingOTP, setVerifyingOTP] = useState(false);
   const [redirecting, setRedirecting] = useState(false);
-  const {setToken} = useGlobalContext();
+  const { setToken } = useGlobalContext();
   const sendOTP = async () => {
     if (!phone_number) {
-      console.error('Phone number is required');
+      console.error("Phone number is required");
       return;
     }
     if (phone_number.length !== 10) {
-      console.error('Phone number should be 10 digits');
-      return
+      console.error("Phone number should be 10 digits");
+      return;
     }
     try {
       setSendingOTP(true);
-      const response = await fetch('/api/send-otp', {
-        method: 'POST',
+      const response = await fetch("/api/send-otp", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({ phone_number: phone_number }),
       });
-console.log("response:", response);
+      console.log("response:", response);
       if (response.ok) {
         const data = await response.json();
-        console.log('OTP sent:', data);
+        console.log("OTP sent:", data);
         if (data.otpSent) {
           setOtpSend(true);
           toast({
@@ -44,10 +44,10 @@ console.log("response:", response);
             variant: "default",
           });
         } else {
-          console.error('Unexpected response:', data);
+          console.error("Unexpected response:", data);
         }
       } else {
-        console.error('Failed to send OTP:', await response.text());
+        console.error("Failed to send OTP:", await response.text());
         toast({
           title: "Failed to send OTP",
           description: "Please try again",
@@ -55,37 +55,36 @@ console.log("response:", response);
         });
       }
     } catch (error) {
-      console.error('Error sending OTP:', error);
+      console.error("Error sending OTP:", error);
     } finally {
       setSendingOTP(false);
     }
-
   };
 
   const verifyOTP = async () => {
-    if(!phone_number || !otp){
-      console.error('Phone number and OTP are required');
+    if (!phone_number || !otp) {
+      console.error("Phone number and OTP are required");
       return;
     }
-    if(otp.length !== 6){
-      console.error('OTP should be 6 digits');
-      return
+    if (otp.length !== 6) {
+      console.error("OTP should be 6 digits");
+      return;
     }
     try {
       setVerifyingOTP(true);
-      const response = await fetch('/api/verify-otp', {
-        method: 'POST',
+      const response = await fetch("/api/verify-otp", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({ phone_number: phone_number, otp }),
       });
       console.log("response: ", response);
       if (response.ok) {
         const data = await response.json();
-        console.log('OTP verified:', data);
+        console.log("OTP verified:", data);
         if (data.verified) {
-          localStorage.setItem('jwt', data.token);
+          localStorage.setItem("jwt", data.token);
           // Add your login logic here
           setToken(data.token);
           setRedirecting(true);
@@ -95,7 +94,7 @@ console.log("response:", response);
             variant: "default",
           });
         } else {
-          console.error('Invalid OTP:', data.error);
+          console.error("Invalid OTP:", data.error);
           toast({
             title: "Invalid OTP",
             description: "Please try again",
@@ -103,7 +102,7 @@ console.log("response:", response);
           });
         }
       } else {
-        console.error('Failed to verify OTP:', await response.text());
+        console.error("Failed to verify OTP:", await response.text());
         toast({
           title: "Failed to verify OTP",
           description: "Please try again",
@@ -111,7 +110,7 @@ console.log("response:", response);
         });
       }
     } catch (error) {
-      console.error('Error verifying OTP:', error);
+      console.error("Error verifying OTP:", error);
     } finally {
       setVerifyingOTP(false);
     }
@@ -149,22 +148,25 @@ console.log("response:", response);
                 <span className="text-black">+91</span>
                 <span className="bg-gray-500 w-[0.5px] h-[70%]"></span>
               </div>
-            <input
-              type="phone"
-              id="phone"
-              name="phone"
-              value={phone_number}
-              onChange={(e) =>{
-                //validate 10 digitds only also number only
-                if(e.target.value.length <= 10 && /^[0-9]*$/.test(e.target.value)){
-                  setPhone(e.target.value)
-                }else{
-                  return;
-                }
-              }}
-              className="w-[89%] text-black px-3 py-2 rounded-2xl focus:outline-none rounded-l-none"
-              required
-            />
+              <input
+                type="phone"
+                id="phone"
+                name="phone"
+                value={phone_number}
+                onChange={(e) => {
+                  //validate 10 digitds only also number only
+                  if (
+                    e.target.value.length <= 10 &&
+                    /^[0-9]*$/.test(e.target.value)
+                  ) {
+                    setPhone(e.target.value);
+                  } else {
+                    return;
+                  }
+                }}
+                className="w-[89%] text-black px-3 py-2 rounded-2xl focus:outline-none rounded-l-none"
+                required
+              />
             </div>
           </div>
           {otpSend && (
@@ -182,8 +184,11 @@ console.log("response:", response);
                 value={otp}
                 onChange={(e) => {
                   //set only 6 digit otp
-                  if(e.target.value.length <= 6 && /^[0-9]*$/.test(e.target.value)){
-                    setOtp(e.target.value)
+                  if (
+                    e.target.value.length <= 6 &&
+                    /^[0-9]*$/.test(e.target.value)
+                  ) {
+                    setOtp(e.target.value);
                   }
                 }}
                 className="w-full text-black px-3 py-2 border border-gray-300 rounded-2xl shadow-sm focus:outline-none focus:ring focus:ring-white focus:ring-opacity-50"
@@ -191,25 +196,28 @@ console.log("response:", response);
               />
             </div>
           )}
-          <div className="w-full flex flex-row justify-end items-center">
+          {/* <div className="w-full flex flex-row justify-end items-center">
             <button
               type="button"
               className="mb-4 text-blue-500 hover:text-blue-700 text-sm text-nowrap"
             >
               Forgot Password?
             </button>
-          </div>
+          </div> */}
           <div className="flex items-center justify-end w-full">
             <button
-            disabled={sendingOTP || verifyingOTP || redirecting}
+              disabled={sendingOTP || verifyingOTP || redirecting}
               type="submit"
               className="flex items-center gap-3 py-2 px-5 text-white bg-[#f0d464] rounded-md hover:bg-[#c5ae51] transition-colors duration-300 disabled:opacity-60"
             >
-              {otpSend ? verifyingOTP?'Verifying': 'Login' : sendingOTP? 'Sending': 'Send OTP'}
-              { verifyingOTP || sendingOTP ?
-              "" :
-               <LogIn />
-              }
+              {otpSend
+                ? verifyingOTP
+                  ? "Verifying"
+                  : "Login"
+                : sendingOTP
+                ? "Sending"
+                : "Send OTP"}
+              {verifyingOTP || sendingOTP ? "" : <LogIn />}
             </button>
           </div>
         </form>
