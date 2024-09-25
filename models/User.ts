@@ -23,10 +23,8 @@ const UserSchema = new Schema<IUser>({
   },
   email: {
     type: String,
-    unique: true,
     trim: true,
     lowercase: true,
-    required: [true, "Email is required"],
     match: [/.+\@.+\..+/, "Please fill a valid email address"],
   },
   role: {

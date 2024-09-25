@@ -22,6 +22,7 @@ interface User {
   cart?: string[];
   orders?: string[];
   address?: string;
+  role?: string;
   city?: {
     name?: string;
     code?: string;
