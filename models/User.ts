@@ -34,7 +34,7 @@ const UserSchema = new Schema<IUser>({
   },
   profile: {
     type: String,
-    default: "default-profile.png",
+    // default: "/default-profile.png",
   },
   dateOfBirth: {
     type: Date,

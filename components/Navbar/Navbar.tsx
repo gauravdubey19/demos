@@ -217,7 +217,7 @@ const Navbar: React.FC<{ appName?: string }> = ({ appName = "LOGO" }) => {
                       >
                         {userData?.profile ?
                           <Image
-                          src={userData?.profile || "/profile.png"}
+                          src={"/" + userData?.profile || "/profile.png"}
                           alt="profile"
                           width={200}
                           height={200}

@@ -9,10 +9,10 @@ export default async function SignInPage() {
   if (session) redirect("/");
 
   return (
-      <GlobalProvider>
-        <AuthContainer>
-            <LoginForm />
-        </AuthContainer>
-      </GlobalProvider>
+    <GlobalProvider>
+      <AuthContainer>
+        <LoginForm />
+      </AuthContainer>
+    </GlobalProvider>
   );
 }
