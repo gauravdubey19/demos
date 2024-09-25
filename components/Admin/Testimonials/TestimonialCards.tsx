@@ -3,7 +3,7 @@
 
 import React, { useRef, useState } from "react";
 import { FaPlay } from "react-icons/fa";
-import Modal from "./Modal";
+import Modal from "./TestimonialsModal";
 
 interface TestimonialCardsI {
   file?: any;

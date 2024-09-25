@@ -14,7 +14,7 @@ export default async function ProfilePage({
   // }
   return (
     <>
-      <div className="h-screen w-full flex gap-2 overflow-hidden">
+      <div className="h-screen w-full flex-between overflow-hidden">
         <Sidebar
           section={decodeURIComponent(params.section)}
           sections={adminSections}
