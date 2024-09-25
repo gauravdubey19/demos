@@ -1,24 +1,33 @@
 import { Schema, model, models } from "mongoose";
 
-const UserSchema = new Schema({
+interface IUser {
+  firstName: string;
+  lastName: string;
+  email: string;
+  role: string;
+  profile?: string;
+  dateOfBirth?: Date;
+  phone_number?: string;
+  gender?: "male" | "female" | "others";
+  favProducts?: Schema.Types.ObjectId[];
+}
+
+const UserSchema = new Schema<IUser>({
   firstName: {
     type: String,
-    required: true,
     trim: true,
-    // lowercase: true,
   },
   lastName: {
     type: String,
-    required: true,
     trim: true,
-    // lowercase: true,
   },
   email: {
     type: String,
-    required: true,
     unique: true,
     trim: true,
     lowercase: true,
+    required: [true, "Email is required"],
+    match: [/.+\@.+\..+/, "Please fill a valid email address"],
   },
   role: {
     type: String,
@@ -27,14 +36,16 @@ const UserSchema = new Schema({
   },
   profile: {
     type: String,
+    default: "default-profile.png",
   },
   dateOfBirth: {
     type: Date,
   },
-  phone: {
+  phone_number: {
     type: String,
     minLength: 10,
     maxLength: 10,
+    unique: true,
   },
   gender: {
     type: String,
@@ -43,22 +54,11 @@ const UserSchema = new Schema({
   favProducts: [
     {
       type: Schema.Types.ObjectId,
-      required: true,
       ref: "Products",
     },
   ],
 });
 
-const User = models.User || model("User", UserSchema);
+const User = models.User || model<IUser>("User", UserSchema);
 
 export default User;
-
-// cart: [{
-//     type: String,
-//     required: true
-// }],
-// // The following has to be a snapshot of the product
-// orders: [{
-//     type: mongoose.Schema.Types.ObjectId,
-//     ref: "Order"
-// }]

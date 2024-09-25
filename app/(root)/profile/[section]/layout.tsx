@@ -10,6 +10,7 @@ export default function ProfilePage({ params, children }: ProfileParams) {
   const router = useRouter();
   useEffect(() => {
     if (!session) {
+      console.log("No session found");
       router.push("/");
     }
   }, [session, router]);

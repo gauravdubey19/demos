@@ -7,15 +7,15 @@ import React, {
   ReactNode,
   useCallback,
 } from "react";
-import { signOut, useSession } from "next-auth/react";
+import { signIn, signOut, useSession } from "next-auth/react";
 import { Session } from "next-auth";
-
+import jwt from "jsonwebtoken";
 // Define the shape of the context state
 interface User {
   firstName: string;
   lastName?: string;
   email: string;
-  phone?: string;
+  phone_number?: string;
   profile?: string;
   dateOfBirth?: Date;
   gender?: string;
@@ -44,6 +44,8 @@ interface GlobalState {
   setContactEditing: (value: boolean) => void;
   userData: User | null;
   setUserData: (value: User | ((prevData: User | null) => User | null)) => void; // Updated type
+  token: string | null;
+  setToken: (value: string | ((prevData: string | null) => string | null)) => void;
 }
 
 interface SessionExtended extends Session {
@@ -67,6 +69,19 @@ const GlobalProvider = ({ children }: { children: ReactNode }) => {
   const [isProfileEditing, setProfileEditing] = useState(false);
   const [isContactEditing, setContactEditing] = useState(false);
   const [userData, setUserData] = useState<User | null>(user);
+  const [token, setToken] = useState<string | null>(null);
+
+  useEffect(() => {
+    const tokenTemp = localStorage.getItem("jwt");
+    setToken(tokenTemp);
+  }, []);
+
+  useEffect(() => {
+    if (token) {
+      if(!session?.user.id)
+      signIn("credentials", { token });
+    }
+  }, [token, session]);
 
   const fetchUser = useCallback(async () => {
     if (!session) {
@@ -74,12 +89,14 @@ const GlobalProvider = ({ children }: { children: ReactNode }) => {
     }
     const extendedSession = session as SessionExtended;
     if (!extendedSession.user.id) {
-      console.log("session user not avaiable: ", extendedSession);
+      console.log("session user not available: ", extendedSession);
+      localStorage.removeItem("jwt");
       signOut();
       //   alert('User ID is null');
       return;
     }
     try {
+      // console.log("Fetching user data using ID: ", extendedSession.user);
       const response = await fetch(`/api/users/${extendedSession.user.id}`);
       const contactResponse = await fetch(
         `/api/contact/${extendedSession.user.id}`
@@ -93,11 +110,18 @@ const GlobalProvider = ({ children }: { children: ReactNode }) => {
         return;
       }
       const userData = await response.json();
+      if(!userData) {
+        console.error('User not found');
+        localStorage.removeItem("jwt");
+        signOut();
+        return;
+      }
       const contactData = await contactResponse.json();
       const userDataObj = {
         ...userData,
         ...contactData,
       };
+      console.log("User data fetched: ", userDataObj);
       setUser(userDataObj);
     } catch (error) {
       console.error("Error fetching user:", error);
@@ -112,6 +136,7 @@ const GlobalProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     setUserData(user);
   }, [user]);
+
   return (
     <GlobalContext.Provider
       value={{
@@ -124,6 +149,8 @@ const GlobalProvider = ({ children }: { children: ReactNode }) => {
         setContactEditing,
         userData,
         setUserData,
+        token,
+        setToken
       }}
     >
       {children}

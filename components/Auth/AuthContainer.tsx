@@ -1,15 +1,24 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import SocialsLogin from "./SocialsLogin";
+// import { useSession } from "next-auth/react";
+// import { useGlobalContext } from "@/context/GlobalProvider";
 
 const AuthContainer: React.FC<{ children?: React.ReactNode }> = ({
   children,
 }) => {
   const pathname = usePathname();
+  // const {token} = useGlobalContext();
+  // useEffect(() => {
+  //   console.log("token:", token);
+  //   if (token) {
+  //     window.location.href = "/";
+  //   }
+  // }, [token]);
   return (
     <div className="h-screen w-full flex bg-[#F5F5F5] relative">
       <div className="w-[40%] bg-[#f0d464]" />

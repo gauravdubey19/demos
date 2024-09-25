@@ -22,6 +22,8 @@ import Search from "./Search";
 import { GoHeart, GoHeartFill } from "react-icons/go";
 import { Button } from "../ui/button";
 import { useCart } from "@/context/CartProvider";
+import { FaUserCircle } from "react-icons/fa";
+import { useGlobalContext } from "@/context/GlobalProvider";
 
 const profileOption = [
   { _id: 1, title: "My Profile", href: "/profile/my-profile" },
@@ -42,7 +44,7 @@ const Navbar: React.FC<{ appName?: string }> = ({ appName = "LOGO" }) => {
   const navbarRef = useRef<HTMLDivElement>(null);
   const { showLeft, showRight } = useCursor();
   const visible = showLeft || showRight;
-
+  const {userData} = useGlobalContext();
   const [categories, setCategories] = useState<CategoryValues[]>([]);
 
   const { favProducts } = useCart();
@@ -207,13 +209,16 @@ const Navbar: React.FC<{ appName?: string }> = ({ appName = "LOGO" }) => {
                           "border border-primary"
                         } overflow-hidden`}
                       >
-                        <Image
-                          src={session?.user?.image || "/profile.png"}
+                        {userData?.profile ?
+                          <Image
+                          src={userData?.profile || "/profile.png"}
                           alt="profile"
                           width={200}
                           height={200}
                           className="w-full h-full object-cover"
                         />
+                          :
+                          <FaUserCircle size={32} color="#000" />}
                       </div>
                       <span
                         className={`font-semibold ${
@@ -221,8 +226,7 @@ const Navbar: React.FC<{ appName?: string }> = ({ appName = "LOGO" }) => {
                           "text-primary"
                         } group-hover:text-primary ease-in-out duration-300`}
                       >
-                        {session?.user?.name &&
-                          session?.user?.name.split(" ")[0]}
+                        {userData?.firstName || "Profile"}
                       </span>
                     </Link>
                   </NavigationMenuTrigger>
@@ -241,7 +245,10 @@ const Navbar: React.FC<{ appName?: string }> = ({ appName = "LOGO" }) => {
                     ))}
                     <Button
                       size="sm"
-                      onClick={() => signOut()}
+                      onClick={() => {
+                        localStorage.removeItem("jwt");
+                    signOut();
+                      }}
                       className="w-full h-fit capitalize rounded-none py-1 border border-primary text-black hover:text-white bg-transparent hover:bg-primary ease-in-out duration-300"
                     >
                       Logout

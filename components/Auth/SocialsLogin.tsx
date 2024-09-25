@@ -17,14 +17,22 @@ type Providers = Record<
 
 const SocialsLogin = () => {
   const [providers, setProviders] = useState<Providers>(null);
-
+  const [error, setError] = useState<string | null>(null);
   useEffect(() => {
     (async () => {
+      try {
       const res = await getProviders();
       setProviders(res);
+      }
+      catch (error) {
+        console.error("Error fetching providers:", error);
+        setError("Error fetching providers");
+      }
     })();
   }, []);
-
+  if (error) {
+    return <div>{error}</div>;
+  }
   return (
     <div className="w-full mt-7">
       <div className="flex flex-row items-center gap-2 px-10">
@@ -35,7 +43,9 @@ const SocialsLogin = () => {
 
       <div className="flex flex-row items-center justify-center gap-10 mt-7">
         {providers &&
-          Object.values(providers).map((provider) => (
+          Object.values(providers).map((provider) => {
+            if (provider.id === "google") {
+              return (
             <button
               className="h-10 p-2 text-black w-10 border-black rounded-xl border  cursor-pointer"
               type="button"
@@ -49,7 +59,9 @@ const SocialsLogin = () => {
                 height={200}
               />
             </button>
-          ))}
+              )
+            }
+})}
         {/* <div className="h-10 p-2 text-black w-10 border-black rounded-xl border cursor-pointer">
             <Image
               src="/github.png"

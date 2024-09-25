@@ -1,13 +1,13 @@
 "use client";
 
 import React, { use, useEffect, useState } from "react";
-import { Session } from "next-auth";
 import { signOut, useSession } from "next-auth/react";
 import { State, City } from "country-state-city";
 import { InputFieldProps } from "@/lib/types";
 import { useGlobalContext } from "@/context/GlobalProvider";
 import { Button } from "@/components/ui/button";
 import { BiSolidEditAlt } from "react-icons/bi";
+import { Session } from "next-auth";
 
 interface SessionExtended extends Session {
   user: {
@@ -15,6 +15,7 @@ interface SessionExtended extends Session {
     name?: string | null;
     email?: string | null;
     image?: string | null;
+    phone_number?: string | null;
   };
 }
 
@@ -22,7 +23,7 @@ interface User {
   firstName: string;
   lastName?: string;
   email: string;
-  phone?: string;
+  phone_number?: string;
   profile?: string;
   dateOfBirth?: Date;
   gender?: string;
@@ -76,6 +77,7 @@ const MyProfile = () => {
       });
 
       if (response.ok) {
+        localStorage.removeItem("jwt");
         signOut();
         alert("Account deleted successfully.");
       } else {
@@ -99,7 +101,10 @@ const MyProfile = () => {
       <div className="flex flex-row justify-end p-2 md:p-4 gap-x-2">
         <Button
           className="font-bold text-sm md:text-base active:translate-y-0.5 border-red-500 text-red-500 bg-white border-1 border rounded-none hover:bg-red-600 hover:text-white"
-          onClick={() => signOut()}
+          onClick={() => {
+            localStorage.removeItem("jwt");
+            signOut();
+          }}
         >
           Logout
         </Button>
@@ -120,7 +125,15 @@ export default MyProfile;
 const PersonalSection = () => {
   const { error, isProfileEditing, setProfileEditing, userData, setUserData } =
     useGlobalContext();
+  const {data: session} = useSession();
   const [userDataCopy, setUserDataCopy] = useState<User | null>(userData ?? null);
+  const [isPhoneLogin, setIsPhoneLogin] = useState(false);
+  useEffect(() => {
+    const exSession = session as SessionExtended;
+    if(exSession?.user?.phone_number){
+      setIsPhoneLogin(true);
+    }
+  },[session])
   useEffect(() => {
     if(!userDataCopy && userData){
       console.log("userDataCopy is empty and userData is not empty");
@@ -128,7 +141,6 @@ const PersonalSection = () => {
     }
   }, [userData, userDataCopy]);
   const [saving, setSaving] = useState(false);
-  const { data: session } = useSession();
   if (error) {
     return <div>Error: {error}</div>;
   }
@@ -142,29 +154,22 @@ const PersonalSection = () => {
       return;
     }
     if (
-      userData.phone &&
-      userData.phone.length < 10 &&
-      userData.phone.length > 0
+      userData.phone_number &&
+      userData.phone_number.length < 10 &&
+      userData.phone_number.length > 0
     ) {
       alert("Phone number must be 10 digits");
-      return;
-    }
-    if (!userData.firstName) {
-      alert("First Name is required");
-      return;
-    }
-    if (!userData.lastName) {
-      alert("Last Name is required");
       return;
     }
     const userDataObj = {
       firstName: userData.firstName,
       lastName: userData.lastName,
-      phone: userData.phone,
+      phone_number: userData.phone_number,
       gender: userData.gender,
+      email: userData.email,
     };
 
-    if(userData.firstName === userDataCopy?.firstName && userData.lastName === userDataCopy?.lastName && userData.phone === userDataCopy?.phone && userData.gender === userData?.gender){
+    if(userData.firstName === userDataCopy?.firstName && userData.lastName === userDataCopy?.lastName && userData.phone_number === userDataCopy?.phone_number && userData.gender === userData?.gender && userData.email === userDataCopy?.email){
       // alert("No changes made to the profile");
       setProfileEditing(false);
       return;
@@ -172,6 +177,7 @@ const PersonalSection = () => {
     try {
       setSaving(true);
       const extendedSession = session as SessionExtended;
+      console.log("userDataObj: ", userDataObj);
       const response = await fetch(`/api/users/${extendedSession.user.id}`, {
         method: "PUT",
         headers: {
@@ -182,6 +188,8 @@ const PersonalSection = () => {
 
       if (response.ok) {
         setUserDataCopy(userData);
+        setProfileEditing(false);
+
       } else {
         const errorData = await response.json();
         alert(`Error: ${errorData.message}`);
@@ -193,7 +201,6 @@ const PersonalSection = () => {
       );
     } finally {
       setSaving(false);
-      setProfileEditing(false);
     }
   };
   const handleInputChange = (field: keyof User, value: string) => {
@@ -269,22 +276,23 @@ const PersonalSection = () => {
           id="email"
           label="Email"
           type="email"
-          isDisabled
+          isDisabled={!isPhoneLogin?true:!isProfileEditing}
           value={userData?.email}
+          setValue={(value) => handleInputChange("email", value)}
         />
         <InputField
           id="phone"
           label="Phone"
           type="tel"
-          value={userData?.phone}
-          isDisabled={!isProfileEditing}
+          value={userData?.phone_number}
+          isDisabled={isPhoneLogin?true:!isProfileEditing}
           setValue={(value) => {
             let numericValue = value.replace(/[^0-9]/g, "");
             if (numericValue.length > 10) {
               numericValue = numericValue.slice(0, 10);
             }
 
-            handleInputChange("phone", numericValue);
+            handleInputChange("phone_number", numericValue);
           }}
         />
         <Dropdown
