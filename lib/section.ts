@@ -22,7 +22,7 @@ import { IoVideocamOutline } from "react-icons/io5";
 import Dashboard from "@/components/Admin/Dashboard";
 import AllProducts from "@/components/Admin/Products/AllProducts";
 import Customers from "@/components/Admin/Customers/Customers";
-import Orders from "@/components/Admin/Orders";
+import Orders from "@/components/Admin/Orders/Orders";
 import MyAccount from "@/components/Admin/MyAccount";
 import TestimonialsAdmin from "@/components/Admin/Testimonials/TestimonialsAdmin";
 import FaqAdmin from "@/components/Admin/QuerysFAQs/FAQ/FaqContainer";

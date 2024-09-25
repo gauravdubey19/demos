@@ -122,19 +122,19 @@ const Dashboard = () => {
       legend: {
         display: false, // Hide the legend
       },
-      tooltip: {
-        enabled: true,
-        backgroundColor: "#3D2C8D", // Dark purple background for tooltip
-        titleFont: { size: 14 },
-        titleColor: "#fff",
-        bodyFont: { size: 12 },
-        bodyColor: "#fff",
-        padding: 8,
-        displayColors: false, // Remove color box in tooltips
-        callbacks: {
-          label: (context: any) => `${context.raw}`, // Show raw data
-        },
-      },
+      // tooltip: {
+      //   enabled: true,
+      //   // backgroundColor: "#3D2C8D", // Dark purple background for tooltip
+      //   titleFont: { size: 14 },
+      //   titleColor: "#fff",
+      //   bodyFont: { size: 12 },
+      //   bodyColor: "#fff",
+      //   padding: 8,
+      //   displayColors: false, // Remove color box in tooltips
+      //   callbacks: {
+      //     label: (context: any) => `${context.raw}`, // Show raw data
+      //   },
+      // },
     },
     scales: {
       x: {
@@ -161,17 +161,17 @@ const Dashboard = () => {
       line: {
         tension: 0.4, // Smooth line
         borderWidth: 3, // Line thickness
-        borderColor: "#FFAC28", // Line color
+        borderColor: "#ffb43390", // Line color
         fill: "start", // Fill below the line
         backgroundColor: "rgba(255, 172, 40, 0.1)", // Gradient background for line fill
       },
       point: {
         radius: 5,
         borderWidth: 2,
-        backgroundColor: "#FFAC28",
+        backgroundColor: "#ffb433",
         borderColor: "#FFFFFF", // White border around points
         hoverRadius: 8, // Larger hover effect
-        hoverBackgroundColor: "#3D2C8D", // Purple on hover
+        hoverBackgroundColor: "#ffb43330", // Purple on hover
       },
     },
   };
