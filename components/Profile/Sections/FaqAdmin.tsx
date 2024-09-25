@@ -1,4 +1,4 @@
-import FaqContainer from '@/components/Admin/FAQ/FaqContainer'
+import FaqContainer from '@/components/Admin/QuerysFAQs/FAQ/FaqContainer'
 import React from 'react'
 
 const FaqAdmin = () => {
