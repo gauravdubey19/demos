@@ -1,15 +1,17 @@
 
-"use client";
-
 import React, { useRef, useState } from "react";
 import { FaPlay } from "react-icons/fa";
 import Modal from "./TestimonialsModal";
+import { Button } from "@/components/ui/button";
 
 interface TestimonialCardsI {
   file?: any;
+  onRefresh?: () => void;
+
 }
 
-const TestimonialCards = ({ file }: TestimonialCardsI) => {
+const TestimonialCards = ({ file, onRefresh }: TestimonialCardsI) => {
+  // console.log(file);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const [isPlaying, setIsPlaying] = useState<boolean>(true);
   const [isHovering, setIsHovering] = useState<boolean>(false);
@@ -42,9 +44,42 @@ const TestimonialCards = ({ file }: TestimonialCardsI) => {
     }
   };
 
+  const handleDelete = async () => {
+    console.log('delete');
+    if (file) {
+      try {
+        const response = await fetch('/api/Testimonials/deleteThings', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ files: file.key }),
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+          // alert('Testimonial deleted successfully');
+          // Optionally, you can add logic to remove the testimonial from the UI
+          if (onRefresh) {
+            onRefresh(); // Call the onRefresh prop when the delete button is clicked
+          }
+        } else {
+          alert(`Error: ${result.error}`);
+        }
+      } catch (err) {
+        console.error('Error deleting testimonial:', err);
+        alert('An unexpected error occurred');
+      }
+    } else {
+      alert('No testimonial selected for deletion');
+    }
+  };
+
   return (
+   
     <div
-      className="relative card md:w-[15rem] w-[13rem] h-[17rem] md:h-[20rem] rounded-xl overflow-hidden bg-white flex items-center justify-between flex-col transition-shadow duration-300"
+      className="relative card w-full sm:w-[15rem] h-[17rem] sm:h-[22rem] rounded-xl overflow-hidden bg-white flex items-center justify-between flex-col transition-shadow duration-300"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
@@ -66,7 +101,7 @@ const TestimonialCards = ({ file }: TestimonialCardsI) => {
           onClick={handleVideoClick}
         >
           <source
-            src="https://utfs.io/f/bb148a99-c84d-4724-b614-ad5f3dd1e9d1-2usdhy.mp4"
+            src={`https://utfs.io/f/${file?.key}`}
             type="video/mp4"
           />
         </video>
@@ -77,10 +112,9 @@ const TestimonialCards = ({ file }: TestimonialCardsI) => {
         className={`absolute bottom-[-100px] left-1/2 w-full h-20 bg-white flex items-center justify-center transform -translate-x-1/2 transition-all duration-500 ease-in-out z-50 ${isHovering ? "translate-y-[-100%]" : "translate-y-0"
           }`}
       >
-        {/* <button className="px-4 py-2 underline text-blue-500 rounded-md hover:bg-primary-dark">
-          View Details
-        </button> */}
-        <Modal variant="edit"/>
+        <Button onClick={handleDelete}>
+          Delete
+        </Button>
       </div>
     </div>
   );
