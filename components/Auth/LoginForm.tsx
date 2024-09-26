@@ -1,39 +1,131 @@
 "use client";
 import React, { useState } from "react";
-import { Eye, EyeOff } from "lucide-react";
 import { LogIn } from "lucide-react";
+import { useGlobalContext } from "@/context/GlobalProvider";
+import { signIn } from "next-auth/react";
+import { set } from "mongoose";
+import { toast } from "@/hooks/use-toast";
 
 export default function LoginForm() {
-  const [showPassword, setShowPassword] = useState(false);
-  const [rememberMe, setRememberMe] = useState(false);
+  const [otpSend, setOtpSend] = useState(false);
+  const [phone_number, setPhone] = useState("");
+  const [otp, setOtp] = useState("");
+  const [sendingOTP, setSendingOTP] = useState(false);
+  const [verifyingOTP, setVerifyingOTP] = useState(false);
+  const [redirecting, setRedirecting] = useState(false);
+  const { setToken } = useGlobalContext();
+  const sendOTP = async () => {
+    if (!phone_number) {
+      console.error("Phone number is required");
+      return;
+    }
+    if (phone_number.length !== 10) {
+      console.error("Phone number should be 10 digits");
+      return;
+    }
+    try {
+      setSendingOTP(true);
+      const response = await fetch("/api/send-otp", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ phone_number: phone_number }),
+      });
+      console.log("response:", response);
+      if (response.ok) {
+        const data = await response.json();
+        console.log("OTP sent:", data);
+        if (data.otpSent) {
+          setOtpSend(true);
+          toast({
+            title: "OTP Sent!",
+            description: "Check your phone for the OTP",
+            variant: "default",
+          });
+        } else {
+          console.error("Unexpected response:", data);
+        }
+      } else {
+        console.error("Failed to send OTP:", await response.text());
+        toast({
+          title: "Failed to send OTP",
+          description: "Please try again",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      console.error("Error sending OTP:", error);
+    } finally {
+      setSendingOTP(false);
+    }
+  };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const verifyOTP = async () => {
+    if (!phone_number || !otp) {
+      console.error("Phone number and OTP are required");
+      return;
+    }
+    if (otp.length !== 6) {
+      console.error("OTP should be 6 digits");
+      return;
+    }
+    try {
+      setVerifyingOTP(true);
+      const response = await fetch("/api/verify-otp", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ phone_number: phone_number, otp }),
+      });
+      console.log("response: ", response);
+      if (response.ok) {
+        const data = await response.json();
+        console.log("OTP verified:", data);
+        if (data.verified) {
+          localStorage.setItem("jwt", data.token);
+          // Add your login logic here
+          setToken(data.token);
+          setRedirecting(true);
+          toast({
+            title: "Login Successful!",
+            description: "Please wait while we redirect you",
+            variant: "default",
+          });
+        } else {
+          console.error("Invalid OTP:", data.error);
+          toast({
+            title: "Invalid OTP",
+            description: "Please try again",
+            variant: "destructive",
+          });
+        }
+      } else {
+        console.error("Failed to verify OTP:", await response.text());
+        toast({
+          title: "Failed to verify OTP",
+          description: "Please try again",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      console.error("Error verifying OTP:", error);
+    } finally {
+      setVerifyingOTP(false);
+    }
+  };
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    const formData = new FormData(e.currentTarget);
-
-    const email = formData.get("email");
-    const password = formData.get("password");
-
-    // Process login with email and password
-    console.log("Email:", email);
-    console.log("Password:", password);
-    console.log("Remember Me:", rememberMe);
-
-    // Add your login logic here
+    if (!otpSend) {
+      // Send OTP
+      console.log("sendOTP");
+      await sendOTP();
+    } else {
+      // Verify OTP
+      await verifyOTP();
+    }
   };
-
-  // Function to toggle password visibility
-  const togglePasswordVisibility = () => {
-    setShowPassword((prevState) => !prevState);
-  };
-
-  // Function to handle "Forgot Password" click
-  const handleForgotPassword = () => {
-    // Implement forgot password logic here
-    console.log("Forgot Password clicked");
-  };
-
   return (
     <div className="w-full h-full animate-slide-down">
       <h2 className="text-3xl text-black text-center mb-8 font-semibold">
@@ -46,57 +138,86 @@ export default function LoginForm() {
         >
           <div className="mb-4 w-full">
             <label
-              htmlFor="email"
+              htmlFor="phone"
               className="block text-black text-sm font-bold mb-2"
             >
-              Email
+              Phone
             </label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              className="w-full text-black px-3 py-2 border border-gray-300 rounded-2xl shadow-sm focus:outline-none focus:ring focus:ring-white focus:ring-opacity-50"
-              required
-            />
+            <div className="flex flex-row border border-gray-300 rounded-2xl focus:outline-none focus:ring focus:ring-white focus:ring-opacity-50 ">
+              <div className="flex items-center gap-2 w-[11%]">
+                <span className="text-black">+91</span>
+                <span className="bg-gray-500 w-[0.5px] h-[70%]"></span>
+              </div>
+              <input
+                type="phone"
+                id="phone"
+                name="phone"
+                value={phone_number}
+                onChange={(e) => {
+                  //validate 10 digitds only also number only
+                  if (
+                    e.target.value.length <= 10 &&
+                    /^[0-9]*$/.test(e.target.value)
+                  ) {
+                    setPhone(e.target.value);
+                  } else {
+                    return;
+                  }
+                }}
+                className="w-[89%] text-black px-3 py-2 rounded-2xl focus:outline-none rounded-l-none"
+                required
+              />
+            </div>
           </div>
-          <div className="mb-6 w-full relative overflow-hidden">
-            <label
-              htmlFor="password"
-              className="block text-black text-sm font-bold mb-2"
-            >
-              Password
-            </label>
-            <input
-              type={showPassword ? "text" : "password"}
-              id="password"
-              name="password"
-              className="w-full px-3 py-2 text-black border border-gray-300 rounded-2xl shadow-sm focus:outline-none focus:ring focus:ring-white focus:ring-opacity-50"
-              required
-            />
+          {otpSend && (
+            <div className={`mb-4 w-full `}>
+              <label
+                htmlFor="otp"
+                className="block text-black text-sm font-bold mb-2"
+              >
+                OTP
+              </label>
+              <input
+                type="text"
+                id="otp"
+                name="otp"
+                value={otp}
+                onChange={(e) => {
+                  //set only 6 digit otp
+                  if (
+                    e.target.value.length <= 6 &&
+                    /^[0-9]*$/.test(e.target.value)
+                  ) {
+                    setOtp(e.target.value);
+                  }
+                }}
+                className="w-full text-black px-3 py-2 border border-gray-300 rounded-2xl shadow-sm focus:outline-none focus:ring focus:ring-white focus:ring-opacity-50"
+                required
+              />
+            </div>
+          )}
+          {/* <div className="w-full flex flex-row justify-end items-center">
             <button
               type="button"
-              onClick={togglePasswordVisibility}
-              className="absolute inset-y-0 right-0 pr-3 pt-6 flex items-center text-gray-600"
-            >
-              {showPassword ? <Eye width={20} /> : <EyeOff width={20} />}
-            </button>
-          </div>
-          <div className="w-full flex flex-row justify-end items-center">
-           
-            <button
-              type="button"
-              onClick={handleForgotPassword}
               className="mb-4 text-blue-500 hover:text-blue-700 text-sm text-nowrap"
             >
               Forgot Password?
             </button>
-          </div>
+          </div> */}
           <div className="flex items-center justify-end w-full">
             <button
+              disabled={sendingOTP || verifyingOTP || redirecting}
               type="submit"
-              className=" flex items-center gap-3 py-2 px-5 text-white bg-[#f0d464] rounded-md  hover:bg-[#c5ae51] transition-colors duration-300"
+              className="flex items-center gap-3 py-2 px-5 text-white bg-[#f0d464] rounded-md hover:bg-[#c5ae51] transition-colors duration-300 disabled:opacity-60"
             >
-              Login <LogIn />
+              {otpSend
+                ? verifyingOTP
+                  ? "Verifying"
+                  : "Login"
+                : sendingOTP
+                ? "Sending"
+                : "Send OTP"}
+              {verifyingOTP || sendingOTP ? "" : <LogIn />}
             </button>
           </div>
         </form>

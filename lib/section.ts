@@ -22,11 +22,12 @@ import { IoVideocamOutline } from "react-icons/io5";
 import Dashboard from "@/components/Admin/Dashboard";
 import AllProducts from "@/components/Admin/Products/AllProducts";
 import Customers from "@/components/Admin/Customers/Customers";
-import Orders from "@/components/Admin/Orders";
+import Orders from "@/components/Admin/Orders/Orders";
 import MyAccount from "@/components/Admin/MyAccount";
 import TestimonialsAdmin from "@/components/Admin/Testimonials/TestimonialsAdmin";
 import FaqAdmin from "@/components/Admin/QuerysFAQs/FAQ/FaqContainer";
 import FaqContainer from "@/components/Admin/QuerysFAQs/FAQ/FaqContainer";
+import Querry from "@/components/Admin/QuerysFAQs/Querries/Querry";
 
 export const profileSections: SectionValues[] = [
   {
@@ -138,7 +139,7 @@ export const adminSections: SectionValues[] = [
         id: "queries",
         head: "Queries",
         href: "/admin/queries",
-        sectionNode: OrderHistory,
+        sectionNode: Querry,
       },
       {
         id: "faqs",

@@ -21,6 +21,7 @@ const ReactCountUp = ({
           decimal="."
           prefix={prefix}
           decimals={decimals ? 2 : 0}
+          duration={0.8}
         />
         {children}
       </span>

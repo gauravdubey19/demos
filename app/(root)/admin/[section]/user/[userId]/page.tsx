@@ -1,13 +1,13 @@
 import CustomersDetail from "@/components/Admin/Customers/CustomersDetail";
 
-export default function SubSectionPage({
+export default function SubUserSectionPage({
   params,
 }: {
-  params: { userSlug: string };
+  params: { orderId: string };
 }) {
   return (
     <div className="w-full lg:w-[75%] xl:w-[82%] h-full overflow-hidden">
-      <CustomersDetail userSlug={params.userSlug} />
+      <CustomersDetail userId={params.orderId} />
     </div>
   );
 }

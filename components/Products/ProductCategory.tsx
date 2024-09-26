@@ -117,7 +117,11 @@ const ProductCategory: React.FC<ProductCategoryProps> = ({
 
   return (
     <section className="w-full h-full overflow-hidden">
-      <div className="relative w-full mt-[60px] py-4 overflow-hidden">
+      <div
+        className={`relative w-full ${
+          products.length > 2 ? "h-full" : "h-screen"
+        } mt-[60px] py-4 overflow-hidden`}
+      >
         <Goback />
         <Filter
           categorySlug={category}

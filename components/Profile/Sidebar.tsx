@@ -12,9 +12,12 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "../ui/accordion";
+import { useGlobalContext } from "@/context/GlobalProvider";
+import { FaUserCircle } from "react-icons/fa";
 
 const Sidebar: React.FC<SectionProps> = ({ section, sections }) => {
   // console.log(section);
+  const {userData} = useGlobalContext();
   const { data: session } = useSession();
   const pathname = usePathname();
   return (
@@ -36,13 +39,13 @@ const Sidebar: React.FC<SectionProps> = ({ section, sections }) => {
           </Link>
         ) : (
           session &&
-          session?.user?.image &&
-          session?.user?.name &&
-          session?.user?.email && (
+          userData?.profile &&
+          userData?.firstName &&
+          userData?.email && (
             <div className="flex-center gap-2 bg-[#ffb43327] text-sm text-primary text-justify p-2">
               <div className="w-[17%] h-10 rounded-full overflow-hidden">
                 <Image
-                  src={session?.user?.image || "/profile.png"}
+                  src={userData?.profile || "/profile.png"}
                   alt="profile"
                   width={200}
                   height={200}
@@ -50,14 +53,14 @@ const Sidebar: React.FC<SectionProps> = ({ section, sections }) => {
                 />
               </div>
               <div className="w-[80%] space-y-1 overflow-hidden">
-                <h4 title={session?.user?.name} className="font-medium">
-                  {session?.user?.name}
+                <h4 title={userData?.firstName} className="font-medium">
+                  {userData?.firstName}
                 </h4>
                 <p
-                  title={session?.user?.email}
+                  title={userData?.email}
                   className="text-xs text-muted-foreground line-clamp-1"
                 >
-                  {session?.user?.email}
+                  {userData?.email}
                 </p>
               </div>
             </div>
