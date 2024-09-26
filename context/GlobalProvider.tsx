@@ -123,7 +123,7 @@ const GlobalProvider = ({ children }: { children: ReactNode }) => {
         ...userData,
         ...contactData,
       };
-      console.log("User data fetched: ", userDataObj);
+      // console.log("User data fetched: ", userDataObj);
       setUser(userDataObj);
     } catch (error) {
       console.error("Error fetching user:", error);

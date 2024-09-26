@@ -26,12 +26,20 @@ import { FaUserCircle } from "react-icons/fa";
 import { useGlobalContext } from "@/context/GlobalProvider";
 
 const profileOption = [
-  { _id: 1, title: "My Profile", href: "/profile/my-profile" },
-  { _id: 1, title: "Order History", href: "/profile/order-history" },
-  { _id: 2, title: "Payment Methods", href: "/profile/payment-methods" },
-  { _id: 3, title: "About Us", href: "/about" },
+  { _id: "my-profile", title: "My Profile", href: "/profile/my-profile" },
   {
-    _id: 4,
+    _id: "order-history",
+    title: "Order History",
+    href: "/profile/order-history",
+  },
+  {
+    _id: "payment-methods",
+    title: "Payment Methods",
+    href: "/profile/payment-methods",
+  },
+  { _id: "about", title: "About Us", href: "/about" },
+  {
+    _id: "contact",
     title: "Contact Us & FAQs",
     href: "/contact",
   },
@@ -41,6 +49,8 @@ const Navbar: React.FC<{ appName?: string }> = ({ appName = "LOGO" }) => {
   const pathname = usePathname(); // console.log("pathname :", pathname);
   const [isVisible, setIsVisible] = useState<boolean>(false);
   const { data: session } = useSession();
+  // console.log(session?.user?.role);
+
   const navbarRef = useRef<HTMLDivElement>(null);
   const { showLeft, showRight } = useCursor();
   const visible = showLeft || showRight;
@@ -206,7 +216,11 @@ const Navbar: React.FC<{ appName?: string }> = ({ appName = "LOGO" }) => {
                 <NavigationMenuItem>
                   <NavigationMenuTrigger className="w-full cursor-pointer bg-transparent border-none outline-none p-1">
                     <Link
-                      href={"/profile/my-profile"}
+                      href={
+                        session?.user?.role === "admin"
+                          ? "/admin/dashboard"
+                          : "/profile/my-profile"
+                      }
                       className="flex-center gap-2 group"
                     >
                       <div
@@ -255,14 +269,28 @@ const Navbar: React.FC<{ appName?: string }> = ({ appName = "LOGO" }) => {
                     )}
                     {profileOption.map((option, index) => (
                       <div key={index || option._id} className="w-36">
-                        <Link
-                          href={option.href}
-                          className={`w-fit text-sm hover-underline-lr hover:text-primary ${
-                            pathname.includes(option.href) && "text-primary"
-                          }`}
-                        >
-                          {option.title}
-                        </Link>
+                        {session?.user?.role !== "admin" ? (
+                          <Link
+                            href={option.href}
+                            className={`w-fit text-sm hover-underline-lr hover:text-primary ${
+                              pathname.includes(option.href) && "text-primary"
+                            }`}
+                          >
+                            {option.title}
+                          </Link>
+                        ) : (
+                          (option._id === "about" ||
+                            option._id === "contact") && (
+                            <Link
+                              href={option.href}
+                              className={`w-fit text-sm hover-underline-lr hover:text-primary ${
+                                pathname.includes(option.href) && "text-primary"
+                              }`}
+                            >
+                              {option.title}
+                            </Link>
+                          )
+                        )}
                       </div>
                     ))}
                     <Button

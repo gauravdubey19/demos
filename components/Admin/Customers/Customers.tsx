@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { Button } from "../../ui/button";
@@ -20,6 +20,7 @@ import {
   ChartOptions,
 } from "chart.js";
 import { MdOutlineKeyboardArrowDown } from "react-icons/md";
+import { formatTimestamp } from "@/lib/utils";
 
 ChartJS.register(
   CategoryScale,
@@ -32,6 +33,17 @@ ChartJS.register(
   ArcElement
 );
 
+interface UserCollectionValues {
+  _id: string;
+  role: string;
+  email: string;
+  phone_number: number;
+  profile: string;
+  firstName: string;
+  lastName: string;
+  createdAt: string;
+}
+
 const Customers = () => {
   const yearOption = [
     new Date().getFullYear() - 3,
@@ -40,6 +52,33 @@ const Customers = () => {
     new Date().getFullYear(),
   ];
   const [year, setYear] = useState<number>(new Date().getFullYear());
+  const [userCollection, setUserCollection] = useState<UserCollectionValues[]>(
+    []
+  );
+
+  useEffect(() => {
+    const fetchUserCollection = async () => {
+      try {
+        const res = await fetch(`/api/products/read/admin/users`, {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+        });
+
+        if (!res.ok) {
+          throw new Error("Failed to fetch user collection");
+        }
+
+        const data = await res.json();
+        // console.error("users:", data as UserCollectionValues);
+        if (res.ok) setUserCollection(data as UserCollectionValues[]);
+      } catch (error) {
+        console.error("Error fetching user collections:", error);
+      }
+    };
+    if (userCollection.length === 0) fetchUserCollection();
+  }, [userCollection]);
+
+  // console.log(userCollection);
 
   return (
     <>
@@ -76,7 +115,7 @@ const Customers = () => {
         </div>
         <div className="w-full h-[calc(100vh-90px)] space-y-2 p-4 overflow-y-auto">
           <UserChart />
-          <UserTable />
+          <UserTable usersCollection={userCollection} />
         </div>
       </section>
     </>
@@ -181,17 +220,19 @@ const UserChart = () => {
   );
 };
 
-const UserTable = () => {
+const UserTable: React.FC<{ usersCollection: UserCollectionValues[] }> = ({
+  usersCollection,
+}) => {
   const router = useRouter();
   const [isAscending, setIsAscending] = useState<boolean>(true);
   const [search, setSearch] = useState<string>("");
 
-  const filteredUsers = users
+  const filteredUsers = usersCollection
     .filter(
-      (order) =>
-        order.firstName.includes(search.toLowerCase()) ||
-        order.lastName.includes(search.toLowerCase()) ||
-        order.email.includes(search.toLowerCase())
+      (user) =>
+        user.firstName.toLowerCase().includes(search) ||
+        user.lastName.toLowerCase().includes(search) ||
+        user.email.toLowerCase().includes(search)
     )
     .sort((a, b) => {
       if (isAscending) {
@@ -202,7 +243,7 @@ const UserTable = () => {
     });
   return (
     <>
-      <div className="w-full space-y-2 rounded-xl bg-[#F8F8F8] p-4">
+      <div className="w-full space-y-2 rounded-xl bg-[#F8F8F8] p-4 select-none">
         <div className="w-full h-fit flex-between">
           <div className="w-fit font-semibold">Customer Details</div>
           <div className="w-fit h-fit flex-between gap-2">
@@ -211,7 +252,7 @@ const UserTable = () => {
               <input
                 type="text"
                 value={search}
-                onChange={(e) => setSearch(e.target.value)}
+                onChange={(e) => setSearch(e.target.value.toLowerCase())}
                 placeholder="Search by name or email"
                 className="placeholder:text-primary bg-none border-none outline-none"
               />
@@ -228,11 +269,11 @@ const UserTable = () => {
             </div>
           </div>
         </div>
-        <div className="relative w-full h-[72vh] border border-gray-300 rounded-2xl overflow-auto">
+        <div className="relative w-full h-fit max-h-[72vh] border border-gray-300 rounded-2xl overflow-auto">
           <table className="relative w-full h-full bg-white rounded-2xl overflow-hidden">
             <thead className="sticky top-0 bg-[#EAEAEA] shadow-sm z-10">
               <tr className="border-b">
-                <th className="px-4 py-2 text-left">Avatar</th>
+                <th className="px-4 py-2 text-left">profile</th>
                 <th className="px-4 py-2 text-left">First Name</th>
                 <th className="px-4 py-2 text-left">Last Name</th>
                 <th className="px-4 py-2 text-left">Registration</th>
@@ -245,14 +286,14 @@ const UserTable = () => {
                 <tr
                   key={index}
                   onClick={() =>
-                    router.push(`/admin/customers/user/${user.firstName}`)
+                    router.push(`/admin/customers/user/${user._id}`)
                   }
                   className="group border-b cursor-pointer hover:bg-[#ffb43335] ease-in-out duration-300"
                 >
                   <td className="px-4 py-2">
                     <Image
-                      src={user.avatar}
-                      alt="avatar"
+                      src={user.profile ?? "/logo.png"}
+                      alt="profile"
                       width={200}
                       height={200}
                       className="rounded-full w-10 h-10 object-cover group-hover:shadow-lg ease-in-out duration-300"
@@ -260,9 +301,11 @@ const UserTable = () => {
                   </td>
                   <td className="px-4 py-2">{user.firstName}</td>
                   <td className="px-4 py-2">{user.lastName}</td>
-                  <td className="px-4 py-2">{user.registrationDate}</td>
+                  <td className="px-4 py-2">
+                    {formatTimestamp(user.createdAt)}
+                  </td>
                   <td className="px-4 py-2">{user.email}</td>
-                  <td className="px-4 py-2">{user.phone}</td>
+                  <td className="px-4 py-2">{user.phone_number ?? "-"}</td>
                 </tr>
               ))}
             </tbody>
@@ -273,140 +316,164 @@ const UserTable = () => {
   );
 };
 
-const users = [
-  {
-    _id: 1,
-    avatar: "https://via.placeholder.com/50",
-    firstName: "Gojo",
-    lastName: "Satoru",
-    registrationDate: "01-03-2024",
-    email: "idkmyemail@gmail.com",
-    phone: "+91 01234 56789",
-  },
-  {
-    _id: 2,
-    avatar: "https://via.placeholder.com/50",
-    firstName: "Gojo",
-    lastName: "Chandra Satoru",
-    registrationDate: "01-03-2024",
-    email: "idkmyemail@gmail.com",
-    phone: "+91 01234 56789",
-  },
-  {
-    _id: 3,
-    avatar: "https://via.placeholder.com/50",
-    firstName: "LongggFirst",
-    lastName: "Satoru",
-    registrationDate: "01-03-2024",
-    email: "longemailll@gmail.com",
-    phone: "+91 01234 56789",
-  },
-  {
-    _id: 4,
-    avatar: "https://via.placeholder.com/50",
-    firstName: "Gojo",
-    lastName: "Satoru",
-    registrationDate: "01-03-2024",
-    email: "idkmyemail@gmail.com",
-    phone: "+91 01234 56789",
-  },
-  {
-    _id: 5,
-    avatar: "https://via.placeholder.com/50",
-    firstName: "Gojo",
-    lastName: "Satoru",
-    registrationDate: "01-03-2024",
-    email: "idkmyemail@gmail.com",
-    phone: "+91 01234 56789",
-  },
-  {
-    _id: 6,
-    avatar: "https://via.placeholder.com/50",
-    firstName: "Gojo",
-    lastName: "Satoru",
-    registrationDate: "01-03-2024",
-    email: "idkmyemail@gmail.com",
-    phone: "+91 01234 56789",
-  },
-  {
-    _id: 7,
-    avatar: "https://via.placeholder.com/50",
-    firstName: "Gojo",
-    lastName: "Satoru",
-    registrationDate: "01-03-2024",
-    email: "idkmyemail@gmail.com",
-    phone: "+91 01234 56789",
-  },
-  {
-    _id: 8,
-    avatar: "https://via.placeholder.com/50",
-    firstName: "Gojo",
-    lastName: "Satoru",
-    registrationDate: "01-03-2024",
-    email: "idkmyemail@gmail.com",
-    phone: "+91 01234 56789",
-  },
-  {
-    _id: 9,
-    avatar: "https://via.placeholder.com/50",
-    firstName: "Gojo",
-    lastName: "Satoru",
-    registrationDate: "01-03-2024",
-    email: "idkmyemail@gmail.com",
-    phone: "+91 01234 56789",
-  },
-  {
-    _id: 10,
-    avatar: "https://via.placeholder.com/50",
-    firstName: "Gojo",
-    lastName: "Satoru",
-    registrationDate: "01-03-2024",
-    email: "idkmyemail@gmail.com",
-    phone: "+91 01234 56789",
-  },
-  {
-    _id: 11,
-    avatar: "https://via.placeholder.com/50",
-    firstName: "Gojo",
-    lastName: "Satoru",
-    registrationDate: "01-03-2024",
-    email: "idkmyemail@gmail.com",
-    phone: "+91 01234 56789",
-  },
-  {
-    _id: 12,
-    avatar: "https://via.placeholder.com/50",
-    firstName: "Gojo",
-    lastName: "Satoru",
-    registrationDate: "01-03-2024",
-    email: "idkmyemail@gmail.com",
-    phone: "+91 01234 56789",
-  },
-  {
-    _id: 13,
-    avatar: "https://via.placeholder.com/50",
-    firstName: "Gojo",
-    lastName: "Satoru",
-    registrationDate: "01-03-2024",
-    email: "idkmyemail@gmail.com",
-    phone: "+91 01234 56789",
-  },
-  {
-    _id: 14,
-    avatar: "https://via.placeholder.com/50",
-    firstName: "Gojo",
-    lastName: "Satoru",
-    registrationDate: "01-03-2024",
-    email: "idkmyemail@gmail.com",
-    phone: "+91 01234 56789",
-  },
-  {
-    _id: 15,
-    avatar: "https://via.placeholder.com/50",
-    firstName: "Gojo",
-    lastName: "Satoru",
-    registrationDate: "01-03-2024",
-    email: "idkmyemail@gmail.com",
-    phone: "+91 01234 56789",
-  },
-];
+// email: "dubeygaurav520@gmail.com";
+// favProducts: [];
+// phone_number
+// firstName: "Gaurav";
+// lastName: "D.";
+// profile: "https://lh3.googleusercontent.com/a/ACg8ocKsY0zxhKmkg13tB6cWHZU03rB0TJf6Ey5e03wQCC-gfx3MqX2s=s96-c";
+// role: "admin";
+// __v: 0;
+// _id:
+// const users = [
+//   {
+//     _id: 1,
+//     role: "user",
+//     email: "idkmyemail@gmail.com",
+//     phone_number: "+91 01234 56789",
+//     profile: "https://via.placeholder.com/50",
+//     firstName: "Gojo",
+//     lastName: "Satoru",
+//     createdAt: "01-03-2024",
+//   },
+//   {
+//     _id: 2,
+//     role: "user",
+//     profile: "https://via.placeholder.com/50",
+//     firstName: "Gojo",
+//     lastName: "Chandra Satoru",
+//     createdAt: "01-03-2024",
+//     email: "idkmyemail@gmail.com",
+//     phone_number: "+91 01234 56789",
+//   },
+//   {
+//     _id: 3,
+//     role: "user",
+//     profile: "https://via.placeholder.com/50",
+//     firstName: "LongggFirst",
+//     lastName: "Satoru",
+//     createdAt: "01-03-2024",
+//     email: "longemailll@gmail.com",
+//     phone_number: "+91 01234 56789",
+//   },
+//   {
+//     _id: 4,
+//     role: "user",
+//     profile: "https://via.placeholder.com/50",
+//     firstName: "Gojo",
+//     lastName: "Satoru",
+//     createdAt: "01-03-2024",
+//     email: "idkmyemail@gmail.com",
+//     phone_number: "+91 01234 56789",
+//   },
+//   {
+//     _id: 5,
+//     role: "user",
+//     profile: "https://via.placeholder.com/50",
+//     firstName: "Gojo",
+//     lastName: "Satoru",
+//     createdAt: "01-03-2024",
+//     email: "idkmyemail@gmail.com",
+//     phone_number: "+91 01234 56789",
+//   },
+//   {
+//     _id: 6,
+//     role: "user",
+//     profile: "https://via.placeholder.com/50",
+//     firstName: "Gojo",
+//     lastName: "Satoru",
+//     createdAt: "01-03-2024",
+//     email: "idkmyemail@gmail.com",
+//     phone_number: "+91 01234 56789",
+//   },
+//   {
+//     _id: 7,
+//     role: "user",
+//     profile: "https://via.placeholder.com/50",
+//     firstName: "Gojo",
+//     lastName: "Satoru",
+//     createdAt: "01-03-2024",
+//     email: "idkmyemail@gmail.com",
+//     phone_number: "+91 01234 56789",
+//   },
+//   {
+//     _id: 8,
+//     role: "user",
+//     profile: "https://via.placeholder.com/50",
+//     firstName: "Gojo",
+//     lastName: "Satoru",
+//     createdAt: "01-03-2024",
+//     email: "idkmyemail@gmail.com",
+//     phone_number: "+91 01234 56789",
+//   },
+//   {
+//     _id: 9,
+//     role: "user",
+//     profile: "https://via.placeholder.com/50",
+//     firstName: "Gojo",
+//     lastName: "Satoru",
+//     createdAt: "01-03-2024",
+//     email: "idkmyemail@gmail.com",
+//     phone_number: "+91 01234 56789",
+//   },
+//   {
+//     _id: 10,
+//     role: "user",
+//     profile: "https://via.placeholder.com/50",
+//     firstName: "Gojo",
+//     lastName: "Satoru",
+//     createdAt: "01-03-2024",
+//     email: "idkmyemail@gmail.com",
+//     phone_number: "+91 01234 56789",
+//   },
+//   {
+//     _id: 11,
+//     role: "user",
+//     profile: "https://via.placeholder.com/50",
+//     firstName: "Gojo",
+//     lastName: "Satoru",
+//     createdAt: "01-03-2024",
+//     email: "idkmyemail@gmail.com",
+//     phone_number: "+91 01234 56789",
+//   },
+//   {
+//     _id: 12,
+//     role: "user",
+//     profile: "https://via.placeholder.com/50",
+//     firstName: "Gojo",
+//     lastName: "Satoru",
+//     createdAt: "01-03-2024",
+//     email: "idkmyemail@gmail.com",
+//     phone_number: "+91 01234 56789",
+//   },
+//   {
+//     _id: 13,
+//     role: "user",
+//     profile: "https://via.placeholder.com/50",
+//     firstName: "Gojo",
+//     lastName: "Satoru",
+//     createdAt: "01-03-2024",
+//     email: "idkmyemail@gmail.com",
+//     phone_number: "+91 01234 56789",
+//   },
+//   {
+//     _id: 14,
+//     role: "user",
+//     profile: "https://via.placeholder.com/50",
+//     firstName: "Gojo",
+//     lastName: "Satoru",
+//     createdAt: "01-03-2024",
+//     email: "idkmyemail@gmail.com",
+//     phone_number: "+91 01234 56789",
+//   },
+//   {
+//     _id: 15,
+//     role: "user",
+//     profile: "https://via.placeholder.com/50",
+//     firstName: "Gojo",
+//     lastName: "Satoru",
+//     createdAt: "01-03-2024",
+//     email: "idkmyemail@gmail.com",
+//     phone_number: "+91 01234 56789",
+//   },
+// ];

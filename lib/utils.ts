@@ -38,3 +38,16 @@ export const calculateDiscount = (price: number, oldPrice: number): number => {
 
   return parseFloat(discountPercentage.toFixed(0));
 };
+
+export const formatTimestamp = (timestamp: string): string => {
+  const date = new Date(timestamp);
+
+  // padding single digits with leading zeros
+  const pad = (num: number) => (num < 10 ? `0${num}` : num);
+
+  const day = pad(date.getUTCDate());
+  const month = pad(date.getUTCMonth() + 1);
+  const year = date.getUTCFullYear();
+
+  return `${day}/${month}/${year}`;
+};

@@ -209,14 +209,14 @@ const OrderChart = () => {
     <>
       <div className="w--full h-fit grid grid-cols-1 lg:grid-cols-2 gap-6 drop-shadow-md rounded-lg overflow-hidden">
         {/* Total Orders Line Chart */}
-        <div className="chart-container h-full bg-[#F8F8F8] shadow-md rounded-lg p-4">
+        <div className="chart-container h-full bg-[#F8F8F8] shadow-md rounded-lg p-4 hover:shadow-lg ease-in-out duration-300 overflow-hidden">
           <h2 className="text-xl font-bold">Total Orders</h2>
           <p className="text-gray-500">Year 2020</p>
           <Line data={totalOrdersData} options={lineChartOptions} />
         </div>
 
         {/* Top Selling Categories Pie Chart */}
-        <div className="chart-container h-[50vh] bg-[#F8F8F8] shadow-md rounded-lg p-4 overflow-hidden">
+        <div className="chart-container h-[50vh] bg-[#F8F8F8] shadow-md rounded-lg p-4 hover:shadow-lg ease-in-out duration-300 overflow-hidden">
           <h2 className="text-xl font-bold">Top Selling Categories</h2>
           <div className="relative w-full h-full flex-center">
             <Pie

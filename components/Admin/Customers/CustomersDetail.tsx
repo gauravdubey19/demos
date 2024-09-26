@@ -1,79 +1,148 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
+import { formatTimestamp } from "@/lib/utils";
 import { Button } from "../../ui/button";
-import { IoSearchOutline } from "react-icons/io5";
+import Loader from "@/components/ui/Loader";
 import { RiDeleteBinLine } from "react-icons/ri";
+import { IoSearchOutline } from "react-icons/io5";
 import { FaArrowDownShortWide, FaArrowUpShortWide } from "react-icons/fa6";
 import { MdOutlineKeyboardArrowDown } from "react-icons/md";
 import { HiOutlineMail } from "react-icons/hi";
 
-const CustomersDetail = ({ userId }: { userId: string }) => {
+interface UserValues {
+  _id: string;
+  email: string;
+  phone_number: string;
+  firstName: string;
+  lastName: string;
+  profile: string;
+  createdAt: string;
+  address: string;
+  state: { name: string; code: string };
+  city: { name: string; code: string };
+  zip: string;
+}
+
+const CustomersDetail: React.FC<{ userId: string }> = ({ userId }) => {
+  const [user, setUser] = useState<UserValues | null>(null);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const userRes = await fetch(`/api/users/${userId}`);
+        const userContactRes = await fetch(`/api/contact/${userId}`);
+
+        if (!userRes.ok || !userContactRes.ok) {
+          throw new Error("Failed to fetch user collection");
+        }
+
+        const userData = await userRes.json();
+        const userContactData = await userContactRes.json();
+        const userFullData: UserValues = {
+          _id: userData?._id,
+          email: userData?.email,
+          phone_number: userData?.phone_number,
+          firstName: userData?.firstName,
+          lastName: userData?.lastName,
+          profile: userData?.profile,
+          createdAt: userData?.createdAt,
+          address: userContactData?.address,
+          state: {
+            name: userContactData?.state?.name,
+            code: userContactData?.state?.code,
+          },
+          city: {
+            name: userContactData?.city?.name,
+            code: userContactData?.city?.code,
+          },
+          zip: userContactData?.zip,
+        };
+
+        setUser(userFullData);
+      } catch (error) {
+        console.error("Error fetching user collections:", error);
+      }
+    };
+
+    if (!user) fetchUser();
+  }, [user, userId]);
+
+  if (!user) return <Loader />;
+
   return (
-    <>
-      <section className="w-full h-full overflow-hidden">
-        <div className="w-full h-fit flex-between p-4 md:py-6">
-          <h2 className="capitalize text-2xl md:text-3xl lg:text-4xl font-semibold tracking-tight">
-            Customer Details
-            {/* {"Gaurav Dubey".split(" ")[0]}, */}
-          </h2>
-          <div className="flex-center">
-            <Button className="bg-[red] text-white">
-              Delete User <RiDeleteBinLine size={20} className="ml-1" />
-            </Button>
-          </div>
-        </div>
-        <div className="w-full h-[calc(100vh-90px)] space-y-2 p-4 overflow-y-auto">
-          <UserDetail userId={userId} />
-          <UserOrderTable />
-        </div>
-      </section>
-    </>
+    <section className="w-full h-full overflow-hidden">
+      <header className="w-full h-fit flex justify-between p-4 md:py-6">
+        <h2 className="capitalize text-2xl md:text-3xl lg:text-4xl font-semibold tracking-tight">
+          Customer Details
+        </h2>
+        <Button className="bg-red-500 text-white">
+          Delete User <RiDeleteBinLine size={20} className="ml-1" />
+        </Button>
+      </header>
+      <div className="w-full h-[calc(100vh-90px)] space-y-2 p-4 overflow-y-auto">
+        <UserDetail user={user} />
+        <UserOrderTable />
+      </div>
+    </section>
   );
 };
 
-export default CustomersDetail;
-
-const UserDetail = ({ userId }: { userId: string }) => {
+const UserDetail: React.FC<{ user: UserValues }> = ({ user }) => {
   return (
-    <>
-      <div className="w-full h-[55vh] flex gap-2 bg-[#F8F8F8] rounded-xl p-4">
-        <div className="pfp w-[30%] h-full flex-center border-r">
-          <div className="flex-center flex-col gap-4">
-            <div className="w-32 h-32 rounded-full overflow-hidden">
-              <Image
-                src="/logo.png"
-                alt="pfp"
-                width={400}
-                height={400}
-                className="w-full h-full bg-zinc-200 rounded-full object-cover"
-              />
-            </div>
-            <h2 className="">{userId}</h2>
-            <h6 className="">Register at: 12/06/2022</h6>
-            <Button className="text-white">
-              Send Email <HiOutlineMail size={20} className="ml-1" />
-            </Button>
+    <div className="w-full h-[55vh] flex gap-2 bg-gray-100 rounded-xl p-4">
+      <div className="pfp w-[30%] h-full flex-center flex-col gap-4 md:gap-6 border-r">
+        <div className="flex-center flex-col space-y-2">
+          <div className="w-32 h-32 rounded-full overflow-hidden">
+            <Image
+              src={user?.profile ?? "/logo.png"}
+              alt="Profile Picture"
+              width={400}
+              height={400}
+              className="w-full h-full bg-zinc-200 rounded-full object-cover"
+            />
           </div>
+          <h2>{`${user?.firstName} ${user?.lastName}`}</h2>
         </div>
-        <div className="w-[70%] h-full overflow-hidden">
-          <h2 className="w-full h-fit text-md md:text-lg lg:text-xl font-semibold">
-            Personal Information
-          </h2>
-          <div className="w-full h-full px-2 space-y-4 mt-2 overflow-hidden">
-            {info.map((pi, index) => (
-              <div key={index} className="flex justify-between gap-6">
-                <span>{pi.lable}</span>
-                <span className="text-end">{pi.value}</span>
-              </div>
-            ))}
-          </div>
+        <h6>Registered at: {formatTimestamp(user.createdAt)}</h6>
+        {/* <Button className="text-white">
+              Send Email <HiOutlineMail size={20} className="ml-1" />
+            </Button> */}
+      </div>
+      <div className="w-[70%] h-full overflow-hidden">
+        <h2 className="text-md md:text-lg lg:text-xl font-semibold">
+          Personal Information
+        </h2>
+        <div className="w-full h-full max-h-[44vh] px-2 md:px-4 space-y-4 mt-2 overflow-x-hidden overflow-y-scroll">
+          <DetailRow label="First name" value={user.firstName} />
+          <DetailRow label="Last name" value={user.lastName} />
+          {user.email && <DetailRow label="Email" value={user.email} />}
+          {user.phone_number && (
+            <DetailRow label="Phone" value={user.phone_number} />
+          )}
+          {/* <DetailRow label="Gender" value="Male" /> */}
+          <DetailRow label="Address" value={user.address} />
+          <DetailRow label="State" value={user.state.name} />
+          <DetailRow label="City" value={user.city.name} />
+          <DetailRow label="Zip code" value={user.zip} />
         </div>
       </div>
-    </>
+    </div>
   );
 };
+
+const DetailRow: React.FC<{ label: string; value: string }> = ({
+  label,
+  value,
+}) => (
+  <div className="flex justify-between gap-6">
+    <span>{label}</span>
+    <span className="text-end">{value}</span>
+  </div>
+);
+
+export default CustomersDetail;
 
 const info = [
   { lable: "First name", value: "Gaurav" },
