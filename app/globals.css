@@ -118,3 +118,27 @@ body {
     @apply appearance-none bg-transparent [&::-webkit-slider-runnable-track]:rounded-full [&::-webkit-slider-runnable-track]:bg-black/25 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-primary cursor-pointer;
   }
 }
+@font-face {
+  font-family: 'DM-sans-bold';
+  src: url('../public/fonts/DMSans-Bold.ttf');
+}
+@font-face {
+  font-family: 'DM-sans';
+  src: url('../public/fonts/DMSans-Regular.ttf');
+}
+@font-face {
+  font-family: 'DM-sans-semibold';
+  src: url('../public/fonts/DMSans-SemiBold.ttf');
+}
+@font-face {
+  font-family: 'Montserrat-bold';
+  src: url('../public/fonts/Montserrat-Bold.ttf');
+}
+@font-face {
+  font-family: 'Montserrat';
+  src: url('../public/fonts/Montserrat-Regular.ttf');
+}
+@font-face {
+  font-family: 'Montserrat-semibold';
+  src: url('../public/fonts/Montserrat-SemiBold.ttf');
+}

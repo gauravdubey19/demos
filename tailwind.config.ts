@@ -139,6 +139,9 @@ const baseConfig: Config = {
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
+        color:{
+          tertiary:"#494949"
+        },
         primary: {
           DEFAULT: "var(--primary)",
           foreground: "hsl(var(--primary-foreground))",
@@ -209,6 +212,17 @@ const baseConfig: Config = {
         "slide-up": "slide-up 0.5s ease-in-out",
         "slide-down": "slide-down 0.5s ease-in-out",
       },
+      fontFamily: {
+        dmSansBold: ["DM-sans-bold", "sans-serif"],
+        dmSans: ["DM-sans", "sans-serif"],
+        dmSansSemiBold: ["DM-sans-semibold", "sans-serif"],
+        montBold: ["Montserrat-bold", "sans-serif"],
+        mont: ["Montserrat", "sans-serif"],
+        montSemiBold: ["Montserrat-semibold", "sans-serif"],
+      },
+      spacing: {
+        'word':'0.25em',
+      }
     },
   },
   plugins: [require("tailwindcss-animate")],

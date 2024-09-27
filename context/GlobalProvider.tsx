@@ -10,6 +10,8 @@ import React, {
 import { signIn, signOut, useSession } from "next-auth/react";
 import { Session } from "next-auth";
 import jwt from "jsonwebtoken";
+import { toast } from "@/hooks/use-toast";
+import { transporter } from "@/app/api/newsletter/core";
 // Define the shape of the context state
 interface User {
   firstName: string;
@@ -47,6 +49,19 @@ interface GlobalState {
   setUserData: (value: User | ((prevData: User | null) => User | null)) => void; // Updated type
   token: string | null;
   setToken: (value: string | ((prevData: string | null) => string | null)) => void;
+  sendOTP: (
+    phone_number: string,
+    setSendingOTP: (sending: boolean) => void,
+    setOtpSend: (sent: boolean) => void
+  ) => void;
+  verifyOTP: (
+    phone_number: string,
+    otp: string,
+    setVerifyingOTP: (verifying: boolean) => void,
+    setIsAccountVerified: (verified: boolean) => void,
+    successDescription?: string
+  ) => void;
+  sendOtpEmail: (options: SendOtpEmailOptions) => Promise<string | null>;
 }
 
 interface SessionExtended extends Session {
@@ -59,6 +74,14 @@ interface SessionExtended extends Session {
     favProducts?: string[];
   };
 }
+interface SendOtpEmailOptions {
+  to: string;
+  subject: string;
+  from?: string;
+  setSendingOTP: (sending: boolean) => void;
+  setOtpSend: (sent: boolean) => void;
+}
+
 
 // Create the context with a default value
 const GlobalContext = createContext<GlobalState | undefined>(undefined);
@@ -77,14 +100,6 @@ const GlobalProvider = ({ children }: { children: ReactNode }) => {
     const tokenTemp = localStorage.getItem("jwt");
     setToken(tokenTemp);
   }, []);
-
-  // useEffect(() => {
-  //   if (token) {
-  //     if(!session?.user){
-  //       console.log("session user not during phone auth: ", session);
-  //   }
-  //   }
-  // }, [token, session]);
 
   const fetchUser = useCallback(async () => {
     if (!session) {
@@ -140,6 +155,177 @@ const GlobalProvider = ({ children }: { children: ReactNode }) => {
     setUserData(user);
   }, [user]);
 
+  const sendOTP = async (
+    phone_number: string,
+    setSendingOTP: (sending: boolean) => void,
+    setOtpSend: (sent: boolean) => void
+  ) => {
+    if (!phone_number) {
+      console.error("Phone number is required");
+      return;
+    }
+    if (phone_number.length !== 10) {
+      console.error("Phone number should be 10 digits");
+      return;
+    }
+    try {
+      setSendingOTP(true);
+      const response = await fetch("/api/send-otp", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ phone_number }),
+      });
+      console.log("response:", response);
+      if (response.ok) {
+        const data = await response.json();
+        console.log("OTP sent:", data);
+        if (data.otpSent) {
+          setOtpSend(true);
+          toast({
+            title: "OTP Sent!",
+            description: "Check your phone for the OTP",
+            variant: "default",
+          });
+        } else {
+          console.error("Unexpected response:", data);
+        }
+      } else {
+        console.error("Failed to send OTP:", await response.text());
+        toast({
+          title: "Failed to send OTP",
+          description: "Please try again",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      console.error("Error sending OTP:", error);
+    } finally {
+      setSendingOTP(false);
+    }
+  };
+  const verifyOTP = async (
+    phone_number: string,
+    otp: string,
+    setVerifyingOTP: (verifying: boolean) => void,
+    setIsAccountVerified: (verified: boolean) => void,
+    successDescription: string = "You can now proceed",
+  ) => {
+    if (!phone_number || !otp) {
+      console.error("Phone number and OTP are required");
+      return;
+    }
+    if (otp.length !== 6) {
+      console.error("OTP should be 6 digits");
+      return;
+    }
+    try {
+      setVerifyingOTP(true);
+      const response = await fetch("/api/verify-otp", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ phone_number, otp }),
+      });
+      console.log("response: ", response);
+      if (response.ok) {
+        const data = await response.json();
+        console.log("OTP verified:", data);
+        if (data.verified) {
+          setIsAccountVerified(true);
+          toast({
+            title: "Account Verified!",
+            description: successDescription,
+            variant: "default",
+          });
+        } else {
+          console.error("Invalid OTP:", data.error);
+          toast({
+            title: "Invalid OTP",
+            description: "Please try again",
+            variant: "destructive",
+          });
+        }
+      } else {
+        console.error("Failed to verify OTP:", await response.text());
+        toast({
+          title: "Failed to verify OTP",
+          description: "Please try again",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      console.error("Error verifying OTP:", error);
+    } finally {
+      setVerifyingOTP(false);
+    }
+  };
+  // const sendEmail = async (options: EmailOptions,toastDetails:ToastOptions) => {
+  //   const { successTitle, successDescription } = toastDetails;
+  //   try {
+  //     const info = await transporter.sendMail(options);
+  //     toast({
+  //       title: successTitle || "Email Sent!",
+  //       description: successDescription || "Check your inbox",
+  //       variant: "default",
+  //     });
+  //     return { success: true, info };
+  //   } catch (error) {
+  //     console.error('Error sending email:', error);
+  //     toast({
+  //       title: "Failed to send email",
+  //       description: "Please try again",
+  //       variant: "destructive",
+  //     });
+  //     return { success: false, error };
+  //   }
+  // };
+
+
+  const sendOtpEmail = async ({ to,setSendingOTP,setOtpSend, subject, from ='"CSK Textiles" <CSK@gmail.com>' }: SendOtpEmailOptions) => {
+    try {
+      setSendingOTP(true);
+      const response = await fetch('/api/sendEmail', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ to, subject, from }),
+      });
+  
+      const data = await response.json();
+  
+      if (response.ok) {
+        toast({
+          title: 'OTP Sent!',
+          description: 'Check your email for the OTP',
+          variant: 'default',
+        });
+        setOtpSend(true);
+        if (data.otp)
+        return data.otp;
+      } else {
+        toast({
+          title: 'Failed to send OTP',
+          description: data.message || 'Please try again',
+          variant: 'destructive',
+        });
+        return null;
+      }
+    } catch (error) {
+      console.error('Error sending OTP email:', error);
+      toast({
+        title: 'Failed to send OTP',
+        description: 'Please try again',
+        variant: 'destructive',
+      });
+      return null;
+    } finally{
+      setSendingOTP(false);
+    }
+  };
   return (
     <GlobalContext.Provider
       value={{
@@ -153,7 +339,7 @@ const GlobalProvider = ({ children }: { children: ReactNode }) => {
         userData,
         setUserData,
         token,
-        setToken
+        setToken, sendOTP, verifyOTP, sendOtpEmail
       }}
     >
       {children}
