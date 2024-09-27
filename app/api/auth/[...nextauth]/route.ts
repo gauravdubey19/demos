@@ -6,6 +6,7 @@ import { connectToDB } from "@/utils/db";
 import jwt from "jsonwebtoken";
 import { AdapterUser } from "next-auth/adapters";
 import { toast } from "@/hooks/use-toast";
+import { to } from "gsap";
 
 const googleClientId = process.env.GOOGLE_ID;
 const googleClientSecret = process.env.GOOGLE_CLIENT_SECRET;
@@ -36,6 +37,8 @@ interface ExtendedProfile extends Record<string, any> {
 
 interface ExtendedUser extends AdapterUser {
   phone_number?: string;
+  favProducts?: string[];
+  role?: string;
 }
 
 const handler = NextAuth({
@@ -63,6 +66,8 @@ const handler = NextAuth({
             return {
               id: user._id.toString(),
               phone_number: user.phone_number,
+              role: user.role,
+              favProducts: user.favProducts,
             };
           }
           return null;
@@ -86,6 +91,8 @@ const handler = NextAuth({
         token.email = extendedUser.email;
         token.image = extendedUser.image;
         token.phone_number = extendedUser.phone_number;
+        token.role = extendedUser.role;
+        token.favProducts = extendedUser.favProducts;
       }
       return token;
     },
@@ -98,6 +105,8 @@ const handler = NextAuth({
       extendedSession.user.email = token.email as string;
       extendedSession.user.image = token.image as string;
       extendedSession.user.phone_number = token.phone_number as string;
+      extendedSession.user.favProducts = token.favProducts as string[];
+      extendedSession.user.role = token.role as string;
 
       if (token.email) {
         try {

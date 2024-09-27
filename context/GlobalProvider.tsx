@@ -78,12 +78,13 @@ const GlobalProvider = ({ children }: { children: ReactNode }) => {
     setToken(tokenTemp);
   }, []);
 
-  useEffect(() => {
-    if (token) {
-      if(!session?.user.id)
-      signIn("credentials", { token });
-    }
-  }, [token, session]);
+  // useEffect(() => {
+  //   if (token) {
+  //     if(!session?.user){
+  //       console.log("session user not during phone auth: ", session);
+  //   }
+  //   }
+  // }, [token, session]);
 
   const fetchUser = useCallback(async () => {
     if (!session) {
@@ -98,7 +99,7 @@ const GlobalProvider = ({ children }: { children: ReactNode }) => {
       return;
     }
     try {
-      // console.log("Fetching user data using ID: ", extendedSession.user);
+      console.log("Fetching user data using ID: ", extendedSession.user);
       const response = await fetch(`/api/users/${extendedSession.user.id}`);
       const contactResponse = await fetch(
         `/api/contact/${extendedSession.user.id}`
