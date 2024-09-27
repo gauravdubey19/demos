@@ -24,7 +24,7 @@ import { Button } from "../ui/button";
 import { useCart } from "@/context/CartProvider";
 import { FaUserCircle } from "react-icons/fa";
 import { useGlobalContext } from "@/context/GlobalProvider";
-
+//adding comment
 const profileOption = [
   { _id: "my-profile", title: "My Profile", href: "/profile/my-profile" },
   {
