@@ -4,6 +4,8 @@ import React, { useState, useEffect } from 'react'
 import SearchForm from './SearchBar'
 import FAQ from "./FAccordian";
 import FaqModal from './FaqModal';
+import { Skeleton } from '@/components/ui/skeleton';
+
 
 const FaqContainer = () => {
   const [faqData, setFaqData] = useState<any[]>([]); // Specify the correct type
@@ -29,7 +31,7 @@ const FaqContainer = () => {
     }
   };
 
-  const handleCreateSection = async (headline:any) => {
+  const handleCreateSection = async (headline: any) => {
     try {
       const response = await fetch('/api/faq/push/createHeadline', {
         method: 'POST',
@@ -65,8 +67,14 @@ const FaqContainer = () => {
         </div>
       </div>
       {isLoading ? (
-        <div>Loading...</div>
+        // Render skeleton while loading
+        <div className="space-y-4 px-20 mt-10">
+          {[1, 2, 3, 4, 5].map((_, index) => (
+            <Skeleton className='w-full h-[3rem] ' key={index} />
+          ))}
+        </div>
       ) : (
+        // Render actual data when loaded
         <FAQ faqData={faqData} setFaqData={setFaqData} />
       )}
     </div>

@@ -1,3 +1,5 @@
+
+
 import React from 'react';
 import AddressCard from './AddressCard';
 import { Plus } from 'lucide-react';
@@ -11,12 +13,12 @@ interface AddressI {
         selected: boolean;
         _id: string;
     }>;
-    handleSelectAddress:(v:any)=>void;
-    selectedAddressId:any
+    handleSelectAddress: (v: any) => void;
+    selectedAddressId: any
 }
 
 const Address = ({ addressData, handleSelectAddress, selectedAddressId }: AddressI) => {
-    
+
 
     return (
 
@@ -24,15 +26,20 @@ const Address = ({ addressData, handleSelectAddress, selectedAddressId }: Addres
             {/* Container for Address Cards */}
             <div className="space-y-3">
                 {addressData.map((address) => (
-                    <AddressCard
+                    <div
                         key={address._id}
-                        address={address.address}
-                        city={address.city.name}
-                        state={address.state.name}
-                        zip={address.zip}
-                        selected={selectedAddressId === address._id}
-                        onSelect={() => handleSelectAddress(address._id)}
-                    />
+                        className={`cursor-pointer ${selectedAddressId === address._id ? 'bg-gray-100' : ''} p-4 rounded-lg`}
+                        onClick={() => handleSelectAddress(address._id)}
+                    >
+                        <AddressCard
+                            address={address.address}
+                            city={address.city.name}
+                            state={address.state.name}
+                            zip={address.zip}
+                            selected={selectedAddressId === address._id}
+                            onSelect={() => handleSelectAddress(address._id)}
+                        />
+                    </div>
                 ))}
             </div>
 
