@@ -86,6 +86,7 @@
 // AnswerChat.js
 import React, { useState } from 'react';
 import { toast } from "@/hooks/use-toast";
+import Image from 'next/image';
 
 interface AnswerChatProps {
     selectedQuery: any;
@@ -138,7 +139,7 @@ const AnswerChat = ({ selectedQuery, onRefreshQueries }: AnswerChatProps) => {
     return (
         <div className="bg-white p-6 rounded-lg shadow-md">
             <div className="flex items-center mb-4">
-                <img src="https://static.vecteezy.com/system/resources/previews/019/896/008/large_2x/male-user-avatar-icon-in-flat-design-style-person-signs-illustration-png.png"  alt="Customer profile picture" className="w-12 h-12 rounded-full mr-4" />
+                <Image height={100} width={100} src="https://static.vecteezy.com/system/resources/previews/019/896/008/large_2x/male-user-avatar-icon-in-flat-design-style-person-signs-illustration-png.png"  alt="Customer profile picture" className="w-12 h-12 rounded-full mr-4" />
                 <div>
                     <p className="font-semibold">{selectedQuery?.name}</p>
                     <p className="text-gray-500">{selectedQuery?.email}</p>

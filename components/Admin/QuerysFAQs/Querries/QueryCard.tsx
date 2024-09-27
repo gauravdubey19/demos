@@ -1,4 +1,5 @@
 import { ChevronRight, CircleCheck, Hourglass, MessageSquareMore } from 'lucide-react'
+import Image from 'next/image';
 import React from 'react'
 
 interface QueryCardI{
@@ -25,7 +26,7 @@ const QueryCard = ({ query, onClick }: QueryCardI) => {
                                   </div>
                               )}
                           </div>
-                          <img src="https://static.vecteezy.com/system/resources/previews/019/896/008/large_2x/male-user-avatar-icon-in-flat-design-style-person-signs-illustration-png.png" alt="Customer profile picture" className="w-12 h-12 rounded-full mr-4" />
+                          <Image height={100} width={100} src="https://static.vecteezy.com/system/resources/previews/019/896/008/large_2x/male-user-avatar-icon-in-flat-design-style-person-signs-illustration-png.png" alt="Customer profile picture" className="w-12 h-12 rounded-full mr-4" />
                       </div>
                       <div>
                           <p className="font-semibold">{query.name}</p>
