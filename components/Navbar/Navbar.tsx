@@ -187,7 +187,7 @@ const Navbar: React.FC<{ appName?: string }> = ({ appName = "LOGO" }) => {
       <div className="hidden md:flex-center md:gap-4 lg:gap-6 relative">
         {/* search */}
         <Search />
-        {session?.user ? (
+        {session?.user?.id ? (
           <>
             <Link href="/profile/wishlist" className="relative mr-1">
               {pathname.includes("/profile/wishlist") ? (

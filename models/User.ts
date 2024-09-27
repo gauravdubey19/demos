@@ -29,7 +29,6 @@ const UserSchema = new Schema<IUser>(
       type: String,
       minLength: 10,
       maxLength: 10,
-      unique: true,
     },
     firstName: {
       type: String,
