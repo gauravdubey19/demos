@@ -1,13 +1,14 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { Session } from "next-auth";
+import React, { use, useEffect, useState } from "react";
 import { signOut, useSession } from "next-auth/react";
 import { State, City } from "country-state-city";
 import { InputFieldProps } from "@/lib/types";
 import { useGlobalContext } from "@/context/GlobalProvider";
 import { Button } from "@/components/ui/button";
 import { BiSolidEditAlt } from "react-icons/bi";
+import { Session } from "next-auth";
+import { useRouter } from "next/navigation";
 
 interface SessionExtended extends Session {
   user: {
@@ -15,6 +16,7 @@ interface SessionExtended extends Session {
     name?: string | null;
     email?: string | null;
     image?: string | null;
+    phone_number?: string | null;
   };
 }
 
@@ -22,7 +24,7 @@ interface User {
   firstName: string;
   lastName?: string;
   email: string;
-  phone?: string;
+  phone_number?: string;
   profile?: string;
   dateOfBirth?: Date;
   gender?: string;
@@ -30,8 +32,8 @@ interface User {
   orders?: string[];
   address?: string;
   city?: {
-    name: string;
-    code: string;
+    name?: string;
+    code?: string;
   };
   state?: {
     name?: string;
@@ -50,67 +52,81 @@ interface DropdownProps {
 }
 const MyAccount = () => {
   const { data: session } = useSession();
-  const handleDeleteAccount = async () => {
-    if (!session) {
-      alert("You need to be logged in to delete your account.");
-      return;
-    }
+  const router = useRouter();
+  // const handleDeleteAccount = async () => {
+  //   if (!session) {
+  //     alert("You need to be logged in to delete your account.");
+  //     return;
+  //   }
 
-    const extendedSession = session as SessionExtended;
-    const userId = extendedSession.user.id;
+  //   const extendedSession = session as SessionExtended;
+  //   const userId = extendedSession.user.id;
 
-    const confirmDelete = window.confirm(
-      "Are you sure you want to delete your account? This action cannot be undone."
-    );
+  //   const confirmDelete = window.confirm(
+  //     "Are you sure you want to delete your account? This action cannot be undone."
+  //   );
 
-    if (!confirmDelete) {
-      return;
-    }
+  //   if (!confirmDelete) {
+  //     return;
+  //   }
 
-    try {
-      const response = await fetch(`/api/users/${extendedSession.user.id}`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+  //   try {
+  //     const response = await fetch(`/api/users/${extendedSession.user.id}`, {
+  //       method: "DELETE",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //     });
 
-      if (response.ok) {
-        signOut();
-        alert("Account deleted successfully.");
-      } else {
-        const errorData = await response.json();
-        alert(`Error: ${errorData.message}`);
-      }
-    } catch (error) {
-      console.error("Error deleting account:", error);
-      alert(
-        "An error occurred while deleting your account. Please try again later."
-      );
-    }
-  };
+  //     if (response.ok) {
+  //       localStorage.removeItem("jwt");
+  //       signOut();
+  //       alert("Account deleted successfully.");
+  //     } else {
+  //       const errorData = await response.json();
+  //       alert(`Error: ${errorData.message}`);
+  //     }
+  //   } catch (error) {
+  //     console.error("Error deleting account:", error);
+  //     alert(
+  //       "An error occurred while deleting your account. Please try again later."
+  //     );
+  //   }
+  // };
 
   return (
     <>
-      <section className="flex-1 p-2 md:p-4 bg-gray-50 space-y-6">
-        <PersonalSection />
-        <ContactSection />
-      </section>
-      <div className="flex flex-row justify-end p-2 md:p-4 gap-x-2">
-        <Button
-          className="font-bold text-sm md:text-base active:translate-y-0.5 border-red-500 text-red-500 bg-white border-1 border rounded-none hover:bg-red-600 hover:text-white"
-          onClick={() => signOut()}
-        >
-          Logout
-        </Button>
-        <Button
+      <section className="w-full h-full overflow-hidden">
+        <div className="space-y-2 p-4 md:py-6">
+          <h2 className="capitalize text-2xl md:text-3xl lg:text-4xl font-semibold tracking-tight">
+            Hey! {session?.user?.name ? session?.user?.name : "Admin"}
+          </h2>
+          <p>Manage your account</p>
+        </div>
+        <div className="w-full h-[71vh] flex-1 p-2 md:p-4 bg-gray-50 space-y-4 md:space-y-6 overflow-y-scroll">
+          <PersonalSection />
+          <ContactSection />
+        </div>
+        <div className="flex justify-end p-2 md:p-4 gap-x-2 shadow-md">
+          <Button
+            className="font-bold text-sm md:text-base active:translate-y-0.5 border-red-500 text-red-500 bg-white border-1 border rounded-none hover:bg-red-600 hover:text-white"
+            onClick={() => {
+              localStorage.removeItem("jwt");
+              signOut();
+              router.push("/");
+            }}
+          >
+            Logout
+          </Button>
+          {/* <Button
           variant="destructive"
           className="font-bold text-sm md:text-base rounded-none active:translate-y-0.5 hover:bg-red-600 "
           onClick={handleDeleteAccount}
         >
           Delete your Account
-        </Button>
-      </div>
+          </Button> */}
+        </div>
+      </section>
     </>
   );
 };
@@ -120,8 +136,24 @@ export default MyAccount;
 const PersonalSection = () => {
   const { error, isProfileEditing, setProfileEditing, userData, setUserData } =
     useGlobalContext();
-  const [saving, setSaving] = useState(false);
   const { data: session } = useSession();
+  const [userDataCopy, setUserDataCopy] = useState<User | null>(
+    userData ?? null
+  );
+  const [isPhoneLogin, setIsPhoneLogin] = useState(false);
+  useEffect(() => {
+    const exSession = session as SessionExtended;
+    if (exSession?.user?.phone_number) {
+      setIsPhoneLogin(true);
+    }
+  }, [session]);
+  useEffect(() => {
+    if (!userDataCopy && userData) {
+      console.log("userDataCopy is empty and userData is not empty");
+      setUserDataCopy(userData);
+    }
+  }, [userData, userDataCopy]);
+  const [saving, setSaving] = useState(false);
   if (error) {
     return <div>Error: {error}</div>;
   }
@@ -142,23 +174,29 @@ const PersonalSection = () => {
       alert("Phone number must be 10 digits");
       return;
     }
-    if (!userData.firstName) {
-      alert("First Name is required");
-      return;
-    }
-    if (!userData.lastName) {
-      alert("Last Name is required");
-      return;
-    }
     const userDataObj = {
       firstName: userData.firstName,
       lastName: userData.lastName,
-      phone: userData.phone_number,
+      phone_number: userData.phone_number,
       gender: userData.gender,
+      email: userData.email,
     };
+
+    if (
+      userData.firstName === userDataCopy?.firstName &&
+      userData.lastName === userDataCopy?.lastName &&
+      userData.phone_number === userDataCopy?.phone_number &&
+      userData.gender === userData?.gender &&
+      userData.email === userDataCopy?.email
+    ) {
+      // alert("No changes made to the profile");
+      setProfileEditing(false);
+      return;
+    }
     try {
       setSaving(true);
       const extendedSession = session as SessionExtended;
+      console.log("userDataObj: ", userDataObj);
       const response = await fetch(`/api/users/${extendedSession.user.id}`, {
         method: "PUT",
         headers: {
@@ -168,6 +206,8 @@ const PersonalSection = () => {
       });
 
       if (response.ok) {
+        setUserDataCopy(userData);
+        setProfileEditing(false);
       } else {
         const errorData = await response.json();
         alert(`Error: ${errorData.message}`);
@@ -179,7 +219,6 @@ const PersonalSection = () => {
       );
     } finally {
       setSaving(false);
-      setProfileEditing(false);
     }
   };
   const handleInputChange = (field: keyof User, value: string) => {
@@ -193,20 +232,35 @@ const PersonalSection = () => {
       };
     });
   };
+  const handleResetValues = () => {
+    if (userDataCopy) {
+      setUserData(userDataCopy);
+    }
+  };
   return (
     <section className="">
       <div className="justify-between flex flex-row  items-center mb-6">
         <h3 className="text-xl font-semibold ">Personal Information</h3>
         {isProfileEditing ? (
-          <Button
-            className="bg-primary text-white border border-primary rounded-none active:translate-y-0.5 hover:bg-transparent hover:text-primary
+          <div className="flex gap-x-2">
+            <Button
+              className="bg-white text-red-500 border border-red-500 rounded-none active:translate-y-0.5 hover:bg-red-500 hover:text-white
             disabled:opacity-80 disabled:cursor-not-allowed
             "
-            onClick={handleEditProfile}
-            disabled={saving}
-          >
-            {saving ? "Saving..." : "Save"}
-          </Button>
+              onClick={handleResetValues}
+            >
+              Reset
+            </Button>
+            <Button
+              className="bg-primary text-white border border-primary rounded-none active:translate-y-0.5 hover:bg-transparent hover:text-primary
+            disabled:opacity-80 disabled:cursor-not-allowed
+            "
+              onClick={handleEditProfile}
+              disabled={saving}
+            >
+              {saving ? "Saving..." : "Save"}
+            </Button>
+          </div>
         ) : (
           <Button
             className="bg-transparent text-primary rounded-none active:translate-y-0.5  hover:bg-yellow-500 hover:text-white"
@@ -240,22 +294,23 @@ const PersonalSection = () => {
           id="email"
           label="Email"
           type="email"
-          isDisabled
+          isDisabled={!isPhoneLogin ? true : !isProfileEditing}
           value={userData?.email}
+          setValue={(value) => handleInputChange("email", value)}
         />
         <InputField
           id="phone"
           label="Phone"
           type="tel"
           value={userData?.phone_number}
-          isDisabled={!isProfileEditing}
+          isDisabled={isPhoneLogin ? true : !isProfileEditing}
           setValue={(value) => {
             let numericValue = value.replace(/[^0-9]/g, "");
             if (numericValue.length > 10) {
               numericValue = numericValue.slice(0, 10);
             }
 
-            handleInputChange("phone", numericValue);
+            handleInputChange("phone_number", numericValue);
           }}
         />
         <Dropdown
@@ -276,6 +331,15 @@ const PersonalSection = () => {
 const ContactSection = () => {
   const { userData, error, isContactEditing, setContactEditing, setUserData } =
     useGlobalContext();
+  const [userDataCopy, setUserDataCopy] = useState<User | null>(
+    userData ?? null
+  );
+  useEffect(() => {
+    if (!userDataCopy && userData) {
+      console.log("userDataCopy is empty and userData is not empty");
+      setUserDataCopy(userData);
+    }
+  }, [userData, userDataCopy]);
   const [saving, setSaving] = useState(false);
   const { data: session } = useSession();
   const [states, setStates] = useState<{ name: string; code: string }[]>([]);
@@ -347,7 +411,6 @@ const ContactSection = () => {
     if (!userData) {
       return;
     }
-    setSaving(true);
     const contactObj = {
       address: userData.address,
       city: userData.city,
@@ -355,7 +418,19 @@ const ContactSection = () => {
       zip: userData.zip,
       country: userData.country,
     };
+    if (
+      userData.address === userDataCopy?.address &&
+      userData.city === userDataCopy?.city &&
+      userData.state === userDataCopy?.state &&
+      userData.zip === userDataCopy?.zip
+    ) {
+      // alert("No changes made to the contact information");
+      setContactEditing(false);
+      return;
+    }
     try {
+      setSaving(true);
+
       const extendedSession = session as SessionExtended;
       const response = await fetch(
         `/api/contact/${extendedSession.user.id}/PutContact`,
@@ -369,6 +444,7 @@ const ContactSection = () => {
       );
 
       if (response.ok) {
+        setUserDataCopy(userData);
       } else {
         const errorData = await response.json();
         alert(`Error: ${errorData.message}`);
@@ -395,22 +471,35 @@ const ContactSection = () => {
       };
     });
   };
-
+  const handleResetValues = () => {
+    if (userDataCopy) {
+      setUserData(userDataCopy);
+    }
+  };
   return (
     <section className="">
       <div className="justify-between flex flex-row items-center mb-6">
         <h3 className="text-xl font-semibold">Contact Information</h3>
         {isContactEditing ? (
-          <Button
-            disabled={saving}
-            className="bg-primary text-white border border-primary rounded-none active:translate-y-0.5 
-            hover:bg-transparent hover:text-primary
+          <div className="flex gap-x-2">
+            <Button
+              className="bg-white text-red-500 border border-red-500 rounded-none active:translate-y-0.5 hover:bg-red-500 hover:text-white
             disabled:opacity-80 disabled:cursor-not-allowed
             "
-            onClick={handleEditContact}
-          >
-            {saving ? "Saving..." : "Save"}
-          </Button>
+              onClick={handleResetValues}
+            >
+              Reset
+            </Button>
+            <Button
+              className="bg-primary text-white border border-primary rounded-none active:translate-y-0.5 hover:bg-transparent hover:text-primary
+            disabled:opacity-80 disabled:cursor-not-allowed
+            "
+              onClick={handleEditContact}
+              disabled={saving}
+            >
+              {saving ? "Saving..." : "Save"}
+            </Button>
+          </div>
         ) : (
           <Button
             className="bg-transparent text-primary rounded-none active:translate-y-0.5 hover:bg-yellow-500 hover:text-white"

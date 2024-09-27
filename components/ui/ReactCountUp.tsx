@@ -5,12 +5,14 @@ const ReactCountUp = ({
   className,
   prefix,
   decimals = false,
+  duration = 0.8,
   children,
 }: {
   amt: number;
   className?: string;
   prefix?: string;
   decimals?: boolean;
+  duration?: number;
   children?: React.ReactNode;
 }) => {
   return (
@@ -21,7 +23,7 @@ const ReactCountUp = ({
           decimal="."
           prefix={prefix}
           decimals={decimals ? 2 : 0}
-          duration={0.8}
+          duration={duration}
         />
         {children}
       </span>

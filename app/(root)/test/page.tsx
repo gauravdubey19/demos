@@ -116,7 +116,7 @@ export default function TestPage() {
     <div className="mt-[60px] w-full h-screen bg-zinc-200 p-10">
       {/* un-comment this below for creating sample data */}
       {/* <CreateCategories /> */}
-      <CreateProducts />
+      {/* <CreateProducts /> */}
     </div>
   );
 }

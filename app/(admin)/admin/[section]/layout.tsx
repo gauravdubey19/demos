@@ -4,7 +4,7 @@ import { ProfileAdminParams } from "@/lib/types";
 import { adminSections } from "@/lib/section";
 import Sidebar from "@/components/Profile/Sidebar";
 
-export default async function ProfilePage({
+export default async function AdminPage({
   params,
   children,
 }: ProfileAdminParams) {

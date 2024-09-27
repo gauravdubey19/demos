@@ -12,50 +12,51 @@ interface IUser {
   favProducts?: Schema.Types.ObjectId[];
 }
 
-const UserSchema = new Schema<IUser>({
-  firstName: {
-    type: String,
-    trim: true,
-  },
-  lastName: {
-    type: String,
-    trim: true,
-  },
-  email: {
-    type: String,
-    trim: true,
-    lowercase: true,
-    match: [/.+\@.+\..+/, "Please fill a valid email address"],
-  },
-  role: {
-    type: String,
-    required: true,
-    default: "user",
-  },
-  profile: {
-    type: String,
-    // default: "/default-profile.png",
-  },
-  dateOfBirth: {
-    type: Date,
-  },
-  phone_number: {
-    type: String,
-    minLength: 10,
-    maxLength: 10,
-    unique: true,
-  },
-  gender: {
-    type: String,
-    enum: ["male", "female", "others"],
-  },
-  favProducts: [
-    {
-      type: Schema.Types.ObjectId,
-      ref: "Products",
+const UserSchema = new Schema<IUser>(
+  {
+    role: {
+      type: String,
+      required: true,
+      default: "user",
     },
-  ],
-});
+    email: {
+      type: String,
+      trim: true,
+      lowercase: true,
+      match: [/.+\@.+\..+/, "Please fill a valid email address"],
+    },
+    phone_number: {
+      type: String,
+      minLength: 10,
+      maxLength: 10,
+    },
+    firstName: {
+      type: String,
+      trim: true,
+    },
+    lastName: {
+      type: String,
+      trim: true,
+    },
+    profile: {
+      type: String,
+    },
+    dateOfBirth: {
+      type: Date,
+    },
+    gender: {
+      type: String,
+      enum: ["male", "female", "others"],
+    },
+    favProducts: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Products",
+      },
+    ],
+  },
+  { timestamps: true }
+);
 
 const User = models.User || model<IUser>("User", UserSchema);
 

@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { PiCubeLight } from "react-icons/pi";
 import { BsCartCheck } from "react-icons/bs";
@@ -19,6 +19,7 @@ import {
   ArcElement,
   ChartOptions,
 } from "chart.js";
+import ReactCountUp from "../ui/ReactCountUp";
 
 ChartJS.register(
   CategoryScale,
@@ -31,31 +32,67 @@ ChartJS.register(
   ArcElement
 );
 
+interface CollectionsLengthValues {
+  products: number;
+  orders: number;
+  users: number;
+}
+
 const Dashboard = () => {
   const { data: session } = useSession();
+  const [collectionsLength, setCollectionsLength] =
+    useState<CollectionsLengthValues | null>(null);
+
+  useEffect(() => {
+    const fetchCollectionsLength = async () => {
+      try {
+        // setLoading(true);
+        const res = await fetch(`/api/products/read/admin/collections-length`, {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+        });
+
+        if (!res.ok) {
+          throw new Error("Failed to fetch collections");
+        }
+
+        const data = await res.json();
+        // console.error("res:", data);
+        setCollectionsLength(data);
+      } catch (error) {
+        console.error("Error fetching collections:", error);
+      }
+      // } finally {
+      //   // setLoading(false);
+      // }
+    };
+    if (!collectionsLength) fetchCollectionsLength();
+  }, [collectionsLength]);
+
+  // console.log(collectionsLength);
 
   const totals = [
     {
-      head: "Total Products",
-      value: "₹ 20.1K",
+      head: "products",
+      value: collectionsLength?.products,
       color: "#704324",
       icon: PiCubeLight,
     },
     {
-      head: "Total Orders",
-      value: "2.48K",
+      head: "orders",
+      value: collectionsLength?.orders,
       color: "#2cd369",
       icon: BsCartCheck,
     },
     {
-      head: "Total Sales",
-      value: "20.81K",
+      head: "sales",
+      value: 20.81,
       color: "#962cd3",
       icon: GiProgression,
     },
     {
-      head: "Total Customers",
-      value: "6,584",
+      head: "customers",
+      value: collectionsLength?.users || 6584,
       color: "#1743BE",
       icon: HiOutlineUsers,
     },
@@ -214,7 +251,7 @@ const Dashboard = () => {
             {totals.map((t, index) => (
               <div
                 key={index}
-                className="w-full md:w-60 lg:w-52 xl:w-60 h-32 flex items-center gap-2 p-2 shadow-2xl rounded-xl hover:shadow-primary ease-in-out duration-300"
+                className="w-full md:w-60 lg:w-52 xl:w-60 h-32 flex items-center gap-2 p-2 shadow-xl rounded-xl hover:shadow-2xl ease-in-out duration-300"
               >
                 <div
                   className="h-full w-1"
@@ -222,12 +259,18 @@ const Dashboard = () => {
                 />
                 <div className="relative w-full h-full flex justify-between gap-2">
                   <div className="space-y-2">
-                    <p className="text-sm md:text-md xl:text-lg">{t.head}</p>
-                    <p
-                      className="text-4xl md:text-3xl xl:text-4xl font-semibold"
-                      style={{ color: t.color }}
-                    >
-                      {t.value}
+                    <p className="text-sm md:text-md xl:text-lg capitalize">
+                      Total {t.head}
+                    </p>
+                    <p style={{ color: t.color }}>
+                      <ReactCountUp
+                        amt={t.value as number}
+                        duration={1}
+                        decimals={t.head === "sales" && true}
+                        className="text-4xl md:text-3xl xl:text-4xl font-semibold"
+                      >
+                        {t.head === "sales" && "K"}
+                      </ReactCountUp>
                     </p>
                   </div>
                   <div className="w-fit h-full flex-center">
@@ -244,14 +287,14 @@ const Dashboard = () => {
             {/* charts section */}
             <div className="w-full h-fit grid grid-cols-1 lg:grid-cols-2 gap-6 p-4">
               {/* Total Orders Line Chart */}
-              <div className="chart-container h-full bg-white shadow-md rounded-lg p-4">
+              <div className="chart-container h-full bg-[#F8F8F8] shadow-md rounded-lg p-4 hover:shadow-lg ease-in-out duration-300">
                 <h2 className="text-xl font-bold">Total Orders</h2>
                 <p className="text-gray-500">Year 2020</p>
                 <Line data={totalOrdersData} options={lineChartOptions} />
               </div>
 
               {/* Top Selling Categories Pie Chart */}
-              <div className="chart-container h-[50vh] bg-white shadow-md rounded-lg p-4 overflow-hidden">
+              <div className="chart-container h-[50vh] bg-[#F8F8F8] shadow-md rounded-lg p-4 hover:shadow-lg ease-in-out duration-300 overflow-hidden">
                 <h2 className="text-xl font-bold">Top Selling Categories</h2>
                 <div className="relative w-full h-full flex-center">
                   <Pie
@@ -263,7 +306,7 @@ const Dashboard = () => {
               </div>
             </div>
             {/* Total Customers Line Chart */}
-            <div className="chart-container w-full h-fit bg-white drop-shadow-md rounded-lg p-4 overflow-hidden">
+            <div className="chart-container w-full h-fit bg-[#F8F8F8] drop-shadow-md rounded-lg p-4 hover:shadow-lg ease-in-out duration-300 overflow-hidden">
               <h2 className="text-xl font-bold">Total Customers</h2>
               <p className="text-gray-500">Year 2020</p>
               <div className="relative w-full h-[65vh] flex-center">
