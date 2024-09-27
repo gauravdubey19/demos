@@ -21,6 +21,9 @@ const CheckoutPage = () => {
   const { cart, isOpen, setOpen } = useCart(); //console.log(isOpen);
 
 
+  // const session = await getServerSession();
+  // if (session) redirect("/");
+
   const handleSelectAddress = (id: string) => {
     setSelectedAddressId(id);
   };
