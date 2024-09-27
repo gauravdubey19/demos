@@ -24,7 +24,7 @@ import { Button } from "../ui/button";
 import { useCart } from "@/context/CartProvider";
 import { FaUserCircle } from "react-icons/fa";
 import { useGlobalContext } from "@/context/GlobalProvider";
-
+//adding comment
 const profileOption = [
   { _id: "my-profile", title: "My Profile", href: "/profile/my-profile" },
   {
@@ -187,7 +187,7 @@ const Navbar: React.FC<{ appName?: string }> = ({ appName = "LOGO" }) => {
       <div className="hidden md:flex-center md:gap-4 lg:gap-6 relative">
         {/* search */}
         <Search />
-        {session?.user ? (
+        {session?.user?.id ? (
           <>
             <Link href="/profile/wishlist" className="relative mr-1">
               {pathname.includes("/profile/wishlist") ? (
@@ -229,9 +229,9 @@ const Navbar: React.FC<{ appName?: string }> = ({ appName = "LOGO" }) => {
                           "border border-primary"
                         } overflow-hidden`}
                       >
-                        {userData?.profile ? (
+                        {session?.user?.image ? (
                           <Image
-                            src={userData?.profile || "/profile.png"}
+                            src={session?.user?.image || "/profile.png"}
                             alt="profile"
                             width={200}
                             height={200}
@@ -248,10 +248,10 @@ const Navbar: React.FC<{ appName?: string }> = ({ appName = "LOGO" }) => {
                             "text-primary"
                           } group-hover:text-primary ease-in-out duration-300`}
                         >
-                          {userData?.firstName || "Profile"}
+                          {session?.user?.name?.split(' ')[0] || "Profile"}
                         </span>
-                        {userData?.role === "admin" && (
-                          <span className="text-xs">{userData?.role}</span>
+                        {session?.user?.role === "admin" && (
+                          <span className="text-xs">{session?.user?.role}</span>
                         )}
                       </div>
                     </Link>
