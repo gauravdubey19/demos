@@ -229,9 +229,9 @@ const Navbar: React.FC<{ appName?: string }> = ({ appName = "LOGO" }) => {
                           "border border-primary"
                         } overflow-hidden`}
                       >
-                        {userData?.profile ? (
+                        {session?.user?.image ? (
                           <Image
-                            src={userData?.profile || "/profile.png"}
+                            src={session?.user?.image || "/profile.png"}
                             alt="profile"
                             width={200}
                             height={200}
@@ -248,10 +248,10 @@ const Navbar: React.FC<{ appName?: string }> = ({ appName = "LOGO" }) => {
                             "text-primary"
                           } group-hover:text-primary ease-in-out duration-300`}
                         >
-                          {userData?.firstName || "Profile"}
+                          {session?.user?.name?.split(' ')[0] || "Profile"}
                         </span>
-                        {userData?.role === "admin" && (
-                          <span className="text-xs">{userData?.role}</span>
+                        {session?.user?.role === "admin" && (
+                          <span className="text-xs">{session?.user?.role}</span>
                         )}
                       </div>
                     </Link>
