@@ -4,8 +4,8 @@ import { SectionValues } from "./types";
 import MyProfile from "@/components/Profile/Sections/MyProfile";
 import OrderHistory from "@/components/Profile/Sections/OrderHistory";
 import ShippingAddresses from "@/components/Profile/Sections/ShippingAddresses";
-import PaymentMethods from "@/components/Profile/Sections/PaymentMethods";
 import DeleteMyAccount from "@/components/Profile/Sections/DeleteMyAccount";
+import AddAddresses from "@/components/Profile/Sections/AddAddresses";
 import { RxPerson } from "react-icons/rx";
 import { CiShoppingBasket } from "react-icons/ci";
 import { RiMoneyDollarCircleLine } from "react-icons/ri";
@@ -28,6 +28,7 @@ import TestimonialsAdmin from "@/components/Admin/Testimonials/TestimonialsAdmin
 import FaqAdmin from "@/components/Admin/QuerysFAQs/FAQ/FaqContainer";
 import FaqContainer from "@/components/Admin/QuerysFAQs/FAQ/FaqContainer";
 import Querry from "@/components/Admin/QuerysFAQs/Querries/Querry";
+import EditAddress from "@/components/Profile/Sections/EditAddress";
 
 export const profileSections: SectionValues[] = [
   {
@@ -52,12 +53,28 @@ export const profileSections: SectionValues[] = [
     sectionNode: ShippingAddresses,
   },
   {
-    id: "payment-methods",
-    head: "Payment Methods",
-    href: "/profile/payment-methods",
-    icon: RiMoneyDollarCircleLine,
-    sectionNode: PaymentMethods,
+    id: "edit-address",
+    head: "Edit Address",
+    href: "/profile/edit-address",
+    icon: GrMapLocation,
+    sectionNode: EditAddress,
+    sidebarHidden: true,
   },
+  {
+    id: "add-a-new-address",
+    head: "Add a New Address",
+    href: "/profile/add-a-new-address",
+    icon: GrMapLocation,
+    sectionNode: AddAddresses,
+    sidebarHidden: true,
+  },
+  // {
+  //   id: "payment-methods",
+  //   head: "Payment Methods",
+  //   href: "/profile/payment-methods",
+  //   icon: RiMoneyDollarCircleLine,
+  //   sectionNode: PaymentMethods,
+  // },
   {
     id: "delete-my-account",
     head: "Delete My Account",

@@ -161,6 +161,7 @@ export interface InputFieldProps {
   value?: string;
   setValue?: (value: string) => void;
   formValidation?: (value: string) => string;
+  required?: boolean;
 }
 
 // | "personal-information"
@@ -175,6 +176,7 @@ export interface SectionValues {
   head: string;
   href: string;
   icon: IconType;
+  sidebarHidden?: boolean;
   sectionNode: () => React.JSX.Element;
   subSections?: {
     id: string;

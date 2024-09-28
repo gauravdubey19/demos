@@ -12,6 +12,7 @@ import { Session } from "next-auth";
 import jwt from "jsonwebtoken";
 import { toast } from "@/hooks/use-toast";
 import { transporter } from "@/app/api/newsletter/core";
+import { set } from "mongoose";
 // Define the shape of the context state
 interface User {
   firstName: string;
@@ -37,6 +38,73 @@ interface User {
   country?: string;
 }
 
+export interface Address {
+  _id: string;
+  firstName: string;
+  lastName: string;
+  address: string;
+  phoneNumber: string;
+  zipCode: string;
+  state: {
+    name: string;
+    code: string;
+  };
+  city: {
+    name: string;
+    code: string;
+  };
+  selected?: boolean;
+  onSelectedChange?: (selected: boolean) => void;
+  createdAt: string;
+}
+export interface AddressClient {
+  _id: string;
+  firstName: string;
+  lastName: string;
+  address: string;
+  phone: string;
+  pincode: string;
+  state: {
+    name: string;
+    code: string;
+  };
+  city: {
+    name: string;
+    code: string;
+  };
+}
+export type Product = {
+  productId: string;
+  title: string;
+  slug: string;
+  image: string;
+  price: number;
+  quantity: number;
+  size: string;
+  color: string;
+  timestamps: string;
+  category: string;
+};
+export interface AllOrdersProps {
+  sampleData: Order[];
+  isSearch?: boolean;
+}
+export type Order = {
+  _id: string;
+  userId: string;
+  orderedProducts: Product[];
+  orderInfo: {
+    orderStatus: string;
+    totalPrice: number;
+    orderDate: string;
+    deliveryDate: string;
+    shippingDate: string;
+    shippingAddress: string;
+    orderID: string;
+    cancelledDate: string;
+  };
+  timestamps: string;
+};
 interface GlobalState {
   user: User | null;
   error: string | null;
@@ -62,6 +130,23 @@ interface GlobalState {
     successDescription?: string
   ) => void;
   sendOtpEmail: (options: SendOtpEmailOptions) => Promise<string | null>;
+  addresses: Address[];
+  setAddresses: React.Dispatch<React.SetStateAction<Address[]>>;  
+  addressLoading: boolean;
+  selectedAddresses: string[];
+  setSelectedAddresses: React.Dispatch<React.SetStateAction<string[]>>;
+  handleDeleteAddresses: () => void;
+  editAddressData: AddressClient;
+  setEditAddressData: React.Dispatch<
+    React.SetStateAction<AddressClient>>;
+  suggestions: Order[];
+  setSuggestions: React.Dispatch<React.SetStateAction<Order[]>>;
+  activeTab: string;
+  setActiveTab: React.Dispatch<React.SetStateAction<string>>;
+  searchLoading: boolean;
+  setSearchLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  searchQuery: string;
+  setSearchQuery: React.Dispatch<React.SetStateAction<string>>;
 }
 
 interface SessionExtended extends Session {
@@ -95,6 +180,61 @@ const GlobalProvider = ({ children }: { children: ReactNode }) => {
   const [isContactEditing, setContactEditing] = useState(false);
   const [userData, setUserData] = useState<User | null>(user);
   const [token, setToken] = useState<string | null>(null);
+  const [addresses, setAddresses] = useState<Address[]>([]);
+  const [addressLoading, setAddressLoading] = useState(true);
+  const [selectedAddresses, setSelectedAddresses] = useState<string[]>([]); // Create selected state
+  const [suggestions, setSuggestions] = useState<Order[]>([]);
+  const [activeTab, setActiveTab] = useState("allOrders");
+  const [searchQuery, setSearchQuery] = useState<string>("");
+
+  const [searchLoading, setSearchLoading] = useState<boolean>(false);
+
+  const [editAddressData, setEditAddressData] = useState({
+    _id: "",
+    firstName: "",
+    lastName: "",
+    phone: "",
+    address: "",
+    state: { name: "Select a state", code: "" },
+    city: { name: "Select a city", code: "" },
+    pincode: "",
+  });
+
+  const fetchAddresses = async (userId: string): Promise<{ addresses: Address[] } | null> => {
+    try {
+      const response = await fetch(`/api/addresses/${userId}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch addresses');
+      }
+
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error('Error fetching addresses:', error);
+      return null;
+    }
+  };
+
+  useEffect(() => {
+    const getAddresses = async () => {
+      setAddressLoading(true);
+      if (session?.user?.id) {
+        const data = await fetchAddresses(session.user.id);
+        if (data) {
+          setAddresses(data.addresses || []);
+        }
+        setAddressLoading(false);
+      }
+    };
+
+    getAddresses();
+  }, [session, setAddresses]);
 
   useEffect(() => {
     const tokenTemp = localStorage.getItem("jwt");
@@ -114,7 +254,6 @@ const GlobalProvider = ({ children }: { children: ReactNode }) => {
       return;
     }
     try {
-      console.log("Fetching user data using ID: ", extendedSession.user);
       const response = await fetch(`/api/users/${extendedSession.user.id}`);
       const contactResponse = await fetch(
         `/api/contact/${extendedSession.user.id}`
@@ -262,28 +401,7 @@ const GlobalProvider = ({ children }: { children: ReactNode }) => {
       setVerifyingOTP(false);
     }
   };
-  // const sendEmail = async (options: EmailOptions,toastDetails:ToastOptions) => {
-  //   const { successTitle, successDescription } = toastDetails;
-  //   try {
-  //     const info = await transporter.sendMail(options);
-  //     toast({
-  //       title: successTitle || "Email Sent!",
-  //       description: successDescription || "Check your inbox",
-  //       variant: "default",
-  //     });
-  //     return { success: true, info };
-  //   } catch (error) {
-  //     console.error('Error sending email:', error);
-  //     toast({
-  //       title: "Failed to send email",
-  //       description: "Please try again",
-  //       variant: "destructive",
-  //     });
-  //     return { success: false, error };
-  //   }
-  // };
-
-
+  
   const sendOtpEmail = async ({ to,setSendingOTP,setOtpSend, subject, from ='"CSK Textiles" <CSK@gmail.com>' }: SendOtpEmailOptions) => {
     try {
       setSendingOTP(true);
@@ -326,6 +444,54 @@ const GlobalProvider = ({ children }: { children: ReactNode }) => {
       setSendingOTP(false);
     }
   };
+const handleDeleteAddresses = async () => {
+    if (selectedAddresses.length === 0) {
+      toast({
+        title: "No addresses selected",
+        description: "Please select addresses to delete",
+        variant: "destructive",
+      });
+      return;
+    }
+    console.log("Deleting addresses:", selectedAddresses);
+    try {
+      const response = await fetch(`/api/addresses/${session?.user?.id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ addressIds: selectedAddresses }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        toast({
+          title: "Success",
+          description: data.message,
+        });
+        const updatedAddresses = addresses.filter(
+          (address) => !selectedAddresses.includes(address._id)
+        );
+        setAddresses(updatedAddresses);
+        setSelectedAddresses([]);
+      } else {
+        const errorData = await response.json();
+        toast({
+          title: "Error",
+          description: errorData?.error || "Error deleting addresses",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      console.error("Error deleting addresses:", error);
+      toast({
+        title: "Error",
+        description: "Error deleting addresses",
+        variant: "destructive",
+      });
+    }
+  };
+
   return (
     <GlobalContext.Provider
       value={{
@@ -339,7 +505,12 @@ const GlobalProvider = ({ children }: { children: ReactNode }) => {
         userData,
         setUserData,
         token,
-        setToken, sendOTP, verifyOTP, sendOtpEmail
+        setToken, sendOTP, verifyOTP, sendOtpEmail,
+        addresses, setAddresses, addressLoading,
+        selectedAddresses, setSelectedAddresses,
+        handleDeleteAddresses, editAddressData, setEditAddressData, suggestions, setSuggestions, activeTab, setActiveTab,
+        searchLoading, setSearchLoading,
+        searchQuery, setSearchQuery
       }}
     >
       {children}

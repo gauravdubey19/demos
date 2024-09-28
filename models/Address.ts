@@ -23,28 +23,25 @@ const AddressFieldSchema = new Schema(
       required: true,
     },
     state: {
-      type: String,
-      required: true,
+      code: {
+        type: String,
+        required: true,
+      },
+      name: {
+        type: String,
+        required: true,
+      },
     },
     city: {
-      type: String,
-      required: true,
+      code: {
+        type: String,
+        required: true,
+      },
+      name: {
+        type: String,
+        required: true,
+      }
     },
-    // typeOfAddress: {
-    //   type: String,
-    //   enum: ["Home", "Office"],
-    //   required: true,
-    // },
-    // isOfficeOpenWeekends: {
-    //   type: Boolean,
-    //   required: false,
-    // },
-    // weekendOpenDays: {
-    //   type: String,
-    //   enum: ["Saturdays", "Sundays"],
-    //   required: true,
-    //   default: "Saturdays",
-    // },
   },
   { timestamps: true }
 );
