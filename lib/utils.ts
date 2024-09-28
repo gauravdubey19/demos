@@ -9,6 +9,13 @@ export const replaceHyphensWithSpaces = (text: string): string => {
   return text.replace(/-/g, " ");
 };
 
+export const capitalizeString = (title: string): string => {
+  return title
+    .split(" ")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(" ");
+};
+
 export const generateSlug = (name: string): string => {
   const slug = name
     .toLowerCase()

@@ -26,6 +26,7 @@ import Orders from "@/components/Admin/Orders/Orders";
 import MyAccount from "@/components/Admin/MyAccount";
 import TestimonialsAdmin from "@/components/Admin/Testimonials/TestimonialsAdmin";
 import FaqAdmin from "@/components/Admin/QuerysFAQs/FAQ/FaqContainer";
+import AllCategories from "@/components/Admin/Products/Category/AllCategories";
 
 export const profileSections: SectionValues[] = [
   {
@@ -108,7 +109,7 @@ export const adminSections: SectionValues[] = [
         id: "all-categories",
         head: "All Categories",
         href: "/admin/all-categories",
-        sectionNode: AllProducts,
+        sectionNode: AllCategories,
       },
     ],
   },

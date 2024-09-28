@@ -233,3 +233,17 @@ export interface CartItem {
   };
   categorySlug: string;
 }
+
+// category
+export interface CategoryCollectionValues {
+  _id: string;
+  image: string;
+  title: string;
+  slug: string;
+  description: string;
+  types: {
+    title: string;
+    slug: string;
+  }[];
+  createdAt: string;
+}
