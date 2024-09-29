@@ -1,20 +1,20 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { useRouter } from "next/navigation";
+import React, { useEffect, useState } from "react";
+import Link from "next/link";
 import Image from "next/image";
-import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
 import Loader from "@/components/ui/Loader";
 import ReactCountUp from "@/components/ui/ReactCountUp";
-import React, { useEffect, useState } from "react";
 import { BsPencilSquare, BsPlus, BsTrash } from "react-icons/bs";
 import { FaArrowDownShortWide, FaArrowUpShortWide } from "react-icons/fa6";
 import { IoSearchOutline } from "react-icons/io5";
 import { CategoryCollectionValues } from "@/lib/types";
 import { DeletePopUp } from "./CategoryDetail";
-import Link from "next/link";
 
 const AllCategories = () => {
+  const router = useRouter();
   const [isAscending, setIsAscending] = useState<boolean>(true);
   const [search, setSearch] = useState<string>("");
   const [categoriesCollection, setCategoriesCollection] = useState<
@@ -89,7 +89,10 @@ const AllCategories = () => {
                 className="md:w-60 placeholder:text-primary bg-none border-none outline-none"
               />
             </div>
-            <Button className="w-full h-full text-white rounded-none">
+            <Button
+              onClick={() => router.push("/admin/all-categories/add-category")}
+              className="w-full h-full text-white rounded-none"
+            >
               <BsPlus size={20} className="ml-1" /> Create New Product
             </Button>
             <div
@@ -160,7 +163,7 @@ const CategoryTable: React.FC<{
                       alt={category.title}
                       width={200}
                       height={200}
-                      className="w-12 h-12 object-contain rounded -mb-5"
+                      className="w-12 h-12 object-contain rounded"
                     />
                   </Link>
                 </td>

@@ -12,12 +12,13 @@ import Loader from "@/components/ui/Loader";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { toast } from "@/hooks/use-toast";
 import { DetailRow } from "../../Customers/CustomersDetail";
-import { CategoryCollectionValues } from "@/lib/types";
+import { CategoryCollectionValues, Type } from "@/lib/types";
 import { RiDeleteBinLine } from "react-icons/ri";
 import { IoSearchOutline } from "react-icons/io5";
 import { Button } from "@/components/ui/button";
 import { BsPencilSquare, BsPlus, BsTrash } from "react-icons/bs";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 const CategoryDetail: React.FC<{ categoryId: string }> = ({ categoryId }) => {
   const [category, setCategory] = useState<CategoryCollectionValues | null>(
@@ -294,7 +295,12 @@ const CategoryInfo: React.FC<{ category: CategoryCollectionValues }> = ({
       </div>
       <div className="w-[70%] h-full overflow-hidden">
         <h2 className="text-md md:text-lg lg:text-xl font-semibold">
-          {category.title}
+          <Link
+            href={`/products/${category?.slug}`}
+            className="w-fit hover-underline-lr"
+          >
+            {category.title}
+          </Link>
         </h2>
         <h4 className="text-xs md:text-sm lg:text-md">
           {category.description}
@@ -317,13 +323,7 @@ const CategoryInfo: React.FC<{ category: CategoryCollectionValues }> = ({
 
 export default CategoryDetail;
 
-interface Type {
-  title: string;
-  slug: string;
-}
-
 interface CategoryTypesTableProps {
-  noData?: boolean;
   categoryId: string;
   types: {
     title: string;
@@ -334,7 +334,6 @@ interface CategoryTypesTableProps {
 export const CategoryTypesTable: React.FC<CategoryTypesTableProps> = ({
   categoryId,
   types,
-  noData = false,
 }) => {
   const [isAddOpen, setIsAddOpen] = useState<boolean>(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState<boolean>(false);
@@ -428,11 +427,11 @@ export const CategoryTypesTable: React.FC<CategoryTypesTableProps> = ({
                 <th className="px-4 py-2 text-left">Action</th>
               </tr>
             </thead>
-            {noData ? (
+            {filteredTypes.length === 0 ? (
               // <></>
               <tbody className="relative w-full h-40">
                 <div className="absolute inset-0 flex-center text-lg md:text-lg lg:text-xl font-semibold">
-                  No Types in this category created
+                  No Types found in this category
                 </div>
               </tbody>
             ) : (
@@ -623,7 +622,7 @@ export const PopUpAddType: React.FC<{
           </Button>
           <Button
             disabled={typeList.length === 0 || loading}
-            onClick={AddNewTypes} // Add the onClick to trigger AddNewTypes function
+            onClick={AddNewTypes}
             className="w-full h-full text-white rounded-none"
           >
             {!loading ? "Save Types" : "Save Types..."}{" "}
@@ -856,7 +855,12 @@ export const DeletePopUp: React.FC<{
           variant: "default",
         });
         handleDeleteClose();
-        router.push("/admin/all-categories");
+        router.push(
+          action === "delete-category"
+            ? "/admin/all-categories"
+            : "/admin/all-products"
+        );
+        router.refresh();
       } else {
         toast({
           title: data.error || "Error deleting the category",

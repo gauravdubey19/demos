@@ -88,6 +88,8 @@ export default function LoginForm() {
           // Add your login logic here
           setToken(data.token);
           setRedirecting(true);
+          signIn("credentials", { token:data.token });
+
           toast({
             title: "Login Successful!",
             description: "Please wait while we redirect you",

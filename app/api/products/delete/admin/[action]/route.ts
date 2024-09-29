@@ -30,7 +30,7 @@ export const DELETE = async (
         );
       }
 
-      await product.delete();
+      await Products.deleteOne({ _id: id });
 
       return NextResponse.json(
         { message: "Product deleted successfully!" },
@@ -48,7 +48,7 @@ export const DELETE = async (
         );
       }
 
-      await category.delete();
+      await Categories.deleteOne({ _id: id });
 
       return NextResponse.json(
         { message: "Category deleted successfully!" },

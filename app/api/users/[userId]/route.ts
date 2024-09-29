@@ -1,6 +1,11 @@
 import User from "@/models/User";
 import { NextRequest, NextResponse } from "next/server";
 import { connectToDB } from "@/utils/db";
+import Address from "@/models/Address";
+import Cart from "@/models/Cart";
+import Contact from "@/models/Contact";
+import Order from "@/models/Order";
+import Review from "@/models/Reviews";
 
 // Get User by ID
 export async function GET(req: NextRequest, { params }: { params: { userId: string } }) {
@@ -24,10 +29,23 @@ export async function DELETE(req: NextRequest, { params }: { params: { userId: s
     const { userId } = params;
 
     try {
+        await connectToDB();
+
+        await Promise.all([
+            Address.deleteMany({ userId }),
+            Cart.deleteMany({ userId }),
+            Contact.deleteMany({ userId }),
+            Order.deleteMany({ userId }),
+            Review.deleteMany({ userId }),
+        ]);
+
+        // Delete the user
         const result = await deleteUser(userId);
+
         return NextResponse.json(result, { status: 200 });
     } catch (error) {
-        return NextResponse.json({ error: 'error deleting' }, { status: 500 });
+        console.error('Error deleting user:', error);
+        return NextResponse.json({ error: 'Error deleting user' }, { status: 500 });
     }
 }
 // PUT handler

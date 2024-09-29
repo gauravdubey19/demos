@@ -10,6 +10,9 @@ import { BsPencilSquare, BsPlus, BsTrash } from "react-icons/bs";
 import { FaArrowDownShortWide, FaArrowUpShortWide } from "react-icons/fa6";
 import { IoSearchOutline } from "react-icons/io5";
 import { DeletePopUp } from "./Category/CategoryDetail";
+import Link from "next/link";
+import { CategoryCollectionValues } from "@/lib/types";
+import { useRouter } from "next/navigation";
 
 interface ProductCollectionValues {
   _id: string;
@@ -19,9 +22,11 @@ interface ProductCollectionValues {
   price: number;
   oldPrice: number;
   quantityInStock: number;
+  categories: CategoryCollectionValues[];
 }
 
 const AllProducts = () => {
+  const router = useRouter();
   const [isAscending, setIsAscending] = useState<boolean>(true);
   const [search, setSearch] = useState<string>("");
   const [productCollection, setProductCollection] = useState<
@@ -86,11 +91,14 @@ const AllProducts = () => {
               type="text"
               placeholder="Search by Product name"
               value={search}
-              onChange={(e) => setSearch(e.target.value)}
+              onChange={(e) => setSearch(e.target.value.trim())}
               className="placeholder:text-primary bg-none border-none outline-none"
             />
           </div>
-          <Button className="w-full h-full text-white rounded-none">
+          <Button
+            onClick={() => router.push("/admin/all-products/add-product")}
+            className="w-full h-full text-white rounded-none"
+          >
             <BsPlus size={20} className="ml-1" /> Create New Product
           </Button>
           <div
@@ -153,34 +161,56 @@ const ProductTable: React.FC<{
                 className="h-fit group border-b cursor-pointer hover:bg-[#ffb43335] ease-in-out duration-300"
               >
                 <td className="px-4 py-2">
-                  <Image
-                    src={product.mainImage}
-                    alt={product.title}
-                    width={200}
-                    height={200}
-                    className="w-12 h-12 object-contain rounded"
-                  />
+                  <Link
+                    href={`/products/${product.categories[0].slug}/${product.slug}`}
+                  >
+                    <Image
+                      src={product.mainImage}
+                      alt={product.title}
+                      width={200}
+                      height={200}
+                      className="w-12 h-12 object-contain rounded"
+                    />
+                  </Link>
                 </td>
                 <td className="w-fit px-4 py-2 text-primary group-hover:underline underline-offset-4">
-                  {product.title.length > 15
-                    ? `${product.title.substring(0, 20)}...`
-                    : product.title}
+                  <Link
+                    href={`/products/${product.categories[0].slug}/${product.slug}`}
+                  >
+                    {product.title.length > 15
+                      ? `${product.title.substring(0, 20)}...`
+                      : product.title}
+                  </Link>
                 </td>
                 <td className="px-4 py-2">
-                  <ReactCountUp
-                    prefix="₹"
-                    amt={product.price}
-                    decimals={true}
-                  />
+                  <Link
+                    href={`/products/${product.categories[0].slug}/${product.slug}`}
+                  >
+                    <ReactCountUp
+                      prefix="₹"
+                      amt={product.price}
+                      decimals={true}
+                    />
+                  </Link>
                 </td>
                 <td className="px-4 py-2 text-green-500">
-                  <ReactCountUp
-                    amt={calculateDiscount(product.price, product.oldPrice)}
+                  <Link
+                    href={`/products/${product.categories[0].slug}/${product.slug}`}
                   >
-                    % off
-                  </ReactCountUp>
+                    <ReactCountUp
+                      amt={calculateDiscount(product.price, product.oldPrice)}
+                    >
+                      % off
+                    </ReactCountUp>
+                  </Link>
                 </td>
-                <td className="px-4 md:px-20 py-2">{product.quantityInStock}</td>
+                <td className="px-4 md:px-20 py-2">
+                  <Link
+                    href={`/products/${product.categories[0].slug}/${product.slug}`}
+                  >
+                    {product.quantityInStock}
+                  </Link>
+                </td>
                 <td className="w-fit h-full px-4 py-2 flex-center gap-2 mt-2">
                   <button className="p-2 rounded bg-yellow-100 hover:bg-yellow-200 text-yellow-600">
                     <BsPencilSquare size={16} />

@@ -84,6 +84,14 @@ export interface ProductDetailValues {
     title: string;
     color: string;
   }[];
+  categories: {
+    title: string;
+    slug: string;
+  }[];
+  types: {
+    title: string;
+    slug: string;
+  }[];
   material: string;
   fabricType?: string;
   careInstructions?: string;
@@ -132,6 +140,40 @@ export interface AdditionalInfoProps {
       answer: string;
     }[];
   };
+}
+
+// Add-Product type
+export interface AddProductValues {
+  title: string;
+  description: string;
+  images: string[];
+  mainImage: string;
+  price: number;
+  oldPrice?: number;
+  availableSizes: string[];
+  colorOptions: {
+    title: string;
+    color: string;
+  }[];
+  categories: {
+    title: string;
+    slug: string;
+  }[];
+  types: {
+    title: string;
+    slug: string;
+  }[];
+  material: string;
+  fabricType?: string;
+  careInstructions?: string;
+  origin: string;
+  quantityInStock: number;
+  brand?: string;
+  faqs: {
+    question: string;
+    answer: string;
+  }[];
+  countryOfManufacture: string;
 }
 
 export interface CategoryValues {
@@ -241,9 +283,11 @@ export interface CategoryCollectionValues {
   title: string;
   slug: string;
   description: string;
-  types: {
-    title: string;
-    slug: string;
-  }[];
+  types: Type[];
   createdAt: string;
+}
+
+export interface Type {
+  title: string;
+  slug: string;
 }

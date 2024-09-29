@@ -1,265 +1,114 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { connectToDB } from "@/utils/db";
-import { Categories } from "@/models/Categories";
 import Products from "@/models/Products";
+import { UTFile } from "uploadthing/server";
+import { utapi } from "@/server/uploadthing";
+import { generateSlug } from "@/lib/utils";
 
-// const generateUniqueSlug = async (slug: string) => {
-//   let uniqueSlug = slug;
-//   let slugExists = await Products.findOne({ slug: uniqueSlug });
+const generateUniqueSlug = async (slug: string) => {
+  let uniqueSlug = slug;
+  let slugExists = await Products.findOne({ slug: uniqueSlug });
 
-//   let counter = 1;
-//   while (slugExists) {
-//     uniqueSlug = `${slug}-${counter}`;
-//     slugExists = await Products.findOne({ slug: uniqueSlug });
-//     counter++;
-//   }
+  let counter = 1;
+  while (slugExists) {
+    uniqueSlug = `${slug}-${counter}`;
+    slugExists = await Products.findOne({ slug: uniqueSlug });
+    counter++;
+  }
 
-//   return uniqueSlug;
-// };
+  return uniqueSlug;
+};
 
-// export const POST = async (request: NextRequest) => {
-//   try {
-//     const {
-//       title,
-//       slug,
-//       description,
-//       images,
-//       mainImage,
-//       price,
-//       oldPrice,
-//       availableSizes,
-//       colorOptions,
-//       categories,
-//       material,
-//       fabricType,
-//       careInstructions,
-//       countryOfManufacture,
-//       faqs,
-//     } = await request.json();
-
-//     await connectToDB();
-
-//     // Generate a unique slug
-//     const uniqueSlug = await generateUniqueSlug(slug);
-
-//     const newProduct = new Products({
-//       title,
-//       slug: uniqueSlug,
-//       description,
-//       images,
-//       mainImage,
-//       price,
-//       oldPrice,
-//       availableSizes,
-//       colorOptions,
-//       categories,
-//       material,
-//       fabricType,
-//       careInstructions,
-//       countryOfManufacture,
-//       faqs,
-//     });
-
-//     const savedProduct = await newProduct.save();
-//     // console.log("Saved product:", savedProduct);
-
-//     return NextResponse.json(
-//       { message: "Product created successfully!", product: savedProduct },
-//       { status: 201 }
-//     );
-//   } catch (error) {
-//     console.error("Error creating product:", error);
-//     return NextResponse.json(
-//       { error: "Failed to create product" },
-//       { status: 500 }
-//     );
-//   }
-// };
-
-export const POST = async (request: NextRequest) => {
+export async function POST(request: Request) {
   try {
-    const products = await request.json();
-    console.log("Received products:", products);
+    const contentType = request.headers.get("Content-Type");
+
+    if (!contentType?.startsWith("multipart/form-data")) {
+      throw new Error("Content-Type must be multipart/form-data");
+    }
+
+    const formData = await request.formData();
+    const mainImage = formData.get("mainImage") as File;
+    const images = formData.getAll("images") as File[]; // getting multiple images
+    const title = formData.get("title") as string;
+    const description = formData.get("description") as string;
+    const price = parseFloat(formData.get("price") as string);
+    const oldPrice = parseFloat(formData.get("oldPrice") as string);
+    const quantityInStock = parseInt(
+      formData.get("quantityInStock") as string,
+      10
+    );
+    const availableSizes = JSON.parse(formData.get("availableSizes") as string);
+    const colorOptions = JSON.parse(formData.get("colorOptions") as string);
+    const categories = JSON.parse(formData.get("categories") as string);
+    const types = JSON.parse(formData.get("types") as string);
+    const material = formData.get("material") as string;
+    const fabricType = formData.get("fabricType") as string;
+    const careInstructions = formData.get("careInstructions") as string;
+    const origin = formData.get("origin") as string;
+    const brand = formData.get("brand") as string;
+    const countryOfManufacture =
+      (formData.get("countryOfManufacture") as string) || "India";
+    const faqs = JSON.parse(formData.get("faqs") as string);
+
+    // console.log(images);
+
+    // uploading mainImage using UTApi
+    const uploadedMainImage = await utapi.uploadFiles([
+      new UTFile([mainImage], mainImage.name),
+    ]);
+    const mainImageUrl = uploadedMainImage[0].data?.url;
+
+    // uploading multiple images using UTApi
+    const uploadedImagesUrls = await Promise.all(
+      images.map(async (image: File) => {
+        const uploadResponse = await utapi.uploadFiles([
+          new UTFile([image], image.name),
+        ]);
+        return uploadResponse[0].data?.url;
+      })
+    );
 
     await connectToDB();
 
-    const savedProducts = await Promise.all(
-      products.map(
-        async (product: {
-          title: string;
-          slug: string;
-          description: string;
-          images: string[];
-          mainImage: string;
-          price: number;
-          oldPrice?: number;
-          availableSizes: string[];
-          colorOptions: { title: string; color: string }[];
-          categories: { title: string; slug: string }[];
-          type: string[];
-          material: string;
-          fabricType?: string;
-          careInstructions?: string;
-          origin?: string;
-          quantityInStock: number;
-          brand?: string;
-          faqs: { question: string; answer: string }[];
-        }) => {
-          const {
-            title,
-            slug,
-            description,
-            images,
-            mainImage,
-            price,
-            oldPrice,
-            availableSizes,
-            colorOptions,
-            categories,
-            type,
-            material,
-            fabricType,
-            careInstructions,
-            origin,
-            quantityInStock,
-            brand,
-            faqs,
-          } = product;
+    const slug = generateSlug(title);
+    const uniqueSlug = await generateUniqueSlug(slug);
 
-          const newProduct = new Products({
-            title,
-            slug,
-            description,
-            images,
-            mainImage,
-            price,
-            oldPrice,
-            availableSizes,
-            colorOptions,
-            categories,
-            type,
-            material,
-            fabricType,
-            careInstructions,
-            origin,
-            quantityInStock,
-            brand,
-            faqs,
-          });
+    const newProduct = new Products({
+      title,
+      slug: uniqueSlug,
+      description,
+      mainImage: mainImageUrl,
+      images: uploadedImagesUrls,
+      price,
+      oldPrice,
+      quantityInStock,
+      availableSizes,
+      colorOptions,
+      categories,
+      type: types,
+      material,
+      fabricType,
+      careInstructions,
+      origin,
+      brand,
+      countryOfManufacture,
+      faqs,
+    });
 
-          return newProduct.save();
-        }
-      )
-    );
+    const savedProduct = await newProduct.save();
 
     return NextResponse.json(
-      { message: `${savedProducts.length} products created successfully!` },
+      {
+        message: `${savedProduct.title} product created successfully!`,
+      },
       { status: 201 }
     );
   } catch (error) {
-    console.error("Error creating products:", error);
+    console.error("Error creating product:", error);
     return NextResponse.json(
-      { error: "Failed to create products" },
+      { error: "Failed to create product" },
       { status: 500 }
     );
   }
-};
-
-// export const POST = async (request: NextRequest) => {
-//   try {
-//     const products = await request.json();
-//     console.log("Received products:", products);
-
-//     await connectToDB();
-
-//     const savedProducts = await Promise.all(
-//       products.map(
-//         async (product: {
-//           title: string;
-//           slug: string;
-//           description: string;
-//           images: string[];
-//           mainImage: string;
-//           price: number;
-//           oldPrice?: number;
-//           availableSizes: string[];
-//           colorOptions: { title: string; color: string }[];
-//           categories: string[];
-//           type: string[];
-//           material: string;
-//           fabricType?: string;
-//           careInstructions?: string;
-//           origin?: string;
-//           quantityInStock: number;
-//           brand?: string;
-//           faqs: { question: string; answer: string }[];
-//         }) => {
-//           const {
-//             title,
-//             slug,
-//             description,
-//             images,
-//             mainImage,
-//             price,
-//             oldPrice,
-//             availableSizes,
-//             colorOptions,
-//             categories: categorySlugs,
-//             type,
-//             material,
-//             fabricType,
-//             careInstructions,
-//             origin,
-//             quantityInStock,
-//             brand = "Chimanlal Suresh Kumar (CSK) Textiles",
-//             faqs,
-//           } = product;
-
-//           const categoryIds = await Promise.all(
-//             categorySlugs.map(async (slug) => {
-//               const category = await Categories.findOne({ slug });
-//               if (!category) {
-//                 throw new Error(`Category with slug '${slug}' not found`);
-//               }
-//               return category._id;
-//             })
-//           );
-
-//           const newProduct = new Products({
-//             title,
-//             slug,
-//             description,
-//             images,
-//             mainImage,
-//             price,
-//             oldPrice,
-//             availableSizes,
-//             colorOptions,
-//             categories: categoryIds,
-//             type,
-//             material,
-//             fabricType,
-//             careInstructions,
-//             origin,
-//             quantityInStock,
-//             brand,
-//             faqs,
-//           });
-
-//           return newProduct.save();
-//         }
-//       )
-//     );
-
-//     return NextResponse.json(
-//       { message: `${savedProducts.length} products created successfully!` },
-//       { status: 201 }
-//     );
-//   } catch (error) {
-//     console.error("Error creating products:", error);
-//     return NextResponse.json(
-//       { error: "Failed to create products" },
-//       { status: 500 }
-//     );
-//   }
-// };
+}
