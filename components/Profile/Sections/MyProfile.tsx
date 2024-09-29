@@ -3,11 +3,12 @@
 import React, {  useEffect, useState } from "react";
 import { signOut, useSession } from "next-auth/react";
 import { State, City } from "country-state-city";
-import { InputFieldProps } from "@/lib/types";
 import { useGlobalContext } from "@/context/GlobalProvider";
 import { Button } from "@/components/ui/button";
 import { BiSolidEditAlt } from "react-icons/bi";
 import { Session } from "next-auth";
+import { InputField } from "../ProfileComponents/InputFields";
+import { Dropdown } from "../ProfileComponents/DropDown";
 
 interface SessionExtended extends Session {
   user: {
@@ -41,14 +42,7 @@ interface User {
   zip?: string;
   country?: string;
 }
-interface DropdownProps {
-  id: string;
-  label: string;
-  value: string | undefined;
-  options: string[];
-  isDisabled: boolean;
-  setValue: (value: string) => void;
-}
+
 const MyProfile = () => {
 
   return (
@@ -299,7 +293,17 @@ const ContactSection = () => {
   }, []);
 
   useEffect(() => {
-    if (!userData || !userData.state) {
+    if (!userData) {
+      return;
+    }
+    if(!userData.state){
+      setUserData({
+        ...userData,
+        state: {
+          name: "Select a state",
+          code: "",
+        },
+      });
       return;
     }
     if (userData.state.code) {
@@ -320,17 +324,22 @@ const ContactSection = () => {
         ]);
       } else {
         console.error("No cities found for the given state code.");
-        setCities([]);
+        setCities([
+          {
+            name: "Select a city",
+            code: "",
+          },
+        ]);
       }
     } else {
       setCities([
         {
-          name: "Select a state first",
+          name: "Select a city",
           code: "",
         },
       ]);
     }
-  }, [userData]);
+  }, [setUserData, userData]);
   if (error) {
     return <div>Error: {error}</div>;
   }
@@ -489,59 +498,5 @@ const ContactSection = () => {
   );
 };
 
-const InputField: React.FC<InputFieldProps> = ({
-  id,
-  label,
-  defaultValue,
-  type = "text",
-  isDisabled = false,
-  capitalize = false,
-  value,
-  setValue,
-}) => (
-  <input
-    id={id}
-    type={type}
-    disabled={isDisabled}
-    placeholder={label}
-    defaultValue={defaultValue}
-    value={value !== undefined ? value : ""}
-    onChange={
-      setValue
-        ? (e) => {
-            let newValue = e.target.value;
-            setValue(newValue);
-          }
-        : () => {}
-    }
-    className={`text-md p-2 px-4 bg-transparent border-b hover:border-b-primary focus:border-b-primary outline-none ${
-      isDisabled ? "text-gray-600" : "text-black border-b-primary"
-    }  ${capitalize ? "capitalize" : ""}`}
-  />
-);
-const Dropdown: React.FC<DropdownProps> = ({
-  id,
-  label,
-  value,
-  options,
-  isDisabled,
-  setValue,
-}) => {
-  return (
-    <div className="dropdown">
-      <select
-        id={id}
-        value={value !== undefined ? value : options[0]} // Default to the first option if value is undefined
-        disabled={isDisabled}
-        onChange={(e) => setValue(e.target.value)}
-        className="mt-1 block w-full pl-3 pr-10 py-3 text-base focus:outline-none focus:ring-primary focus:border-primary sm:text-sm rounded-md"
-      >
-        {options.map((option) => (
-          <option key={option} value={option}>
-            {option}
-          </option>
-        ))}
-      </select>
-    </div>
-  );
-};
+
+

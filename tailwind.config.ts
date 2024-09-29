@@ -140,8 +140,10 @@ const baseConfig: Config = {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         color:{
-          tertiary:"#494949"
+          tertiary:"#494949",
         },
+        strokeLight:"#D8D8D8",
+        green: "#2CD396",
         primary: {
           DEFAULT: "var(--primary)",
           foreground: "hsl(var(--primary-foreground))",
