@@ -139,7 +139,7 @@ const AddProduct = () => {
     formData.append("title", title);
     formData.append("description", description);
     formData.append("price", price.toString());
-    formData.append("oldPrice", oldPrice.toString());
+    if(oldPrice) formData.append("oldPrice", oldPrice.toString());
     formData.append("quantityInStock", quantityInStock.toString());
     formData.append("material", material);
     formData.append("fabricType", fabricType);
