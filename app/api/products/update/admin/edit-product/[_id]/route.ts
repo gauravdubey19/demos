@@ -4,7 +4,21 @@ import Products from "@/models/Products";
 import { UTFile } from "uploadthing/server";
 import { utapi } from "@/server/uploadthing";
 import { generateSlug } from "@/lib/utils";
-import { generateUniqueSlug } from "@/app/api/products/create/create-product/route";
+// import { generateUniqueSlug } from "@/app/api/products/create/create-product/route";
+
+const generateUniqueSlug = async (slug: string) => {
+  let uniqueSlug = slug;
+  let slugExists = await Products.findOne({ slug: uniqueSlug });
+
+  let counter = 1;
+  while (slugExists) {
+    uniqueSlug = `${slug}-${counter}`;
+    slugExists = await Products.findOne({ slug: uniqueSlug });
+    counter++;
+  }
+
+  return uniqueSlug;
+};
 
 export async function PUT(
   request: Request,

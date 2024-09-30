@@ -1,11 +1,11 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { connectToDB } from "@/utils/db";
 import Products from "@/models/Products";
 import { UTFile } from "uploadthing/server";
 import { utapi } from "@/server/uploadthing";
 import { generateSlug } from "@/lib/utils";
 
-export const generateUniqueSlug = async (slug: string) => {
+const generateUniqueSlug = async (slug: string) => {
   let uniqueSlug = slug;
   let slugExists = await Products.findOne({ slug: uniqueSlug });
 
@@ -19,7 +19,7 @@ export const generateUniqueSlug = async (slug: string) => {
   return uniqueSlug;
 };
 
-export async function POST(request: Request) {
+export const POST = async (request: NextRequest) => {
   try {
     const contentType = request.headers.get("Content-Type");
 
@@ -71,8 +71,8 @@ export async function POST(request: Request) {
 
     await connectToDB();
 
-    const slug = generateSlug(title);
-    const uniqueSlug = await generateUniqueSlug(slug);
+    const slug: string = generateSlug(title as string);
+    const uniqueSlug = await generateUniqueSlug(slug as string);
 
     const newProduct = new Products({
       title,
@@ -110,4 +110,4 @@ export async function POST(request: Request) {
       { status: 500 }
     );
   }
-}
+};
