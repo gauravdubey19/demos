@@ -15,10 +15,6 @@ const OrderItemSchema = new Schema(
       unique: true,
       required: true,
     },
-    description: {
-      type: String,
-      required: true,
-    },
     image: {
       type: String,
       required: true,
@@ -27,8 +23,20 @@ const OrderItemSchema = new Schema(
       type: Number,
       required: true,
     },
+    category: {
+      type: String,
+      required: true,
+    },
     quantity: {
       type: Number,
+      required: true,
+    },
+    size: {
+      type: String,
+      required: true,
+    },
+    color: {
+      type: String,
       required: true,
     },
   },
@@ -49,6 +57,10 @@ const OrderSchema = new Schema(
         enum: ["pending", "shipped", "delivered", "cancelled"],
         required: true,
       },
+      orderID: {
+        type: String,
+        required: true,
+      },
       totalPrice: {
         type: Number,
         required: true,
@@ -59,15 +71,15 @@ const OrderSchema = new Schema(
       },
       deliveryDate: {
         type: Date,
-        required: true,
       },
       shippingDate: {
         type: Date,
-        required: true,
+      },
+      cancelledDate: {
+        type: Date,
       },
       shippingAddress: {
         type: String,
-        required: true,
       },
     },
   },

@@ -8,13 +8,15 @@ export const GET = async (
   request: NextRequest,
   { params }: { params: { require: string } }
 ) => {
+  const { require } = params;
+
   if (!params.require) {
     return NextResponse.json(
       { error: "Admin 'require' is required" },
       { status: 400 }
     );
   }
-  const require = params.require;
+
   try {
     await connectToDB();
 

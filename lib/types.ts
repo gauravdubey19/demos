@@ -78,19 +78,30 @@ export interface ProductDetailValues {
   mainImage: string;
   price: number;
   oldPrice?: number;
+  quantityInStock: number;
   availableSizes: string[];
   colorOptions: {
     _id: string;
     title: string;
     color: string;
   }[];
+  categories: {
+    _id: string;
+    title: string;
+    slug: string;
+  }[];
+  types: {
+    _id: string;
+    title: string;
+    slug: string;
+  }[];
   material: string;
   fabricType?: string;
   careInstructions?: string;
   origin: string;
-  quantityInStock: number;
   brand: string;
   faqs: {
+    _id: string;
     question: string;
     answer: string;
   }[];
@@ -134,6 +145,40 @@ export interface AdditionalInfoProps {
   };
 }
 
+// Add-Product type
+export interface AddProductValues {
+  title: string;
+  description: string;
+  images: string[];
+  mainImage: string;
+  price: number;
+  oldPrice?: number;
+  availableSizes: string[];
+  colorOptions: {
+    title: string;
+    color: string;
+  }[];
+  categories: {
+    title: string;
+    slug: string;
+  }[];
+  types: {
+    title: string;
+    slug: string;
+  }[];
+  material: string;
+  fabricType?: string;
+  careInstructions?: string;
+  origin: string;
+  quantityInStock: number;
+  brand?: string;
+  faqs: {
+    question: string;
+    answer: string;
+  }[];
+  countryOfManufacture: string;
+}
+
 export interface CategoryValues {
   _id: string;
   title: string;
@@ -161,6 +206,7 @@ export interface InputFieldProps {
   value?: string;
   setValue?: (value: string) => void;
   formValidation?: (value: string) => string;
+  required?: boolean;
 }
 
 // | "personal-information"
@@ -175,6 +221,7 @@ export interface SectionValues {
   head: string;
   href: string;
   icon: IconType;
+  sidebarHidden?: boolean;
   sectionNode: () => React.JSX.Element;
   subSections?: {
     id: string;
@@ -232,4 +279,20 @@ export interface CartItem {
     color: string;
   };
   categorySlug: string;
+}
+
+// category
+export interface CategoryCollectionValues {
+  _id: string;
+  image: string;
+  title: string;
+  slug: string;
+  description: string;
+  types: Type[];
+  createdAt: string;
+}
+
+export interface Type {
+  title: string;
+  slug: string;
 }

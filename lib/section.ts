@@ -1,15 +1,25 @@
 "use client";
 
 import { SectionValues } from "./types";
+// profile
 import MyProfile from "@/components/Profile/Sections/MyProfile";
 import OrderHistory from "@/components/Profile/Sections/OrderHistory";
 import ShippingAddresses from "@/components/Profile/Sections/ShippingAddresses";
-import PaymentMethods from "@/components/Profile/Sections/PaymentMethods";
 import DeleteMyAccount from "@/components/Profile/Sections/DeleteMyAccount";
-import { RxPerson } from "react-icons/rx";
-import { CiShoppingBasket } from "react-icons/ci";
-import { RiMoneyDollarCircleLine } from "react-icons/ri";
-import { GrMapLocation } from "react-icons/gr";
+import AddAddresses from "@/components/Profile/Sections/AddAddresses";
+// admin
+import Dashboard from "@/components/Admin/Dashboard";
+import AllProducts from "@/components/Admin/Products/AllProducts";
+import Customers from "@/components/Admin/Customers/Customers";
+import Orders from "@/components/Admin/Orders/Orders";
+import MyAccount from "@/components/Admin/MyAccount";
+import TestimonialsAdmin from "@/components/Admin/Testimonials/TestimonialsAdmin";
+import FaqContainer from "@/components/Admin/QuerysFAQs/FAQ/FaqContainer";
+import Querry from "@/components/Admin/QuerysFAQs/Querries/Querry";
+import EditAddress from "@/components/Profile/Sections/EditAddress";
+import AddProduct from "@/components/Admin/Products/AddProduct";
+import AllCategories from "@/components/Admin/Products/Category/AllCategories";
+// icons
 import {
   AiOutlinePieChart,
   AiTwotoneDelete,
@@ -19,17 +29,12 @@ import { PiCubeLight } from "react-icons/pi";
 import { SlLayers } from "react-icons/sl";
 import { LiaQuestionSolid } from "react-icons/lia";
 import { IoVideocamOutline } from "react-icons/io5";
-import Dashboard from "@/components/Admin/Dashboard";
-import AllProducts from "@/components/Admin/Products/AllProducts";
-import Customers from "@/components/Admin/Customers/Customers";
-import Orders from "@/components/Admin/Orders/Orders";
-import MyAccount from "@/components/Admin/MyAccount";
-import TestimonialsAdmin from "@/components/Admin/Testimonials/TestimonialsAdmin";
-import FaqAdmin from "@/components/Admin/QuerysFAQs/FAQ/FaqContainer";
-import FaqContainer from "@/components/Admin/QuerysFAQs/FAQ/FaqContainer";
-import Querry from "@/components/Admin/QuerysFAQs/Querries/Querry";
-import NewOutFit from "@/components/Admin/Products/AddOutfit/NewOutFit";
+import { RxPerson } from "react-icons/rx";
+import { CiShoppingBasket } from "react-icons/ci";
+import { RiMoneyDollarCircleLine } from "react-icons/ri";
+import { GrMapLocation } from "react-icons/gr";
 import Collection from "@/components/Admin/Products/OutfitCollection/Collection";
+import NewOutFit from "@/components/Admin/Products/AddOutfit/NewOutFit";
 
 export const profileSections: SectionValues[] = [
   {
@@ -54,12 +59,28 @@ export const profileSections: SectionValues[] = [
     sectionNode: ShippingAddresses,
   },
   {
-    id: "payment-methods",
-    head: "Payment Methods",
-    href: "/profile/payment-methods",
-    icon: RiMoneyDollarCircleLine,
-    sectionNode: PaymentMethods,
+    id: "edit-address",
+    head: "Edit Address",
+    href: "/profile/edit-address",
+    icon: GrMapLocation,
+    sectionNode: EditAddress,
+    sidebarHidden: true,
   },
+  {
+    id: "add-a-new-address",
+    head: "Add a New Address",
+    href: "/profile/add-a-new-address",
+    icon: GrMapLocation,
+    sectionNode: AddAddresses,
+    sidebarHidden: true,
+  },
+  // {
+  //   id: "payment-methods",
+  //   head: "Payment Methods",
+  //   href: "/profile/payment-methods",
+  //   icon: RiMoneyDollarCircleLine,
+  //   sectionNode: PaymentMethods,
+  // },
   {
     id: "delete-my-account",
     head: "Delete My Account",
@@ -94,7 +115,7 @@ export const adminSections: SectionValues[] = [
         id: "add-products",
         head: "Add Products",
         href: "/admin/add-products",
-        sectionNode: AllProducts,
+        sectionNode: AddProduct,
       },
       {
         id: "all-outfit-collections",
@@ -112,7 +133,7 @@ export const adminSections: SectionValues[] = [
         id: "all-categories",
         head: "All Categories",
         href: "/admin/all-categories",
-        sectionNode: AllProducts,
+        sectionNode: AllCategories,
       },
     ],
   },

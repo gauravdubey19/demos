@@ -17,7 +17,7 @@ import { FaUserCircle } from "react-icons/fa";
 
 const Sidebar: React.FC<SectionProps> = ({ section, sections }) => {
   // console.log(section);
-  const {userData} = useGlobalContext();
+  const { userData } = useGlobalContext();
   const { data: session } = useSession();
   const pathname = usePathname();
   return (
@@ -68,6 +68,7 @@ const Sidebar: React.FC<SectionProps> = ({ section, sections }) => {
         )}
         <nav className="mt-6 flex flex-1 flex-col space-y-1">
           {sections.map((sec, index) => (
+            sec.sidebarHidden ? null :
             <div key={index}>
               {!sec.subSections ? (
                 <Link
@@ -84,7 +85,10 @@ const Sidebar: React.FC<SectionProps> = ({ section, sections }) => {
                 </Link>
               ) : (
                 <Accordion type="single" collapsible className="w-full px-2">
-                  <AccordionItem value="item-1" className="border-none">
+                  <AccordionItem
+                    value={`item-${index + 1}`}
+                    className="border-none"
+                  >
                     <AccordionTrigger className="flex gap-5">
                       <Link
                         href={sec.href}
