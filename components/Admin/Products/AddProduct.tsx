@@ -139,7 +139,7 @@ const AddProduct = () => {
     formData.append("title", title);
     formData.append("description", description);
     formData.append("price", price.toString());
-    if(oldPrice) formData.append("oldPrice", oldPrice.toString());
+    if (oldPrice) formData.append("oldPrice", oldPrice.toString());
     formData.append("quantityInStock", quantityInStock.toString());
     formData.append("material", material);
     formData.append("fabricType", fabricType);
@@ -159,6 +159,7 @@ const AddProduct = () => {
       });
 
       const data = await res.json();
+      setLoading(false);
       toast({
         title: data.message || data.error,
         description: data.message
@@ -166,8 +167,9 @@ const AddProduct = () => {
           : "Please try again later...",
         variant: data.error ? "destructive" : "default",
       });
-      setLoading(false);
-      router.back();
+      if (res.ok) {
+        router.back();
+      }
     } catch (error) {
       setLoading(false);
       console.error("Error creating product:", error);
@@ -188,63 +190,96 @@ const AddProduct = () => {
           </h2>
           <div className="w-fit flex-center gap-2">
             <Button
+              type="button"
               onClick={() => router.back()}
               className="bg-red-500 text-white"
             >
               Cancel
             </Button>
-            <Button disabled={loading} type="submit" className="text-white">
+            <Button type="submit" disabled={loading} className="text-white">
               {!loading ? "Save" : "Saving..."}
             </Button>
           </div>
         </header>
         <div className="w-full h-[calc(100vh-90px)] space-y-2 p-4 overflow-y-auto">
           <div className="w-full h-[calc(100vh-140px)] flex gap-2">
-            <div className="w-[60%] h-full bg-[#F8F8F8] br">
-              {mainImage && (
-                <Image
-                  src={URL.createObjectURL(mainImage)}
-                  alt="Main Image"
-                  width={800}
-                  height={800}
-                  className="w-full h-full object-contain"
-                />
-              )}
-            </div>
-            <div className="w-[40%] h-full bg-[#F8F8F8] overflow-x-hidden overflow-y-scroll">
-              <div className="w-full h-fit grid grid-cols-1 md:grid-cols-2 gap-2">
-                <div
-                  className="w-full h-60 flex-center cursor-pointer select-none br active:scale-95 ease-in-out duration-300"
-                  onClick={handleAddImage}
-                >
-                  <div className="w-12 h-12 rounded-full flex-center bg-primary text-2xl md:text-4xl lg:text-5xl text-white p-4">
-                    +
-                  </div>
-                </div>
-                {images
-                  .slice()
-                  .reverse()
-                  .map((image, index) => (
-                    <div
-                      key={index}
-                      className="relative group w-full h-60 br"
-                      onClick={() => handleSetMainImage(image)}
-                    >
-                      <button
-                        onClick={() => handleRemoveImage(image)}
-                        className="absolute top-1 right-2 text-xl text-red opacity-0 group-hover:opacity-100 ease-in-out duration-300"
-                      >
-                        x
-                      </button>
-                      <Image
-                        src={URL.createObjectURL(image)}
-                        alt={`Image ${index + 1}`}
-                        width={400}
-                        height={400}
-                        className="w-full h-full object-contain cursor-pointer"
-                      />
+            <div className="w-[60%] h-full overflow-hidden">
+              <h4>
+                Main Image<span className="text-[red]">*</span>
+              </h4>
+              <div className="relative w-full h-[95%] bg-[#F8F8F8] br flex-center">
+                {mainImage ? (
+                  <Image
+                    src={URL.createObjectURL(mainImage)}
+                    alt="Main Image"
+                    width={800}
+                    height={800}
+                    className="w-full h-full object-contain animate-slide-down"
+                  />
+                ) : (
+                  <>
+                    <Image
+                      src="/logo.png"
+                      alt="Main Image"
+                      width={800}
+                      height={800}
+                      className="w-full h-full object-contain"
+                    />
+                    <div className="absolute inset-0 bg-black/50 flex-center text-primary animate-slide-down">
+                      Choose a Image
                     </div>
-                  ))}
+                  </>
+                )}
+              </div>
+            </div>
+            <div className="w-[40%] h-full overflow-hidden">
+              <h4>
+                Images<span className="text-[red]">*</span>
+              </h4>
+              <div className="w-full h-[95%] bg-[#F8F8F8] overflow-x-hidden overflow-y-scroll">
+                <div className="w-full h-fit grid grid-cols-1 md:grid-cols-2 gap-2">
+                  <div
+                    className="w-full h-56 flex-center cursor-pointer select-none br active:scale-95 ease-in-out duration-300"
+                    onClick={handleAddImage}
+                  >
+                    <div className="w-12 h-12 rounded-full flex-center bg-primary text-2xl md:text-4xl lg:text-5xl text-white p-4">
+                      +
+                    </div>
+                  </div>
+                  {images
+                    .slice()
+                    .reverse()
+                    .map((image, index) => (
+                      <div
+                        key={index}
+                        className={`relative group w-full h-56 br ${
+                          image === mainImage && "bg-primary shadow-xl"
+                        }`}
+                        onClick={() => handleSetMainImage(image)}
+                      >
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveImage(image)}
+                          title="Remove"
+                          className="absolute top-1 right-2 z-10 text-xl text-red opacity-0 group-hover:opacity-100 ease-in-out duration-300"
+                        >
+                          x
+                        </button>
+                        {image === mainImage && (
+                          <div className="absolute inset-0 bg-black/40 flex-center text-primary animate-slide-down">
+                            Main Image
+                          </div>
+                        )}
+                        <Image
+                          src={URL.createObjectURL(image)}
+                          alt={`Image ${index + 1}`}
+                          width={400}
+                          height={400}
+                          className="w-full h-full object-contain cursor-pointer"
+                        />
+                      </div>
+                    ))}
+                </div>
               </div>
             </div>
           </div>
@@ -359,6 +394,7 @@ const AddProduct = () => {
                   <div className="flex space-x-2 mt-1">
                     {["XS", "S", "M", "L", "XL", "XXL"].map((size) => (
                       <button
+                        type="button"
                         key={size}
                         className={`border rounded-full px-3 py-2 ${
                           availableSizes.includes(size)
@@ -466,7 +502,7 @@ const AddProduct = () => {
 
 export default AddProduct;
 
-const ColorOption: React.FC<{
+export const ColorOption: React.FC<{
   colorOptions: ColorOptionValue[];
   setColorOptions: React.Dispatch<React.SetStateAction<ColorOptionValue[]>>;
 }> = ({ colorOptions, setColorOptions }) => {
@@ -549,6 +585,7 @@ const ColorOption: React.FC<{
             </div>
             <div className="mt-4">
               <button
+                type="button"
                 onClick={() => handleRemoveColor(index)}
                 className="w-fit h-fit p-2 rounded bg-red-100 hover:bg-red-200 text-red-600"
               >
@@ -599,6 +636,7 @@ const ColorOption: React.FC<{
             </div>
             <div className="mt-4">
               <button
+                type="button"
                 onClick={handleAddColor}
                 className="w-fit h-fit p-2 rounded bg-yellow-100 hover:bg-yellow-200 text-yellow-600"
               >
@@ -609,6 +647,7 @@ const ColorOption: React.FC<{
         ) : (
           <div className="">
             <button
+              type="button"
               onClick={() => setIsAdding(true)}
               className="flex items-center p-2 rounded bg-yellow-100 hover:bg-yellow-200 text-yellow-600"
             >
@@ -739,7 +778,9 @@ const SelectCategoriesAndTypes: React.FC<{
 
   return (
     <div className="col-span-2 grid grid-cols-1 gap-2">
-      <div className="font-semibold">Categories and Types<span className="text-[red]">*</span></div>
+      <div className="font-semibold">
+        Categories and Types<span className="text-[red]">*</span>
+      </div>
       <div className="col-span-2 grid grid-cols-2 gap-4">
         {categorySelections.map((selection, index) => (
           <div key={index} className="grid grid-cols-2 gap-4">
@@ -791,6 +832,7 @@ const SelectCategoriesAndTypes: React.FC<{
                   </select>
                 )}
                 <button
+                  type="button"
                   onClick={() => handleRemoveSelection(index)}
                   className="w-fit h-fit p-2 rounded bg-red-100 hover:bg-red-200 text-red-600"
                 >
@@ -803,6 +845,7 @@ const SelectCategoriesAndTypes: React.FC<{
 
         <div className="col-span-2">
           <Button
+            type="button"
             onClick={handleAddMoreCategory}
             disabled={isAddButtonDisabled}
             className="w-full py-2 mt-2 text-white"
@@ -815,7 +858,7 @@ const SelectCategoriesAndTypes: React.FC<{
   );
 };
 
-const FAQs: React.FC<{
+export const FAQs: React.FC<{
   faqs: Faq[];
   setFaqs: React.Dispatch<React.SetStateAction<Faq[]>>;
 }> = ({ faqs, setFaqs }) => {
@@ -868,6 +911,7 @@ const FAQs: React.FC<{
                   <div className="w-full flex justify-between items-center">
                     {faq.question || `FAQ Question ${index + 1}`}
                     <button
+                      type="button"
                       onClick={(e) => {
                         e.stopPropagation();
                         handleRemoveFaq(index);

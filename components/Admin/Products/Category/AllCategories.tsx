@@ -93,7 +93,7 @@ const AllCategories = () => {
               onClick={() => router.push("/admin/all-categories/add-category")}
               className="w-full h-full text-white rounded-none"
             >
-              <BsPlus size={20} className="ml-1" /> Create New Product
+              <BsPlus size={20} className="ml-1" /> Create New Category
             </Button>
             <div
               onClick={() => setIsAscending(!isAscending)}

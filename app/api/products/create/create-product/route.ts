@@ -5,7 +5,7 @@ import { UTFile } from "uploadthing/server";
 import { utapi } from "@/server/uploadthing";
 import { generateSlug } from "@/lib/utils";
 
-const generateUniqueSlug = async (slug: string) => {
+export const generateUniqueSlug = async (slug: string) => {
   let uniqueSlug = slug;
   let slugExists = await Products.findOne({ slug: uniqueSlug });
 
@@ -33,7 +33,9 @@ export async function POST(request: Request) {
     const title = formData.get("title") as string;
     const description = formData.get("description") as string;
     const price = parseFloat(formData.get("price") as string);
-    const oldPrice = parseFloat(formData.get("oldPrice") as string);
+    const oldPrice =
+      (formData.get("oldPrice") as string) &&
+      parseFloat(formData.get("oldPrice") as string);
     const quantityInStock = parseInt(
       formData.get("quantityInStock") as string,
       10

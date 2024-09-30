@@ -1,5 +1,11 @@
-import Contact from "@/components/Contact";
+import Contact from "@/components/Contact/Contact";
+import FAQ from "@/components/Contact/FAQ";
 
 export default function ContactPage() {
-  return <Contact />;
+  return (
+    <>
+      <Contact />
+      <FAQ />
+    </>
+  );
 }

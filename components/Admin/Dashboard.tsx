@@ -238,7 +238,7 @@ const Dashboard = () => {
 
   return (
     <>
-      <section className="w-full h-full overflow-hidden bg-[]">
+      <section className="w-full h-full overflow-hidden">
         <div className="space-y-2 p-4 md:py-6">
           <h2 className="capitalize text-2xl md:text-3xl lg:text-4xl font-semibold tracking-tight">
             Welcome Back{" "}

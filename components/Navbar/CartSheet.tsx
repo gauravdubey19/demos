@@ -79,7 +79,7 @@ const Cart = () => {
                 </span> */}
               </div>
               <Button
-                onClick={()=>router.push('/checkout')}
+                onClick={() => router.push("/checkout")}
                 size="sm"
                 className="w-full select-none text-lg rounded-none hover:shadow-md active:translate-y-0.5 border-none outline-none ease-in-out duration-300"
               >
@@ -174,8 +174,8 @@ const CartItemCard: React.FC<{ item: CartItem }> = ({ item }) => {
         onClick={() => handleRemoveFromCart(item.productId)}
         className={`absolute right-2 top-0 z-10 cursor-pointer opacity-0 group-hover:opacity-100 ${
           item.quantity !== 1
-            ? "text-gray-400 hover:text-primary"
-            : "text-primary"
+            ? "text-gray-400 hover:text-[red]"
+            : "text-[red]"
         }`}
       >
         x

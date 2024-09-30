@@ -60,6 +60,11 @@ export interface CardValues {
     title: string;
     color: string;
   }[];
+  categories: {
+    _id: string;
+    title: string;
+    slug: string;
+  }[];
 }
 
 export interface CardDetails {

@@ -198,11 +198,11 @@ const ProductTable: React.FC<{
                   <Link
                     href={`/products/${product.categories[0].slug}/${product.slug}`}
                   >
-                    <ReactCountUp
+                    {product.oldPrice ? <ReactCountUp
                       amt={calculateDiscount(product.price, product.oldPrice)}
                     >
                       % off
-                    </ReactCountUp>
+                    </ReactCountUp> : <div className="w-[50%] h-fit text-center text-xl">-</div>}
                   </Link>
                 </td>
                 <td className="px-4 md:px-20 py-2">

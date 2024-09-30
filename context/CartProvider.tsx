@@ -196,7 +196,7 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
         const res = await fetch(
           "/api/products/update/update-cart-items/remove",
           {
-            method: "POST",
+            method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
               userId: session.user.id,
@@ -247,7 +247,7 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
     },
     [status, router, session]
   );
-  // 
+  
   const handleClearCart = useCallback(
     async () => {
       if (status !== "authenticated") {
@@ -291,7 +291,7 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
     [status, router, session]
   );
 
-// 
+
   const handleIncrement = useCallback(
     async (productId: string) => {
       if (status !== "authenticated") {
@@ -307,7 +307,7 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
         const res = await fetch(
           "/api/products/update/update-cart-items/increment",
           {
-            method: "POST",
+            method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
               userId: session.user.id,
@@ -374,7 +374,7 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
         const res = await fetch(
           "/api/products/update/update-cart-items/decrement",
           {
-            method: "POST",
+            method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
               userId: session.user.id,
@@ -444,7 +444,7 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
         const res = await fetch(
           `/api/products/update/update-cart-items/${action}`,
           {
-            method: "POST",
+            method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
               userId: session.user.id,

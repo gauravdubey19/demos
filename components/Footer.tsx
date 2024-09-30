@@ -98,7 +98,6 @@ const Footer: React.FC<{ appName?: string }> = ({ appName = "LOGO" }) => {
 
 export default Footer;
 
-//
 const Form = () => {
   const [email, setEmail] = useState<string>("");
   const [status, setStatus] = useState<FormStatus>({

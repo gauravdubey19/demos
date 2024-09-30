@@ -1,4 +1,3 @@
-// ProductCategory.tsx
 "use client";
 
 import React, { useEffect, useState } from "react";
@@ -52,7 +51,7 @@ const ProductCategory: React.FC<ProductCategoryProps> = ({
         setAllProducts(data);
         setProducts(data);
 
-        // Extracting color options & sizes from the fetched products
+        // extracting color options & sizes from the fetched products
         const allColorOptions = data.flatMap((product) => product.colorOptions);
         const uniqueColorOptions = Array.from(
           new Set(allColorOptions.map((option) => JSON.stringify(option)))
@@ -74,25 +73,25 @@ const ProductCategory: React.FC<ProductCategoryProps> = ({
     fetchProducts();
   }, [category]);
 
-  // Function to filter products based on selectedType, selectedColor, selectedSize, and price range
+  // function to filter products based on selectedType, selectedColor, selectedSize, and price range
   useEffect(() => {
     const filteredProducts = allProducts.filter((product) => {
-      // Filter based on type
+      // Filtering based on type
       const matchesType = selectedType
         ? product.type.includes(selectedType)
         : true;
 
-      // Filter based on color
+      // filtering based on color
       const matchesColor = selectedColor
         ? product.colorOptions.some((color) => color.title === selectedColor)
         : true;
 
-      // Filter based on size
+      // filtering based on size
       const matchesSize = selectedSize
         ? product.availableSizes.includes(selectedSize)
         : true;
 
-      // Filter based on price range
+      // filtering based on price range
       const matchesPrice =
         product.price >= priceRange.min && product.price <= priceRange.max;
 
@@ -135,7 +134,7 @@ const ProductCategory: React.FC<ProductCategoryProps> = ({
           setSelectedSize={setSelectedSize}
           priceRange={priceRange}
           setPriceRange={setPriceRange}
-          isAscending={isAscending} // Pass the sorting state
+          isAscending={isAscending}
           setIsAscending={setIsAscending}
         />
         <div className="mt-10 md:mt-0 w-full px-2 md:px-10 lg:px-14">
