@@ -12,9 +12,9 @@ export async function POST(req: NextRequest, { params }: { params: { userId: str
         return NextResponse.json({ error: 'User ID is required' }, { status: 400 });
     }
 
-    const { address, country, city, zip,state } = await req.json();
+    const { address, country, city, zipCode,state } = await req.json();
 
-    if (!address || !country || !city || !zip || !state) {
+    if (!address || !country || !city || !zipCode || !state) {
         return NextResponse.json({ error: 'All fields are required' }, { status: 400 });
     }
 
@@ -26,7 +26,7 @@ export async function POST(req: NextRequest, { params }: { params: { userId: str
             country,
             city,
             state,
-            zip
+            zipCode
         });
 
         // Save the contact to the database

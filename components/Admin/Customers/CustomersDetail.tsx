@@ -22,7 +22,7 @@ interface UserValues {
   address: string;
   state: { name: string; code: string };
   city: { name: string; code: string };
-  zip: string;
+  zipCode: string;
 }
 
 const CustomersDetail: React.FC<{ userId: string }> = ({ userId }) => {
@@ -57,7 +57,7 @@ const CustomersDetail: React.FC<{ userId: string }> = ({ userId }) => {
             name: userContactData?.city?.name,
             code: userContactData?.city?.code,
           },
-          zip: userContactData?.zip,
+          zipCode: userContactData?.zipCode,
         };
 
         setUser(userFullData);
@@ -125,7 +125,7 @@ const UserDetail: React.FC<{ user: UserValues }> = ({ user }) => {
           <DetailRow label="Address" value={user.address} />
           <DetailRow label="State" value={user.state.name} />
           <DetailRow label="City" value={user.city.name} />
-          <DetailRow label="Zip code" value={user.zip} />
+          <DetailRow label="Zip code" value={user.zipCode} />
         </div>
       </div>
     </div>

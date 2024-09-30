@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { connectToDB } from '@/utils/db';
 import Contact from '@/models/Contact';
+import User from '@/models/User';
+import Address from '@/models/Address';
 
 // Function to establish database connection
 async function connectDB() {
@@ -46,8 +48,53 @@ async function getContactsByUserId(userId: string) {
 
     try {
         // Find contacts that match the userId
-        const contacts = await Contact.find({ userId }).exec();
-        return contacts;
+        const contact = await Contact.findOne({ userId});
+        const user = await User.findById(userId);
+        console.log('Contact:', contact);
+        console.log('User:', user);
+        let userAddress = null;
+        if(contact && user){
+            console.log("user.firstName", user.firstName);
+            console.log("user.lastName", user.lastName);
+            console.log("user.phone_number", user.phone_number);
+            console.log("contact.address", contact.address);
+            console.log("contact.city", contact.city);
+            console.log("contact.state", contact.state);
+            console.log("contact.zipCode", contact.zipCode);
+            if(user.firstName && user.lastName && user.phone_number && contact.address && contact.city && contact.state && contact.zipCode){
+            console.log('User and contact details found');
+            userAddress = {
+            _id: contact._id,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            phone_number: user.phone_number,
+            address: contact.address,
+            city: contact.city,
+            state: contact.state,
+            zipCode: contact.zipCode,
+            isSameAddress: true,
+        }
+    }
+    }
+        const userAddresses = await Address.findOne({userId});
+        let finalUserAddresses = [];
+        let sortedFinalUserAddresses = [];
+        if (!userAddresses && userAddress) {
+            finalUserAddresses = [userAddress];
+        }
+        if(!userAddress && !userAddresses){
+            finalUserAddresses = [];
+        }
+        if(userAddresses && !userAddress){
+            sortedFinalUserAddresses= userAddresses.addresses.sort((a:any, b:any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+            finalUserAddresses = sortedFinalUserAddresses;
+        }
+        if(userAddress && userAddresses){
+            sortedFinalUserAddresses= userAddresses.addresses.sort((a:any, b:any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+            finalUserAddresses = [userAddress, ...sortedFinalUserAddresses];
+    }
+    console.log('Final User Addresses:', finalUserAddresses);
+    return finalUserAddresses;
     } catch (error) {
         console.error('Error fetching contacts:', error);
         throw new Error('Error fetching contacts');

@@ -39,7 +39,7 @@ interface User {
     name?: string;
     code?: string;
   };
-  zip?: string;
+  zipCode?: string;
   country?: string;
 }
 
@@ -356,10 +356,10 @@ const ContactSection = () => {
       address: userData.address,
       city: userData.city,
       state: userData.state,
-      zip: userData.zip,
+      zipCode: userData.zipCode,
       country: userData.country,
     };
-    if(userData.address === userDataCopy?.address && userData.city === userDataCopy?.city && userData.state === userDataCopy?.state && userData.zip === userDataCopy?.zip){
+    if(userData.address === userDataCopy?.address && userData.city === userDataCopy?.city && userData.state === userDataCopy?.state && userData.zipCode=== userDataCopy?.zipCode){
       // alert("No changes made to the contact information");
       setContactEditing(false);
       return;
@@ -483,14 +483,14 @@ const ContactSection = () => {
         <InputField
           id="zip"
           label="Zip"
-          value={userData?.zip}
+          value={userData?.zipCode}
           isDisabled={!isContactEditing}
           setValue={(value) => {
             let numericValue = value.replace(/[^0-9]/g, "");
             if (numericValue.length > 6) {
               numericValue = numericValue.slice(0, 6);
             }
-            handleInputChange("zip", numericValue);
+            handleInputChange("zipCode", numericValue);
           }}
         />
       </div>

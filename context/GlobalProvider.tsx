@@ -34,7 +34,7 @@ interface User {
     name?: string;
     code?: string;
   };
-  zip?: string;
+  zipCode?: string;
   country?: string;
 }
 
@@ -43,7 +43,7 @@ export interface Address {
   firstName: string;
   lastName: string;
   address: string;
-  phoneNumber: string;
+  phone_number: string;
   zipCode: string;
   state: {
     name: string;
@@ -80,14 +80,18 @@ export type Product = {
   image: string;
   price: number;
   quantity: number;
-  size: string;
-  color: string;
+  selectedSize: string;
+  selectedColor: {
+    title: string;
+    color: string
+  };
   timestamps: string;
-  category: string;
+  categorySlug: string;
 };
 export interface AllOrdersProps {
-  sampleData: Order[];
+  fetchedOrders: Order[];
   isSearch?: boolean;
+  fetchingOrders?: boolean;
 }
 export type Order = {
   _id: string;
@@ -97,11 +101,11 @@ export type Order = {
     orderStatus: string;
     totalPrice: number;
     orderDate: string;
-    deliveryDate: string;
-    shippingDate: string;
-    shippingAddress: string;
     orderID: string;
-    cancelledDate: string;
+    deliveryDate?: string;
+    shippingDate?: string;
+    shippingAddress?: string;
+    cancelledDate?: string;
   };
   timestamps: string;
 };
@@ -128,7 +132,7 @@ interface GlobalState {
     setVerifyingOTP: (verifying: boolean) => void,
     setIsAccountVerified: (verified: boolean) => void,
     successDescription?: string
-  ) => void;
+  ) => Promise<boolean>;
   sendOtpEmail: (options: SendOtpEmailOptions) => Promise<string | null>;
   addresses: Address[];
   setAddresses: React.Dispatch<React.SetStateAction<Address[]>>;  
@@ -147,6 +151,10 @@ interface GlobalState {
   setSearchLoading: React.Dispatch<React.SetStateAction<boolean>>;
   searchQuery: string;
   setSearchQuery: React.Dispatch<React.SetStateAction<string>>;
+  fetchedOrders: Order[];
+  fetchingOrders: boolean;
+  setFetchingOrders: React.Dispatch<React.SetStateAction<boolean>>;
+  setFetchedOrders: React.Dispatch<React.SetStateAction<Order[]>>;
 }
 
 interface SessionExtended extends Session {
@@ -188,7 +196,25 @@ const GlobalProvider = ({ children }: { children: ReactNode }) => {
   const [searchQuery, setSearchQuery] = useState<string>("");
 
   const [searchLoading, setSearchLoading] = useState<boolean>(false);
-
+  const [fetchingOrders, setFetchingOrders] = useState<boolean>(false);
+  const [fetchedOrders, setFetchedOrders] = useState<Order[]>([]);
+  useEffect(()=>{
+    if(!session?.user?.id) return;
+    const fetchOrders = async () => {
+      const userId = session?.user?.id;
+      try{
+      setFetchingOrders(true);
+      const response = await fetch(`/api/orders/${userId}`);
+      const data = await response.json();
+      setFetchedOrders(data);
+      } catch (error) {
+        console.error('Error fetching orders:', error);
+      } finally {
+        setFetchingOrders(false);
+      }
+    }
+    fetchOrders();
+  },[session])
   const [editAddressData, setEditAddressData] = useState({
     _id: "",
     firstName: "",
@@ -344,64 +370,72 @@ const GlobalProvider = ({ children }: { children: ReactNode }) => {
       setSendingOTP(false);
     }
   };
-  const verifyOTP = async (
-    phone_number: string,
-    otp: string,
-    setVerifyingOTP: (verifying: boolean) => void,
-    setIsAccountVerified: (verified: boolean) => void,
-    successDescription: string = "You can now proceed",
-  ) => {
-    if (!phone_number || !otp) {
-      console.error("Phone number and OTP are required");
-      return;
-    }
-    if (otp.length !== 6) {
-      console.error("OTP should be 6 digits");
-      return;
-    }
-    try {
-      setVerifyingOTP(true);
-      const response = await fetch("/api/verify-otp", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ phone_number, otp }),
-      });
-      console.log("response: ", response);
-      if (response.ok) {
-        const data = await response.json();
-        console.log("OTP verified:", data);
-        if (data.verified) {
-          setIsAccountVerified(true);
-          toast({
-            title: "Account Verified!",
-            description: successDescription,
-            variant: "default",
-          });
+    const verifyOTP = async (
+      phone_number: string,
+      otp: string,
+      setVerifyingOTP: (verifying: boolean) => void,
+      setIsAccountVerified: (verified: boolean) => void,
+      successDescription: string = "You can now proceed",
+    ): Promise<boolean> => {
+      if (!phone_number || !otp) {
+        console.error("Phone number and OTP are required");
+        return false;
+      }
+      if (otp.length !== 6) {
+        console.error("OTP should be 6 digits");
+        return false;
+      }
+      try {
+        setVerifyingOTP(true);
+        const response = await fetch("/api/verify-otp", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ phone_number, otp }),
+        });
+        console.log("response: ", response);
+        if (response.ok) {
+          const data = await response.json();
+          console.log("OTP verified:", data);
+          if (data.verified) {
+            setIsAccountVerified(true);
+            toast({
+              title: "Account Verified!",
+              description: successDescription,
+              variant: "default",
+            });
+            return true;
+          } else {
+            console.error("Invalid OTP:", data.error);
+            toast({
+              title: "Invalid OTP",
+              description: "Please try again",
+              variant: "destructive",
+            });
+            return false;
+          }
         } else {
-          console.error("Invalid OTP:", data.error);
+          console.error("Failed to verify OTP:", await response.text());
           toast({
-            title: "Invalid OTP",
+            title: "Failed to verify OTP",
             description: "Please try again",
             variant: "destructive",
           });
+          return false;
         }
-      } else {
-        console.error("Failed to verify OTP:", await response.text());
+      } catch (error) {
+        console.error("Error verifying OTP:", error);
         toast({
           title: "Failed to verify OTP",
           description: "Please try again",
           variant: "destructive",
         });
+        return false;
+      } finally {
+        setVerifyingOTP(false);
       }
-    } catch (error) {
-      console.error("Error verifying OTP:", error);
-    } finally {
-      setVerifyingOTP(false);
-    }
-  };
-  
+    };
   const sendOtpEmail = async ({ to,setSendingOTP,setOtpSend, subject, from ='"CSK Textiles" <CSK@gmail.com>' }: SendOtpEmailOptions) => {
     try {
       setSendingOTP(true);
@@ -510,7 +544,7 @@ const handleDeleteAddresses = async () => {
         selectedAddresses, setSelectedAddresses,
         handleDeleteAddresses, editAddressData, setEditAddressData, suggestions, setSuggestions, activeTab, setActiveTab,
         searchLoading, setSearchLoading,
-        searchQuery, setSearchQuery
+        searchQuery, setSearchQuery, fetchedOrders, fetchingOrders, setFetchingOrders, setFetchedOrders
       }}
     >
       {children}

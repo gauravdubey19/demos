@@ -50,6 +50,7 @@ interface CartContextType {
   handleAddProductToWhistlist: (productId: string) => void;
   handleRemoveProductFromWishlist: (productId: string) => void;
   productExistInWishlist: (productId: string) => boolean;
+  setCart: React.Dispatch<React.SetStateAction<CartItem[]>>;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -268,10 +269,10 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
         if (res.ok) {
           setCart([]);
 
-          toast({
-            title: data.message || "All items removed successfully.",
-            variant: "destructive",
-          });
+          // toast({
+          //   title: data.message || "All items removed successfully.",
+          //   variant: "destructive",
+          // });
         } else {
           toast({
             title: data.error || "Failed to clear the cart.",
@@ -594,6 +595,7 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
     <CartContext.Provider
       value={{
         cart,
+        setCart,
         isOpen,
         setOpen,
         handleIncrement,

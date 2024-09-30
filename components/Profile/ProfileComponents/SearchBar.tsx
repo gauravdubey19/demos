@@ -8,7 +8,7 @@ import OrderImage from '@/public/assets/orderBox.png';
 import { AllOrdersProps, Order, useGlobalContext } from "@/context/GlobalProvider";
 import { MdCancel } from "react-icons/md";
 
-const SearchBar:React.FC<AllOrdersProps> = ({sampleData}) => {
+const SearchBar:React.FC<AllOrdersProps> = ({fetchedOrders}) => {
   const [showSuggestions, setShowSuggestions] = useState<boolean>(false);
     const { setSuggestions, setActiveTab,activeTab, setSearchLoading,searchQuery,setSearchQuery } = useGlobalContext();
   const isFirstRender = useRef(true);
@@ -22,8 +22,8 @@ const SearchBar:React.FC<AllOrdersProps> = ({sampleData}) => {
         }
     
         setSearchLoading(true);
-        // Perform your search logic here using sampleData
-        let searchedData = sampleData.filter((item) =>
+        // Perform your search logic here using fetchedOrders
+        let searchedData = fetchedOrders.filter((item) =>
             item.orderInfo.orderID.toLowerCase().startsWith(searchQuery.toLowerCase())
         );
         setSuggestions(searchedData);
@@ -37,7 +37,7 @@ const SearchBar:React.FC<AllOrdersProps> = ({sampleData}) => {
       const delayFetch = setTimeout(fetchSuggestions, 2000);
       return () => clearTimeout(delayFetch);
     }
-  }, [searchQuery]);
+  }, [fetchedOrders, searchQuery, setSearchLoading, setSuggestions]);
 
   return (
     <>
@@ -61,7 +61,7 @@ const SearchBar:React.FC<AllOrdersProps> = ({sampleData}) => {
                     setSuggestions([]);
                     setSearchLoading(false);
                 }
-                if(!isNaN(Number(e.target.value))){
+                if(!isNaN(Number(e.target.value)) && e.target.value.length <= 6){
                 setSearchQuery(e.target.value);
                 }
             }}

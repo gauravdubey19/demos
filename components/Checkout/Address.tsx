@@ -1,30 +1,46 @@
 
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import AddressCard from './AddressCard';
 import { Plus } from 'lucide-react';
+import Link from 'next/link';
+
 
 interface AddressI {
-    addressData: Array<{
-        address: string;
-        city: { name: string; code: string };
-        state: { name: string; code: string };
-        zip: string;
-        selected: boolean;
+    addressData: {
         _id: string;
-    }>;
+        firstName: string;
+        lastName: string;
+        address: string;
+        phone_number: string;
+        zipCode: string;
+        state: {
+            name: string;
+            code: string;
+        };
+        city: {
+            name: string;
+            code: string;
+        };
+        isSameAddress?: boolean;
+    }[];
     handleSelectAddress: (v: any) => void;
-    selectedAddressId: any
+    selectedAddressId: any;
+    fetchingAddress: boolean;
 }
 
-const Address = ({ addressData, handleSelectAddress, selectedAddressId }: AddressI) => {
-
-
+const Address = ({ addressData, handleSelectAddress, selectedAddressId,fetchingAddress }: AddressI) => {
+    useEffect(() => {
+        console.log('Address Data in address: ', addressData);
+    }, [addressData]);
+    if(fetchingAddress){
+        return <div className="p-4 md:p-5 space-y-4 pt-7">Loading...</div>
+    }
     return (
 
         <div className="p-4 md:p-5 space-y-4 pt-7">
             {/* Container for Address Cards */}
-            <div className="space-y-3">
+            <div className="space-y-0">
                 {addressData.map((address) => (
                     <div
                         key={address._id}
@@ -32,10 +48,15 @@ const Address = ({ addressData, handleSelectAddress, selectedAddressId }: Addres
                         onClick={() => handleSelectAddress(address._id)}
                     >
                         <AddressCard
+                            isSameAddress={address.isSameAddress}
+                            _id={address._id}
+                            city={address.city}
+                            state={address.state}
                             address={address.address}
-                            city={address.city.name}
-                            state={address.state.name}
-                            zip={address.zip}
+                            firstName={address.firstName}
+                            lastName={address.lastName}
+                            phone={address.phone_number}
+                            pincode={address.zipCode}
                             selected={selectedAddressId === address._id}
                             onSelect={() => handleSelectAddress(address._id)}
                         />
@@ -44,9 +65,9 @@ const Address = ({ addressData, handleSelectAddress, selectedAddressId }: Addres
             </div>
 
             {/* Add Address Button */}
-            <div className="flex flex-row gap-4 items-center justify-center border-2 border-[#FFB433] text-xl md:text-2xl text-[#FFB433] w-full py-2 rounded-lg transition-transform hover:scale-105 cursor-pointer">
+            <Link href={'/profile/add-a-new-address'} className="flex flex-row gap-4 items-center justify-center border-2 border-[#FFB433] text-xl md:text-2xl text-[#FFB433] w-full py-2 rounded-lg transition-transform hover:scale-105 cursor-pointer">
                 <Plus height={30} width={30} className="md:h-8 md:w-8" /> Add Address
-            </div>
+            </Link>
         </div>
 
     );

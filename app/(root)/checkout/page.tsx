@@ -9,34 +9,107 @@ import PriceDetails from '@/components/Checkout/PriceDetails';
 import Address from '@/components/Checkout/Address';
 import ShoppingCart from '@/components/Checkout/ShoppingCart';
 import Payment from '@/components/Checkout/Payment';
+import { CartItem } from '@/lib/types';
+import { useRouter } from 'next/navigation';
+import { Session } from 'inspector/promises';
+import ShippingAddresses from '@/components/Profile/Sections/ShippingAddresses';
+import { useGlobalContext } from '@/context/GlobalProvider';
 
 const CheckoutPage = () => {
+  const router = useRouter();
   const { data: session } = useSession();
   const [cartData, setCartData] = useState<any[]>([]);
   const [selectedItems, setSelectedItems] = useState<number>(0);
+  const [selectedAddress, setSelectedAddress] = useState<any | null>(null);
   const [checkoutStep, setCheckoutStep] = useState<'cart' | 'address' | 'payment'>('cart');
   const [addressData, setAddressData] = useState<any[]>([]);
   const [selectedAddressId, setSelectedAddressId] = useState<string | null>(null);
-
-  const { cart, isOpen, setOpen } = useCart();
-
+  const [placingOrder, setPlacingOrder] = useState<boolean>(false);
+  const [initiatedProcess, setInitiatedProcess] = useState<boolean>(false);
+  const [fetchingAddress, setFetchingAddress] = useState<boolean>(false);
+  const { cart, isOpen, setOpen,setCart,handleClearCart } = useCart();
+  
+  const {setFetchedOrders} = useGlobalContext();
+  useEffect(() => {
+    if( selectedAddressId) {
+      setSelectedAddress(addressData.find((item) => item._id === selectedAddressId));
+    }
+  },[addressData, selectedAddressId]);
+  const placeOrder = async () => {
+    if(!session?.user?.id) {
+      return;
+    }
+    if (placingOrder) {
+      return;
+    }
+    console.log("Orders for selected cart items", cartData.filter((item) => item.selected));
+    console.log("Selected address", selectedAddressId);
+    const userId = session?.user?.id;
+    console.log("userId: ", userId);
+    const totalAmount = cartData.filter((item) => item.selected).reduce((acc, item) => acc + item.price, 0);
+    const orderDetails = {
+      orderedProducts: cartData.filter((item) => item.selected),
+      orderInfo: {
+        orderStatus: 'pending',
+        totalPrice: totalAmount,
+        orderDate: new Date(),
+        zipCode: selectedAddress.zipCode,
+        shippingAddress: `${selectedAddress.address}, ${selectedAddress.city.name}, ${selectedAddress.state.name}`,
+        phone_number: selectedAddress.phone_number,
+      },
+    };
+    try {
+      setPlacingOrder(true);
+      const response = await fetch(`/api/orders/${userId}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({orderDetails}),
+      });
+  
+      if (!response.ok) {
+        throw new Error('Failed to place order');
+      }
+  
+      const data = await response.json();
+      setCart([]);
+      handleClearCart();
+      console.log("Order placed successfully: ", data);
+      setFetchedOrders((prevOrders) => [data.order, ...prevOrders]);
+      console.log('Order placed successfully:', data);
+      router.push(`/profile/order-history`);
+      toast({ title: "Order placed successfully",description: "Please wait while we redirect you to order order page."});
+    } catch (error) {
+      console.error('Error placing order:', error);
+      toast({ title: "Error placing order", variant: "destructive" });
+      // Handle error (e.g., show an error message)
+    } finally{
+      setPlacingOrder(false);
+    }
+  }
   // Memoizing getUserAddress with useCallback
   const getUserAddress = useCallback(async () => {
     if (session) {
       try {
+        setFetchingAddress(true);
         const response = await fetch(`/api/contact/${session.user.id}/get-All-contacts-by-user-Id/`);
         if (response.ok) {
           const res = await response.json();
+          console.log("User addresses: ", res);
           const initialAddress = res.map((item: any) => ({
             ...item,
             selected: true,
           }));
+          setFetchingAddress(false);
           setAddressData(initialAddress);
         } else {
           console.error('Failed to fetch address');
         }
       } catch (error) {
         console.error('Error fetching address:', error);
+      } finally{
+        setFetchingAddress(false);
       }
     }
   }, [session]);
@@ -93,7 +166,7 @@ const CheckoutPage = () => {
 
   return (
     <div className="h-max w-full pt-20">
-      <ProgressIndicator currentStep={checkoutStep} />
+      <ProgressIndicator currentStep={checkoutStep} setCheckoutStep= {setCheckoutStep} initiatedProcess={initiatedProcess} />
       <div className="pt-7 px-2 w-full flex justify-between md:flex-row flex-col gap-3 pb-5">
         <div className="md:w-[75%] w-full p-5 min-h-60 max-h-max border border-[#8888] rounded-lg">
           <h1 className="text-2xl md:text-3xl text-black">
@@ -113,12 +186,13 @@ const CheckoutPage = () => {
           )}
           {checkoutStep === 'address' &&
             <Address
+              fetchingAddress={fetchingAddress}
               addressData={addressData}
               handleSelectAddress={setSelectedAddressId}
               selectedAddressId={selectedAddressId}
             />
           }
-          {checkoutStep === 'payment' && <Payment handlePlaceOrder={() => { }} />}
+          {checkoutStep === 'payment' && <Payment handlePlaceOrder={placeOrder} placingOrder={placingOrder} selectedAddress={selectedAddress} setInitiatedProcess={setInitiatedProcess} />}
         </div>
         <PriceDetails
           cartData={cartData}

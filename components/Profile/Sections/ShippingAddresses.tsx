@@ -49,7 +49,7 @@ const ShippingAddresses = () => {
               address={address.address}
               firstName={address.firstName}
               lastName={address.lastName}
-              phone={address.phoneNumber}
+              phone={address.phone_number}
               pincode={address.zipCode}
               selected={selectedAddresses.includes(address._id)} // Check if the address is selected
               onSelect={() => handleSelect(address._id)} // Toggle selection

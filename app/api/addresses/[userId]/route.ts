@@ -31,7 +31,7 @@ export async function POST(req: NextRequest, { params }: { params: { userId: str
     await connectToDB();
 
     const { userId } = params;
-    const { firstName, lastName, address, phoneNumber, zipCode, state, city } = await req.json();
+    const { firstName, lastName, address, phone_number, zipCode, state, city } = await req.json();
 
     if (!userId || Array.isArray(userId)) {
         return NextResponse.json({ error: 'Valid User ID is required' }, { status: 400 });
@@ -41,7 +41,7 @@ export async function POST(req: NextRequest, { params }: { params: { userId: str
         let userAddress = await Address.findOne({ userId });
 
         if (userAddress) {
-            const newAddress = { firstName, lastName, address, phoneNumber, zipCode, state, city };
+            const newAddress = { firstName, lastName, address, phone_number, zipCode, state, city };
             userAddress.addresses.push(newAddress);
             const savedAddress = await userAddress.save();
             const createdAddress = savedAddress.addresses[savedAddress.addresses.length - 1];
@@ -49,7 +49,7 @@ export async function POST(req: NextRequest, { params }: { params: { userId: str
         } else {
             const newAddress = {
                 userId,
-                addresses: [{ firstName, lastName, address, phoneNumber, zipCode, state, city }],
+                addresses: [{ firstName, lastName, address, phone_number, zipCode, state, city }],
             };
             userAddress = await Address.create(newAddress);
             return NextResponse.json({ message: 'Address added successfully', address: userAddress.addresses[0] }, { status: 201 });
@@ -65,7 +65,7 @@ export async function PUT(req: NextRequest, { params }: { params: { userId: stri
     await connectToDB();
 
     const { userId } = params;
-    const { addressId, firstName, lastName, address, phoneNumber, zipCode, state, city } = await req.json();
+    const { addressId, firstName, lastName, address, phone_number, zipCode, state, city } = await req.json();
 
     if (!userId || Array.isArray(userId) || !addressId) {
         return NextResponse.json({ error: 'Valid User ID and Address ID are required' }, { status: 400 });
@@ -87,7 +87,7 @@ export async function PUT(req: NextRequest, { params }: { params: { userId: stri
         addressToUpdate.firstName = firstName ?? addressToUpdate.firstName;
         addressToUpdate.lastName = lastName ?? addressToUpdate.lastName;
         addressToUpdate.address = address ?? addressToUpdate.address;
-        addressToUpdate.phoneNumber = phoneNumber ?? addressToUpdate.phoneNumber;
+        addressToUpdate.phone_number = phone_number ?? addressToUpdate.phone_number;
         addressToUpdate.zipCode = zipCode ?? addressToUpdate.zipCode;
         addressToUpdate.state.code = state.code ?? addressToUpdate.state.code;
         addressToUpdate.state.name = state.name ?? addressToUpdate.state.name;
