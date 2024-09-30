@@ -78,6 +78,7 @@ export interface ProductDetailValues {
   mainImage: string;
   price: number;
   oldPrice?: number;
+  quantityInStock: number;
   availableSizes: string[];
   colorOptions: {
     _id: string;
@@ -85,10 +86,12 @@ export interface ProductDetailValues {
     color: string;
   }[];
   categories: {
+    _id: string;
     title: string;
     slug: string;
   }[];
   types: {
+    _id: string;
     title: string;
     slug: string;
   }[];
@@ -96,9 +99,9 @@ export interface ProductDetailValues {
   fabricType?: string;
   careInstructions?: string;
   origin: string;
-  quantityInStock: number;
   brand: string;
   faqs: {
+    _id: string;
     question: string;
     answer: string;
   }[];

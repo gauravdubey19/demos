@@ -16,12 +16,53 @@ import {
 import ReactCountUp from "@/components/ui/ReactCountUp";
 import { FaPlus } from "react-icons/fa";
 import { BsPlus, BsTrash } from "react-icons/bs";
+import Loader from "@/components/ui/Loader";
+
+export interface ProductDetailValues {
+  _id: string;
+  title: string;
+  slug: string;
+  description: string;
+  images: string[];
+  mainImage: string;
+  price: number;
+  oldPrice?: number;
+  quantityInStock: number;
+  availableSizes: string[];
+  colorOptions: {
+    _id: string;
+    title: string;
+    color: string;
+  }[];
+  categories: {
+    _id: string;
+    title: string;
+    slug: string;
+  }[];
+  types: {
+    _id: string;
+    title: string;
+    slug: string;
+  }[];
+  material: string;
+  fabricType?: string;
+  careInstructions?: string;
+  origin: string;
+  brand: string;
+  faqs: {
+    _id: string;
+    question: string;
+    answer: string;
+  }[];
+  type: string;
+  countryOfManufacture: string;
+}
 
 interface ColorOptionValue {
   title: string;
   color: string;
 }
-interface CategoryValue {
+interface CategoryAndTypeValue {
   title: string;
   slug: string;
 }
@@ -30,9 +71,39 @@ interface Faq {
   answer: string;
 }
 
-const AddProduct = () => {
+const EditProduct: React.FC<{ slug: string }> = ({ slug }) => {
   const router = useRouter();
-  const [loading, setLoading] = useState<boolean>(false);
+  const [product, setProduct] = useState<ProductDetailValues | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+
+  useEffect(() => {
+    const fetchProductBySlug = async () => {
+      try {
+        setLoading(true);
+        const res = await fetch(
+          `/api/products/read/get-product-by-slug/${slug}`,
+          {
+            method: "GET",
+            headers: { "Content-Type": "application/json" },
+          }
+        );
+
+        if (!res.ok) {
+          throw new Error("Failed to fetch product");
+        }
+
+        const data = await res.json();
+        setProduct(data.product);
+      } catch (error) {
+        console.error("Error fetching product:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    // if (!product)
+    fetchProductBySlug();
+  }, [slug]);
 
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
@@ -43,15 +114,16 @@ const AddProduct = () => {
   const [quantityInStock, setQuantityInStock] = useState<number>();
   const [availableSizes, setAvailableSizes] = useState<string[]>([]);
   const [colorOptions, setColorOptions] = useState<ColorOptionValue[]>([]);
-  const [categories, setCategories] = useState<CategoryValue[]>([]);
-  const [types, setTypes] = useState<string[]>([]);
+  const [categories, setCategories] = useState<CategoryAndTypeValue[]>([]);
+  const [types, setTypes] = useState<CategoryAndTypeValue[]>([]);
   const [material, setMaterial] = useState<string>("");
   const [fabricType, setFabricType] = useState<string>("");
   const [careInstructions, setCareInstructions] = useState<string>("");
-  const [origin, setOrigin] = useState<string>("India");
+  const [origin, setOrigin] = useState<string>("");
   const [brand, setBrand] = useState<string>(
     "Chimanlal Suresh Kumar (CSK) Textiles"
   );
+  const [countryOfManufacture, setCountryOfManufacture] = useState<string>("");
   const [faqs, setFaqs] = useState<Faq[]>([]);
 
   const handleAddImage = (event: React.MouseEvent<HTMLDivElement>) => {
@@ -107,22 +179,23 @@ const AddProduct = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setLoading(true);
-    // checking for missing fields...
+
+    // Check for missing fields
     if (
       !title ||
       !description ||
       !images.length ||
       !mainImage ||
       !price ||
+      !oldPrice ||
       !quantityInStock ||
       !availableSizes.length ||
       !colorOptions.length ||
       !categories.length ||
       !types.length ||
-      !material
+      !material ||
+      !fabricType
     ) {
-      setLoading(false);
       return toast({
         title: "Missing Fields",
         description: "Please fill in all required fields.",
@@ -144,8 +217,9 @@ const AddProduct = () => {
     formData.append("material", material);
     formData.append("fabricType", fabricType);
     formData.append("careInstructions", careInstructions || "");
-    formData.append("origin", origin);
+    formData.append("origin", origin || "");
     formData.append("brand", brand || "");
+    formData.append("countryOfManufacture", countryOfManufacture || "India");
     formData.append("availableSizes", JSON.stringify(availableSizes));
     formData.append("colorOptions", JSON.stringify(colorOptions));
     formData.append("categories", JSON.stringify(categories));
@@ -166,10 +240,8 @@ const AddProduct = () => {
           : "Please try again later...",
         variant: data.error ? "destructive" : "default",
       });
-      setLoading(false);
       router.back();
     } catch (error) {
-      setLoading(false);
       console.error("Error creating product:", error);
       toast({
         title: "Error creating product",
@@ -178,6 +250,12 @@ const AddProduct = () => {
       });
     }
   };
+
+  if (loading) return <Loader />;
+
+  if (!product) {
+    return <div>Product not found</div>;
+  }
 
   return (
     <>
@@ -193,8 +271,8 @@ const AddProduct = () => {
             >
               Cancel
             </Button>
-            <Button disabled={loading} type="submit" className="text-white">
-              {!loading ? "Save" : "Saving..."}
+            <Button type="submit" className="text-white">
+              Save Edit
             </Button>
           </div>
         </header>
@@ -253,25 +331,23 @@ const AddProduct = () => {
               {/* Product Title and Description */}
               <div>
                 <label className="block text-sm font-medium text-gray-700">
-                  Title<span className="text-[red]">*</span>
+                  Title
                 </label>
                 <input
                   type="text"
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
-                  required
                   className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm bg-[#F8F8F8]"
                   placeholder="Enter Title"
                 />
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700">
-                  Description<span className="text-[red]">*</span>
+                  Description
                 </label>
                 <textarea
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  required
                   placeholder="Enter Description"
                   className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm bg-[#F8F8F8]"
                 ></textarea>
@@ -282,7 +358,7 @@ const AddProduct = () => {
                 <div className="flex gap-2">
                   <div className="flex-1">
                     <label className="block text-sm font-medium text-gray-700">
-                      Price<span className="text-[red]">*</span>
+                      Price
                     </label>
                     <input
                       type="number"
@@ -290,7 +366,6 @@ const AddProduct = () => {
                       onChange={(e) =>
                         setPrice(e.target.value as unknown as number)
                       }
-                      required
                       placeholder="Enter"
                       className="custom-number-input mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm bg-[#F8F8F8]"
                     />
@@ -311,34 +386,31 @@ const AddProduct = () => {
                   </div>
                 </div>
                 {/* Discount and Available Sizes */}
-                {oldPrice && (
-                  <div className="w-fit h-fit py-1 animate-slide-down">
-                    <label className="animate-slide-up block text-sm font-medium text-gray-700">
-                      Discount -{" "}
-                      {price && oldPrice && (
-                        <ReactCountUp
-                          amt={calculateDiscount(price, oldPrice)}
-                          duration={1}
-                          className="text-md text-[#2CD396] font-medium"
-                        >
-                          % off
-                        </ReactCountUp>
-                      )}
-                    </label>
-                  </div>
-                )}
+                <div className="w-fit h-fit py-1">
+                  <label className="animate-slide-up block text-sm font-medium text-gray-700">
+                    Discount -{" "}
+                    {price && oldPrice && (
+                      <ReactCountUp
+                        amt={calculateDiscount(price, oldPrice)}
+                        duration={1}
+                        className="text-md text-green-500 font-medium"
+                      >
+                        % off
+                      </ReactCountUp>
+                    )}
+                  </label>
+                </div>
               </div>
 
               {/* Material */}
               <div>
                 <label className="block text-sm font-medium text-gray-700">
-                  Material<span className="text-[red]">*</span>
+                  Material
                 </label>
                 <input
                   type="text"
                   value={material}
                   onChange={(e) => setMaterial(e.target.value)}
-                  required
                   placeholder="Enter"
                   className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm bg-[#F8F8F8]"
                 />
@@ -354,7 +426,7 @@ const AddProduct = () => {
               <div className="flex gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700">
-                    Available Sizes<span className="text-[red]">*</span>
+                    Available Sizes
                   </label>
                   <div className="flex space-x-2 mt-1">
                     {["XS", "S", "M", "L", "XL", "XXL"].map((size) => (
@@ -374,7 +446,7 @@ const AddProduct = () => {
                 </div>
                 <div className="">
                   <label className="block text-sm font-medium text-gray-700">
-                    Quantity In Stock<span className="text-[red]">*</span>
+                    Quantity In Stock
                   </label>
                   <input
                     type="number"
@@ -382,7 +454,6 @@ const AddProduct = () => {
                     onChange={(e) =>
                       setQuantityInStock(e.target.value as unknown as number)
                     }
-                    required
                     placeholder="Enter"
                     className="custom-number-input mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm bg-[#F8F8F8]"
                   />
@@ -415,7 +486,7 @@ const AddProduct = () => {
                 />
               </div>
               {/* Country Of Manufacture */}
-              {/* <div className="">
+              <div className="">
                 <label className="block text-sm font-medium text-gray-700">
                   Country Of Manufacture
                 </label>
@@ -426,9 +497,9 @@ const AddProduct = () => {
                   placeholder="Enter"
                   className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm bg-[#F8F8F8]"
                 />
-              </div> */}
+              </div>
               {/* Brand */}
-              <div className="col-span-2">
+              <div className="">
                 <label className="block text-sm font-medium text-gray-700">
                   Brand
                 </label>
@@ -464,7 +535,7 @@ const AddProduct = () => {
   );
 };
 
-export default AddProduct;
+export default EditProduct;
 
 const ColorOption: React.FC<{
   colorOptions: ColorOptionValue[];
@@ -562,7 +633,7 @@ const ColorOption: React.FC<{
           <div className="flex-between gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700">
-                Choose Color<span className="text-[red]">*</span>
+                Choose Color
               </label>
               <input
                 type="color"
@@ -573,7 +644,7 @@ const ColorOption: React.FC<{
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700">
-                HEX Color<span className="text-[red]">*</span>
+                HEX Color
               </label>
               <input
                 type="text"
@@ -585,7 +656,7 @@ const ColorOption: React.FC<{
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700">
-                Color Title<span className="text-[red]">*</span>
+                Color Title
               </label>
               <input
                 type="text"
@@ -623,8 +694,8 @@ const ColorOption: React.FC<{
 };
 
 const SelectCategoriesAndTypes: React.FC<{
-  setCategories: React.Dispatch<React.SetStateAction<CategoryValue[]>>;
-  setTypes: React.Dispatch<React.SetStateAction<string[]>>;
+  setCategories: React.Dispatch<React.SetStateAction<CategoryAndTypeValue[]>>;
+  setTypes: React.Dispatch<React.SetStateAction<CategoryAndTypeValue[]>>;
 }> = ({ setCategories, setTypes }) => {
   const [categoriesCollection, setCategoriesCollection] = useState<
     CategoryCollectionValues[]
@@ -687,7 +758,12 @@ const SelectCategoriesAndTypes: React.FC<{
       setCategorySelections(updatedSelections);
 
       // Update selected types in parent
-      setTypes(updatedSelections.map((sel) => sel.type.slug));
+      setTypes(
+        updatedSelections.map((sel) => ({
+          title: sel.type.title,
+          slug: sel.type.slug,
+        }))
+      );
     }
   };
 
@@ -720,7 +796,12 @@ const SelectCategoriesAndTypes: React.FC<{
         slug: sel.category.slug,
       }))
     );
-    setTypes(updatedSelections.map((sel) => sel.type.slug));
+    setTypes(
+      updatedSelections.map((sel) => ({
+        title: sel.type.title,
+        slug: sel.type.slug,
+      }))
+    );
   };
 
   const availableCategories = categoriesCollection.filter(
@@ -739,13 +820,13 @@ const SelectCategoriesAndTypes: React.FC<{
 
   return (
     <div className="col-span-2 grid grid-cols-1 gap-2">
-      <div className="font-semibold">Categories and Types<span className="text-[red]">*</span></div>
+      <span className="font-semibold">Categories and Types</span>
       <div className="col-span-2 grid grid-cols-2 gap-4">
         {categorySelections.map((selection, index) => (
           <div key={index} className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700">
-                Category<span className="text-[red]">*</span>
+                Category
               </label>
               {selection.category.slug ? (
                 <div className="mt-1 p-2 py-2.5 border border-gray-300 rounded-md shadow-sm bg-gray-100">
@@ -769,7 +850,7 @@ const SelectCategoriesAndTypes: React.FC<{
 
             <div>
               <label className="block text-sm font-medium text-gray-700">
-                Type<span className="text-[red]">*</span>
+                Type
               </label>
               <div className="flex-between gap-2">
                 {selection.type.slug ? (

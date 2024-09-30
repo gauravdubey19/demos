@@ -124,6 +124,7 @@ const AllProducts = () => {
 const ProductTable: React.FC<{
   filteredProducts: ProductCollectionValues[];
 }> = ({ filteredProducts }) => {
+  const router = useRouter();
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [selectedProduct, setSelectedProduct] = useState<{
     id: string;
@@ -212,7 +213,14 @@ const ProductTable: React.FC<{
                   </Link>
                 </td>
                 <td className="w-fit h-full px-4 py-2 flex-center gap-2 mt-2">
-                  <button className="p-2 rounded bg-yellow-100 hover:bg-yellow-200 text-yellow-600">
+                  <button
+                    onClick={() =>
+                      router.push(
+                        `/admin/all-products/edit-product/${product.slug}`
+                      )
+                    }
+                    className="p-2 rounded bg-yellow-100 hover:bg-yellow-200 text-yellow-600"
+                  >
                     <BsPencilSquare size={16} />
                   </button>
                   <button

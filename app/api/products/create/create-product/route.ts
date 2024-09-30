@@ -41,14 +41,12 @@ export async function POST(request: Request) {
     const availableSizes = JSON.parse(formData.get("availableSizes") as string);
     const colorOptions = JSON.parse(formData.get("colorOptions") as string);
     const categories = JSON.parse(formData.get("categories") as string);
-    const types = JSON.parse(formData.get("types") as string);
+    const type = JSON.parse(formData.get("types") as string);
     const material = formData.get("material") as string;
     const fabricType = formData.get("fabricType") as string;
     const careInstructions = formData.get("careInstructions") as string;
-    const origin = formData.get("origin") as string;
+    const origin = (formData.get("origin") as string) || "India";
     const brand = formData.get("brand") as string;
-    const countryOfManufacture =
-      (formData.get("countryOfManufacture") as string) || "India";
     const faqs = JSON.parse(formData.get("faqs") as string);
 
     // console.log(images);
@@ -86,13 +84,12 @@ export async function POST(request: Request) {
       availableSizes,
       colorOptions,
       categories,
-      type: types,
+      type,
       material,
       fabricType,
       careInstructions,
       origin,
       brand,
-      countryOfManufacture,
       faqs,
     });
 

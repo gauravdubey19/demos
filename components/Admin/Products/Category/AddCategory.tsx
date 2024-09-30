@@ -35,6 +35,7 @@ const AddCategory: React.FC = () => {
       };
 
       if (name === "title") {
+        updatedCategory.title = capitalizeString(value);
         updatedCategory.slug = generateSlug(value);
       }
       return updatedCategory;

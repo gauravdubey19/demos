@@ -365,7 +365,7 @@ const Details: React.FC<DetailsProps> = ({ product, categorySlug }) => {
           {product.oldPrice && (
             <ReactCountUp
               amt={calculateDiscount(product.price, product.oldPrice)}
-              className="text-md text-green-500 font-medium"
+              className="text-md text-[#2CD396] font-medium"
             >
               % off
             </ReactCountUp>
