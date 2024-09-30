@@ -85,7 +85,7 @@ useEffect(() => {
     firstName: editAddressData.firstName,
     lastName: editAddressData.lastName,
     address: editAddressData.address,
-    phoneNumber: editAddressData.phone,
+    phone_number: editAddressData.phone,
     zipCode: editAddressData.pincode,
     state: editAddressData.state,
     city: editAddressData.city,

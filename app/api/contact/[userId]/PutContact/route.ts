@@ -11,7 +11,7 @@ export async function PUT(req: NextRequest, { params }: { params: { userId: stri
     if (!userId) {
         return NextResponse.json({ error: 'User ID is required' }, { status: 400 });
     }
-    const {  address, country, city, zip, state } = await req.json();
+    const {  address, country, city, zipCode, state } = await req.json();
     console.log("state in backend: ", state);
     const alreadyExists = await Contact.findOne({ userId});
     const updateFields = {
@@ -21,7 +21,7 @@ export async function PUT(req: NextRequest, { params }: { params: { userId: stri
             name: city?.name ?? alreadyExists?.city.name,
             code: city?.code ?? alreadyExists?.city.code
         },
-        zip: zip ?? alreadyExists?.zip,
+        zipCode: zipCode ?? alreadyExists?.zipCode,
         state: {
             name: state?.name ?? alreadyExists?.state.name,
             code: state?.code ?? alreadyExists?.state.code

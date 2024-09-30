@@ -1,4 +1,5 @@
 import { Schema, model, models } from "mongoose";
+import { title } from "process";
 
 const OrderItemSchema = new Schema(
   {
@@ -12,30 +13,35 @@ const OrderItemSchema = new Schema(
     },
     slug: {
       type: String,
-      unique: true,
-      required: true,
-    },
-    image: {
-      type: String,
       required: true,
     },
     price: {
       type: Number,
       required: true,
     },
-    category: {
-      type: String,
-      required: true,
-    },
     quantity: {
       type: Number,
       required: true,
     },
-    size: {
+    image: {
       type: String,
       required: true,
     },
-    color: {
+    selectedSize: {
+      type: String,
+      required: true,
+    },
+    selectedColor: {
+      title:{
+        type: String,
+        required: true
+      },
+      color:{
+        type: String,
+        required: true
+      }
+    },
+    categorySlug: {
       type: String,
       required: true,
     },
@@ -80,6 +86,15 @@ const OrderSchema = new Schema(
       },
       shippingAddress: {
         type: String,
+        required: true,
+      },
+      phone_number: {
+        type: String,
+        required: true,
+      },
+      zipCode: {
+        type: String,
+        required: true,
       },
     },
   },
