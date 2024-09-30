@@ -21,6 +21,7 @@ import {
 } from "chart.js";
 import { MdOutlineKeyboardArrowDown } from "react-icons/md";
 import { formatTimestamp } from "@/lib/utils";
+import Loader from "@/components/ui/Loader";
 
 ChartJS.register(
   CategoryScale,
@@ -69,7 +70,7 @@ const Customers = () => {
         }
 
         const data = await res.json();
-        // console.error("users:", data as UserCollectionValues);
+        // console.log("users:", data as UserCollectionValues);
         if (res.ok) setUserCollection(data as UserCollectionValues[]);
       } catch (error) {
         console.error("Error fetching user collections:", error);
@@ -77,7 +78,7 @@ const Customers = () => {
     };
     if (userCollection.length === 0) fetchUserCollection();
   }, [userCollection]);
-
+  if (userCollection.length === 0) return <Loader />;
   // console.log(userCollection);
 
   return (
@@ -227,20 +228,32 @@ const UserTable: React.FC<{ usersCollection: UserCollectionValues[] }> = ({
   const [isAscending, setIsAscending] = useState<boolean>(true);
   const [search, setSearch] = useState<string>("");
 
-  const filteredUsers = usersCollection
-    .filter(
-      (user) =>
-        user.firstName.toLowerCase().includes(search) ||
-        user.lastName.toLowerCase().includes(search) ||
-        user.email.toLowerCase().includes(search)
-    )
-    .sort((a, b) => {
-      if (isAscending) {
-        return a._id > b._id ? 1 : -1;
-      } else {
-        return a._id < b._id ? 1 : -1;
-      }
-    });
+  if (usersCollection.length === 0) return <Loader />;
+
+  const filteredUsers =
+    usersCollection &&
+    usersCollection
+      .filter((user) => {
+        const firstName = user.firstName?.toLowerCase() || "";
+        const lastName = user.lastName?.toLowerCase() || "";
+        const email = user.email?.toLowerCase() || "";
+
+        return (
+          firstName.includes(search) ||
+          lastName.includes(search) ||
+          email.includes(search)
+        );
+        // user.firstName.toLowerCase().includes(search) ||
+        // user.lastName.toLowerCase().includes(search) ||
+        // user.email.toLowerCase().includes(search)
+      })
+      .sort((a, b) => {
+        if (isAscending) {
+          return a._id > b._id ? 1 : -1;
+        } else {
+          return a._id < b._id ? 1 : -1;
+        }
+      });
   return (
     <>
       <div className="w-full space-y-2 rounded-xl bg-[#F8F8F8] p-4 select-none">
@@ -270,7 +283,7 @@ const UserTable: React.FC<{ usersCollection: UserCollectionValues[] }> = ({
           </div>
         </div>
         <div className="relative w-full h-fit max-h-[72vh] border border-gray-300 rounded-2xl overflow-auto">
-          <table className="relative w-full h-full bg-white rounded-2xl overflow-hidden">
+          <table className="w-full bg-white rounded-2xl">
             <thead className="sticky top-0 bg-[#EAEAEA] shadow-sm z-10">
               <tr className="border-b">
                 <th className="px-4 py-2 text-left">profile</th>
@@ -281,14 +294,14 @@ const UserTable: React.FC<{ usersCollection: UserCollectionValues[] }> = ({
                 <th className="px-4 py-2 text-left">Phone No.</th>
               </tr>
             </thead>
-            <tbody className="">
+            <tbody>
               {filteredUsers.map((user, index) => (
                 <tr
                   key={index}
                   onClick={() =>
                     router.push(`/admin/customers/user/${user._id}`)
                   }
-                  className="group border-b cursor-pointer hover:bg-[#ffb43335] ease-in-out duration-300"
+                  className="h-fit group border-b cursor-pointer hover:bg-[#ffb43335] ease-in-out duration-300"
                 >
                   <td className="px-4 py-2">
                     <Image
@@ -316,15 +329,6 @@ const UserTable: React.FC<{ usersCollection: UserCollectionValues[] }> = ({
   );
 };
 
-// email: "dubeygaurav520@gmail.com";
-// favProducts: [];
-// phone_number
-// firstName: "Gaurav";
-// lastName: "D.";
-// profile: "https://lh3.googleusercontent.com/a/ACg8ocKsY0zxhKmkg13tB6cWHZU03rB0TJf6Ey5e03wQCC-gfx3MqX2s=s96-c";
-// role: "admin";
-// __v: 0;
-// _id:
 // const users = [
 //   {
 //     _id: 1,

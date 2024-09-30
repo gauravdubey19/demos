@@ -57,7 +57,7 @@ const Dashboard = () => {
         }
 
         const data = await res.json();
-        // console.error("res:", data);
+        // console.log("res:", data);
         setCollectionsLength(data);
       } catch (error) {
         console.error("Error fetching collections:", error);

@@ -86,7 +86,16 @@
 .scroll-none::-webkit-scrollbar {
   display: none;
 }
+.custom-number-input::-webkit-inner-spin-button,
+.custom-number-input::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
 
+/* Hide spinner buttons in Firefox */
+.custom-number-input {
+  -moz-appearance: textfield;
+}
 body {
   @apply bg-background text-[var(--foreground)];
 }
@@ -99,7 +108,7 @@ body {
     @apply flex items-center justify-between;
   }
   .br {
-    @apply border border-[red] border-solid;
+    @apply border border-primary border-solid;
   }
   .text-balance {
     text-wrap: balance;
@@ -119,26 +128,26 @@ body {
   }
 }
 @font-face {
-  font-family: 'DM-sans-bold';
-  src: url('../public/fonts/DMSans-Bold.ttf');
+  font-family: "DM-sans-bold";
+  src: url("../public/fonts/DMSans-Bold.ttf");
 }
 @font-face {
-  font-family: 'DM-sans';
-  src: url('../public/fonts/DMSans-Regular.ttf');
+  font-family: "DM-sans";
+  src: url("../public/fonts/DMSans-Regular.ttf");
 }
 @font-face {
-  font-family: 'DM-sans-semibold';
-  src: url('../public/fonts/DMSans-SemiBold.ttf');
+  font-family: "DM-sans-semibold";
+  src: url("../public/fonts/DMSans-SemiBold.ttf");
 }
 @font-face {
-  font-family: 'Montserrat-bold';
-  src: url('../public/fonts/Montserrat-Bold.ttf');
+  font-family: "Montserrat-bold";
+  src: url("../public/fonts/Montserrat-Bold.ttf");
 }
 @font-face {
-  font-family: 'Montserrat';
-  src: url('../public/fonts/Montserrat-Regular.ttf');
+  font-family: "Montserrat";
+  src: url("../public/fonts/Montserrat-Regular.ttf");
 }
 @font-face {
-  font-family: 'Montserrat-semibold';
-  src: url('../public/fonts/Montserrat-SemiBold.ttf');
+  font-family: "Montserrat-semibold";
+  src: url("../public/fonts/Montserrat-SemiBold.ttf");
 }

@@ -78,19 +78,30 @@ export interface ProductDetailValues {
   mainImage: string;
   price: number;
   oldPrice?: number;
+  quantityInStock: number;
   availableSizes: string[];
   colorOptions: {
     _id: string;
     title: string;
     color: string;
   }[];
+  categories: {
+    _id: string;
+    title: string;
+    slug: string;
+  }[];
+  types: {
+    _id: string;
+    title: string;
+    slug: string;
+  }[];
   material: string;
   fabricType?: string;
   careInstructions?: string;
   origin: string;
-  quantityInStock: number;
   brand: string;
   faqs: {
+    _id: string;
     question: string;
     answer: string;
   }[];
@@ -132,6 +143,40 @@ export interface AdditionalInfoProps {
       answer: string;
     }[];
   };
+}
+
+// Add-Product type
+export interface AddProductValues {
+  title: string;
+  description: string;
+  images: string[];
+  mainImage: string;
+  price: number;
+  oldPrice?: number;
+  availableSizes: string[];
+  colorOptions: {
+    title: string;
+    color: string;
+  }[];
+  categories: {
+    title: string;
+    slug: string;
+  }[];
+  types: {
+    title: string;
+    slug: string;
+  }[];
+  material: string;
+  fabricType?: string;
+  careInstructions?: string;
+  origin: string;
+  quantityInStock: number;
+  brand?: string;
+  faqs: {
+    question: string;
+    answer: string;
+  }[];
+  countryOfManufacture: string;
 }
 
 export interface CategoryValues {
@@ -235,4 +280,20 @@ export interface CartItem {
     title: string;
     color: string;
   }[];
+}
+
+// category
+export interface CategoryCollectionValues {
+  _id: string;
+  image: string;
+  title: string;
+  slug: string;
+  description: string;
+  types: Type[];
+  createdAt: string;
+}
+
+export interface Type {
+  title: string;
+  slug: string;
 }

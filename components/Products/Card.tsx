@@ -119,25 +119,29 @@ const Card: React.FC<CardDetails> = ({ card, category, loading = false }) => {
             >
               {!loading && "₹" + card.price}
             </span>
-            <div className="flex flex-wrap gap-2">
-              <span
-                className={`text-sm md:text-md line-through text-gray-400 ${
-                  loading &&
-                  "mt-1 lg:mt-0 w-14 h-3 md:h-5 bg-gray-200 animate-pulse"
-                }`}
-              >
-                {!loading && "₹" + card.oldPrice}
-              </span>
-              <span
-                className={`text-xs md:text-sm text-[#2CD396] ${
-                  loading &&
-                  "mt-1 lg:mt-0 w-14 h-3 md:h-5 bg-gray-200 animate-pulse"
-                }`}
-              >
-                {!loading &&
-                  "(" + calculateDiscount(card.price, card.oldPrice) + "% off)"}
-              </span>
-            </div>
+            {card.oldPrice && (
+              <div className="flex flex-wrap gap-2">
+                <span
+                  className={`text-sm md:text-md line-through text-gray-400 ${
+                    loading &&
+                    "mt-1 lg:mt-0 w-14 h-3 md:h-5 bg-gray-200 animate-pulse"
+                  }`}
+                >
+                  {!loading && "₹" + card.oldPrice}
+                </span>
+                <span
+                  className={`text-xs md:text-sm text-[#2CD396] ${
+                    loading &&
+                    "mt-1 lg:mt-0 w-14 h-3 md:h-5 bg-gray-200 animate-pulse"
+                  }`}
+                >
+                  {!loading &&
+                    "(" +
+                      calculateDiscount(card.price, card.oldPrice) +
+                      "% off)"}
+                </span>
+              </div>
+            )}
           </div>
           {/* <Button
             onClick={handleAddToCartBtn}

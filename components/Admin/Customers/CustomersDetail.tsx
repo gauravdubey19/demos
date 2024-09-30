@@ -18,6 +18,7 @@ interface UserValues {
   firstName: string;
   lastName: string;
   profile: string;
+  gender: string;
   createdAt: string;
   address: string;
   state: { name: string; code: string };
@@ -47,6 +48,7 @@ const CustomersDetail: React.FC<{ userId: string }> = ({ userId }) => {
           firstName: userData?.firstName,
           lastName: userData?.lastName,
           profile: userData?.profile,
+          gender: userData?.gender,
           createdAt: userData?.createdAt,
           address: userContactData?.address,
           state: {
@@ -121,7 +123,7 @@ const UserDetail: React.FC<{ user: UserValues }> = ({ user }) => {
           {user.phone_number && (
             <DetailRow label="Phone" value={user.phone_number} />
           )}
-          {/* <DetailRow label="Gender" value="Male" /> */}
+          {user.gender && <DetailRow label="Gender" value={user.gender} />}
           <DetailRow label="Address" value={user.address} />
           <DetailRow label="State" value={user.state.name} />
           <DetailRow label="City" value={user.city.name} />
@@ -132,31 +134,7 @@ const UserDetail: React.FC<{ user: UserValues }> = ({ user }) => {
   );
 };
 
-const DetailRow: React.FC<{ label: string; value: string }> = ({
-  label,
-  value,
-}) => (
-  <div className="flex justify-between gap-6">
-    <span>{label}</span>
-    <span className="text-end">{value}</span>
-  </div>
-);
-
 export default CustomersDetail;
-
-const info = [
-  { lable: "First name", value: "Gaurav" },
-  { lable: "Last name", value: "D." },
-  { lable: "Email", value: "gd@textile.csk" },
-  { lable: "Phone", value: "1234567890" },
-  { lable: "Gender", value: "Male" },
-  {
-    lable: "Address",
-    value:
-      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae fugit exercitationem natus minus soluta fuga ducimus maxime eos a at!",
-  },
-  { lable: "Pincode", value: "400057" },
-];
 
 const UserOrderTable = () => {
   const [isAscending, setIsAscending] = useState<boolean>(true);
@@ -228,7 +206,7 @@ const UserOrderTable = () => {
       </div>
 
       <div className="relative w-full h-fit max-h-[72vh] border border-gray-300 rounded-2xl overflow-auto">
-        <table className="relative w-full h-full bg-white rounded-2xl overflow-hidden">
+        <table className="w-full bg-white rounded-2xl">
           <thead className="sticky top-0 bg-[#EAEAEA] shadow-sm z-10">
             <tr className="border-b">
               <th className="px-4 py-2 text-left">Order ID</th>
@@ -239,7 +217,7 @@ const UserOrderTable = () => {
               <th className="px-4 py-2 text-left">Status</th>
             </tr>
           </thead>
-          <tbody className="">
+          <tbody>
             {filteredOrders.map((order, index) => (
               <tr
                 key={index}
@@ -394,3 +372,13 @@ const orders = [
     status: "delivered",
   },
 ];
+
+export const DetailRow: React.FC<{ label: string; value: string | number }> = ({
+  label,
+  value,
+}) => (
+  <div className="flex justify-between gap-6">
+    <span>{label}</span>
+    <span className="text-end">{value}</span>
+  </div>
+);

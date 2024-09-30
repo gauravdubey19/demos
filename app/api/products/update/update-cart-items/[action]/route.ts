@@ -4,7 +4,7 @@ import User from "@/models/User";
 import Cart from "@/models/Cart";
 import { CartItem } from "@/lib/types";
 
-export const POST = async (
+export const PUT = async (
   request: NextRequest,
   { params }: { params: { action: string } }
 ) => {
