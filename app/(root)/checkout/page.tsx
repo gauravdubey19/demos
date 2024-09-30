@@ -9,41 +9,84 @@ import PriceDetails from '@/components/Checkout/PriceDetails';
 import Address from '@/components/Checkout/Address';
 import ShoppingCart from '@/components/Checkout/ShoppingCart';
 import Payment from '@/components/Checkout/Payment';
+import { useRouter } from 'next/navigation';
+import { useGlobalContext } from '@/context/GlobalProvider';
 
 const CheckoutPage = () => {
+  const router = useRouter();
   const { data: session } = useSession();
   const [cartData, setCartData] = useState<any[]>([]);
   const [selectedItems, setSelectedItems] = useState<number>(0);
+  const [selectedAddress, setSelectedAddress] = useState<any | null>(null);
   const [checkoutStep, setCheckoutStep] = useState<'cart' | 'address' | 'payment'>('cart');
   const [addressData, setAddressData] = useState<any[]>([]);
   const [selectedAddressId, setSelectedAddressId] = useState<string | null>(null);
-  const [totals, setTotals] = useState({
-      totalMRP: 0,
-      totalDiscount: 0,
-      platformFee: 15,
-      shippingFee: 40,
-  });
-  const [selectedItemsData, setSelectedItemsData] = useState<{ id: string, quantity: number }[]>([]);
+  const [placingOrder, setPlacingOrder] = useState<boolean>(false);
+  const [initiatedProcess, setInitiatedProcess] = useState<boolean>(false);
+  const [fetchingAddress, setFetchingAddress] = useState<boolean>(false);
+  const { cart, setOpen, setCart, handleClearCart } = useCart();
+  const [selectedItemsData, setSelectedItemsData] = useState<any[]>([]);
+  const [totals, setTotals] = useState({ subtotal: 0, shipping: 0, total: 0 });
 
-  const { cart, isOpen, setOpen } = useCart();
+  const { setFetchedOrders } = useGlobalContext();
 
+  useEffect(() => {
+    if (selectedAddressId) {
+      setSelectedAddress(addressData.find((item) => item._id === selectedAddressId));
+    }
+  }, [addressData, selectedAddressId]);
 
-  const handlePlaceOrder=()=>{
-    console.log("Selected items with quantities:", selectedItemsData);
-    console.log("selectedItems : ", selectedItems);
-    console.log("selectedAddressId : ", selectedItems);
-    console.log("shippingFee : ", totals.shippingFee);
-    console.log("totalDiscount : ", totals.totalDiscount);
-    console.log("platformFee : ", totals.platformFee);
-    console.log("totalMRP : ", totals.totalMRP);
-    const totalAmount = totals.totalMRP - totals.totalDiscount + totals.platformFee + totals.shippingFee;
-    console.log("totalAmount : ", totalAmount);
+  const placeOrder = async () => {
+    if (!session?.user?.id || placingOrder) {
+      return;
+    }
+
+    const userId = session.user.id;
+    const totalAmount = cartData.filter((item) => item.selected).reduce((acc, item) => acc + item.price, 0);
+    const orderDetails = {
+      orderedProducts: cartData.filter((item) => item.selected),
+      orderInfo: {
+        orderStatus: 'pending',
+        totalPrice: totalAmount,
+        orderDate: new Date(),
+        zipCode: selectedAddress.zipCode,
+        shippingAddress: `${selectedAddress.address}, ${selectedAddress.city.name}, ${selectedAddress.state.name}`,
+        phone_number: selectedAddress.phone_number,
+      },
+    };
+
+    try {
+      setPlacingOrder(true);
+      const response = await fetch(`/api/orders/${userId}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ orderDetails }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to place order');
+      }
+
+      const data = await response.json();
+      setCart([]);
+      handleClearCart();
+      setFetchedOrders((prevOrders) => [data.order, ...prevOrders]);
+      router.push(`/profile/order-history`);
+      toast({ title: "Order placed successfully", description: "Please wait while we redirect you to order history page." });
+    } catch (error) {
+      console.error('Error placing order:', error);
+      toast({ title: "Error placing order", variant: "destructive" });
+    } finally {
+      setPlacingOrder(false);
+    }
   }
 
-  // Memoizing getUserAddress with useCallback
   const getUserAddress = useCallback(async () => {
     if (session) {
       try {
+        setFetchingAddress(true);
         const response = await fetch(`/api/contact/${session.user.id}/get-All-contacts-by-user-Id/`);
         if (response.ok) {
           const res = await response.json();
@@ -51,17 +94,19 @@ const CheckoutPage = () => {
             ...item,
             selected: true,
           }));
+          setFetchingAddress(false);
           setAddressData(initialAddress);
         } else {
           console.error('Failed to fetch address');
         }
       } catch (error) {
         console.error('Error fetching address:', error);
+      } finally {
+        setFetchingAddress(false);
       }
     }
   }, [session]);
 
-  // Memoizing getCartItems with useCallback
   const getCartItems = useCallback(async () => {
     if (session) {
       try {
@@ -77,14 +122,6 @@ const CheckoutPage = () => {
     }
   }, [session, cart]);
 
-  // const handleSelectItem = (id: any, isSelected: boolean) => {
-  //   setCartData((prevCartData) =>
-  //     prevCartData.map((item) =>
-  //       item.productId === id ? { ...item, selected: isSelected } : item
-  //     )
-  //   );
-  //   setSelectedItems((prevSelected) => (isSelected ? prevSelected + 1 : Math.max(prevSelected - 1, 0)));
-  // };
   const handleSelectItem = (id: any, isSelected: boolean) => {
     setCartData((prevCartData) =>
       prevCartData.map((item) =>
@@ -94,20 +131,16 @@ const CheckoutPage = () => {
     setSelectedItems((prevSelected) => (isSelected ? prevSelected + 1 : Math.max(prevSelected - 1, 0)));
 
     // Update selectedItemsData
-    setSelectedItemsData((prevData) => {
+    setSelectedItemsData((prevData: any) => {
       if (isSelected) {
         const selectedItem = cartData.find(item => item.productId === id);
         return [...prevData, { id: id, quantity: selectedItem.quantity }];
       } else {
-        return prevData.filter(item => item.id !== id);
+        return prevData.filter((item: any) => item.id !== id);
       }
     });
   };
 
-  // const handleSelectAll = (selectAll: boolean) => {
-  //   setCartData((prevCartData) => prevCartData.map((item) => ({ ...item, selected: selectAll })));
-  //   setSelectedItems(selectAll ? cartData.length : 0);
-  // };
   const handleSelectAll = (selectAll: boolean) => {
     setCartData((prevCartData) => prevCartData.map((item) => ({ ...item, selected: selectAll })));
     setSelectedItems(selectAll ? cartData.length : 0);
@@ -142,7 +175,7 @@ const CheckoutPage = () => {
 
   return (
     <div className="h-max w-full pt-20">
-      <ProgressIndicator currentStep={checkoutStep} />
+      <ProgressIndicator currentStep={checkoutStep} setCheckoutStep={setCheckoutStep} initiatedProcess={initiatedProcess} />
       <div className="pt-7 px-2 w-full flex justify-between md:flex-row flex-col gap-3 pb-5">
         <div className="md:w-[75%] w-full p-5 min-h-60 max-h-max border border-[#8888] rounded-lg">
           <h1 className="text-2xl md:text-3xl text-black">
@@ -162,12 +195,13 @@ const CheckoutPage = () => {
           )}
           {checkoutStep === 'address' &&
             <Address
+              fetchingAddress={fetchingAddress}
               addressData={addressData}
               handleSelectAddress={setSelectedAddressId}
               selectedAddressId={selectedAddressId}
             />
           }
-          {checkoutStep === 'payment' && <Payment handlePlaceOrder={handlePlaceOrder} />}
+          {checkoutStep === 'payment' && <Payment handlePlaceOrder={placeOrder} placingOrder={placingOrder} selectedAddress={selectedAddress} setInitiatedProcess={setInitiatedProcess} />}
         </div>
         <PriceDetails
           cartData={cartData}
@@ -183,6 +217,3 @@ const CheckoutPage = () => {
 };
 
 export default CheckoutPage;
-
-
-

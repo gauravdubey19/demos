@@ -60,6 +60,11 @@ export interface CardValues {
     title: string;
     color: string;
   }[];
+  categories: {
+    _id: string;
+    title: string;
+    slug: string;
+  }[];
 }
 
 export interface CardDetails {
@@ -263,22 +268,23 @@ export interface CartItem {
   productId: string;
   title: string;
   slug: string;
-  description: string;
   price: number;
   quantity: number;
   image: string;
-  availableSizes: string[];
   selectedSize: string;
-  colorOptions: {
-    _id: string;
-    title: string;
-    color: string;
-  }[];
   selectedColor: {
     title: string;
     color: string;
   };
   categorySlug: string;
+  //above are needed for order shcmea
+  description: string;
+  availableSizes: string[];
+  colorOptions: {
+    _id: string;
+    title: string;
+    color: string;
+  }[];
 }
 
 // category

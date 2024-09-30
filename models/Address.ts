@@ -14,7 +14,7 @@ const AddressFieldSchema = new Schema(
       type: String,
       required: true,
     },
-    phoneNumber: {
+    phone_number: {
       type: String,
       required: true,
     },

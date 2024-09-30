@@ -3,8 +3,8 @@
 import React, { useState, useEffect } from "react";
 import { useCursor } from "@/context/CursorProvider";
 import { Button } from "@/components/ui/button";
-import ScrollVideo from "@/components/ScrollVideo";
-import ParticlesImage from "../ui/ParticlesImageOld";
+import ScrollVideo from "@/components/ui/ScrollVideo";
+// import ParticlesImage from "../ui/ParticlesImageOld";
 
 export default function Hero() {
   const {
@@ -56,7 +56,11 @@ export default function Hero() {
 
   return (
     <>
-      <section className={`${visible ? "h-screen" : "h-[400vh]"} bg-slate-500 overflow-hidden`}>
+      <section
+        className={`${
+          visible ? "h-screen" : "h-[400vh]"
+        } bg-slate-500 overflow-hidden`}
+      >
         <div className="w-full h-screen sticky top-0 flex-between overflow-hidden">
           <div
             ref={leftRef}
@@ -172,7 +176,7 @@ const RightContainor = () => {
         </div>
       </div>
       <div className="h-[calc(100vh-60px)] w-full bg-black mt-[60px]">
-        <ParticlesImage img="/assets/rightImage.png" />
+        {/* <ParticlesImage img="/assets/rightImage.png" /> */}
       </div>
     </div>
   );

@@ -5,9 +5,11 @@ export default function ProductDetailPage({
   params,
 }: ProductCategoryDetailParams) {
   return (
-    <EditProduct
-      slug={params.slug}
-      //   categorySlug={decodeURIComponent(params.category)}
-    />
+    <div className="w-full lg:w-[75%] xl:w-[82%] h-full overflow-hidden">
+      <EditProduct
+        slug={params.slug}
+        //   categorySlug={decodeURIComponent(params.category)}
+      />
+    </div>
   );
 }

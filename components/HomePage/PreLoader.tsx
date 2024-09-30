@@ -1,5 +1,5 @@
 import React from "react";
-import ScrollVideo from "../ScrollVideo";
+import ScrollVideo from "../ui/ScrollVideo";
 
 const PreLoader = () => {
   return (

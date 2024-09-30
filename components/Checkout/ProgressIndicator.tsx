@@ -2,9 +2,11 @@ import React from 'react';
 
 interface ProgressIndicatorProps {
   currentStep: 'cart' | 'address' | 'payment';
+  setCheckoutStep: (step: 'cart' | 'address' | 'payment') => void;
+  initiatedProcess: boolean;
 }
 
-const ProgressIndicator: React.FC<ProgressIndicatorProps> = ({ currentStep }) => {
+const ProgressIndicator: React.FC<ProgressIndicatorProps> = ({ currentStep,setCheckoutStep,initiatedProcess }) => {
   const steps = ['cart', 'address', 'payment'];
 
   return (
@@ -13,10 +15,15 @@ const ProgressIndicator: React.FC<ProgressIndicatorProps> = ({ currentStep }) =>
         <React.Fragment key={step}>
           <div className="flex flex-col items-center flex-1">
             <div
-              className={`w-max h-8 sm:w-max sm:h-10 px-4 py-2  rounded-full flex items-center justify-center text-sm sm:text-base font-medium ${steps.indexOf(currentStep) >= index
-                  ? 'bg-[#2ed396] text-white'
+              onClick={() => {
+                if(steps.indexOf(currentStep) >= index && !initiatedProcess) {
+                setCheckoutStep(step as 'cart' | 'address' | 'payment')
+                }
+              }}
+              className={`w-max h-8 sm:w-max sm:h-10 px-4 py-2  rounded-full flex items-center justify-center text-sm sm:text-base font-medium  ${steps.indexOf(currentStep) >= index && !initiatedProcess
+                  ? 'bg-[#2ed396] text-white cursor-pointer'
                   : 'bg-gray-200 text-black'
-                }`}
+                } ${initiatedProcess && 'bg-white  text-green cursor-not-allowed border border-[#2ed396]'}`}
             >
               <p className={` text-xs  sm:text-sm font-medium
                 }`}>

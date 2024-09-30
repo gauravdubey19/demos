@@ -50,6 +50,7 @@ interface CartContextType {
   handleAddProductToWhistlist: (productId: string) => void;
   handleRemoveProductFromWishlist: (productId: string) => void;
   productExistInWishlist: (productId: string) => boolean;
+  setCart: React.Dispatch<React.SetStateAction<CartItem[]>>;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -196,7 +197,7 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
         const res = await fetch(
           "/api/products/update/update-cart-items/remove",
           {
-            method: "POST",
+            method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
               userId: session.user.id,
@@ -247,7 +248,7 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
     },
     [status, router, session]
   );
-  // 
+  
   const handleClearCart = useCallback(
     async () => {
       if (status !== "authenticated") {
@@ -268,10 +269,10 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
         if (res.ok) {
           setCart([]);
 
-          toast({
-            title: data.message || "All items removed successfully.",
-            variant: "destructive",
-          });
+          // toast({
+          //   title: data.message || "All items removed successfully.",
+          //   variant: "destructive",
+          // });
         } else {
           toast({
             title: data.error || "Failed to clear the cart.",
@@ -291,7 +292,7 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
     [status, router, session]
   );
 
-// 
+
   const handleIncrement = useCallback(
     async (productId: string) => {
       if (status !== "authenticated") {
@@ -307,7 +308,7 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
         const res = await fetch(
           "/api/products/update/update-cart-items/increment",
           {
-            method: "POST",
+            method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
               userId: session.user.id,
@@ -374,7 +375,7 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
         const res = await fetch(
           "/api/products/update/update-cart-items/decrement",
           {
-            method: "POST",
+            method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
               userId: session.user.id,
@@ -444,7 +445,7 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
         const res = await fetch(
           `/api/products/update/update-cart-items/${action}`,
           {
-            method: "POST",
+            method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
               userId: session.user.id,
@@ -594,6 +595,7 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
     <CartContext.Provider
       value={{
         cart,
+        setCart,
         isOpen,
         setOpen,
         handleIncrement,

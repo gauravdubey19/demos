@@ -11,6 +11,8 @@ export const PUT = async (
   try {
     const { action } = params;
     const { userId, productId, color, size } = await request.json();
+    // console.log(userId, productId, color, size, action);
+    
 
     if (
       !["increment", "decrement", "remove", "upd-color", "upd-size"].includes(

@@ -3,7 +3,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { Draggable } from "gsap/dist/Draggable";
-import ScrollVideo from "../ScrollVideo";
+import ScrollVideo from "../ui/ScrollVideo";
 import { Button } from "../ui/button";
 import { IoArrowBackSharp, IoArrowForwardSharp } from "react-icons/io5";
 import ImagePracticles from "../ui/ImagePracticles";
@@ -119,7 +119,7 @@ const GsapHero: React.FC = () => {
     updateBounds();
 
     const handleScroll = () => {
-      setContainerDraggable(window.scrollY > window.innerHeight * 2.9);
+      setContainerDraggable(window.scrollY > window.innerHeight * 2);
     };
 
     window.addEventListener("scroll", handleScroll);

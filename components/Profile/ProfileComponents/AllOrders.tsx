@@ -7,7 +7,7 @@ import { MdCancel, MdOutlineCurrencyRupee } from 'react-icons/md';
 import OrderCardProduct from './OrdersCardProduct';
 import { AllOrdersProps, Order, useGlobalContext } from '@/context/GlobalProvider';
 
-const AllOrders: React.FC<AllOrdersProps> = ({ sampleData,isSearch=false }) => {
+const AllOrders: React.FC<AllOrdersProps> = ({ fetchedOrders,isSearch=false,fetchingOrders }) => {
   const [expandedOrderIndex, setExpandedOrderIndex] = useState<number | null>(null);
   const [clientRendered, setClientRendered] = useState(false);
   const {searchLoading,searchQuery} = useGlobalContext();
@@ -20,10 +20,13 @@ const AllOrders: React.FC<AllOrdersProps> = ({ sampleData,isSearch=false }) => {
       case 'pending':
         return <span className={`font-mont text-base text-primary`}>Order is pending since {formatDate(order.orderInfo.orderDate)} </span>;
       case 'shipped':
+        if(!order.orderInfo.shippingDate) return <span className={`font-mont text-base text-blue-500`}>Order is shipped</span>;
         return <span className={`font-mont text-base text-blue-500`}>Order is shipped since {formatDate(order.orderInfo.shippingDate)}</span>;
       case 'delivered':
+        if(!order.orderInfo.deliveryDate) return <span className={`font-mont text-base text-green`}>Order is delivered</span>;
         return <span className={`font-mont text-base text-green`}>Order is delivered on {formatDate(order.orderInfo.deliveryDate)}</span>;
       case 'cancelled':
+        if(!order.orderInfo.cancelledDate) return <span className={`font-mont text-base text-red-500`}>Order is cancelled</span>;
         return <span className={`font-mont text-base text-red-500`}>Order is cancelled on {formatDate(order.orderInfo.cancelledDate)}</span>;
       default:
         return 'Order status not available';
@@ -38,18 +41,22 @@ const AllOrders: React.FC<AllOrdersProps> = ({ sampleData,isSearch=false }) => {
     const date = new Date(dateString);
     return date.toLocaleDateString(undefined, { day: 'numeric', month: 'long', year: 'numeric' });
   };
+  if(fetchingOrders){
+    return <div className="flex justify-center items-center h-[300px]"><p className="font-mont text-lg">Fetching orders...</p></div>
+  }
   if(!searchQuery.trim() && isSearch){
     return <div className="flex justify-center items-center h-[300px]"><p className="font-mont text-lg">Search for an order ID</p></div>
   }
   if(isSearch && searchLoading && searchQuery.trim() !== ""){
     return <div className="flex justify-center items-center h-[300px]"><p className="font-mont text-lg ">Searching...</p></div>
   }
-if(sampleData.length === 0){
+if(fetchedOrders.length === 0){
   return <div className="flex justify-center items-center h-[300px]"><p className="font-mont text-lg">No orders found</p></div>
 }
+
   return (
     <div className=''>
-      {sampleData.map((order, orderIndex) => (
+      {fetchedOrders.map((order, orderIndex) => (
         <div key={order._id} className='bg-white p-4 rounded-md mb-4'>
           {/* Order Header - Accordion */}
           <div

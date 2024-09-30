@@ -8,15 +8,19 @@ import { useRouter } from "next/navigation";
 
 interface CartDataI {
     data: {
-        productId: any;
+        productId: string;
         title: string;
         slug: string;
         image: string;
         price: number;
         quantity: number;
-        size: string;
-        color: string;
-        category: string;
+        selectedSize: string;
+        selectedColor: {
+          title: string;
+          color: string
+        };
+        timestamps: string;
+        categorySlug: string;
     };
 }
 
@@ -26,7 +30,7 @@ const OrderCardProduct
     return (
 
         <div className="border-b border-strokeLight hover:bg-slate-50 cursor-pointer" onClick={()=>{
-            router.push(`/products/${data?.category}/${data?.slug}`);
+            router.push(`/products/${data?.categorySlug}/${data?.slug}`);
         }}>
             <div className="p-3 sm:p-5 sm:px-1 w-full">
                 <div className="flex flex-col sm:flex-row items-start sm:items-center ">
@@ -44,13 +48,13 @@ const OrderCardProduct
 
                         <div className="flex flex-col gap-2">
                             <div className="flex flex-wrap gap-4 items-center">
-                                <Dropdown title="Size" selected={data?.size} />
+                                <Dropdown title="Size" selected={data?.selectedSize} />
                                 <Dropdown title="Quantity" selected={data?.quantity.toString()} />
                             </div>
                             <div className="flex items-center gap-2">
                                 <span className="text-sm">Color:</span>
                                 <span
-                                    style={{ backgroundColor: data?.color }}
+                                    style={{ backgroundColor: data?.selectedColor.color }}
                                     className="flex items-center justify-center p-1 rounded-full border border-[#8888]"
                                 >
                                     <Check className="h-3 w-3 sm:h-4 sm:w-4 text-white" />

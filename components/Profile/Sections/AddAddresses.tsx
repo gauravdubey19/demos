@@ -92,7 +92,7 @@ const AddNewAddress = () => {
       firstName: addressData.firstName,
       lastName: addressData.lastName,
       address: addressData.address,
-      phoneNumber: addressData.phone,
+      phone_number: addressData.phone,
       zipCode: addressData.pincode,
       state: addressData.state,
       city: addressData.city,

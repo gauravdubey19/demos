@@ -2,185 +2,23 @@
 
 import { replaceHyphensWithSpaces } from "@/lib/utils";
 import { SectionProps } from "@/lib/types";
-import {  useState } from "react";
+import {  useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import { IoAddSharp } from "react-icons/io5";
 import { useRouter } from "next/navigation";
-import { Order, useGlobalContext } from "@/context/GlobalProvider";
+import {  useGlobalContext } from "@/context/GlobalProvider";
 import { MdOutlineKeyboardArrowDown } from "react-icons/md";
 import SearchBar from "./ProfileComponents/SearchBar";
 import AllOrders from "./ProfileComponents/AllOrders";
+import { useSession } from "next-auth/react";
 
 const Section: React.FC<SectionProps> = ({ section, sections }) => {
-  const sampleData: Order[] = [
-    {
-      "_id": "65043225e93457d2e6b45e8f",
-      "userId": "65043225e93457d2e6b45e90",
-      "orderedProducts": [
-        {
-          "productId": "66eed4308449712754a8b968",
-          "title": "Silk Sherwani",
-          "slug": "silk-sherwani",
-          "image": "https://absolutelydesi.com/wp-content/uploads/2023/08/VASTRAMAY-Men-s-Multicolor-Base-Blue-Silk-Blend-Sherwani-With-Kurta-Pant-Set-1.jpg",
-          "price": 79.99,
-          "quantity": 1,
-          "category": "sherwani",
-          "size": "L",
-          "color": "Black",
-          "timestamps": "2024-09-28T12:00:00Z"
-        },
-        {
-          "productId": "66eed4308449712754a8b961",
-          "title": "Cotton Kurta",
-          "slug": "cotton-kurta",
-          "image": "https://manyavar.scene7.com/is/image/manyavar/I07_IMGL5556+copy_11-10-2021-06-01:650x900",
-          "price": 129.99,
-          "quantity": 1,
-          "category": "sherwani",
-          "size": "42",
-          "color": "Brown",
-          "timestamps": "2024-09-28T12:00:00Z"
-        }
-      ],
-      "orderInfo": {
-        "orderStatus": "delivered",
-        "totalPrice": 209.98,
-        "orderID": "123456",
-        "orderDate": "2024-09-28T12:00:00Z",
-        "deliveryDate": "2024-10-05T12:00:00Z",
-        "shippingDate": "2024-09-29T12:00:00Z",
-        "cancelledDate": "2024-09-30T12:00:00Z",
-        "shippingAddress": "1234 Elm Street, Springfield, IL, 62704"
-      },
-      "timestamps": "2024-09-28T12:00:00Z"
-    },
-    {
-      "_id": "65043225e93457d2e6b45e8e",
-      "userId": "65043225e93457d2e6b45e90",
-      "orderedProducts": [
-        {
-          "productId": "66eed4308449712754a8b968",
-          "title": "Silk Sherwani",
-          "slug": "silk-sherwani",
-          "image": "https://absolutelydesi.com/wp-content/uploads/2023/08/VASTRAMAY-Men-s-Multicolor-Base-Blue-Silk-Blend-Sherwani-With-Kurta-Pant-Set-1.jpg",
-          "price": 79.99,
-          "quantity": 1,
-          "category": "sherwani",
-          "size": "L",
-          "color": "Black",
-          "timestamps": "2024-09-28T12:00:00Z"
-        },
-        {
-          "productId": "66eed4308449712754a8b961",
-          "title": "Cotton Kurta",
-          "slug": "cotton-kurta",
-          "image": "https://manyavar.scene7.com/is/image/manyavar/I07_IMGL5556+copy_11-10-2021-06-01:650x900",
-          "price": 129.99,
-          "quantity": 1,
-          "category": "sherwani",
-          "size": "42",
-          "color": "Brown",
-          "timestamps": "2024-09-28T12:00:00Z"
-        }
-      ],
-      "orderInfo": {
-        "orderStatus": "shipped",
-        "totalPrice": 209.98,
-        "orderID": "234567",
-        "orderDate": "2024-09-28T12:00:00Z",
-        "deliveryDate": "2024-10-05T12:00:00Z",
-        "shippingDate": "2024-09-29T12:00:00Z",
-        "cancelledDate": "2024-09-30T12:00:00Z",
-        "shippingAddress": "1234 Elm Street, Springfield, IL, 62704"
-      },
-      "timestamps": "2024-09-28T12:00:00Z"
-    },
-    {
-      "_id": "65043225e93457d2e6b45e8a",
-      "userId": "65043225e93457d2e6b45e90",
-      "orderedProducts": [
-        {
-          "productId": "66eed4308449712754a8b968",
-          "title": "Silk Sherwani",
-          "slug": "silk-sherwani",
-          "image": "https://absolutelydesi.com/wp-content/uploads/2023/08/VASTRAMAY-Men-s-Multicolor-Base-Blue-Silk-Blend-Sherwani-With-Kurta-Pant-Set-1.jpg",
-          "price": 79.99,
-          "quantity": 1,
-          "category": "sherwani",
-          "size": "L",
-          "color": "Black",
-          "timestamps": "2024-09-28T12:00:00Z"
-        },
-        {
-          "productId": "66eed4308449712754a8b961",
-          "title": "Cotton Kurta",
-          "slug": "cotton-kurta",
-          "image": "https://manyavar.scene7.com/is/image/manyavar/I07_IMGL5556+copy_11-10-2021-06-01:650x900",
-          "price": 129.99,
-          "quantity": 1,
-          "category": "sherwani",
-          "size": "42",
-          "color": "Brown",
-          "timestamps": "2024-09-28T12:00:00Z"
-        }
-      ],
-      "orderInfo": {
-        "orderStatus": "cancelled",
-        "totalPrice": 209.98,
-        "orderID": "345678",
-        "orderDate": "2024-09-28T12:00:00Z",
-        "deliveryDate": "2024-10-05T12:00:00Z",
-        "shippingDate": "2024-09-29T12:00:00Z",
-        "cancelledDate": "2024-09-30T12:00:00Z",
-        "shippingAddress": "1234 Elm Street, Springfield, IL, 62704"
-      },
-      "timestamps": "2024-09-28T12:00:00Z"
-    },
-    {
-      "_id": "65043225e93457d2e6b45e8l",
-      "userId": "65043225e93457d2e6b45e90",
-      "orderedProducts": [
-        {
-          "productId": "66eed4308449712754a8b968",
-          "title": "Silk Sherwani",
-          "slug": "silk-sherwani",
-          "image": "https://absolutelydesi.com/wp-content/uploads/2023/08/VASTRAMAY-Men-s-Multicolor-Base-Blue-Silk-Blend-Sherwani-With-Kurta-Pant-Set-1.jpg",
-          "price": 79.99,
-          "quantity": 1,
-          "category": "sherwani",
-          "size": "L",
-          "color": "Black",
-          "timestamps": "2024-09-28T12:00:00Z"
-        },
-        {
-          "productId": "66eed4308449712754a8b961",
-          "title": "Cotton Kurta",
-          "slug": "cotton-kurta",
-          "image": "https://manyavar.scene7.com/is/image/manyavar/I07_IMGL5556+copy_11-10-2021-06-01:650x900",
-          "price": 129.99,
-          "quantity": 1,
-          "category": "sherwani",
-          "size": "42",
-          "color": "Brown",
-          "timestamps": "2024-09-28T12:00:00Z"
-        }
-      ],
-      "orderInfo": {
-        "orderStatus": "pending",
-        "totalPrice": 209.98,
-        "orderID": "456789",
-        "orderDate": "2024-09-28T12:00:00Z",
-        "deliveryDate": "2024-10-05T12:00:00Z",
-        "shippingDate": "2024-09-29T12:00:00Z",
-        "cancelledDate": "2024-09-30T12:00:00Z",
-        "shippingAddress": "1234 Elm Street, Springfield, IL, 62704"
-      },
-      "timestamps": "2024-09-28T12:00:00Z"
-    }
-  ];
+ 
   const router = useRouter();
+  const {data:session} = useSession();
   const [orderDuration, setOrderDuration] = useState("past 3 months");
   const orderDurationOptions = ["past 3 months", "past 6 months", "2024"];
+  const { fetchedOrders, fetchingOrders } = useGlobalContext();
 
   const tabs = [
     { id: "allOrders", label: "All Orders" },
@@ -189,25 +27,25 @@ const Section: React.FC<SectionProps> = ({ section, sections }) => {
     { id: "cancelled", label: "Cancelled" },
     { id: "search", label: "Search" },
   ];
-  const pendingOrders = sampleData.filter((order) => order.orderInfo.orderStatus === "pending");
-  const deliveredOrders = sampleData.filter((order) => order.orderInfo.orderStatus === "delivered");
-  const cancelledOrders = sampleData.filter((order) => order.orderInfo.orderStatus === "cancelled");
+  const pendingOrders = fetchedOrders.filter((order) => order.orderInfo.orderStatus === "pending");
+  const deliveredOrders = fetchedOrders.filter((order) => order.orderInfo.orderStatus === "delivered");
+  const cancelledOrders = fetchedOrders.filter((order) => order.orderInfo.orderStatus === "cancelled");
   const { handleDeleteAddresses,suggestions,activeTab,setActiveTab} = useGlobalContext();
 
   const renderTabContent = () => {
     switch (activeTab) {
       case "allOrders":
-        return <AllOrders sampleData={sampleData}/>;
+        return <AllOrders fetchingOrders={fetchingOrders} fetchedOrders={fetchedOrders}/>;
       case "notShippedYet":
-        return  <AllOrders sampleData={pendingOrders}/>
+        return  <AllOrders fetchingOrders={fetchingOrders} fetchedOrders={pendingOrders}/>
       case "delivered":
-        return <AllOrders sampleData={deliveredOrders}/>;
+        return <AllOrders fetchingOrders={fetchingOrders} fetchedOrders={deliveredOrders}/>;
       case "cancelled":
-        return <AllOrders sampleData={cancelledOrders}/>;
+        return <AllOrders fetchingOrders={fetchingOrders} fetchedOrders={cancelledOrders}/>;
       case "search":
-        return <AllOrders sampleData={suggestions} isSearch/>;
+        return <AllOrders fetchedOrders={suggestions} isSearch/>;
       default:
-        return <AllOrders sampleData={sampleData}/>;
+        return <AllOrders fetchingOrders={fetchingOrders} fetchedOrders={fetchedOrders}/>;
     }
   };
 
@@ -275,7 +113,7 @@ const Section: React.FC<SectionProps> = ({ section, sections }) => {
         {/* Search Bar */}
         {section === "order-history" && (
           <div className="w-full flex items-center justify-between gap-x-2 mt-4">
-            <SearchBar sampleData={sampleData} />
+            <SearchBar fetchedOrders={fetchedOrders} />
           </div>
         )}
 

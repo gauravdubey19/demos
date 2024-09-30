@@ -10,7 +10,7 @@ interface IContact extends Document {
         name: string;
         code: string;
     };
-    zip: string;
+    zipCode: string;
 }
 
 const contactSchema = new Schema<IContact>({
@@ -25,7 +25,7 @@ const contactSchema = new Schema<IContact>({
         name: { type: String },
         code: { type: String }
     },
-    zip: { type: String}
+    zipCode: { type: String}
 });
 
 

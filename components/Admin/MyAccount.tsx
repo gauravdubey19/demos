@@ -39,7 +39,7 @@ interface User {
     name?: string;
     code?: string;
   };
-  zip?: string;
+  zipCode?: string;
   country?: string;
 }
 interface DropdownProps {
@@ -53,47 +53,6 @@ interface DropdownProps {
 const MyAccount = () => {
   const { data: session } = useSession();
   const router = useRouter();
-  // const handleDeleteAccount = async () => {
-  //   if (!session) {
-  //     alert("You need to be logged in to delete your account.");
-  //     return;
-  //   }
-
-  //   const extendedSession = session as SessionExtended;
-  //   const userId = extendedSession.user.id;
-
-  //   const confirmDelete = window.confirm(
-  //     "Are you sure you want to delete your account? This action cannot be undone."
-  //   );
-
-  //   if (!confirmDelete) {
-  //     return;
-  //   }
-
-  //   try {
-  //     const response = await fetch(`/api/users/${extendedSession.user.id}`, {
-  //       method: "DELETE",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //     });
-
-  //     if (response.ok) {
-  //       localStorage.removeItem("jwt");
-  //       signOut();
-  //       alert("Account deleted successfully.");
-  //     } else {
-  //       const errorData = await response.json();
-  //       alert(`Error: ${errorData.message}`);
-  //     }
-  //   } catch (error) {
-  //     console.error("Error deleting account:", error);
-  //     alert(
-  //       "An error occurred while deleting your account. Please try again later."
-  //     );
-  //   }
-  // };
-
   return (
     <>
       <section className="w-full h-full overflow-hidden">
@@ -415,14 +374,14 @@ const ContactSection = () => {
       address: userData.address,
       city: userData.city,
       state: userData.state,
-      zip: userData.zip,
+      zipCode: userData.zipCode,
       country: userData.country,
     };
     if (
       userData.address === userDataCopy?.address &&
       userData.city === userDataCopy?.city &&
       userData.state === userDataCopy?.state &&
-      userData.zip === userDataCopy?.zip
+      userData.zipCode === userDataCopy?.zipCode
     ) {
       // alert("No changes made to the contact information");
       setContactEditing(false);
@@ -547,14 +506,14 @@ const ContactSection = () => {
         <InputField
           id="zip"
           label="Zip"
-          value={userData?.zip}
+          value={userData?.zipCode}
           isDisabled={!isContactEditing}
           setValue={(value) => {
             let numericValue = value.replace(/[^0-9]/g, "");
             if (numericValue.length > 6) {
               numericValue = numericValue.slice(0, 6);
             }
-            handleInputChange("zip", numericValue);
+            handleInputChange("zipCode", numericValue);
           }}
         />
       </div>

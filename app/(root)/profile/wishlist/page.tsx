@@ -1,11 +1,11 @@
-import React from "react";
+import { getServerSession } from "next-auth";
+import { redirect } from "next/navigation";
+import Wishlist from "@/components/Profile/Wishlist";
 
-export default function WishlistPage() {
-  return (
-    <>
-      <div className="mt-[80px] w-full h-[calc(100vh-60px)] text-3xl capitalize text-center">
-        Wishlist Page
-      </div>
-    </>
-  );
+export default async function WishlistPage() {
+  const session = await getServerSession();
+  // console.log(session);
+
+  if (session) redirect("/");
+  return <Wishlist />;
 }

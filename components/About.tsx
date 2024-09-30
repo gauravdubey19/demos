@@ -21,7 +21,7 @@ export default About;
 
 const Hero = () => {
   return (
-    <div className="w-full h-full lg:h-[calc(100vh-60px)] flex-between flex-col md:flex-row gap-2 md:gap-6 px-4 md:px-0 py-5 md:py-8 overflow-hidden">
+    <div className="w-full h-full lg:h-[calc(100vh-60px)] flex-between flex-col md:flex-row gap-2 md:gap-6 px-4 md:px-0 py-5 md:py-8 animate-slide-down overflow-hidden">
       <div className="w-full h-52 md:h-full bg-[url('/assets/rightImage.png')] bg-cover bg-no-repeat rounded-xl md:rounded-l-none md:rounded-r-xl overflow-hidden"></div>
       <div className="w-full h-full flex items-center justify-start p-2 overflow-hidden">
         <div className="w-full lg:max-w-xl h-fit space-y-4 md:pr-3 lg:pr-5">
@@ -71,7 +71,7 @@ const OurPartners = () => {
               width={400}
               height={300}
               objectFit="contain"
-              className="w-fit h-24 object-contain cursor-default"
+              className="w-fit h-24 object-contain cursor-default animate-slide-down"
             />
           ))}
         </Carousel>
@@ -104,7 +104,7 @@ const OurExecutives = () => {
                   width={400}
                   height={300}
                   objectFit="contain"
-                  className="w-fit h-[240px] sm:h-[240px] md:h-[220px] lg:h-[340px] object-cover cursor-default"
+                  className="w-fit h-[240px] sm:h-[240px] md:h-[220px] lg:h-[340px] object-cover cursor-default animate-slide-up"
                 />
                 <div className="w-full h-fit space-y-1">
                   <h3 className="text-black">{p.name}</h3>
@@ -132,7 +132,7 @@ const OurExecutives = () => {
 
 const OurGoals = () => {
   return (
-    <div className="w-full h-full lg:h-[calc(100vh-60px)] px-4 md:px-0 py-5 md:py-8 overflow-hidden">
+    <div className="w-full h-full lg:h-[calc(100vh-60px)] px-4 md:px-0 py-5 md:py-8 animate-slide-down mb-4 overflow-hidden">
       <div className="w-full h-fit px-4 md:px-6 lg:px-8">
         <h2 className="text-lg md:text-xl lg:text-2xl xl:text-3xl font-bold">
           Our Goals

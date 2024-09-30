@@ -3,19 +3,71 @@
 import React, { useState } from 'react';
 import { ChevronUp, ChevronDown } from 'lucide-react';
 import { Button } from '../ui/button';
+import { useGlobalContext } from '@/context/GlobalProvider';
+import { set } from 'mongoose';
 
 interface PaymentI {
   handlePlaceOrder: () => void;
+  placingOrder: boolean;
+  selectedAddress: {
+    _id: string;
+    firstName: string;
+    lastName: string;
+    address: string;
+    phone_number: string;
+    zipCode: string;
+    state: {
+        name: string;
+        code: string;
+    };
+    city: {
+        name: string;
+        code: string;
+    };
+};
+setInitiatedProcess: (v: boolean) => void;
 }
 
-const Payment = ({ handlePlaceOrder }: PaymentI) => {
+const Payment = ({ handlePlaceOrder,placingOrder,selectedAddress,setInitiatedProcess }: PaymentI) => {
   const [isOpen, setIsOpen] = useState(false);
   const [otp, setOtp] = useState('');
   const [onlinePayment, setOnlinePayment] = useState(false);
-
+  const [verifiedOtp, setVerifiedOtp] = useState(false);
+  const [verifyingOtp, setVerifyingOtp] = useState(false);
+  const [sentOtp, setSentOtp] = useState(false);
+  const [sendingOtp, setSendingOtp] = useState(false);
   const handleToggle = () => setIsOpen(!isOpen);
   const handleOnlinePaymentToggle = () => setOnlinePayment(!onlinePayment);
+  const {sendOTP,verifyOTP} = useGlobalContext();
 
+  const handleOTPSend = async () => {
+
+    if(selectedAddress.phone_number){
+      setInitiatedProcess(true);
+      try {
+        sendOTP(selectedAddress.phone_number,setSendingOtp,setSentOtp);
+      } catch (error) {
+        console.log("Error while sending OTP: ",error);
+      }
+    }
+  }
+const handleVerifyOTP = async () => {
+  try {
+    const result = await verifyOTP(selectedAddress.phone_number,otp,setVerifyingOtp,setVerifiedOtp,"OTP verified successfully");
+    console.log("OTP verification result: ",result);
+    if(result){
+      console.log("Placing Order after otp verification");
+      handlePlaceOrder();
+    }else{
+      console.log("OTP verification failed");
+      setOtp('');
+      setSentOtp(false);
+      setVerifiedOtp(false);
+    }
+  } catch (error) {
+    console.log("Error while verifying OTP: ",error);
+  }
+}
   return (
     <div className="mb-2 pt-7 ">
       <h2 id="cash-on-delivery-heading">
@@ -36,20 +88,37 @@ const Payment = ({ handlePlaceOrder }: PaymentI) => {
       >
         <div className="p-4 space-y-3">
           <label htmlFor="otp" className="block mb-2 text-sm font-medium text-gray-900">
-            Enter OTP:
+            Enter OTP sent to +91 {selectedAddress.phone_number}:
           </label>
           <input
-            type="number"
+            type="text"
             id="otp"
+            disabled={!sentOtp}
             value={otp}
-            onChange={(e) => setOtp(e.target.value)}
-            className="bg-gray-50 border w-[40] border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-[white] focus:border-[white] block  p-2.5"
+            onChange={(e) => {
+              // Accept only 6 digit number OTP
+              const value = e.target.value;
+              if (value.length <= 6 && !isNaN(Number(value))) {
+                setOtp(value);
+              }
+            }}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                handleVerifyOTP();
+              }}
+            }
+            className="bg-gray-50 border w-[40] border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-[white] focus:border-[white] block  p-2.5 disabled:opacity-70"
             placeholder="Enter OTP"
             required
           />
-          <Button className='text-lg' onClick={handlePlaceOrder}>
-            Place Order
+          {sentOtp ?
+          <Button className='text-lg disabled:opacity-70' onClick={handleVerifyOTP} disabled={placingOrder||verifyingOtp||placingOrder ||verifiedOtp}>
+            {verifyingOtp?'Verifying OTP':placingOrder ? 'Placing Order' : 'Place Order'}
+          </Button>:
+          <Button className='text-lg disabled:opacity-70' onClick={handleOTPSend} disabled={sendingOtp}>
+            {sendingOtp ? 'Sending OTP' : 'Send OTP'}
           </Button>
+          }
         </div>
       </div>
 
@@ -85,9 +154,14 @@ const Payment = ({ handlePlaceOrder }: PaymentI) => {
               <label htmlFor="netbanking" className="ml- 2 text-sm text-gray-900">Net Banking</label>
             </li>
           </ul>
-          <Button className='text-lg' onClick={handlePlaceOrder}>
-            Place Order
+          {sentOtp ?
+          <Button className='text-lg disabled:opacity-70' onClick={handleVerifyOTP} disabled={placingOrder}>
+            {placingOrder ? 'Placing Order...' : 'Place Order'}
+          </Button>:
+          <Button className='text-lg disabled:opacity-70' onClick={handleOTPSend} disabled={sendingOtp}>
+            {sendingOtp ? 'Sending OTP' : 'Send OTP'}
           </Button>
+          }
         </div>
       </div>
     </div>

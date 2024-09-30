@@ -17,6 +17,7 @@ import ReactCountUp from "@/components/ui/ReactCountUp";
 import { FaPlus } from "react-icons/fa";
 import { BsPlus, BsTrash } from "react-icons/bs";
 import Loader from "@/components/ui/Loader";
+import { ColorOption, FAQs } from "./AddProduct";
 
 export interface ProductDetailValues {
   _id: string;
@@ -39,30 +40,24 @@ export interface ProductDetailValues {
     title: string;
     slug: string;
   }[];
-  types: {
-    _id: string;
-    title: string;
-    slug: string;
-  }[];
+  type: string[];
   material: string;
   fabricType?: string;
   careInstructions?: string;
   origin: string;
   brand: string;
-  faqs: {
+  faqs?: {
     _id: string;
     question: string;
     answer: string;
   }[];
-  type: string;
-  countryOfManufacture: string;
 }
 
 interface ColorOptionValue {
   title: string;
   color: string;
 }
-interface CategoryAndTypeValue {
+interface CategoryValue {
   title: string;
   slug: string;
 }
@@ -75,6 +70,29 @@ const EditProduct: React.FC<{ slug: string }> = ({ slug }) => {
   const router = useRouter();
   const [product, setProduct] = useState<ProductDetailValues | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const [loadingSave, setLoadingSave] = useState<boolean>(false);
+
+  const [mainImage, setMainImage] = useState<File | string | null>(null);
+  const [fetchImages, setFeachImages] = useState<string[]>([]);
+  const [images, setImages] = useState<File[]>([]);
+
+  const [title, setTitle] = useState<string>("");
+  const [description, setDescription] = useState<string>("");
+  const [price, setPrice] = useState<number>();
+  const [oldPrice, setOldPrice] = useState<number>();
+  const [quantityInStock, setQuantityInStock] = useState<number>();
+  const [availableSizes, setAvailableSizes] = useState<string[]>([]);
+  const [colorOptions, setColorOptions] = useState<ColorOptionValue[]>([]);
+  const [categories, setCategories] = useState<CategoryValue[]>([]);
+  const [types, setTypes] = useState<string[]>([]);
+  const [material, setMaterial] = useState<string>("");
+  const [fabricType, setFabricType] = useState<string>("");
+  const [careInstructions, setCareInstructions] = useState<string>("");
+  const [origin, setOrigin] = useState<string>("India");
+  const [brand, setBrand] = useState<string>(
+    "Chimanlal Suresh Kumar (CSK) Textiles"
+  );
+  const [faqs, setFaqs] = useState<Faq[]>([]);
 
   useEffect(() => {
     const fetchProductBySlug = async () => {
@@ -101,30 +119,30 @@ const EditProduct: React.FC<{ slug: string }> = ({ slug }) => {
       }
     };
 
-    // if (!product)
-    fetchProductBySlug();
-  }, [slug]);
+    if (!product) fetchProductBySlug();
+    else {
+      setMainImage(product?.mainImage);
+      setFeachImages(product?.images);
+      setTitle(product.title);
+      setDescription(product?.description);
+      setPrice(product?.price);
+      setOldPrice(product?.oldPrice);
+      setQuantityInStock(product?.quantityInStock);
+      setAvailableSizes(product?.availableSizes);
+      setColorOptions(product?.colorOptions);
+      setCategories(product?.categories);
+      setTypes(product?.type);
+      setMaterial(product?.material);
+      if (product?.fabricType) setFabricType(product?.fabricType);
+      if (product?.careInstructions)
+        setCareInstructions(product?.careInstructions);
+      if (product?.origin) setOrigin(product?.origin);
+      if (product?.brand) setBrand(product?.brand);
+      if (product?.faqs) setFaqs(product?.faqs);
+    }
+  }, [product, slug]);
 
-  const [title, setTitle] = useState<string>("");
-  const [description, setDescription] = useState<string>("");
-  const [images, setImages] = useState<File[]>([]);
-  const [mainImage, setMainImage] = useState<File | null>(null);
-  const [price, setPrice] = useState<number>();
-  const [oldPrice, setOldPrice] = useState<number>();
-  const [quantityInStock, setQuantityInStock] = useState<number>();
-  const [availableSizes, setAvailableSizes] = useState<string[]>([]);
-  const [colorOptions, setColorOptions] = useState<ColorOptionValue[]>([]);
-  const [categories, setCategories] = useState<CategoryAndTypeValue[]>([]);
-  const [types, setTypes] = useState<CategoryAndTypeValue[]>([]);
-  const [material, setMaterial] = useState<string>("");
-  const [fabricType, setFabricType] = useState<string>("");
-  const [careInstructions, setCareInstructions] = useState<string>("");
-  const [origin, setOrigin] = useState<string>("");
-  const [brand, setBrand] = useState<string>(
-    "Chimanlal Suresh Kumar (CSK) Textiles"
-  );
-  const [countryOfManufacture, setCountryOfManufacture] = useState<string>("");
-  const [faqs, setFaqs] = useState<Faq[]>([]);
+  console.log(product);
 
   const handleAddImage = (event: React.MouseEvent<HTMLDivElement>) => {
     const input = document.createElement("input");
@@ -179,23 +197,22 @@ const EditProduct: React.FC<{ slug: string }> = ({ slug }) => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setLoadingSave(true);
 
-    // Check for missing fields
     if (
       !title ||
       !description ||
       !images.length ||
       !mainImage ||
       !price ||
-      !oldPrice ||
       !quantityInStock ||
       !availableSizes.length ||
       !colorOptions.length ||
       !categories.length ||
       !types.length ||
-      !material ||
-      !fabricType
+      !material
     ) {
+      setLoadingSave(false);
       return toast({
         title: "Missing Fields",
         description: "Please fill in all required fields.",
@@ -204,50 +221,54 @@ const EditProduct: React.FC<{ slug: string }> = ({ slug }) => {
     }
 
     const formData = new FormData();
-
-    formData.append("mainImage", mainImage);
-    images.forEach((image) => {
-      formData.append(`images`, image);
-    });
-    formData.append("title", title);
-    formData.append("description", description);
-    formData.append("price", price.toString());
-    formData.append("oldPrice", oldPrice.toString());
-    formData.append("quantityInStock", quantityInStock.toString());
-    formData.append("material", material);
-    formData.append("fabricType", fabricType);
-    formData.append("careInstructions", careInstructions || "");
-    formData.append("origin", origin || "");
-    formData.append("brand", brand || "");
-    formData.append("countryOfManufacture", countryOfManufacture || "India");
-    formData.append("availableSizes", JSON.stringify(availableSizes));
-    formData.append("colorOptions", JSON.stringify(colorOptions));
-    formData.append("categories", JSON.stringify(categories));
-    formData.append("types", JSON.stringify(types));
-    formData.append("faqs", JSON.stringify(faqs));
-
     try {
-      const res = await fetch("/api/products/create/create-product", {
-        method: "POST",
-        body: formData,
+      formData.append("mainImage", mainImage); // Main image
+      images.forEach((image) => {
+        formData.append("images", image); // Multiple images
       });
+      formData.append("title", title);
+      formData.append("description", description);
+      formData.append("price", price.toString());
+      if (oldPrice) formData.append("oldPrice", oldPrice.toString());
+      formData.append("quantityInStock", quantityInStock.toString());
+      formData.append("material", material);
+      if (fabricType) formData.append("fabricType", fabricType);
+      if (careInstructions)
+        formData.append("careInstructions", careInstructions);
+      formData.append("origin", origin || "India");
+      if (brand) formData.append("brand", brand);
+      formData.append("availableSizes", JSON.stringify(availableSizes));
+      formData.append("colorOptions", JSON.stringify(colorOptions));
+      formData.append("categories", JSON.stringify(categories));
+      formData.append("types", JSON.stringify(types));
+      if (faqs.length) formData.append("faqs", JSON.stringify(faqs));
+
+      const res = await fetch(
+        `/api/products/update/admin/edit-product/${product?._id}`,
+        {
+          method: "PUT",
+          body: formData,
+        }
+      );
 
       const data = await res.json();
       toast({
         title: data.message || data.error,
         description: data.message
-          ? "Now you can view the product."
+          ? "Now you can view the updated product details."
           : "Please try again later...",
         variant: data.error ? "destructive" : "default",
       });
-      router.back();
+      if (res.ok) router.refresh();
     } catch (error) {
       console.error("Error creating product:", error);
       toast({
-        title: "Error creating product",
-        description: "Please try again later...",
+        title: "Error",
+        description: "Something went wrong. Please try again later.",
         variant: "destructive",
       });
+    } finally {
+      setLoadingSave(false);
     }
   };
 
@@ -266,63 +287,140 @@ const EditProduct: React.FC<{ slug: string }> = ({ slug }) => {
           </h2>
           <div className="w-fit flex-center gap-2">
             <Button
+              type="button"
               onClick={() => router.back()}
               className="bg-red-500 text-white"
             >
               Cancel
             </Button>
-            <Button type="submit" className="text-white">
-              Save Edit
+            <Button type="submit" disabled={loadingSave} className="text-white">
+              {!loadingSave ? "Save" : "Saving..."}
             </Button>
           </div>
         </header>
         <div className="w-full h-[calc(100vh-90px)] space-y-2 p-4 overflow-y-auto">
           <div className="w-full h-[calc(100vh-140px)] flex gap-2">
-            <div className="w-[60%] h-full bg-[#F8F8F8] br">
-              {mainImage && (
-                <Image
-                  src={URL.createObjectURL(mainImage)}
-                  alt="Main Image"
-                  width={800}
-                  height={800}
-                  className="w-full h-full object-contain"
-                />
-              )}
-            </div>
-            <div className="w-[40%] h-full bg-[#F8F8F8] overflow-x-hidden overflow-y-scroll">
-              <div className="w-full h-fit grid grid-cols-1 md:grid-cols-2 gap-2">
-                <div
-                  className="w-full h-60 flex-center cursor-pointer select-none br active:scale-95 ease-in-out duration-300"
-                  onClick={handleAddImage}
-                >
-                  <div className="w-12 h-12 rounded-full flex-center bg-primary text-2xl md:text-4xl lg:text-5xl text-white p-4">
-                    +
-                  </div>
-                </div>
-                {images
-                  .slice()
-                  .reverse()
-                  .map((image, index) => (
-                    <div
-                      key={index}
-                      className="relative group w-full h-60 br"
-                      onClick={() => handleSetMainImage(image)}
-                    >
-                      <button
-                        onClick={() => handleRemoveImage(image)}
-                        className="absolute top-1 right-2 text-xl text-red opacity-0 group-hover:opacity-100 ease-in-out duration-300"
-                      >
-                        x
-                      </button>
-                      <Image
-                        src={URL.createObjectURL(image)}
-                        alt={`Image ${index + 1}`}
-                        width={400}
-                        height={400}
-                        className="w-full h-full object-contain cursor-pointer"
-                      />
+            <div className="w-[60%] h-full overflow-hidden">
+              <h4>
+                Main Image<span className="text-[red]">*</span>
+              </h4>
+              <div className="relative w-full h-[95%] bg-[#F8F8F8] flex-center">
+                {mainImage ? (
+                  typeof mainImage === "string" ? (
+                    <Image
+                      src={mainImage}
+                      alt="Main Image"
+                      width={800}
+                      height={800}
+                      className="w-full h-full object-contain animate-slide-down"
+                    />
+                  ) : (
+                    <Image
+                      src={URL.createObjectURL(mainImage)}
+                      alt="Main Image"
+                      width={800}
+                      height={800}
+                      className="w-full h-full object-contain animate-slide-down"
+                    />
+                  )
+                ) : (
+                  <>
+                    <Image
+                      src="/logo.png"
+                      alt="Main Image"
+                      width={800}
+                      height={800}
+                      className="w-full h-full object-contain"
+                    />
+                    <div className="absolute inset-0 bg-black/50 flex-center text-primary animate-slide-down">
+                      Choose an Image
                     </div>
-                  ))}
+                  </>
+                )}
+              </div>
+            </div>
+            <div className="w-[40%] h-full overflow-hidden">
+              <h4>
+                Images<span className="text-[red]">*</span>
+              </h4>
+              <div className="w-full h-[95%] bg-[#F8F8F8] overflow-x-hidden overflow-y-scroll">
+                <div className="w-full h-fit grid grid-cols-1 md:grid-cols-2 gap-2">
+                  <div
+                    className="w-full h-56 flex-center cursor-pointer select-none br active:scale-95 ease-in-out duration-300"
+                    onClick={handleAddImage}
+                  >
+                    <div className="w-12 h-12 rounded-full flex-center bg-primary text-2xl md:text-4xl lg:text-5xl text-white p-4">
+                      +
+                    </div>
+                  </div>
+                  {images
+                    .slice()
+                    .reverse()
+                    .map((image, index) => (
+                      <div
+                        key={index}
+                        className={`relative group w-full h-56 br ${
+                          image === mainImage && "bg-primary shadow-xl"
+                        }`}
+                        onClick={() => handleSetMainImage(image)}
+                      >
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveImage(image)}
+                          title="Remove"
+                          className="absolute top-1 right-2 z-10 text-xl text-red opacity-0 group-hover:opacity-100 ease-in-out duration-300"
+                        >
+                          x
+                        </button>
+                        {image === mainImage && (
+                          <div className="absolute inset-0 bg-black/40 flex-center text-primary animate-slide-down">
+                            Main Image
+                          </div>
+                        )}
+                        <Image
+                          src={URL.createObjectURL(image)}
+                          alt={`Image ${index + 1}`}
+                          width={400}
+                          height={400}
+                          className="w-full h-full object-contain cursor-pointer"
+                        />
+                      </div>
+                    ))}
+
+                  {fetchImages
+                    .slice()
+                    .reverse()
+                    .map((image, index) => (
+                      <div
+                        key={index}
+                        className={`relative group w-full h-56 br ${
+                          image === mainImage && "bg-primary shadow-xl"
+                        }`}
+                        // onClick={() => handleSetMainImage(image)}
+                      >
+                        <button
+                          type="button"
+                          // onClick={() => handleRemoveImage(image)}
+                          title="Remove"
+                          className="absolute top-1 right-2 z-10 text-xl text-red opacity-0 group-hover:opacity-100 ease-in-out duration-300"
+                        >
+                          x
+                        </button>
+                        {image === mainImage && (
+                          <div className="absolute inset-0 bg-black/40 flex-center text-primary animate-slide-down">
+                            Main Image
+                          </div>
+                        )}
+                        <Image
+                          src={image}
+                          alt={`Image ${index + 1}`}
+                          width={400}
+                          height={400}
+                          className="w-full h-full object-contain cursor-pointer"
+                        />
+                      </div>
+                    ))}
+                </div>
               </div>
             </div>
           </div>
@@ -331,23 +429,25 @@ const EditProduct: React.FC<{ slug: string }> = ({ slug }) => {
               {/* Product Title and Description */}
               <div>
                 <label className="block text-sm font-medium text-gray-700">
-                  Title
+                  Title<span className="text-[red]">*</span>
                 </label>
                 <input
                   type="text"
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
+                  required
                   className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm bg-[#F8F8F8]"
                   placeholder="Enter Title"
                 />
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700">
-                  Description
+                  Description<span className="text-[red]">*</span>
                 </label>
                 <textarea
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
+                  required
                   placeholder="Enter Description"
                   className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm bg-[#F8F8F8]"
                 ></textarea>
@@ -358,7 +458,7 @@ const EditProduct: React.FC<{ slug: string }> = ({ slug }) => {
                 <div className="flex gap-2">
                   <div className="flex-1">
                     <label className="block text-sm font-medium text-gray-700">
-                      Price
+                      Price<span className="text-[red]">*</span>
                     </label>
                     <input
                       type="number"
@@ -366,6 +466,7 @@ const EditProduct: React.FC<{ slug: string }> = ({ slug }) => {
                       onChange={(e) =>
                         setPrice(e.target.value as unknown as number)
                       }
+                      required
                       placeholder="Enter"
                       className="custom-number-input mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm bg-[#F8F8F8]"
                     />
@@ -386,31 +487,34 @@ const EditProduct: React.FC<{ slug: string }> = ({ slug }) => {
                   </div>
                 </div>
                 {/* Discount and Available Sizes */}
-                <div className="w-fit h-fit py-1">
-                  <label className="animate-slide-up block text-sm font-medium text-gray-700">
-                    Discount -{" "}
-                    {price && oldPrice && (
-                      <ReactCountUp
-                        amt={calculateDiscount(price, oldPrice)}
-                        duration={1}
-                        className="text-md text-green-500 font-medium"
-                      >
-                        % off
-                      </ReactCountUp>
-                    )}
-                  </label>
-                </div>
+                {oldPrice && (
+                  <div className="w-fit h-fit py-1 animate-slide-down overflow-hidden">
+                    <label className="animate-slide-up block text-sm font-medium text-gray-700">
+                      Discount -{" "}
+                      {price && oldPrice && (
+                        <ReactCountUp
+                          amt={calculateDiscount(price, oldPrice)}
+                          duration={1}
+                          className="text-md text-[#2CD396] font-medium"
+                        >
+                          % off
+                        </ReactCountUp>
+                      )}
+                    </label>
+                  </div>
+                )}
               </div>
 
               {/* Material */}
               <div>
                 <label className="block text-sm font-medium text-gray-700">
-                  Material
+                  Material<span className="text-[red]">*</span>
                 </label>
                 <input
                   type="text"
                   value={material}
                   onChange={(e) => setMaterial(e.target.value)}
+                  required
                   placeholder="Enter"
                   className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm bg-[#F8F8F8]"
                 />
@@ -426,11 +530,12 @@ const EditProduct: React.FC<{ slug: string }> = ({ slug }) => {
               <div className="flex gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700">
-                    Available Sizes
+                    Available Sizes<span className="text-[red]">*</span>
                   </label>
                   <div className="flex space-x-2 mt-1">
                     {["XS", "S", "M", "L", "XL", "XXL"].map((size) => (
                       <button
+                        type="button"
                         key={size}
                         className={`border rounded-full px-3 py-2 ${
                           availableSizes.includes(size)
@@ -446,7 +551,7 @@ const EditProduct: React.FC<{ slug: string }> = ({ slug }) => {
                 </div>
                 <div className="">
                   <label className="block text-sm font-medium text-gray-700">
-                    Quantity In Stock
+                    Quantity In Stock<span className="text-[red]">*</span>
                   </label>
                   <input
                     type="number"
@@ -454,6 +559,7 @@ const EditProduct: React.FC<{ slug: string }> = ({ slug }) => {
                     onChange={(e) =>
                       setQuantityInStock(e.target.value as unknown as number)
                     }
+                    required
                     placeholder="Enter"
                     className="custom-number-input mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm bg-[#F8F8F8]"
                   />
@@ -485,21 +591,8 @@ const EditProduct: React.FC<{ slug: string }> = ({ slug }) => {
                   className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm bg-[#F8F8F8]"
                 />
               </div>
-              {/* Country Of Manufacture */}
-              <div className="">
-                <label className="block text-sm font-medium text-gray-700">
-                  Country Of Manufacture
-                </label>
-                <input
-                  type="text"
-                  value={countryOfManufacture}
-                  onChange={(e) => setCountryOfManufacture(e.target.value)}
-                  placeholder="Enter"
-                  className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm bg-[#F8F8F8]"
-                />
-              </div>
               {/* Brand */}
-              <div className="">
+              <div className="col-span-2">
                 <label className="block text-sm font-medium text-gray-700">
                   Brand
                 </label>
@@ -512,6 +605,8 @@ const EditProduct: React.FC<{ slug: string }> = ({ slug }) => {
                 />
               </div>
               <SelectCategoriesAndTypes
+                categories={categories}
+                types={types}
                 setCategories={setCategories}
                 setTypes={setTypes}
               />
@@ -537,166 +632,19 @@ const EditProduct: React.FC<{ slug: string }> = ({ slug }) => {
 
 export default EditProduct;
 
-const ColorOption: React.FC<{
-  colorOptions: ColorOptionValue[];
-  setColorOptions: React.Dispatch<React.SetStateAction<ColorOptionValue[]>>;
-}> = ({ colorOptions, setColorOptions }) => {
-  const [newColor, setNewColor] = useState<{
-    title: string;
-    color: string;
-    hex: string;
-  }>({
-    title: "",
-    color: "#ffb433",
-    hex: "#ffb433",
-  });
-  const [isAdding, setIsAdding] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+interface SelectCategoriesAndTypesProps {
+  categories: CategoryValue[];
+  types: string[];
+  setCategories: React.Dispatch<React.SetStateAction<CategoryValue[]>>;
+  setTypes: React.Dispatch<React.SetStateAction<string[]>>;
+}
 
-  const handleAddColor = () => {
-    if (!newColor.title || !newColor.color) {
-      setError("Title and color are required");
-      return;
-    }
-
-    // checking for duplicates
-    const exists = colorOptions.some(
-      (option) =>
-        option.title.toLowerCase() === newColor.title.toLowerCase() ||
-        option.color === newColor.color
-    );
-
-    if (exists) {
-      setError("Color title or color already exists.");
-      return;
-    }
-
-    // adding the new color if it passes checks
-    setColorOptions([
-      ...colorOptions,
-      { title: capitalizeString(newColor.title), color: newColor.color },
-    ]);
-    setNewColor({ title: "", color: "#ffb433", hex: "#ffb433" });
-    setIsAdding(false);
-    setError(null);
-  };
-
-  const handleRemoveColor = (index: number) => {
-    const updatedColors = colorOptions.filter((_, i) => i !== index);
-    setColorOptions(updatedColors);
-  };
-
-  const handleColorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const colorValue = e.target.value;
-    setNewColor((prev) => ({
-      ...prev,
-      color: colorValue,
-      hex: colorValue, // Update hex input to reflect the color picker
-    }));
-  };
-
-  const handleHexChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const hexValue = e.target.value;
-    setNewColor((prev) => ({
-      ...prev,
-      hex: hexValue,
-      color: hexValue,
-    }));
-  };
-
-  return (
-    <div>
-      {error && <div className="text-red-500 mb-2">{error}</div>}{" "}
-      {/* Display error if exists */}
-      <div className="flex flex-col gap-4">
-        {colorOptions.map((option, index) => (
-          <div key={index} className="flex-between gap-4">
-            <div className="flex items-center gap-2">
-              <div
-                className="w-12 h-12 border border-gray-300 rounded-full overflow-hidden"
-                style={{ backgroundColor: option.color }}
-              />
-              <span>{option.title}</span>
-            </div>
-            <div className="mt-4">
-              <button
-                onClick={() => handleRemoveColor(index)}
-                className="w-fit h-fit p-2 rounded bg-red-100 hover:bg-red-200 text-red-600"
-              >
-                <BsTrash size={16} />
-              </button>
-            </div>
-          </div>
-        ))}
-
-        {isAdding ? (
-          <div className="flex-between gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Choose Color
-              </label>
-              <input
-                type="color"
-                value={newColor.color}
-                onChange={handleColorChange}
-                className="mt-1 block w-12 h-12 cursor-pointer border border-gray-300 rounded-md shadow-sm bg-[#F8F8F8]"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">
-                HEX Color
-              </label>
-              <input
-                type="text"
-                value={newColor.hex}
-                onChange={handleHexChange}
-                className="mt-1 block w-28 p-2 border border-gray-300 rounded-md shadow-sm bg-[#F8F8F8]"
-                placeholder="Enter"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Color Title
-              </label>
-              <input
-                type="text"
-                value={newColor.title}
-                onChange={(e) =>
-                  setNewColor({ ...newColor, title: e.target.value })
-                }
-                className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm bg-[#F8F8F8]"
-                placeholder="Enter"
-              />
-            </div>
-            <div className="mt-4">
-              <button
-                onClick={handleAddColor}
-                className="w-fit h-fit p-2 rounded bg-yellow-100 hover:bg-yellow-200 text-yellow-600"
-              >
-                <BsPlus size={20} />
-              </button>
-            </div>
-          </div>
-        ) : (
-          <div className="">
-            <button
-              onClick={() => setIsAdding(true)}
-              className="flex items-center p-2 rounded bg-yellow-100 hover:bg-yellow-200 text-yellow-600"
-            >
-              <BsPlus size={16} className="mr-1" />
-              Add Color
-            </button>
-          </div>
-        )}
-      </div>
-    </div>
-  );
-};
-
-const SelectCategoriesAndTypes: React.FC<{
-  setCategories: React.Dispatch<React.SetStateAction<CategoryAndTypeValue[]>>;
-  setTypes: React.Dispatch<React.SetStateAction<CategoryAndTypeValue[]>>;
-}> = ({ setCategories, setTypes }) => {
+const SelectCategoriesAndTypes: React.FC<SelectCategoriesAndTypesProps> = ({
+  setCategories,
+  setTypes,
+  categories,
+  types,
+}) => {
   const [categoriesCollection, setCategoriesCollection] = useState<
     CategoryCollectionValues[]
   >([]);
@@ -725,6 +673,38 @@ const SelectCategoriesAndTypes: React.FC<{
 
     fetchCategoriesCollection();
   }, []);
+
+  useEffect(() => {
+    // Update initial selections based on categories and types from props
+    const initialSelections = categories.map((category) => {
+      const matchedCategory = categoriesCollection.find(
+        (cat) => cat.slug === category.slug
+      ) || {
+        _id: "",
+        image: "",
+        title: "",
+        slug: "",
+        description: "",
+        types: [],
+        createdAt: "",
+      };
+
+      return {
+        category: matchedCategory,
+        type: { title: "", slug: "" },
+      };
+    });
+
+    setCategorySelections(initialSelections);
+  }, [categories, categoriesCollection]);
+
+  useEffect(() => {
+    // Update the types based on category selections
+    const selectedTypes = categorySelections.map(
+      (selection) => selection.type.slug
+    );
+    setTypes(selectedTypes);
+  }, [categorySelections, setTypes]);
 
   const handleCategoryChange = (index: number, slug: string) => {
     const selectedCategory = categoriesCollection.find(
@@ -756,14 +736,6 @@ const SelectCategoriesAndTypes: React.FC<{
       const updatedSelections = [...categorySelections];
       updatedSelections[index].type = selectedType;
       setCategorySelections(updatedSelections);
-
-      // Update selected types in parent
-      setTypes(
-        updatedSelections.map((sel) => ({
-          title: sel.type.title,
-          slug: sel.type.slug,
-        }))
-      );
     }
   };
 
@@ -796,12 +768,6 @@ const SelectCategoriesAndTypes: React.FC<{
         slug: sel.category.slug,
       }))
     );
-    setTypes(
-      updatedSelections.map((sel) => ({
-        title: sel.type.title,
-        slug: sel.type.slug,
-      }))
-    );
   };
 
   const availableCategories = categoriesCollection.filter(
@@ -820,13 +786,15 @@ const SelectCategoriesAndTypes: React.FC<{
 
   return (
     <div className="col-span-2 grid grid-cols-1 gap-2">
-      <span className="font-semibold">Categories and Types</span>
+      <div className="font-semibold">
+        Categories and Types<span className="text-[red]">*</span>
+      </div>
       <div className="col-span-2 grid grid-cols-2 gap-4">
         {categorySelections.map((selection, index) => (
           <div key={index} className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700">
-                Category
+                Category<span className="text-[red]">*</span>
               </label>
               {selection.category.slug ? (
                 <div className="mt-1 p-2 py-2.5 border border-gray-300 rounded-md shadow-sm bg-gray-100">
@@ -850,9 +818,9 @@ const SelectCategoriesAndTypes: React.FC<{
 
             <div>
               <label className="block text-sm font-medium text-gray-700">
-                Type
+                Type<span className="text-[red]">*</span>
               </label>
-              <div className="flex-between gap-2">
+              <div className="flex gap-2">
                 {selection.type.slug ? (
                   <div className="mt-1 w-full p-2 py-2.5 border border-gray-300 rounded-md shadow-sm bg-gray-100">
                     {selection.type.title}
@@ -872,6 +840,7 @@ const SelectCategoriesAndTypes: React.FC<{
                   </select>
                 )}
                 <button
+                  type="button"
                   onClick={() => handleRemoveSelection(index)}
                   className="w-fit h-fit p-2 rounded bg-red-100 hover:bg-red-200 text-red-600"
                 >
@@ -884,6 +853,7 @@ const SelectCategoriesAndTypes: React.FC<{
 
         <div className="col-span-2">
           <Button
+            type="button"
             onClick={handleAddMoreCategory}
             disabled={isAddButtonDisabled}
             className="w-full py-2 mt-2 text-white"
@@ -893,132 +863,5 @@ const SelectCategoriesAndTypes: React.FC<{
         </div>
       </div>
     </div>
-  );
-};
-
-const FAQs: React.FC<{
-  faqs: Faq[];
-  setFaqs: React.Dispatch<React.SetStateAction<Faq[]>>;
-}> = ({ faqs, setFaqs }) => {
-  const [newFaq, setNewFaq] = useState({ question: "", answer: "" });
-  const [showFaqForm, setShowFaqForm] = useState(true);
-
-  const handleFaqChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const { name, value } = e.target;
-    setNewFaq((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-
-  const handleSaveFaq = () => {
-    if (newFaq.question && newFaq.answer) {
-      setFaqs((prevFaqs) => [...prevFaqs, newFaq]);
-      setNewFaq({ question: "", answer: "" });
-      setShowFaqForm(false);
-    }
-  };
-
-  const handleAddMoreFaq = () => {
-    setShowFaqForm(true);
-    window.scrollTo({
-      top: document.body.scrollHeight,
-      left: 0,
-      behavior: "smooth",
-    });
-  };
-
-  const handleRemoveFaq = (index: number) => {
-    setFaqs((prevFaqs) => prevFaqs.filter((_, i) => i !== index));
-  };
-
-  return (
-    <>
-      {/* FAQ Section */}
-      <div className="col-span-2">
-        <h3 className="text-lg font-medium text-gray-900">FAQ{"'"}s</h3>
-
-        {/* If there are saved FAQs, show them in accordion format */}
-        {faqs.length > 0 && (
-          <Accordion type="single" collapsible className="w-full mt-1">
-            {faqs.map((faq, index) => (
-              <AccordionItem key={index} value={`item-${index + 1}`}>
-                <AccordionTrigger>
-                  <div className="w-full flex justify-between items-center">
-                    {faq.question || `FAQ Question ${index + 1}`}
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleRemoveFaq(index);
-                      }}
-                      className="ml-4 w-fit h-fit p-2 rounded bg-red-100 hover:bg-red-200 text-red-600"
-                    >
-                      <BsTrash size={16} />
-                    </button>
-                  </div>
-                </AccordionTrigger>
-                <AccordionContent className="bg-[#F8F8F8] text-sm p-4 rounded-md">
-                  {faq.answer}
-                </AccordionContent>
-              </AccordionItem>
-            ))}
-          </Accordion>
-        )}
-
-        {/* If the FAQ form should be shown, render the input form */}
-        {showFaqForm ? (
-          <div className="mt-2">
-            <h4 className="text-md font-medium text-gray-900">
-              Write FAQ about the Product
-            </h4>
-            <div className="mt-2">
-              <input
-                type="text"
-                name="question"
-                value={newFaq.question}
-                onChange={handleFaqChange}
-                className="w-full p-2 border border-gray-300 rounded-md shadow-sm bg-[#F8F8F8]"
-                placeholder="Enter Question"
-              />
-            </div>
-            <div className="mt-2">
-              <textarea
-                name="answer"
-                value={newFaq.answer}
-                onChange={handleFaqChange}
-                className="w-full p-2 border border-gray-300 rounded-md shadow-sm bg-[#F8F8F8]"
-                placeholder="Describe response here..."
-              ></textarea>
-            </div>
-            <div className="flex gap-2 mt-4">
-              <Button
-                type="button"
-                onClick={() => setShowFaqForm(false)}
-                className="w-fit p-2 text-white bg-red-500 rounded-md"
-              >
-                Cancel
-              </Button>
-              <Button
-                type="button"
-                onClick={handleSaveFaq}
-                className="w-fit p-2 text-white rounded-md"
-              >
-                Save FAQ
-              </Button>
-            </div>
-          </div>
-        ) : (
-          <Button
-            type="button"
-            onClick={handleAddMoreFaq}
-            className="mt-4 w-full p-2 text-white rounded-md"
-          >
-            <FaPlus className="mr-2" /> Add More FAQ
-          </Button>
-        )}
-      </div>
-    </>
   );
 };
