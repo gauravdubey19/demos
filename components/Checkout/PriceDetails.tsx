@@ -98,16 +98,18 @@ interface PriceDetailsI {
     selectedItems: any,
     onProceed: () => void;
     currentStep: 'cart' | 'address' | 'payment';
+    setTotals:any;
+    totals:any;
 }
 
-const PriceDetails = ({ onProceed, cartData, currentStep, selectedItems }: PriceDetailsI) => {
+const PriceDetails = ({ totals,setTotals,onProceed, cartData, currentStep, selectedItems }: PriceDetailsI) => {
 
-    const [totals, setTotals] = useState({
-        totalMRP: 0,
-        totalDiscount: 0,
-        platformFee: 15,
-        shippingFee: 40,
-    });
+    // const [totals, setTotals] = useState({
+    //     totalMRP: 0,
+    //     totalDiscount: 0,
+    //     platformFee: 15,
+    //     shippingFee: 40,
+    // });
 
     useEffect(() => {
         const calculateTotals = () => {
@@ -121,7 +123,7 @@ const PriceDetails = ({ onProceed, cartData, currentStep, selectedItems }: Price
                 }
             });
 
-            setTotals((prevTotals) => ({
+            setTotals((prevTotals:any) => ({
                 ...prevTotals,
                 totalMRP,
                 totalDiscount,

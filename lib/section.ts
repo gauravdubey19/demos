@@ -28,6 +28,8 @@ import TestimonialsAdmin from "@/components/Admin/Testimonials/TestimonialsAdmin
 import FaqAdmin from "@/components/Admin/QuerysFAQs/FAQ/FaqContainer";
 import FaqContainer from "@/components/Admin/QuerysFAQs/FAQ/FaqContainer";
 import Querry from "@/components/Admin/QuerysFAQs/Querries/Querry";
+import NewOutFit from "@/components/Admin/Products/AddOutfit/NewOutFit";
+import Collection from "@/components/Admin/Products/OutfitCollection/Collection";
 
 export const profileSections: SectionValues[] = [
   {
@@ -98,13 +100,13 @@ export const adminSections: SectionValues[] = [
         id: "all-outfit-collections",
         head: "All Outfit Collections",
         href: "/admin/all-outfit-collections",
-        sectionNode: AllProducts,
+        sectionNode: Collection,
       },
       {
         id: "add-outfit-collections",
         head: "Add Outfit Collections",
         href: "/admin/add-outfit-collections",
-        sectionNode: AllProducts,
+        sectionNode: NewOutFit,
       },
       {
         id: "all-categories",

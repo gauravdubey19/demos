@@ -17,8 +17,28 @@ const CheckoutPage = () => {
   const [checkoutStep, setCheckoutStep] = useState<'cart' | 'address' | 'payment'>('cart');
   const [addressData, setAddressData] = useState<any[]>([]);
   const [selectedAddressId, setSelectedAddressId] = useState<string | null>(null);
+  const [totals, setTotals] = useState({
+      totalMRP: 0,
+      totalDiscount: 0,
+      platformFee: 15,
+      shippingFee: 40,
+  });
+  const [selectedItemsData, setSelectedItemsData] = useState<{ id: string, quantity: number }[]>([]);
 
   const { cart, isOpen, setOpen } = useCart();
+
+
+  const handlePlaceOrder=()=>{
+    console.log("Selected items with quantities:", selectedItemsData);
+    console.log("selectedItems : ", selectedItems);
+    console.log("selectedAddressId : ", selectedItems);
+    console.log("shippingFee : ", totals.shippingFee);
+    console.log("totalDiscount : ", totals.totalDiscount);
+    console.log("platformFee : ", totals.platformFee);
+    console.log("totalMRP : ", totals.totalMRP);
+    const totalAmount = totals.totalMRP - totals.totalDiscount + totals.platformFee + totals.shippingFee;
+    console.log("totalAmount : ", totalAmount);
+  }
 
   // Memoizing getUserAddress with useCallback
   const getUserAddress = useCallback(async () => {
@@ -57,6 +77,14 @@ const CheckoutPage = () => {
     }
   }, [session, cart]);
 
+  // const handleSelectItem = (id: any, isSelected: boolean) => {
+  //   setCartData((prevCartData) =>
+  //     prevCartData.map((item) =>
+  //       item.productId === id ? { ...item, selected: isSelected } : item
+  //     )
+  //   );
+  //   setSelectedItems((prevSelected) => (isSelected ? prevSelected + 1 : Math.max(prevSelected - 1, 0)));
+  // };
   const handleSelectItem = (id: any, isSelected: boolean) => {
     setCartData((prevCartData) =>
       prevCartData.map((item) =>
@@ -64,11 +92,32 @@ const CheckoutPage = () => {
       )
     );
     setSelectedItems((prevSelected) => (isSelected ? prevSelected + 1 : Math.max(prevSelected - 1, 0)));
+
+    // Update selectedItemsData
+    setSelectedItemsData((prevData) => {
+      if (isSelected) {
+        const selectedItem = cartData.find(item => item.productId === id);
+        return [...prevData, { id: id, quantity: selectedItem.quantity }];
+      } else {
+        return prevData.filter(item => item.id !== id);
+      }
+    });
   };
 
+  // const handleSelectAll = (selectAll: boolean) => {
+  //   setCartData((prevCartData) => prevCartData.map((item) => ({ ...item, selected: selectAll })));
+  //   setSelectedItems(selectAll ? cartData.length : 0);
+  // };
   const handleSelectAll = (selectAll: boolean) => {
     setCartData((prevCartData) => prevCartData.map((item) => ({ ...item, selected: selectAll })));
     setSelectedItems(selectAll ? cartData.length : 0);
+
+    // Update selectedItemsData
+    if (selectAll) {
+      setSelectedItemsData(cartData.map(item => ({ id: item.productId, quantity: item.quantity })));
+    } else {
+      setSelectedItemsData([]);
+    }
   };
 
   const handleProceed = () => {
@@ -118,13 +167,15 @@ const CheckoutPage = () => {
               selectedAddressId={selectedAddressId}
             />
           }
-          {checkoutStep === 'payment' && <Payment handlePlaceOrder={() => { }} />}
+          {checkoutStep === 'payment' && <Payment handlePlaceOrder={handlePlaceOrder} />}
         </div>
         <PriceDetails
           cartData={cartData}
           selectedItems={selectedItems}
           onProceed={handleProceed}
           currentStep={checkoutStep}
+          totals={totals}
+          setTotals={setTotals}
         />
       </div>
     </div>
