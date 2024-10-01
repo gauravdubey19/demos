@@ -61,7 +61,7 @@ export default function LoginForm() {
     }
   };
 
-  const verifyOTP = async () => {
+  const verifyOTP = async (e: React.FormEvent<HTMLFormElement>) => {
     if (!phone_number || !otp) {
       console.error("Phone number and OTP are required");
       return;
@@ -125,7 +125,7 @@ export default function LoginForm() {
       await sendOTP();
     } else {
       // Verify OTP
-      await verifyOTP();
+      await verifyOTP(e);
     }
   };
   return (

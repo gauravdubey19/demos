@@ -58,6 +58,10 @@ const OrderSchema = new Schema(
     },
     orderedProducts: [OrderItemSchema],
     orderInfo: {
+      customerName: {
+        type: String,
+        required: true,
+      },
       orderStatus: {
         type: String,
         enum: ["pending", "shipped", "delivered", "cancelled"],

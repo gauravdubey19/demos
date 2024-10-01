@@ -20,7 +20,7 @@ export const connectToDB = async () => {
     await mongoose.connect(mongoUri, {
       dbName: "TSKEcommerce",
       socketTimeoutMS: 30000,
-      serverSelectionTimeoutMS: 5000,
+      serverSelectionTimeoutMS: 30000, // Increase timeout to 30 seconds
     });
 
     isConnected = true;

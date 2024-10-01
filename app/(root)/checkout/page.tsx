@@ -11,6 +11,7 @@ import ShoppingCart from '@/components/Checkout/ShoppingCart';
 import Payment from '@/components/Checkout/Payment';
 import { useRouter } from 'next/navigation';
 import { useGlobalContext } from '@/context/GlobalProvider';
+import { set } from 'mongoose';
 
 const CheckoutPage = () => {
   const router = useRouter();
@@ -29,10 +30,13 @@ const CheckoutPage = () => {
   const [totals, setTotals] = useState({ subtotal: 0, shippingFee: 0, total: 0 ,totalMRP:0,platformFee:0,totalDiscount:0});
 
   const { setFetchedOrders } = useGlobalContext();
-
+useEffect(() => {
+  console.log("selectedAddress: ",selectedAddress);
+}, [selectedAddress]);
   useEffect(() => {
     if (selectedAddressId) {
       setSelectedAddress(addressData.find((item) => item._id === selectedAddressId));
+
     }
   }, [addressData, selectedAddressId]);
 
@@ -40,7 +44,6 @@ const CheckoutPage = () => {
     if (!session?.user?.id || placingOrder) {
       return;
     }
-
     const userId = session.user.id;
     const totalAmount = cartData.filter((item) => item.selected).reduce((acc, item) => acc + item.price, 0);
     const orderDetails = {
@@ -48,6 +51,7 @@ const CheckoutPage = () => {
       orderInfo: {
         orderStatus: 'pending',
         totalPrice: totalAmount,
+        customerName: `${selectedAddress.firstName} ${selectedAddress.lastName}`,
         orderDate: new Date(),
         zipCode: selectedAddress.zipCode,
         shippingAddress: `${selectedAddress.address}, ${selectedAddress.city.name}, ${selectedAddress.state.name}`,
@@ -77,6 +81,8 @@ const CheckoutPage = () => {
       toast({ title: "Order placed successfully", description: "Please wait while we redirect you to order history page." });
     } catch (error) {
       console.error('Error placing order:', error);
+      setCheckoutStep('cart');
+      setInitiatedProcess(false);
       toast({ title: "Error placing order", variant: "destructive" });
     } finally {
       setPlacingOrder(false);

@@ -50,7 +50,10 @@ const SocialsLogin = () => {
               className="h-10 p-2 text-black w-10 border-black rounded-xl border  cursor-pointer"
               type="button"
               key={provider.id}
-              onClick={() => signIn(provider.id)}
+              onClick={(e) =>{
+                e.preventDefault();
+                signIn(provider.id)
+              } }
             >
               <Image
                 src="/google.png"
