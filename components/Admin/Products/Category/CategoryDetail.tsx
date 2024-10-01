@@ -840,11 +840,19 @@ export const DeletePopUp: React.FC<{
   const handleDeleteCategory = async () => {
     setLoading(true);
     try {
-      const res = await fetch(`/api/products/delete/admin/${action}`, {
-        method: "DELETE",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id }),
-      });
+      const res =
+        action === "delete-user"
+          ? await fetch(`/api/users/${id}`, {
+              method: "DELETE",
+              headers: {
+                "Content-Type": "application/json",
+              },
+            })
+          : await fetch(`/api/products/delete/admin/${action}`, {
+              method: "DELETE",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ id }),
+            });
 
       const data = await res.json();
 
@@ -856,9 +864,11 @@ export const DeletePopUp: React.FC<{
         });
         handleDeleteClose();
         router.push(
-          action === "delete-category"
-            ? "/admin/all-categories"
-            : "/admin/all-products"
+          action === "delete-product"
+            ? "/admin/all-products"
+            : action === "delete-user"
+            ? "/admin/customers"
+            : "/admin/all-categories"
         );
         router.refresh();
       } else {

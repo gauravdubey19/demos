@@ -1,12 +1,11 @@
-"use client"
+"use client";
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { FiEdit } from "react-icons/fi";
 import ProductCard from "./ProductCard";
-import productImg from '@/public/productImg.png'
+import productImg from "@/public/productImg.png";
 import PriceDetails from "./PriceDetails";
 import UserDetails from "./UserDetails";
-
 
 const sampleData = {
   data: {
@@ -23,16 +22,31 @@ const sampleData = {
 };
 
 const sampleCartData = [
-  { id: 1, name: "Product 1", price: 100, discount: 10, quantity: 2, selected: true },
+  {
+    id: 1,
+    name: "Product 1",
+    price: 100,
+    discount: 10,
+    quantity: 2,
+    selected: true,
+  },
 ];
 
-const OrderDetails = ({ orderId }: { orderId: string }) => {
+const OrderDetails = ({
+  userId,
+  orderId,
+}: {
+  userId: string;
+  orderId: string;
+}) => {
+  console.log(userId);
+
   return (
     <div className="p-5 pb-10 h-screen overflow-y-auto">
       <section className="w-full h-full">
         <div className="w-full h-fit flex justify-between items-center md:py-6">
           <h2 className="capitalize text-xl md:text-2xl lg:text-3xl font-semibold tracking-tight">
-            Order Number <span className=" text-[#FFB433]">#{orderId}</span>
+            {userId}/ Order Number <span className=" text-[#FFB433]">#{orderId}</span>
           </h2>
           <div className="flex items-center gap-1">
             <Button
@@ -84,7 +98,6 @@ const OrderDetails = ({ orderId }: { orderId: string }) => {
               <ProductCard data={sampleData.data} />
               <ProductCard data={sampleData.data} />
             </div>
-
           </div>
           {/* right */}
           <div className="w-full lg:w-[40%] flex flex-col gap-4 sticky top-20">

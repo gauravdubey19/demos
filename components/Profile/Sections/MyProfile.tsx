@@ -1,6 +1,6 @@
 "use client";
 
-import React, {  useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { signOut, useSession } from "next-auth/react";
 import { State, City } from "country-state-city";
 import { useGlobalContext } from "@/context/GlobalProvider";
@@ -44,7 +44,6 @@ interface User {
 }
 
 const MyProfile = () => {
-
   return (
     <>
       <section className="flex-1 p-2 md:p-4 bg-gray-50 space-y-6">
@@ -71,17 +70,19 @@ export default MyProfile;
 export const PersonalSection = () => {
   const { error, isProfileEditing, setProfileEditing, userData, setUserData } =
     useGlobalContext();
-  const {data: session} = useSession();
-  const [userDataCopy, setUserDataCopy] = useState<User | null>(userData ?? null);
+  const { data: session } = useSession();
+  const [userDataCopy, setUserDataCopy] = useState<User | null>(
+    userData ?? null
+  );
   const [isPhoneLogin, setIsPhoneLogin] = useState(false);
   useEffect(() => {
     const exSession = session as SessionExtended;
-    if(exSession?.user?.phone_number){
+    if (exSession?.user?.phone_number) {
       setIsPhoneLogin(true);
     }
-  },[session])
+  }, [session]);
   useEffect(() => {
-    if(!userDataCopy && userData){
+    if (!userDataCopy && userData) {
       console.log("userDataCopy is empty and userData is not empty");
       setUserDataCopy(userData);
     }
@@ -115,7 +116,13 @@ export const PersonalSection = () => {
       email: userData.email,
     };
 
-    if(userData.firstName === userDataCopy?.firstName && userData.lastName === userDataCopy?.lastName && userData.phone_number === userDataCopy?.phone_number && userData.gender === userData?.gender && userData.email === userDataCopy?.email){
+    if (
+      userData.firstName === userDataCopy?.firstName &&
+      userData.lastName === userDataCopy?.lastName &&
+      userData.phone_number === userDataCopy?.phone_number &&
+      userData.gender === userData?.gender &&
+      userData.email === userDataCopy?.email
+    ) {
       // alert("No changes made to the profile");
       setProfileEditing(false);
       return;
@@ -135,7 +142,6 @@ export const PersonalSection = () => {
       if (response.ok) {
         setUserDataCopy(userData);
         setProfileEditing(false);
-
       } else {
         const errorData = await response.json();
         alert(`Error: ${errorData.message}`);
@@ -170,24 +176,24 @@ export const PersonalSection = () => {
       <div className="justify-between flex flex-row  items-center mb-6">
         <h3 className="text-xl font-semibold ">Personal Information</h3>
         {isProfileEditing ? (
-          <div  className="flex gap-x-2">
-          <Button
-            className="bg-white text-red-500 border border-red-500 rounded-none active:translate-y-0.5 hover:bg-red-500 hover:text-white
+          <div className="flex gap-x-2">
+            <Button
+              className="bg-white text-red-500 border border-red-500 rounded-none active:translate-y-0.5 hover:bg-red-500 hover:text-white
             disabled:opacity-80 disabled:cursor-not-allowed
             "
-            onClick={handleResetValues}
-          >
-            Reset
-          </Button>
-          <Button
-            className="bg-primary text-white border border-primary rounded-none active:translate-y-0.5 hover:bg-transparent hover:text-primary
+              onClick={handleResetValues}
+            >
+              Reset
+            </Button>
+            <Button
+              className="bg-primary text-white border border-primary rounded-none active:translate-y-0.5 hover:bg-transparent hover:text-primary
             disabled:opacity-80 disabled:cursor-not-allowed
             "
-            onClick={handleEditProfile}
-            disabled={saving}
-          >
-            {saving ? "Saving..." : "Save"}
-          </Button>
+              onClick={handleEditProfile}
+              disabled={saving}
+            >
+              {saving ? "Saving..." : "Save"}
+            </Button>
           </div>
         ) : (
           <Button
@@ -222,7 +228,7 @@ export const PersonalSection = () => {
           id="email"
           label="Email"
           type="email"
-          isDisabled={!isPhoneLogin?true:!isProfileEditing}
+          isDisabled={!isPhoneLogin ? true : !isProfileEditing}
           value={userData?.email}
           setValue={(value) => handleInputChange("email", value)}
         />
@@ -231,7 +237,7 @@ export const PersonalSection = () => {
           label="Phone"
           type="tel"
           value={userData?.phone_number}
-          isDisabled={isPhoneLogin?true:!isProfileEditing}
+          isDisabled={isPhoneLogin ? true : !isProfileEditing}
           setValue={(value) => {
             let numericValue = value.replace(/[^0-9]/g, "");
             if (numericValue.length > 10) {
@@ -259,9 +265,11 @@ export const PersonalSection = () => {
 export const ContactSection = () => {
   const { userData, error, isContactEditing, setContactEditing, setUserData } =
     useGlobalContext();
-  const [userDataCopy, setUserDataCopy] = useState<User | null>(userData ?? null);
+  const [userDataCopy, setUserDataCopy] = useState<User | null>(
+    userData ?? null
+  );
   useEffect(() => {
-    if(!userDataCopy && userData){
+    if (!userDataCopy && userData) {
       console.log("userDataCopy is empty and userData is not empty");
       setUserDataCopy(userData);
     }
@@ -296,7 +304,7 @@ export const ContactSection = () => {
     if (!userData) {
       return;
     }
-    if(!userData.state){
+    if (!userData.state) {
       setUserData({
         ...userData,
         state: {
@@ -359,13 +367,18 @@ export const ContactSection = () => {
       zipCode: userData.zipCode,
       country: userData.country,
     };
-    if(userData.address === userDataCopy?.address && userData.city === userDataCopy?.city && userData.state === userDataCopy?.state && userData.zipCode=== userDataCopy?.zipCode){
+    if (
+      userData.address === userDataCopy?.address &&
+      userData.city === userDataCopy?.city &&
+      userData.state === userDataCopy?.state &&
+      userData.zipCode === userDataCopy?.zipCode
+    ) {
       // alert("No changes made to the contact information");
       setContactEditing(false);
       return;
     }
     try {
-    setSaving(true);
+      setSaving(true);
 
       const extendedSession = session as SessionExtended;
       const response = await fetch(
@@ -417,24 +430,24 @@ export const ContactSection = () => {
       <div className="justify-between flex flex-row items-center mb-6">
         <h3 className="text-xl font-semibold">Contact Information</h3>
         {isContactEditing ? (
-          <div  className="flex gap-x-2">
-          <Button
-            className="bg-white text-red-500 border border-red-500 rounded-none active:translate-y-0.5 hover:bg-red-500 hover:text-white
+          <div className="flex gap-x-2">
+            <Button
+              className="bg-white text-red-500 border border-red-500 rounded-none active:translate-y-0.5 hover:bg-red-500 hover:text-white
             disabled:opacity-80 disabled:cursor-not-allowed
             "
-            onClick={handleResetValues}
-          >
-            Reset
-          </Button>
-          <Button
-            className="bg-primary text-white border border-primary rounded-none active:translate-y-0.5 hover:bg-transparent hover:text-primary
+              onClick={handleResetValues}
+            >
+              Reset
+            </Button>
+            <Button
+              className="bg-primary text-white border border-primary rounded-none active:translate-y-0.5 hover:bg-transparent hover:text-primary
             disabled:opacity-80 disabled:cursor-not-allowed
             "
-            onClick={handleEditContact}
-            disabled={saving}
-          >
-            {saving ? "Saving..." : "Save"}
-          </Button>
+              onClick={handleEditContact}
+              disabled={saving}
+            >
+              {saving ? "Saving..." : "Save"}
+            </Button>
           </div>
         ) : (
           <Button
@@ -497,6 +510,3 @@ export const ContactSection = () => {
     </section>
   );
 };
-
-
-
