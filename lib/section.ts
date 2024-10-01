@@ -13,7 +13,7 @@ import AllProducts from "@/components/Admin/Products/AllProducts";
 import Customers from "@/components/Admin/Customers/Customers";
 import Orders from "@/components/Admin/Orders/Orders";
 import MyAccount from "@/components/Admin/MyAccount";
-import TestimonialsAdmin from "@/components/Admin/Testimonials/TestimonialsAdmin";
+
 import FaqContainer from "@/components/Admin/QuerysFAQs/FAQ/FaqContainer";
 import Querry from "@/components/Admin/QuerysFAQs/Querries/Querry";
 import EditAddress from "@/components/Profile/Sections/EditAddress";
@@ -35,6 +35,7 @@ import { RiMoneyDollarCircleLine } from "react-icons/ri";
 import { GrMapLocation } from "react-icons/gr";
 import Collection from "@/components/Admin/Products/OutfitCollection/Collection";
 import NewOutFit from "@/components/Admin/Products/AddOutfit/NewOutFit";
+import TestimonialsAdmin from "@/components/Admin/Testimonials/TestimonialsAdmin";
 
 export const profileSections: SectionValues[] = [
   {
@@ -177,7 +178,7 @@ export const adminSections: SectionValues[] = [
     head: "Testimonials",
     href: "/admin/testimonials",
     icon: IoVideocamOutline,
-    sectionNode: TestimonialsAdmin,
+    sectionNode: TestimonialsAdmin ,
   },
   {
     id: "my-account",

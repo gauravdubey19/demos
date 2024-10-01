@@ -5,13 +5,13 @@ import Modal from "./TestimonialsModal";
 import { Button } from "@/components/ui/button";
 
 interface TestimonialCardsI {
-  file?: any;
+  testimonial?: any;
   onRefresh?: () => void;
 
 }
 
-const TestimonialCards = ({ file, onRefresh }: TestimonialCardsI) => {
-  // console.log(file);
+const TestimonialCards = ({ testimonial, onRefresh }: TestimonialCardsI) => {
+  // console.log(testimonial);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const [isPlaying, setIsPlaying] = useState<boolean>(true);
   const [isHovering, setIsHovering] = useState<boolean>(false);
@@ -46,34 +46,6 @@ const TestimonialCards = ({ file, onRefresh }: TestimonialCardsI) => {
 
   const handleDelete = async () => {
     console.log('delete');
-    if (file) {
-      try {
-        const response = await fetch('/api/Testimonials/deleteThings', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ files: file.key }),
-        });
-
-        const result = await response.json();
-
-        if (response.ok) {
-          // alert('Testimonial deleted successfully');
-          // Optionally, you can add logic to remove the testimonial from the UI
-          if (onRefresh) {
-            onRefresh(); // Call the onRefresh prop when the delete button is clicked
-          }
-        } else {
-          alert(`Error: ${result.error}`);
-        }
-      } catch (err) {
-        console.error('Error deleting testimonial:', err);
-        alert('An unexpected error occurred');
-      }
-    } else {
-      alert('No testimonial selected for deletion');
-    }
   };
 
   return (
@@ -101,7 +73,7 @@ const TestimonialCards = ({ file, onRefresh }: TestimonialCardsI) => {
           onClick={handleVideoClick}
         >
           <source
-            src={`https://utfs.io/f/${file?.key}`}
+            src={`${testimonial?.videoLink}`}
             type="video/mp4"
           />
         </video>
