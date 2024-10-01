@@ -16,7 +16,7 @@ if (!googleClientId || !googleClientSecret || !jwtSecret) {
   throw new Error("Missing environment variables");
 }
 
-interface SessionExtended extends Session {
+export interface SessionExtended extends Session {
   user: {
     id: string;
     name?: string | null;

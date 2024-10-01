@@ -26,7 +26,6 @@ export async function POST(req: NextRequest, { params }: { params: { userId: str
     await connectToDB();
     const { userId } = params;
     const { orderDetails } = await req.json();
-    console.log("Entered details: ", orderDetails)
 
     if (!userId || Array.isArray(userId)) {
         console.log('Valid User ID is required');
@@ -39,7 +38,6 @@ export async function POST(req: NextRequest, { params }: { params: { userId: str
             orderInfo: orderDetails.orderInfo,
             orderedProducts: orderDetails.orderedProducts
         };
-        console.log("New Order: ", newOrder)
         //keep generating uniuqe order ID until it is unique
         if(!newOrder.orderInfo){
             console.log('Valid Order Info is required');
@@ -58,14 +56,43 @@ export async function POST(req: NextRequest, { params }: { params: { userId: str
 }
 
 // Update Order for User
+// export async function PUT(req: NextRequest, { params }: { params: { userId: string } }) {
+//     await connectToDB();
+
+//     const { userId } = params;
+//     const { orderId, orderedProducts, orderInfo } = await req.json();
+
+//     if (!userId || Array.isArray(userId) || !orderId) {
+//         return NextResponse.json({ error: 'Valid User ID and Order ID are required' }, { status: 400 });
+//     }
+
+//     try {
+//         const orderToUpdate = await Order.findOne({ userId, _id: orderId });
+
+//         if (!orderToUpdate) {
+//             return NextResponse.json({ error: 'Order not found' }, { status: 404 });
+//         }
+
+//         orderToUpdate.orderedProducts = orderedProducts ?? orderToUpdate.orderedProducts;
+//         orderToUpdate.orderInfo = { ...orderToUpdate.orderInfo, ...orderInfo };
+
+//         await orderToUpdate.save();
+//         return NextResponse.json({ message: 'Order updated successfully', order: orderToUpdate }, { status: 200 });
+//     } catch (error) {
+//         console.error('Error updating order:', error);
+//         return NextResponse.json({ error: 'Error updating order' }, { status: 500 });
+//     }
+// }
+
+//Change Order Status
 export async function PUT(req: NextRequest, { params }: { params: { userId: string } }) {
     await connectToDB();
 
     const { userId } = params;
-    const { orderId, orderedProducts, orderInfo } = await req.json();
+    const { orderId, orderStatus } = await req.json();
 
-    if (!userId || Array.isArray(userId) || !orderId) {
-        return NextResponse.json({ error: 'Valid User ID and Order ID are required' }, { status: 400 });
+    if (!userId || Array.isArray(userId) || !orderId || !orderStatus) {
+        return NextResponse.json({ error: 'Valid User ID, Order ID and Order Status are required' }, { status: 400 });
     }
 
     try {
@@ -75,14 +102,19 @@ export async function PUT(req: NextRequest, { params }: { params: { userId: stri
             return NextResponse.json({ error: 'Order not found' }, { status: 404 });
         }
 
-        orderToUpdate.orderedProducts = orderedProducts ?? orderToUpdate.orderedProducts;
-        orderToUpdate.orderInfo = { ...orderToUpdate.orderInfo, ...orderInfo };
-
+        orderToUpdate.orderInfo.orderStatus = orderStatus;
+        if(orderStatus === 'cancelled'){
+            orderToUpdate.orderInfo.cancelledDate = new Date();
+        } else if(orderStatus === 'shipped'){
+            orderToUpdate.orderInfo.shippingDate = new Date();
+        } else if(orderStatus === 'delivered'){
+            orderToUpdate.orderInfo.deliveryDate = new Date();
+        }
         await orderToUpdate.save();
-        return NextResponse.json({ message: 'Order updated successfully', order: orderToUpdate }, { status: 200 });
+        return NextResponse.json({ message: 'Order status updated successfully', order: orderToUpdate }, { status: 200 });
     } catch (error) {
-        console.error('Error updating order:', error);
-        return NextResponse.json({ error: 'Error updating order' }, { status: 500 });
+        console.error('Error updating order status:', error);
+        return NextResponse.json({ error: 'Error updating order status' }, { status: 500 });
     }
 }
 

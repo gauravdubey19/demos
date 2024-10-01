@@ -6,7 +6,7 @@ import {  useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import { IoAddSharp } from "react-icons/io5";
 import { useRouter } from "next/navigation";
-import {  useGlobalContext } from "@/context/GlobalProvider";
+import {  Order, useGlobalContext } from "@/context/GlobalProvider";
 import { MdOutlineKeyboardArrowDown } from "react-icons/md";
 import SearchBar from "./ProfileComponents/SearchBar";
 import AllOrders from "./ProfileComponents/AllOrders";
@@ -27,12 +27,25 @@ const Section: React.FC<SectionProps> = ({ section, sections }) => {
     { id: "cancelled", label: "Cancelled" },
     { id: "search", label: "Search" },
   ];
-  const pendingOrders = fetchedOrders.filter((order) => order.orderInfo.orderStatus === "pending");
-  const deliveredOrders = fetchedOrders.filter((order) => order.orderInfo.orderStatus === "delivered");
-  const cancelledOrders = fetchedOrders.filter((order) => order.orderInfo.orderStatus === "cancelled");
   const { handleDeleteAddresses,suggestions,activeTab,setActiveTab} = useGlobalContext();
-
-  const renderTabContent = () => {
+  if(!fetchedOrders) return (  
+    <div className="
+    flex items-center justify-center w-full h-full text-2xl font-semibold text-primary
+    ">
+      No Orders Found
+    </div>
+  )
+  if ('error' in fetchedOrders) {
+    // Handle the case where there is an error
+    console.error(fetchedOrders.error);
+    // return <div>Error fetching orders</div>;
+  } 
+ 
+  const renderTabContent = (fetchedOrders:Order[]) => {
+    if(!Array.isArray(fetchedOrders)) return null;
+    const pendingOrders = fetchedOrders.filter((order) => order.orderInfo.orderStatus === "pending");
+    const deliveredOrders = fetchedOrders.filter((order) => order.orderInfo.orderStatus === "delivered");
+    const cancelledOrders = fetchedOrders.filter((order) => order.orderInfo.orderStatus === "cancelled");
     switch (activeTab) {
       case "allOrders":
         return <AllOrders fetchingOrders={fetchingOrders} fetchedOrders={fetchedOrders}/>;
@@ -137,7 +150,7 @@ const Section: React.FC<SectionProps> = ({ section, sections }) => {
             </div>
 
             {/* Tab Content */}
-            <div className="mt-6 overflow-y-auto">{renderTabContent()}</div>
+            <div className="mt-6 overflow-y-auto">{renderTabContent(fetchedOrders)}</div>
           </>
         )}
       </div>

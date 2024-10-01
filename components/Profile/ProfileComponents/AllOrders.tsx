@@ -1,16 +1,23 @@
-"use client";
-import Image from 'next/image';
 import React, { useState, useEffect } from 'react';
+import Image from 'next/image';
 import { IoCheckmarkCircleSharp, IoChevronDown, IoChevronUp } from "react-icons/io5";
 import OrderImage from '@/public/assets/orderBox.png';
 import { MdCancel, MdOutlineCurrencyRupee } from 'react-icons/md';
 import OrderCardProduct from './OrdersCardProduct';
 import { AllOrdersProps, Order, useGlobalContext } from '@/context/GlobalProvider';
+import { Button } from '@/components/ui/button';
+import { useSession } from 'next-auth/react';
+import { toast } from '@/hooks/use-toast';
+import CancelOrderDialog from './CancelOrderDialog';
 
-const AllOrders: React.FC<AllOrdersProps> = ({ fetchedOrders,isSearch=false,fetchingOrders }) => {
+const AllOrders: React.FC<AllOrdersProps> = ({ fetchedOrders, isSearch = false, fetchingOrders }) => {
   const [expandedOrderIndex, setExpandedOrderIndex] = useState<number | null>(null);
   const [clientRendered, setClientRendered] = useState(false);
-  const {searchLoading,searchQuery} = useGlobalContext();
+  const { searchLoading, searchQuery, setFetchedOrders: globalFetchedOrders } = useGlobalContext();
+  const [isCancelDialogOpen, setIsCancelDialogOpen] = useState(false);
+  const [selectedOrderId, setSelectedOrderId] = useState<string | null>(null);
+  const { data: session } = useSession();
+
   useEffect(() => {
     setClientRendered(true);
   }, []);
@@ -20,13 +27,13 @@ const AllOrders: React.FC<AllOrdersProps> = ({ fetchedOrders,isSearch=false,fetc
       case 'pending':
         return <span className={`font-mont text-base text-primary`}>Order is pending since {formatDate(order.orderInfo.orderDate)} </span>;
       case 'shipped':
-        if(!order.orderInfo.shippingDate) return <span className={`font-mont text-base text-blue-500`}>Order is shipped</span>;
+        if (!order.orderInfo.shippingDate) return <span className={`font-mont text-base text-blue-500`}>Order is shipped</span>;
         return <span className={`font-mont text-base text-blue-500`}>Order is shipped since {formatDate(order.orderInfo.shippingDate)}</span>;
       case 'delivered':
-        if(!order.orderInfo.deliveryDate) return <span className={`font-mont text-base text-green`}>Order is delivered</span>;
+        if (!order.orderInfo.deliveryDate) return <span className={`font-mont text-base text-green`}>Order is delivered</span>;
         return <span className={`font-mont text-base text-green`}>Order is delivered on {formatDate(order.orderInfo.deliveryDate)}</span>;
       case 'cancelled':
-        if(!order.orderInfo.cancelledDate) return <span className={`font-mont text-base text-red-500`}>Order is cancelled</span>;
+        if (!order.orderInfo.cancelledDate) return <span className={`font-mont text-base text-red-500`}>Order is cancelled</span>;
         return <span className={`font-mont text-base text-red-500`}>Order is cancelled on {formatDate(order.orderInfo.cancelledDate)}</span>;
       default:
         return 'Order status not available';
@@ -41,18 +48,36 @@ const AllOrders: React.FC<AllOrdersProps> = ({ fetchedOrders,isSearch=false,fetc
     const date = new Date(dateString);
     return date.toLocaleDateString(undefined, { day: 'numeric', month: 'long', year: 'numeric' });
   };
-  if(fetchingOrders){
+
+  const handleCancelOrderClick = (orderId: string) => {
+    setSelectedOrderId(orderId);
+    setIsCancelDialogOpen(true);
+  };
+
+  const handleOrderCancelled = (orderId: string) => {
+    globalFetchedOrders((prevOrders) => {
+      const updatedOrders = prevOrders.map((order) => {
+        if (order._id === orderId) {
+          return { ...order, orderInfo: { ...order.orderInfo, orderStatus: 'cancelled' } };
+        }
+        return order;
+      });
+      return updatedOrders;
+    });
+  };
+
+  if (fetchingOrders) {
     return <div className="flex justify-center items-center h-[300px]"><p className="font-mont text-lg">Fetching orders...</p></div>
   }
-  if(!searchQuery.trim() && isSearch){
+  if (!searchQuery.trim() && isSearch) {
     return <div className="flex justify-center items-center h-[300px]"><p className="font-mont text-lg">Search for an order ID</p></div>
   }
-  if(isSearch && searchLoading && searchQuery.trim() !== ""){
+  if (isSearch && searchLoading && searchQuery.trim() !== "") {
     return <div className="flex justify-center items-center h-[300px]"><p className="font-mont text-lg ">Searching...</p></div>
   }
-if(fetchedOrders.length === 0){
-  return <div className="flex justify-center items-center h-[300px]"><p className="font-mont text-lg">No orders found</p></div>
-}
+  if (fetchedOrders.length === 0) {
+    return <div className="flex justify-center items-center h-[300px]"><p className="font-mont text-lg">No orders found</p></div>
+  }
 
   return (
     <div className=''>
@@ -112,13 +137,25 @@ if(fetchedOrders.length === 0){
               }`}
           >
             <div className='p-3 border-t border-gray-300 mt-4'>
-              <div>
-                <span className='font-mont text-base'>Order Status: </span>
-                {orderStatusLine(order.orderInfo.orderStatus, order)}
-              </div>
-              <div className='mt-1'>
-                <span className='font-mont text-base'>Order ID: </span>
-                <span className='font-montSemiBold text-base'>{order.orderInfo.orderID}</span>
+              <div className='flex flex-row justify-between '>
+                <div>
+                  <div>
+                    <span className='font-mont text-base'>Order Status: </span>
+                    {orderStatusLine(order.orderInfo.orderStatus, order)}
+                  </div>
+                  <div className='mt-1'>
+                    <span className='font-mont text-base'>Order ID: </span>
+                    <span className='font-montSemiBold text-base'>{order.orderInfo.orderID}</span>
+                  </div>
+                </div>
+                {order.orderInfo.orderStatus === 'pending' &&
+                  <Button
+                    className='mt-4 bg-white hover:bg-red-500 hover:text-white text-red-500 border border-red-500 disabled:opacity-70'
+                    onClick={() => handleCancelOrderClick(order._id)}
+                  >
+                    Cancel
+                  </Button>
+                }
               </div>
               {order.orderedProducts.map((product) => (
                 <OrderCardProduct key={product.productId} data={product} />
@@ -127,6 +164,13 @@ if(fetchedOrders.length === 0){
           </div>
         </div>
       ))}
+      {isCancelDialogOpen && selectedOrderId && (
+        <CancelOrderDialog
+          orderId={selectedOrderId}
+          onClose={() => setIsCancelDialogOpen(false)}
+          onOrderCancelled={handleOrderCancelled}
+        />
+      )}
     </div>
   );
 };

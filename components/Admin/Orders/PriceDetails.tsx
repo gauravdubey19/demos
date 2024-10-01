@@ -42,7 +42,7 @@ const PriceDetails = ({ cartData }: PriceDetailsI) => {
             <div className="space-y-2 pt-5">
                 <div className="flex items-center justify-between px-5 text-base md:text-lg">
                     <p>Total MRP</p>
-                    <p className="text-black">{"₹ "}{totalMRP.toFixed(2)}</p>
+                    <p className="text-black">{"₹ "}{totalMRP?.toFixed(2)}</p>
                 </div>
                 <div className="flex items-center justify-between px-5 text-base md:text-lg">
                     <p>Total Discount</p>

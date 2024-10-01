@@ -26,7 +26,7 @@ const CheckoutPage = () => {
   const [fetchingAddress, setFetchingAddress] = useState<boolean>(false);
   const { cart, setOpen, setCart, handleClearCart } = useCart();
   const [selectedItemsData, setSelectedItemsData] = useState<any[]>([]);
-  const [totals, setTotals] = useState({ subtotal: 0, shipping: 0, total: 0 });
+  const [totals, setTotals] = useState({ subtotal: 0, shippingFee: 0, total: 0 ,totalMRP:0,platformFee:0,totalDiscount:0});
 
   const { setFetchedOrders } = useGlobalContext();
 

@@ -27,7 +27,6 @@ const UserSchema = new Schema<IUser>(
     },
     phone_number: {
       type: String,
-      minLength: 10,
       maxLength: 10,
     },
     firstName: {

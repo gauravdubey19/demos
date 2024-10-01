@@ -21,7 +21,6 @@ interface CartDataI {
 }
 
 const CartCard = ({ data, onSelectItem }: CartDataI) => {
-    console.log(data);
 
     const { handleRemoveFromCart } = useCart(); //console.log(isOpen);
 

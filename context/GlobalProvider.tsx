@@ -286,6 +286,7 @@ const GlobalProvider = ({ children }: { children: ReactNode }) => {
       );
       if (!response.ok) {
         setError("Error fetching user");
+        signOut();
         return;
       }
       if (!contactResponse.ok) {
@@ -308,6 +309,12 @@ const GlobalProvider = ({ children }: { children: ReactNode }) => {
       setUser(userDataObj);
     } catch (error) {
       console.error("Error fetching user:", error);
+      toast({
+        title: "Error fetching user",
+        description: "Please try again",
+        variant: "destructive",
+      });
+      signOut();
       setError("Error fetching user");
     }
   }, [session]);

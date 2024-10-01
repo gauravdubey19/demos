@@ -1,9 +1,10 @@
 
-
+"use client";
 import React, { useEffect } from 'react';
 import AddressCard from './AddressCard';
 import { Plus } from 'lucide-react';
 import Link from 'next/link';
+import { IoIosInformationCircleOutline } from 'react-icons/io';
 
 
 interface AddressI {
@@ -30,8 +31,17 @@ interface AddressI {
 }
 
 const Address = ({ addressData, handleSelectAddress, selectedAddressId,fetchingAddress }: AddressI) => {
+    const [hasProfileAddress, setHasProfileAddress] = React.useState(false);
     useEffect(() => {
         console.log('Address Data in address: ', addressData);
+    }, [addressData]);
+    
+    //map over the addressdata and check if any one of them has isSameAddress as true
+    
+    useEffect(() => {
+        const hasProfileAddress = addressData.some((address) => address.isSameAddress);
+        console.log('hasProfileAddress: ', hasProfileAddress);
+        setHasProfileAddress(hasProfileAddress);
     }, [addressData]);
     if(fetchingAddress){
         return <div className="p-4 md:p-5 space-y-4 pt-7">Loading...</div>
@@ -41,6 +51,14 @@ const Address = ({ addressData, handleSelectAddress, selectedAddressId,fetchingA
         <div className="p-4 md:p-5 space-y-4 pt-7">
             {/* Container for Address Cards */}
             <div className="space-y-0">
+            {!hasProfileAddress && 
+            //a message to info user to complet profile for showing profile address
+            <div className="bg-emerald-50 text-green p-4 rounded-lg flex flex-row gap-x-2">
+                <IoIosInformationCircleOutline size={20} />
+                <span>Please complete your profile to view your profile address here.
+                </span>
+            </div>
+            }
                 {addressData.map((address) => (
                     <div
                         key={address._id}

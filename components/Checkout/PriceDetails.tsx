@@ -30,7 +30,6 @@ const PriceDetails = ({ totals,setTotals,onProceed, cartData, currentStep, selec
                     totalDiscount += (item.discount || 0) * item.quantity;
                 }
             });
-
             setTotals((prevTotals:any) => ({
                 ...prevTotals,
                 totalMRP,
@@ -39,7 +38,7 @@ const PriceDetails = ({ totals,setTotals,onProceed, cartData, currentStep, selec
         };
 
         calculateTotals();
-    }, [cartData, selectedItems]);
+    }, [cartData, selectedItems, setTotals]);
 
     const { totalMRP, totalDiscount, platformFee, shippingFee } = totals;
     const totalAmount = totalMRP - totalDiscount + platformFee + shippingFee;

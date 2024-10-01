@@ -93,7 +93,6 @@ async function getContactsByUserId(userId: string) {
             sortedFinalUserAddresses= userAddresses.addresses.sort((a:any, b:any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
             finalUserAddresses = [userAddress, ...sortedFinalUserAddresses];
     }
-    console.log('Final User Addresses:', finalUserAddresses);
     return finalUserAddresses;
     } catch (error) {
         console.error('Error fetching contacts:', error);

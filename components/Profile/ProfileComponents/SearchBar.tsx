@@ -15,6 +15,7 @@ const SearchBar:React.FC<AllOrdersProps> = ({fetchedOrders}) => {
 
   useEffect(() => {
     const fetchSuggestions = async () => {
+      if(!fetchedOrders) return;
         if (searchQuery.trim() === "") {
             setSuggestions([]);
             setSearchLoading(false);
