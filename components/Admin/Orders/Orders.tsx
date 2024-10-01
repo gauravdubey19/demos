@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Line, Pie } from "react-chartjs-2";
@@ -19,6 +19,8 @@ import {
 import { IoSearchOutline } from "react-icons/io5";
 import { MdOutlineKeyboardArrowDown } from "react-icons/md";
 import { FaArrowDownShortWide, FaArrowUpShortWide } from "react-icons/fa6";
+import { Order } from "@/context/GlobalProvider";
+import { OrderTable } from "../Customers/CustomersDetail";
 
 ChartJS.register(
   CategoryScale,
@@ -39,6 +41,25 @@ const Orders = () => {
     new Date().getFullYear(),
   ];
   const [year, setYear] = useState<number>(new Date().getFullYear());
+  const [customerOrders, setCustomerOrders] = useState<Order[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+
+  useEffect(() => {
+    const fetchCustomersOrders = async () => {
+      try {
+        const ordersRes = await fetch(`/api/orders/get-all-orders`);
+        const data = await ordersRes.json();
+        // console.log(data);
+
+        setCustomerOrders(data as Order[]);
+        setIsLoading(false);
+      } catch (error) {
+        console.error("Error fetching user collections:", error);
+      }
+    };
+
+    if (customerOrders.length === 0) fetchCustomersOrders();
+  }, [customerOrders]);
 
   return (
     <>
@@ -73,9 +94,13 @@ const Orders = () => {
             </div>
           </div>
         </div>
-        <div className="w-full h-[calc(100vh-90px)] space-y-2 p-4 overflow-y-auto">
+        <div className="w-full h-[calc(100vh-90px)] space-y-4 p-4 overflow-y-auto">
           <OrderChart />
-          <OrdersTable />
+          <OrderTable
+            orderPage="all-orders"
+            orders={customerOrders}
+            isLoading={isLoading}
+          />
         </div>
       </section>
     </>
@@ -216,13 +241,13 @@ const OrderChart = () => {
         </div>
 
         {/* Top Selling Categories Pie Chart */}
-        <div className="chart-container h-[50vh] bg-[#F8F8F8] shadow-md rounded-lg p-4 hover:shadow-lg ease-in-out duration-300 overflow-hidden">
+        <div className="chart-container h-fit lg:h-[50vh] bg-[#F8F8F8] shadow-md rounded-lg p-4 hover:shadow-lg ease-in-out duration-300 overflow-hidden">
           <h2 className="text-xl font-bold">Top Selling Categories</h2>
           <div className="relative w-full h-full flex-center">
             <Pie
               data={topSellingCategoriesData}
               options={pieChartOptions}
-              className="w-full h-full scale-125"
+              className="w-full h-full lg:scale-125"
             />
           </div>
         </div>
@@ -230,294 +255,3 @@ const OrderChart = () => {
     </>
   );
 };
-
-const OrdersTable = () => {
-  const [isAscending, setIsAscending] = useState<boolean>(true);
-
-  const statusOption = ["all", "delivered", "pending", "shipped", "cancelled"];
-  const [status, setStatus] = useState<string>(statusOption[0]);
-  const [search, setSearch] = useState<string>("");
-
-  const filteredOrders = orders
-    .filter(
-      (order) =>
-        order.orderID.includes(search) ||
-        order.customer.includes(search.toLowerCase())
-    )
-    .filter((order) => (status === "all" ? true : order.status === status))
-    .sort((a, b) => {
-      if (isAscending) {
-        return a.orderID > b.orderID ? 1 : -1;
-      } else {
-        return a.orderID < b.orderID ? 1 : -1;
-      }
-    });
-  return (
-    <div className="w-full space-y-2 rounded-xl bg-[#F8F8F8] p-4 select-none">
-      <div className="w-full h-fit flex-between">
-        <div className="w-fit font-semibold">Order Details</div>
-        <div className="w-fit h-fit flex-between gap-2">
-          {/* Search Bar */}
-          <div className="w-fit flex-center gap-1 cursor-pointer bg-white border border-primary py-1 px-2">
-            <IoSearchOutline size={20} className="text-primary" />
-            <input
-              type="text"
-              placeholder="Search by Order ID or Customer"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="w-64 placeholder:text-primary bg-none border-none outline-none"
-            />
-          </div>
-
-          <div className="relative group w-fit h-fit">
-            <Button className="h-fit text-white bg-primary capitalize py-1 px-3 rounded-md flex items-center">
-              {status}{" "}
-              <MdOutlineKeyboardArrowDown
-                size={20}
-                className="ml-1 group-hover:-rotate-180 ease-in-out duration-300"
-              />
-            </Button>
-            <div className="hidden group-hover:block animate-slide-down absolute left-0 right-0 top-full z-40 w-full min-w-fit h-fit bg-slate-200 shadow-md rounded-md overflow-hidden">
-              {statusOption.map((sp, index) => (
-                <div
-                  key={index}
-                  onClick={() => setStatus(sp)}
-                  className={`w-full cursor-pointer capitalize p-2 border-b border-b-slate-300 ${
-                    status === sp && "text-primary bg-slate-100"
-                  } ${
-                    sp === "delivered"
-                      ? "text-[#2CD396]"
-                      : sp === "pending"
-                      ? "text-orange-500"
-                      : sp === "cancelled"
-                      ? "text-[red]"
-                      : "text-blue-600"
-                  } hover:text-primary ease-in-out duration-300`}
-                >
-                  {sp}
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div
-            onClick={() => setIsAscending(!isAscending)}
-            className="w-fit flex-center gap-1 cursor-pointer bg-white border border-primary py-1 px-2"
-          >
-            {isAscending ? (
-              <FaArrowDownShortWide size={20} className="text-primary" />
-            ) : (
-              <FaArrowUpShortWide size={20} className="text-primary" />
-            )}
-          </div>
-        </div>
-      </div>
-
-      <div className="relative w-full h-fit max-h-[72vh] border border-gray-300 rounded-2xl overflow-auto">
-        <table className="relative w-full h-full bg-white rounded-2xl overflow-hidden">
-          <thead className="sticky top-0 bg-[#EAEAEA] shadow-sm z-10">
-            <tr className="border-b">
-              <th className="px-4 py-2 text-left">Order ID</th>
-              <th className="px-4 py-2 text-left">Customer</th>
-              <th className="px-4 py-2 text-left">Order</th>
-              <th className="px-4 py-2 text-left">Shipping</th>
-              <th className="px-4 py-2 text-left">Delivery</th>
-              <th className="px-4 py-2 text-left">Price</th>
-              <th className="px-4 py-2 text-left">Status</th>
-            </tr>
-          </thead>
-          <tbody
-            className={`relative ${
-              filteredOrders.length === 0 ? "h-10" : "h-fit"
-            }`}
-          >
-            {filteredOrders.length === 0 ? (
-              <tr className="absolute inset-0 w-full h-full py-2 flex-center">
-                No Orders found
-              </tr>
-            ) : (
-              filteredOrders.map((order, index) => (
-                <tr
-                  key={index}
-                  className="h-fit group border-b cursor-pointer hover:bg-[#ffb43335] ease-in-out duration-300"
-                >
-                  <td>
-                    <Link
-                      href={`/admin/orders/order/${order.orderID}`}
-                      className="text-primary px-4 py-2 hover:underline underline-offset-4"
-                    >
-                      {order.orderID}
-                    </Link>
-                  </td>
-                  <td>
-                    <Link
-                      href={`/admin/customers/user/${order.customer}`}
-                      className="px-4 py-2 hover:underline underline-offset-4"
-                    >
-                      {order.customer}
-                    </Link>
-                  </td>
-                  <td className="px-4 py-2">{order.orderDate}</td>
-                  <td className="px-4 py-2">{order.shippingDate || "-"}</td>
-                  <td className="px-4 py-2">{order.deliveryDate || "-"}</td>
-                  <td className="px-4 py-2">₹ {order.price}</td>
-                  <td
-                    className={`px-4 py-2 ${
-                      order.status === "delivered"
-                        ? "text-green-600"
-                        : order.status === "pending"
-                        ? "text-orange-500"
-                        : order.status === "cancelled"
-                        ? "text-[red]"
-                        : "text-blue-600"
-                    }`}
-                  >
-                    {order.status}
-                  </td>
-                </tr>
-              ))
-            )}
-          </tbody>
-        </table>
-      </div>
-    </div>
-  );
-};
-
-const orders = [
-  {
-    orderID: "012345",
-    customer: "Gojo",
-    orderDate: "24-10-2020",
-    shippingDate: "28-10-2020",
-    deliveryDate: "29-10-2020",
-    price: 2400,
-    status: "delivered",
-  },
-  {
-    orderID: "012346",
-    customer: "Gojo",
-    orderDate: "24-10-2020",
-    shippingDate: "-",
-    deliveryDate: "-",
-    price: 100000,
-    status: "pending",
-  },
-  {
-    orderID: "012347",
-    customer: "Gojo",
-    orderDate: "24-10-2020",
-    shippingDate: "28-10-2020",
-    deliveryDate: "-",
-    price: 2400,
-    status: "shipped",
-  },
-  {
-    orderID: "012348",
-    customer: "Gojo",
-    orderDate: "24-10-2020",
-    shippingDate: "28-10-2020",
-    deliveryDate: "29-10-2020",
-    price: 2400,
-    status: "delivered",
-  },
-  {
-    orderID: "012346",
-    customer: "Gojo",
-    orderDate: "24-10-2020",
-    shippingDate: "-",
-    deliveryDate: "-",
-    price: 100000,
-    status: "pending",
-  },
-  {
-    orderID: "012347",
-    customer: "Gojo",
-    orderDate: "24-10-2020",
-    shippingDate: "28-10-2020",
-    deliveryDate: "-",
-    price: 2400,
-    status: "shipped",
-  },
-  {
-    orderID: "012348",
-    customer: "Gojo",
-    orderDate: "24-10-2020",
-    shippingDate: "28-10-2020",
-    deliveryDate: "29-10-2020",
-    price: 2400,
-    status: "delivered",
-  },
-  {
-    orderID: "012347",
-    customer: "Gojo",
-    orderDate: "24-10-2020",
-    shippingDate: "28-10-2020",
-    deliveryDate: "-",
-    price: 2400,
-    status: "shipped",
-  },
-  {
-    orderID: "012348",
-    customer: "Gojo",
-    orderDate: "24-10-2020",
-    shippingDate: "28-10-2020",
-    deliveryDate: "29-10-2020",
-    price: 2400,
-    status: "delivered",
-  },
-  {
-    orderID: "012347",
-    customer: "Gojo",
-    orderDate: "24-10-2020",
-    shippingDate: "28-10-2020",
-    deliveryDate: "-",
-    price: 2400,
-    status: "shipped",
-  },
-  {
-    orderID: "012348",
-    customer: "Gojo",
-    orderDate: "24-10-2020",
-    shippingDate: "28-10-2020",
-    deliveryDate: "29-10-2020",
-    price: 2400,
-    status: "delivered",
-  },
-  {
-    orderID: "012347",
-    customer: "Gojo",
-    orderDate: "24-10-2020",
-    shippingDate: "28-10-2020",
-    deliveryDate: "-",
-    price: 2400,
-    status: "shipped",
-  },
-  {
-    orderID: "012348",
-    customer: "Gojo",
-    orderDate: "24-10-2020",
-    shippingDate: "28-10-2020",
-    deliveryDate: "29-10-2020",
-    price: 2400,
-    status: "delivered",
-  },
-  {
-    orderID: "012347",
-    customer: "Gojo",
-    orderDate: "24-10-2020",
-    shippingDate: "28-10-2020",
-    deliveryDate: "-",
-    price: 2400,
-    status: "shipped",
-  },
-  {
-    orderID: "012348",
-    customer: "Gojo",
-    orderDate: "24-10-2020",
-    shippingDate: "28-10-2020",
-    deliveryDate: "29-10-2020",
-    price: 2400,
-    status: "delivered",
-  },
-];

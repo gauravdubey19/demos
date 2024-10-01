@@ -11,6 +11,8 @@ import { FaArrowDownShortWide, FaArrowUpShortWide } from "react-icons/fa6";
 import { MdOutlineKeyboardArrowDown } from "react-icons/md";
 import { HiOutlineMail } from "react-icons/hi";
 import { DeletePopUp } from "../Products/Category/CategoryDetail";
+import { Order } from "@/context/GlobalProvider";
+import Link from "next/link";
 
 interface UserValues {
   _id: string;
@@ -30,6 +32,8 @@ interface UserValues {
 const CustomersDetail: React.FC<{ userId: string }> = ({ userId }) => {
   const [user, setUser] = useState<UserValues | null>(null);
   const [isDeleteOpen, setIsDeleteOpen] = useState<boolean>(false);
+  const [userOrders, setUserOrders] = useState<Order[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const handleDletePopupClose = () => {
     // setSelectedProduct({ id: "", title: "" });
@@ -77,6 +81,21 @@ const CustomersDetail: React.FC<{ userId: string }> = ({ userId }) => {
     if (!user) fetchUser();
   }, [user, userId]);
 
+  useEffect(() => {
+    const fetchUserOrders = async () => {
+      try {
+        const useOrdersrRes = await fetch(`/api/orders/${userId}`);
+        const data = await useOrdersrRes.json();
+        setUserOrders(data as Order[]);
+        setIsLoading(false);
+      } catch (error) {
+        console.error("Error fetching user collections:", error);
+      }
+    };
+
+    if (userOrders.length === 0) fetchUserOrders();
+  }, [userId, userOrders]);
+
   if (!user) return <Loader />;
 
   return (
@@ -86,13 +105,17 @@ const CustomersDetail: React.FC<{ userId: string }> = ({ userId }) => {
           <h2 className="capitalize text-2xl md:text-3xl lg:text-4xl font-semibold tracking-tight">
             Customer Details
           </h2>
-          <Button className="bg-red-500 text-white">
+          <Button
+            type="button"
+            onClick={() => setIsDeleteOpen(true)}
+            className="bg-red-500 text-white"
+          >
             Delete User <RiDeleteBinLine size={20} className="ml-1" />
           </Button>
         </header>
         <div className="w-full h-[calc(100vh-90px)] space-y-2 p-4 overflow-y-auto">
           <UserDetail user={user} />
-          <UserOrderTable />
+          <OrderTable orders={userOrders} isLoading={isLoading} />
         </div>
       </section>
       {isDeleteOpen && (
@@ -153,20 +176,30 @@ const UserDetail: React.FC<{ user: UserValues }> = ({ user }) => {
 
 export default CustomersDetail;
 
-const UserOrderTable = () => {
+export const OrderTable = ({
+  orders,
+  isLoading,
+  orderPage = "user-detail",
+}: {
+  orders: Order[];
+  isLoading: boolean;
+  orderPage?: string;
+}) => {
   const [isAscending, setIsAscending] = useState<boolean>(true);
   const statusOption = ["all", "delivered", "pending", "shipped", "cancelled"];
   const [status, setStatus] = useState<string>(statusOption[0]);
   const [search, setSearch] = useState<string>("");
 
-  const filteredOrders = orders
-    .filter((order) => order.orderID.includes(search))
-    .filter((order) => (status === "all" ? true : order.status === status))
+  const filteredOrders: Order[] = orders
+    .filter((order) => order.orderInfo?.orderID.includes(search))
+    .filter((order) =>
+      status === "all" ? true : order.orderInfo.orderStatus === status
+    )
     .sort((a, b) => {
       if (isAscending) {
-        return a.orderID > b.orderID ? 1 : -1;
+        return a.orderInfo.orderID > b.orderInfo.orderID ? 1 : -1;
       } else {
-        return a.orderID < b.orderID ? 1 : -1;
+        return a.orderInfo.orderID < b.orderInfo.orderID ? 1 : -1;
       }
     });
   return (
@@ -235,6 +268,9 @@ const UserOrderTable = () => {
           <thead className="sticky top-0 bg-[#EAEAEA] shadow-sm z-10">
             <tr className="border-b">
               <th className="px-4 py-2 text-left">Order ID</th>
+              {orderPage === "all-orders" && (
+                <th className="px-4 py-2 text-left">Customer</th>
+              )}
               <th className="px-4 py-2 text-left">Order</th>
               <th className="px-4 py-2 text-left">Shipping</th>
               <th className="px-4 py-2 text-left">Delivery</th>
@@ -247,7 +283,49 @@ const UserOrderTable = () => {
               filteredOrders.length === 0 ? "h-10" : "h-fit"
             }`}
           >
-            {filteredOrders.length === 0 ? (
+            {isLoading ? (
+              Array.from({ length: 3 }, (_, index) => (
+                <tr key={index} className="border-b">
+                  <th className="px-4 py-2 text-left">
+                    <span className="animate-pulse bg-gray-400 text-gray-400">
+                      Order ID
+                    </span>
+                  </th>
+                  {orderPage === "all-orders" && (
+                    <th className="px-4 py-2 text-left">
+                      <span className="animate-pulse bg-gray-400 text-gray-400">
+                        Customer
+                      </span>
+                    </th>
+                  )}
+                  <th className="px-4 py-2 text-left">
+                    <span className="animate-pulse bg-gray-400 text-gray-400">
+                      Order
+                    </span>
+                  </th>
+                  <th className="px-4 py-2 text-left">
+                    <span className="animate-pulse bg-gray-400 text-gray-400">
+                      Shipping
+                    </span>
+                  </th>
+                  <th className="px-4 py-2 text-left">
+                    <span className="animate-pulse bg-gray-400 text-gray-400">
+                      Delivery
+                    </span>
+                  </th>
+                  <th className="px-4 py-2 text-left">
+                    <span className="animate-pulse bg-gray-400 text-gray-400">
+                      Price
+                    </span>
+                  </th>
+                  <th className="px-4 py-2 text-left">
+                    <span className="animate-pulse bg-gray-400 text-gray-400">
+                      Status
+                    </span>
+                  </th>
+                </tr>
+              ))
+            ) : filteredOrders.length === 0 ? (
               <tr className="absolute inset-0 w-full h-full py-2 flex-center">
                 No Orders found
               </tr>
@@ -257,25 +335,50 @@ const UserOrderTable = () => {
                   key={index}
                   className="h-fit group border-b cursor-pointer hover:bg-[#ffb43335] ease-in-out duration-300"
                 >
-                  <td className="px-4 py-2 text-primary hover:underline">
-                    {order.orderID}
+                  <td>
+                    <Link
+                      href={`/admin/orders/${order.userId}/${order.orderInfo.orderID}`}
+                      className="text-primary px-4 py-2"
+                    >
+                      <span className="hover-underline-lr">
+                        {order.orderInfo.orderID}
+                      </span>
+                    </Link>
                   </td>
-                  <td className="px-4 py-2">{order.orderDate}</td>
-                  <td className="px-4 py-2">{order.shippingDate || "-"}</td>
-                  <td className="px-4 py-2">{order.deliveryDate || "-"}</td>
-                  <td className="px-4 py-2">₹ {order.price}</td>
-                  <td
-                    className={`px-4 py-2 capitalize ${
-                      order.status === "delivered"
-                        ? "text-[#2CD396]"
-                        : order.status === "pending"
-                        ? "text-orange-500"
-                        : order.status === "cancelled"
-                        ? "text-[red]"
-                        : "text-blue-600"
-                    }`}
-                  >
-                    {order.status}
+                  {orderPage === "all-orders" && (
+                    <td>
+                      <Link
+                        href={`/admin/customers/user/${order.userId}`}
+                        className="px-4 py-2"
+                      >
+                        <span className="capitalize hover-underline-lr">
+                          {order.orderInfo?.customerName}
+                        </span>
+                      </Link>
+                    </td>
+                  )}
+                  <td className="px-4 py-2">{order.orderInfo.orderDate}</td>
+                  <td className="px-4 py-2">
+                    {order.orderInfo.shippingDate || "-"}
+                  </td>
+                  <td className="px-4 py-2">
+                    {order.orderInfo.deliveryDate || "-"}
+                  </td>
+                  <td className="px-4 py-2">₹ {order.orderInfo?.totalPrice}</td>
+                  <td className="px-2 py-1 capitalize">
+                    <span
+                      className={`text-white text-xs px-2 py-1 rounded-full ${
+                        order.orderInfo.orderStatus === "delivered"
+                          ? "bg-[#2CD396]"
+                          : order.orderInfo.orderStatus === "pending"
+                          ? "bg-orange-500"
+                          : order.orderInfo.orderStatus === "cancelled"
+                          ? "bg-[red]"
+                          : "bg-blue-600"
+                      }`}
+                    >
+                      {order.orderInfo.orderStatus}
+                    </span>
                   </td>
                 </tr>
               ))
@@ -287,129 +390,6 @@ const UserOrderTable = () => {
   );
 };
 
-const orders = [
-  {
-    orderID: "012345",
-    orderDate: "24-10-2020",
-    shippingDate: "28-10-2020",
-    deliveryDate: "29-10-2020",
-    price: 2400,
-    status: "delivered",
-  },
-  {
-    orderID: "012346",
-    orderDate: "24-10-2020",
-    shippingDate: "-",
-    deliveryDate: "-",
-    price: 100000,
-    status: "pending",
-  },
-  {
-    orderID: "012347",
-    orderDate: "24-10-2020",
-    shippingDate: "28-10-2020",
-    deliveryDate: "-",
-    price: 2400,
-    status: "shipped",
-  },
-  {
-    orderID: "012348",
-    orderDate: "24-10-2020",
-    shippingDate: "28-10-2020",
-    deliveryDate: "29-10-2020",
-    price: 2400,
-    status: "delivered",
-  },
-  {
-    orderID: "012346",
-    orderDate: "24-10-2020",
-    shippingDate: "-",
-    deliveryDate: "-",
-    price: 100000,
-    status: "pending",
-  },
-  {
-    orderID: "012347",
-    orderDate: "24-10-2020",
-    shippingDate: "28-10-2020",
-    deliveryDate: "-",
-    price: 2400,
-    status: "shipped",
-  },
-  {
-    orderID: "012348",
-    orderDate: "24-10-2020",
-    shippingDate: "28-10-2020",
-    deliveryDate: "29-10-2020",
-    price: 2400,
-    status: "delivered",
-  },
-  {
-    orderID: "012347",
-    orderDate: "24-10-2020",
-    shippingDate: "28-10-2020",
-    deliveryDate: "-",
-    price: 2400,
-    status: "shipped",
-  },
-  {
-    orderID: "012348",
-    orderDate: "24-10-2020",
-    shippingDate: "28-10-2020",
-    deliveryDate: "29-10-2020",
-    price: 2400,
-    status: "delivered",
-  },
-  {
-    orderID: "012347",
-    orderDate: "24-10-2020",
-    shippingDate: "28-10-2020",
-    deliveryDate: "-",
-    price: 2400,
-    status: "shipped",
-  },
-  {
-    orderID: "012348",
-    orderDate: "24-10-2020",
-    shippingDate: "28-10-2020",
-    deliveryDate: "29-10-2020",
-    price: 2400,
-    status: "delivered",
-  },
-  {
-    orderID: "012347",
-    orderDate: "24-10-2020",
-    shippingDate: "28-10-2020",
-    deliveryDate: "-",
-    price: 2400,
-    status: "shipped",
-  },
-  {
-    orderID: "012348",
-    orderDate: "24-10-2020",
-    shippingDate: "28-10-2020",
-    deliveryDate: "29-10-2020",
-    price: 2400,
-    status: "delivered",
-  },
-  {
-    orderID: "012347",
-    orderDate: "24-10-2020",
-    shippingDate: "28-10-2020",
-    deliveryDate: "-",
-    price: 2400,
-    status: "shipped",
-  },
-  {
-    orderID: "012348",
-    orderDate: "24-10-2020",
-    shippingDate: "28-10-2020",
-    deliveryDate: "29-10-2020",
-    price: 2400,
-    status: "delivered",
-  },
-];
-
 export const DetailRow: React.FC<{ label: string; value: string | number }> = ({
   label,
   value,
@@ -419,3 +399,126 @@ export const DetailRow: React.FC<{ label: string; value: string | number }> = ({
     <span className="text-end">{value}</span>
   </div>
 );
+
+// const orders = [
+//   {
+//     orderID: "012345",
+//     orderDate: "24-10-2020",
+//     shippingDate: "28-10-2020",
+//     deliveryDate: "29-10-2020",
+//     price: 2400,
+//     status: "delivered",
+//   },
+//   {
+//     orderID: "012346",
+//     orderDate: "24-10-2020",
+//     shippingDate: "-",
+//     deliveryDate: "-",
+//     price: 100000,
+//     status: "pending",
+//   },
+//   {
+//     orderID: "012347",
+//     orderDate: "24-10-2020",
+//     shippingDate: "28-10-2020",
+//     deliveryDate: "-",
+//     price: 2400,
+//     status: "shipped",
+//   },
+//   {
+//     orderID: "012348",
+//     orderDate: "24-10-2020",
+//     shippingDate: "28-10-2020",
+//     deliveryDate: "29-10-2020",
+//     price: 2400,
+//     status: "delivered",
+//   },
+//   {
+//     orderID: "012346",
+//     orderDate: "24-10-2020",
+//     shippingDate: "-",
+//     deliveryDate: "-",
+//     price: 100000,
+//     status: "pending",
+//   },
+//   {
+//     orderID: "012347",
+//     orderDate: "24-10-2020",
+//     shippingDate: "28-10-2020",
+//     deliveryDate: "-",
+//     price: 2400,
+//     status: "shipped",
+//   },
+//   {
+//     orderID: "012348",
+//     orderDate: "24-10-2020",
+//     shippingDate: "28-10-2020",
+//     deliveryDate: "29-10-2020",
+//     price: 2400,
+//     status: "delivered",
+//   },
+//   {
+//     orderID: "012347",
+//     orderDate: "24-10-2020",
+//     shippingDate: "28-10-2020",
+//     deliveryDate: "-",
+//     price: 2400,
+//     status: "shipped",
+//   },
+//   {
+//     orderID: "012348",
+//     orderDate: "24-10-2020",
+//     shippingDate: "28-10-2020",
+//     deliveryDate: "29-10-2020",
+//     price: 2400,
+//     status: "delivered",
+//   },
+//   {
+//     orderID: "012347",
+//     orderDate: "24-10-2020",
+//     shippingDate: "28-10-2020",
+//     deliveryDate: "-",
+//     price: 2400,
+//     status: "shipped",
+//   },
+//   {
+//     orderID: "012348",
+//     orderDate: "24-10-2020",
+//     shippingDate: "28-10-2020",
+//     deliveryDate: "29-10-2020",
+//     price: 2400,
+//     status: "delivered",
+//   },
+//   {
+//     orderID: "012347",
+//     orderDate: "24-10-2020",
+//     shippingDate: "28-10-2020",
+//     deliveryDate: "-",
+//     price: 2400,
+//     status: "shipped",
+//   },
+//   {
+//     orderID: "012348",
+//     orderDate: "24-10-2020",
+//     shippingDate: "28-10-2020",
+//     deliveryDate: "29-10-2020",
+//     price: 2400,
+//     status: "delivered",
+//   },
+//   {
+//     orderID: "012347",
+//     orderDate: "24-10-2020",
+//     shippingDate: "28-10-2020",
+//     deliveryDate: "-",
+//     price: 2400,
+//     status: "shipped",
+//   },
+//   {
+//     orderID: "012348",
+//     orderDate: "24-10-2020",
+//     shippingDate: "28-10-2020",
+//     deliveryDate: "29-10-2020",
+//     price: 2400,
+//     status: "delivered",
+//   },
+// ];

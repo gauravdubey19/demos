@@ -97,6 +97,7 @@ export type Order = {
   userId: string;
   orderedProducts: Product[];
   orderInfo: {
+    customerName?: string;
     orderStatus: string;
     totalPrice: number;
     orderDate: string;

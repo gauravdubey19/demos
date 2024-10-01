@@ -1,56 +1,10 @@
 "use client";
 
-import React, { use, useEffect, useState } from "react";
 import { signOut, useSession } from "next-auth/react";
-import { State, City } from "country-state-city";
-import { InputFieldProps } from "@/lib/types";
-import { useGlobalContext } from "@/context/GlobalProvider";
-import { Button } from "@/components/ui/button";
-import { BiSolidEditAlt } from "react-icons/bi";
-import { Session } from "next-auth";
 import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
 import { ContactSection, PersonalSection } from "../Profile/Sections/MyProfile";
 
-interface SessionExtended extends Session {
-  user: {
-    id: string;
-    name?: string | null;
-    email?: string | null;
-    image?: string | null;
-    phone_number?: string | null;
-  };
-}
-
-interface User {
-  firstName: string;
-  lastName?: string;
-  email: string;
-  phone_number?: string;
-  profile?: string;
-  dateOfBirth?: Date;
-  gender?: string;
-  cart?: string[];
-  orders?: string[];
-  address?: string;
-  city?: {
-    name?: string;
-    code?: string;
-  };
-  state?: {
-    name?: string;
-    code?: string;
-  };
-  zipCode?: string;
-  country?: string;
-}
-interface DropdownProps {
-  id: string;
-  label: string;
-  value: string | undefined;
-  options: string[];
-  isDisabled: boolean;
-  setValue: (value: string) => void;
-}
 const MyAccount = () => {
   const { data: session } = useSession();
   const router = useRouter();

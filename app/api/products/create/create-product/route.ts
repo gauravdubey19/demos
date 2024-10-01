@@ -52,6 +52,7 @@ export const POST = async (request: NextRequest) => {
     const faqs = JSON.parse(formData.get("faqs") as string);
 
     // console.log(images);
+    let loading = true;
 
     // uploading mainImage using UTApi
     const uploadedMainImage = await utapi.uploadFiles([
@@ -68,7 +69,6 @@ export const POST = async (request: NextRequest) => {
         return uploadResponse[0].data?.url;
       })
     );
-
     await connectToDB();
 
     const slug: string = generateSlug(title as string);

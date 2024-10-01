@@ -58,24 +58,24 @@ export const DELETE = async (
       );
     }
 
-    if (action === "delete-user") {
-      const user = await User.findById(id);
+    // if (action === "delete-user") {
+    //   const user = await User.findById(id);
 
-      if (!user) {
-        return NextResponse.json(
-          { error: "Product not found" },
-          { status: 404 }
-        );
-      }
+    //   if (!user) {
+    //     return NextResponse.json(
+    //       { error: "Product not found" },
+    //       { status: 404 }
+    //     );
+    //   }
 
-      await Cart.deleteOne({ userId: id });
-      await User.deleteOne({ _id: id });
+    //   await Cart.deleteOne({ userId: id });
+    //   await User.deleteOne({ _id: id });
 
-      return NextResponse.json(
-        { message: "Product deleted successfully!" },
-        { status: 200 }
-      );
-    }
+    //   return NextResponse.json(
+    //     { message: "Product deleted successfully!" },
+    //     { status: 200 }
+    //   );
+    // }
 
     return NextResponse.json({ error: "Invalid action" }, { status: 400 });
   } catch (error) {

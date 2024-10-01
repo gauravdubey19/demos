@@ -6,8 +6,6 @@ import { MdCancel, MdOutlineCurrencyRupee } from 'react-icons/md';
 import OrderCardProduct from './OrdersCardProduct';
 import { AllOrdersProps, Order, useGlobalContext } from '@/context/GlobalProvider';
 import { Button } from '@/components/ui/button';
-import { useSession } from 'next-auth/react';
-import { toast } from '@/hooks/use-toast';
 import CancelOrderDialog from './CancelOrderDialog';
 
 const AllOrders: React.FC<AllOrdersProps> = ({ fetchedOrders, isSearch = false, fetchingOrders }) => {
@@ -16,7 +14,6 @@ const AllOrders: React.FC<AllOrdersProps> = ({ fetchedOrders, isSearch = false, 
   const { searchLoading, searchQuery, setFetchedOrders: globalFetchedOrders } = useGlobalContext();
   const [isCancelDialogOpen, setIsCancelDialogOpen] = useState(false);
   const [selectedOrderId, setSelectedOrderId] = useState<string | null>(null);
-  const { data: session } = useSession();
 
   useEffect(() => {
     setClientRendered(true);
