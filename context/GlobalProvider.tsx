@@ -1,5 +1,4 @@
 "use client";
-
 import React, {
   createContext,
   useContext,
@@ -8,7 +7,7 @@ import React, {
   ReactNode,
   useCallback,
 } from "react";
-import { signOut, useSession } from "next-auth/react";
+import {signOut, useSession } from "next-auth/react";
 import { Session } from "next-auth";
 import { toast } from "@/hooks/use-toast";
 
@@ -19,7 +18,6 @@ interface User {
   email: string;
   phone_number?: string;
   profile?: string;
-  favProducts?: string[]
   dateOfBirth?: Date;
   gender?: string;
   cart?: string[];
@@ -36,6 +34,7 @@ interface User {
   };
   zipCode?: string;
   country?: string;
+  favProducts?: string[];
 }
 
 export interface Address {
