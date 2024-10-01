@@ -70,6 +70,11 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
     userData?.favProducts || []
   );
 
+  useEffect(() => {
+    if (userData?.favProducts) setFavProducts(userData.favProducts);
+    else setFavProducts([]);
+  }, [userData?.favProducts]);
+
   const fetchCart = useCallback(async () => {
     if (status === "authenticated" && session?.user?.id) {
       try {
