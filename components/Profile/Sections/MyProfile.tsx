@@ -68,7 +68,7 @@ const MyProfile = () => {
 
 export default MyProfile;
 
-const PersonalSection = () => {
+export const PersonalSection = () => {
   const { error, isProfileEditing, setProfileEditing, userData, setUserData } =
     useGlobalContext();
   const {data: session} = useSession();
@@ -256,7 +256,7 @@ const PersonalSection = () => {
   );
 };
 
-const ContactSection = () => {
+export const ContactSection = () => {
   const { userData, error, isContactEditing, setContactEditing, setUserData } =
     useGlobalContext();
   const [userDataCopy, setUserDataCopy] = useState<User | null>(userData ?? null);

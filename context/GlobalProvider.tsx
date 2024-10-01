@@ -18,7 +18,7 @@ interface User {
   email: string;
   phone_number?: string;
   profile?: string;
-  favProducts: string[];
+  favProducts?: string[];
   dateOfBirth?: Date;
   gender?: string;
   cart?: string[];

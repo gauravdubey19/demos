@@ -10,6 +10,7 @@ import { IoSearchOutline } from "react-icons/io5";
 import { FaArrowDownShortWide, FaArrowUpShortWide } from "react-icons/fa6";
 import { MdOutlineKeyboardArrowDown } from "react-icons/md";
 import { HiOutlineMail } from "react-icons/hi";
+import { DeletePopUp } from "../Products/Category/CategoryDetail";
 
 interface UserValues {
   _id: string;
@@ -28,7 +29,12 @@ interface UserValues {
 
 const CustomersDetail: React.FC<{ userId: string }> = ({ userId }) => {
   const [user, setUser] = useState<UserValues | null>(null);
+  const [isDeleteOpen, setIsDeleteOpen] = useState<boolean>(false);
 
+  const handleDletePopupClose = () => {
+    // setSelectedProduct({ id: "", title: "" });
+    setIsDeleteOpen(false);
+  };
   useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -74,20 +80,31 @@ const CustomersDetail: React.FC<{ userId: string }> = ({ userId }) => {
   if (!user) return <Loader />;
 
   return (
-    <section className="w-full h-full overflow-hidden">
-      <header className="w-full h-fit flex justify-between p-4 md:py-6">
-        <h2 className="capitalize text-2xl md:text-3xl lg:text-4xl font-semibold tracking-tight">
-          Customer Details
-        </h2>
-        <Button className="bg-red-500 text-white">
-          Delete User <RiDeleteBinLine size={20} className="ml-1" />
-        </Button>
-      </header>
-      <div className="w-full h-[calc(100vh-90px)] space-y-2 p-4 overflow-y-auto">
-        <UserDetail user={user} />
-        <UserOrderTable />
-      </div>
-    </section>
+    <>
+      <section className="w-full h-full overflow-hidden">
+        <header className="w-full h-fit flex justify-between p-4 md:py-6">
+          <h2 className="capitalize text-2xl md:text-3xl lg:text-4xl font-semibold tracking-tight">
+            Customer Details
+          </h2>
+          <Button className="bg-red-500 text-white">
+            Delete User <RiDeleteBinLine size={20} className="ml-1" />
+          </Button>
+        </header>
+        <div className="w-full h-[calc(100vh-90px)] space-y-2 p-4 overflow-y-auto">
+          <UserDetail user={user} />
+          <UserOrderTable />
+        </div>
+      </section>
+      {isDeleteOpen && (
+        <DeletePopUp
+          action="delete-user"
+          id={user._id}
+          title={user.firstName + " " + user.lastName}
+          isDeleteOpen={isDeleteOpen}
+          handleDeleteClose={handleDletePopupClose}
+        />
+      )}
+    </>
   );
 };
 
@@ -225,36 +242,44 @@ const UserOrderTable = () => {
               <th className="px-4 py-2 text-left">Status</th>
             </tr>
           </thead>
-          <tbody className={`relative ${filteredOrders.length === 0 ? "h-10" : "h-fit"}`}>
+          <tbody
+            className={`relative ${
+              filteredOrders.length === 0 ? "h-10" : "h-fit"
+            }`}
+          >
             {filteredOrders.length === 0 ? (
-              <tr className="absolute inset-0 w-full h-full py-2 flex-center">No Orders found</tr>
-            ) : filteredOrders.map((order, index) => (
-              <tr
-                key={index}
-                className="h-fit group border-b cursor-pointer hover:bg-[#ffb43335] ease-in-out duration-300"
-              >
-                <td className="px-4 py-2 text-primary hover:underline">
-                  {order.orderID}
-                </td>
-                <td className="px-4 py-2">{order.orderDate}</td>
-                <td className="px-4 py-2">{order.shippingDate || "-"}</td>
-                <td className="px-4 py-2">{order.deliveryDate || "-"}</td>
-                <td className="px-4 py-2">₹ {order.price}</td>
-                <td
-                  className={`px-4 py-2 capitalize ${
-                    order.status === "delivered"
-                      ? "text-[#2CD396]"
-                      : order.status === "pending"
-                      ? "text-orange-500"
-                      : order.status === "cancelled"
-                      ? "text-[red]"
-                      : "text-blue-600"
-                  }`}
-                >
-                  {order.status}
-                </td>
+              <tr className="absolute inset-0 w-full h-full py-2 flex-center">
+                No Orders found
               </tr>
-            ))}
+            ) : (
+              filteredOrders.map((order, index) => (
+                <tr
+                  key={index}
+                  className="h-fit group border-b cursor-pointer hover:bg-[#ffb43335] ease-in-out duration-300"
+                >
+                  <td className="px-4 py-2 text-primary hover:underline">
+                    {order.orderID}
+                  </td>
+                  <td className="px-4 py-2">{order.orderDate}</td>
+                  <td className="px-4 py-2">{order.shippingDate || "-"}</td>
+                  <td className="px-4 py-2">{order.deliveryDate || "-"}</td>
+                  <td className="px-4 py-2">₹ {order.price}</td>
+                  <td
+                    className={`px-4 py-2 capitalize ${
+                      order.status === "delivered"
+                        ? "text-[#2CD396]"
+                        : order.status === "pending"
+                        ? "text-orange-500"
+                        : order.status === "cancelled"
+                        ? "text-[red]"
+                        : "text-blue-600"
+                    }`}
+                  >
+                    {order.status}
+                  </td>
+                </tr>
+              ))
+            )}
           </tbody>
         </table>
       </div>

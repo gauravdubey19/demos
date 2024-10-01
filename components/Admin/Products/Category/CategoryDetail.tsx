@@ -884,9 +884,15 @@ export const DeletePopUp: React.FC<{
     <Dialog open={isDeleteOpen} onOpenChange={handleDeleteClose}>
       <DialogContent className="w-full h-fit flex flex-col gap-8">
         <DialogTitle className="text-lg md:text-xl lg:text-2xl text-center">
-          Are you sure you want to delete this category:
+          Are you sure you want to delete this{" "}
+          {action === "delete-product"
+            ? "product"
+            : action === "delete-user"
+            ? "user"
+            : "category"}
+          :
           <br />
-          <span className="text-primary">{title}?</span>
+          <span className="text-primary">{title}</span>?
         </DialogTitle>
         <div className="w-full flex justify-between gap-4">
           <Button
