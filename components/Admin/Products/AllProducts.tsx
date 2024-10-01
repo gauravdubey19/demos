@@ -53,8 +53,9 @@ const AllProducts = () => {
         console.error("Error fetching user collections:", error);
       }
     };
-    if (productCollection.length === 0) fetchProductCollection();
-  }, [productCollection]);
+    // if (productCollection.length === 0)
+    fetchProductCollection();
+  }, []);
 
   if (productCollection.length === 0) return <Loader />;
 
@@ -80,41 +81,46 @@ const AllProducts = () => {
 
   return (
     <section className="w-full h-full overflow-hidden select-none">
-      <header className="w-full h-fit flex justify-between p-4 md:py-6">
+      <header className="w-full h-fit space-y-2 p-4 md:py-6">
         <h2 className="capitalize text-2xl md:text-3xl lg:text-4xl font-semibold tracking-tight">
-          Product List - <ReactCountUp amt={filteredProducts.length} />
+          All Products
         </h2>
-        <div className="w-fit h-fit flex-center gap-2 md:gap-4">
-          <div className="w-fit flex-center gap-1 cursor-pointer border border-primary py-1 px-2">
-            <IoSearchOutline size={20} className="text-primary" />
-            <input
-              type="text"
-              placeholder="Search by Product name"
-              value={search}
-              onChange={(e) => setSearch(e.target.value.trim())}
-              className="placeholder:text-primary bg-none border-none outline-none"
-            />
-          </div>
-          <Button
-            onClick={() => router.push("/admin/all-products/add-product")}
-            className="w-full h-full text-white rounded-none"
-          >
-            <BsPlus size={20} className="ml-1" /> Create New Product
-          </Button>
-          <div
-            onClick={() => setIsAscending(!isAscending)}
-            className="w-fit h-full flex-center gap-1 cursor-pointer bg-white border border-primary py-1.5 px-2"
-          >
-            {isAscending ? (
-              <FaArrowDownShortWide size={20} className="text-primary" />
-            ) : (
-              <FaArrowUpShortWide size={20} className="text-primary" />
-            )}
+        <div className="w-full h-fit flex-between gap-2">
+          <h2 className="capitalize text-md md:text-lg lg:text-xl">
+            Total Products: <ReactCountUp amt={filteredProducts.length} />
+          </h2>
+          <div className="w-fit h-fit flex-center gap-2 md:gap-4">
+            <div className="w-fit flex-center gap-1 cursor-pointer border border-primary py-1 px-2">
+              <IoSearchOutline size={20} className="text-primary" />
+              <input
+                type="text"
+                placeholder="Search by Product name"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="md:w-60 placeholder:text-primary bg-none border-none outline-none"
+              />
+            </div>
+            <Button
+              onClick={() => router.push("/admin/all-categories/add-product")}
+              className="w-full h-full text-white rounded-none"
+            >
+              <BsPlus size={20} className="ml-1" /> Create New Product
+            </Button>
+            <div
+              onClick={() => setIsAscending(!isAscending)}
+              className="w-fit h-full flex-center gap-1 cursor-pointer bg-white border border-primary py-1.5 px-2"
+            >
+              {isAscending ? (
+                <FaArrowDownShortWide size={20} className="text-primary" />
+              ) : (
+                <FaArrowUpShortWide size={20} className="text-primary" />
+              )}
+            </div>
           </div>
         </div>
       </header>
 
-      <div className="w-full h-[calc(100vh-90px)] space-y-2 p-4 overflow-hidden">
+      <div className="w-full h-[calc(100vh-130px)] space-y-2 p-4 overflow-hidden">
         <ProductTable filteredProducts={filteredProducts} />
       </div>
     </section>
@@ -198,11 +204,15 @@ const ProductTable: React.FC<{
                   <Link
                     href={`/products/${product.categories[0].slug}/${product.slug}`}
                   >
-                    {product.oldPrice ? <ReactCountUp
-                      amt={calculateDiscount(product.price, product.oldPrice)}
-                    >
-                      % off
-                    </ReactCountUp> : <div className="w-[50%] h-fit text-center text-xl">-</div>}
+                    {product.oldPrice ? (
+                      <ReactCountUp
+                        amt={calculateDiscount(product.price, product.oldPrice)}
+                      >
+                        % off
+                      </ReactCountUp>
+                    ) : (
+                      <div className="w-[50%] h-fit text-center text-xl">-</div>
+                    )}
                   </Link>
                 </td>
                 <td className="px-4 md:px-20 py-2">

@@ -12,6 +12,7 @@ import { toast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { CartItem } from "@/lib/types";
+import { useGlobalContext } from "./GlobalProvider";
 
 interface CartContextType {
   cart: CartItem[];
@@ -60,11 +61,13 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
 }) => {
   const { data: session, status } = useSession();
   const router = useRouter();
+  const { userData } = useGlobalContext();
+  // console.log(userData);
 
   const [isOpen, setOpen] = useState<boolean>(false);
   const [cart, setCart] = useState<CartItem[]>([]);
   const [favProducts, setFavProducts] = useState<string[]>(
-    session?.user?.favProducts || []
+    userData?.favProducts || []
   );
 
   const fetchCart = useCallback(async () => {
@@ -248,50 +251,49 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
     },
     [status, router, session]
   );
-  
-  const handleClearCart = useCallback(
-    async () => {
-      if (status !== "authenticated") {
-        router.replace("/sign-in");
-        return;
-      }
 
-      try {
-        const res = await fetch(`/api/products/delete/delete-users-all-cart-items/${session.user.id}/`, {
-          method: 'DELETE',
+  const handleClearCart = useCallback(async () => {
+    if (status !== "authenticated") {
+      router.replace("/sign-in");
+      return;
+    }
+
+    try {
+      const res = await fetch(
+        `/api/products/delete/delete-users-all-cart-items/${session.user.id}/`,
+        {
+          method: "DELETE",
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
-        });
-
-        const data = await res.json();
-
-        if (res.ok) {
-          setCart([]);
-
-          // toast({
-          //   title: data.message || "All items removed successfully.",
-          //   variant: "destructive",
-          // });
-        } else {
-          toast({
-            title: data.error || "Failed to clear the cart.",
-            description: "Please try again later.",
-            variant: "destructive",
-          });
         }
-      } catch (error) {
-        console.error("Error clearing the cart:", error);
+      );
+
+      const data = await res.json();
+
+      if (res.ok) {
+        setCart([]);
+
+        // toast({
+        //   title: data.message || "All items removed successfully.",
+        //   variant: "destructive",
+        // });
+      } else {
         toast({
-          title: "Something went wrong",
+          title: data.error || "Failed to clear the cart.",
           description: "Please try again later.",
           variant: "destructive",
         });
       }
-    },
-    [status, router, session]
-  );
-
+    } catch (error) {
+      console.error("Error clearing the cart:", error);
+      toast({
+        title: "Something went wrong",
+        description: "Please try again later.",
+        variant: "destructive",
+      });
+    }
+  }, [status, router, session]);
 
   const handleIncrement = useCallback(
     async (productId: string) => {

@@ -246,12 +246,12 @@ const Dashboard = () => {
           </h2>
           <p>Here’s what happening with your store today.</p>
         </div>
-        <div className="w-full h-[81.5vh] overflow-y-scroll">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2 p-4">
+        <div className="w-full h-[87vh] md:h-[81.5vh] overflow-y-scroll">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-2 p-4">
             {totals.map((t, index) => (
               <div
                 key={index}
-                className="w-full md:w-60 lg:w-52 xl:w-60 h-32 flex items-center gap-2 p-2 shadow-xl rounded-xl hover:shadow-2xl ease-in-out duration-300"
+                className="w-full xl:w-60 h-32 flex items-center gap-2 p-2 shadow-xl rounded-xl hover:shadow-2xl ease-in-out duration-300"
               >
                 <div
                   className="h-full w-1"
@@ -289,18 +289,18 @@ const Dashboard = () => {
               {/* Total Orders Line Chart */}
               <div className="chart-container h-full bg-[#F8F8F8] shadow-md rounded-lg p-4 hover:shadow-lg ease-in-out duration-300">
                 <h2 className="text-xl font-bold">Total Orders</h2>
-                <p className="text-gray-500">Year 2020</p>
+                <p className="text-gray-500">Year 2024</p>
                 <Line data={totalOrdersData} options={lineChartOptions} />
               </div>
 
               {/* Top Selling Categories Pie Chart */}
-              <div className="chart-container h-[50vh] bg-[#F8F8F8] shadow-md rounded-lg p-4 hover:shadow-lg ease-in-out duration-300 overflow-hidden">
+              <div className="chart-container h-fit md:h-[50vh] bg-[#F8F8F8] shadow-md rounded-lg p-4 hover:shadow-lg ease-in-out duration-300 overflow-hidden">
                 <h2 className="text-xl font-bold">Top Selling Categories</h2>
                 <div className="relative w-full h-full flex-center">
                   <Pie
                     data={topSellingCategoriesData}
                     options={pieChartOptions}
-                    className="w-full h-full scale-125"
+                    className="w-full h-full md:scale-125"
                   />
                 </div>
               </div>
@@ -309,7 +309,7 @@ const Dashboard = () => {
             <div className="chart-container w-full h-fit bg-[#F8F8F8] drop-shadow-md rounded-lg p-4 hover:shadow-lg ease-in-out duration-300 overflow-hidden">
               <h2 className="text-xl font-bold">Total Customers</h2>
               <p className="text-gray-500">Year 2020</p>
-              <div className="relative w-full h-[65vh] flex-center">
+              <div className="relative w-full h-fit lg:h-[65vh] flex-center">
                 <Line
                   data={totalCustomersData}
                   options={lineChartOptions}

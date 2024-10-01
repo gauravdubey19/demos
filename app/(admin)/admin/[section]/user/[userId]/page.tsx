@@ -6,7 +6,7 @@ export default function SubUserSectionPage({
   params: { userId: string };
 }) {
   return (
-    <div className="w-full lg:w-[75%] xl:w-[82%] h-full overflow-hidden">
+    <div className="w-full md:w-[68%] lg:w-[75%] xl:w-[82%] h-full overflow-hidden">
       <CustomersDetail userId={params.userId} />
     </div>
   );

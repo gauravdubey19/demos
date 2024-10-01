@@ -69,9 +69,14 @@ const Customers = () => {
           throw new Error("Failed to fetch user collection");
         }
 
-        const data = await res.json();
+        const data: UserCollectionValues[] = await res.json();
         // console.log("users:", data as UserCollectionValues);
-        if (res.ok) setUserCollection(data as UserCollectionValues[]);
+        if (res.ok) {
+          const onlyCustomers = data.filter(
+            (customer) => customer.role !== "admin" && customer
+          );
+          setUserCollection(onlyCustomers as UserCollectionValues[]);
+        }
       } catch (error) {
         console.error("Error fetching user collections:", error);
       }
@@ -286,7 +291,7 @@ const UserTable: React.FC<{ usersCollection: UserCollectionValues[] }> = ({
           <table className="w-full bg-white rounded-2xl">
             <thead className="sticky top-0 bg-[#EAEAEA] shadow-sm z-10">
               <tr className="border-b">
-                <th className="px-4 py-2 text-left">profile</th>
+                <th className="px-4 py-2 text-left">Profile</th>
                 <th className="px-4 py-2 text-left">First Name</th>
                 <th className="px-4 py-2 text-left">Last Name</th>
                 <th className="px-4 py-2 text-left">Registration</th>

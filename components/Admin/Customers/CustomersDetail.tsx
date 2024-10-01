@@ -105,7 +105,7 @@ const UserDetail: React.FC<{ user: UserValues }> = ({ user }) => {
               className="w-full h-full bg-zinc-200 rounded-full object-cover"
             />
           </div>
-          <h2>{`${user?.firstName} ${user?.lastName}`}</h2>
+          <h2 className="capitalize">{`${user?.firstName} ${user?.lastName}`}</h2>
         </div>
         <h6>Registered at: {formatTimestamp(user.createdAt)}</h6>
         {/* <Button className="text-white">
@@ -138,7 +138,7 @@ export default CustomersDetail;
 
 const UserOrderTable = () => {
   const [isAscending, setIsAscending] = useState<boolean>(true);
-  const statusOption = ["all", "delivered", "pending", "shipped"];
+  const statusOption = ["all", "delivered", "pending", "shipped", "cancelled"];
   const [status, setStatus] = useState<string>(statusOption[0]);
   const [search, setSearch] = useState<string>("");
 
@@ -177,13 +177,21 @@ const UserOrderTable = () => {
                 className="ml-1 group-hover:-rotate-180 ease-in-out duration-300"
               />
             </button>
-            <div className="hidden group-hover:block animate-slide-down absolute left-0 right-0 -bottom-[25.5vh] z-40 w-full min-w-fit h-fit bg-slate-200 shadow-md rounded-md overflow-hidden">
+            <div className="hidden group-hover:block animate-slide-down absolute left-0 right-0 top-full z-40 w-full min-w-fit h-fit bg-slate-200 shadow-md rounded-md overflow-hidden">
               {statusOption.map((sp, index) => (
                 <div
                   key={index}
                   onClick={() => setStatus(sp)}
                   className={`w-full cursor-pointer capitalize p-2 border-b border-b-slate-300 ${
                     status === sp && "text-primary bg-slate-100"
+                  } ${
+                    sp === "delivered"
+                      ? "text-[#2CD396]"
+                      : sp === "pending"
+                      ? "text-orange-500"
+                      : sp === "cancelled"
+                      ? "text-[red]"
+                      : "text-blue-600"
                   } hover:text-primary ease-in-out duration-300`}
                 >
                   {sp}
@@ -217,8 +225,10 @@ const UserOrderTable = () => {
               <th className="px-4 py-2 text-left">Status</th>
             </tr>
           </thead>
-          <tbody>
-            {filteredOrders.map((order, index) => (
+          <tbody className={`relative ${filteredOrders.length === 0 ? "h-10" : "h-fit"}`}>
+            {filteredOrders.length === 0 ? (
+              <tr className="absolute inset-0 w-full h-full py-2 flex-center">No Orders found</tr>
+            ) : filteredOrders.map((order, index) => (
               <tr
                 key={index}
                 className="h-fit group border-b cursor-pointer hover:bg-[#ffb43335] ease-in-out duration-300"
@@ -231,11 +241,13 @@ const UserOrderTable = () => {
                 <td className="px-4 py-2">{order.deliveryDate || "-"}</td>
                 <td className="px-4 py-2">₹ {order.price}</td>
                 <td
-                  className={`px-4 py-2 ${
+                  className={`px-4 py-2 capitalize ${
                     order.status === "delivered"
-                      ? "text-green-600"
+                      ? "text-[#2CD396]"
                       : order.status === "pending"
                       ? "text-orange-500"
+                      : order.status === "cancelled"
+                      ? "text-[red]"
                       : "text-blue-600"
                   }`}
                 >
