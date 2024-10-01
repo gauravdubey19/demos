@@ -106,7 +106,8 @@ useEffect(() => {
           console.error('Failed to fetch address');
         }
       } catch (error) {
-        console.error('Error fetching address:', error);
+        // console.error('Error fetching address:', error);
+        throw new Error('Error fetching address');
       } finally {
         setFetchingAddress(false);
       }
@@ -123,7 +124,8 @@ useEffect(() => {
         setCartData(initialCartData);
         setSelectedItems(initialCartData.length);
       } catch (error) {
-        console.error('Error fetching cart items:', error);
+        // console.error('Error fetching cart items:', error);
+        throw new Error('Error fetching cart items');
       }
     }
   }, [session, cart]);

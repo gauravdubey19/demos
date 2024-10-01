@@ -61,7 +61,7 @@ export const GET = async (
 
     // return NextResponse.json("cart.cartItems", { status: 200 });
   } catch (error) {
-    console.error("Error fetching cart for user ID:", params.require, error);
+    // console.error("Error fetching cart for user ID:", params.require, error);
     return NextResponse.json(
       { error: "Failed to fetch cart" },
       { status: 500 }

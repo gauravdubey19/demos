@@ -21,7 +21,7 @@ export async function GET(req: NextRequest, { params }: { params: { userId: stri
         }
         return NextResponse.json(userAddress, { status: 200 });
     } catch (error) {
-        console.error('Error fetching addresses:', error);
+        // console.error('Error fetching addresses:', error);
         return NextResponse.json({ error: 'Error fetching addresses' }, { status: 500 });
     }
 }

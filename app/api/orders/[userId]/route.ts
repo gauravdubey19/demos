@@ -16,7 +16,7 @@ export async function GET(req: NextRequest, { params }: { params: { userId: stri
         const userOrders = await Order.find({ userId }).sort({ createdAt: -1 });
         return NextResponse.json(userOrders, { status: 200 });
     } catch (error) {
-        console.error('Error fetching orders:', error);
+        // console.error('Error fetching orders:', error);
         return NextResponse.json({ error: 'Error fetching orders' }, { status: 500 });
     }
 }

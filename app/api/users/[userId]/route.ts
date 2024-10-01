@@ -71,7 +71,7 @@ async function getUserById(userId: string) {
         const user = await User.findById(userId);
         return user;
     } catch (error) {
-        console.error('Error fetching user:', error);
+        // console.error('Error fetching user:', error);
         throw new Error('Error fetching user');
     }
 }

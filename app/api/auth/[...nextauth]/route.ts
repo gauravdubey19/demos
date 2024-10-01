@@ -58,6 +58,7 @@ const handler = NextAuth({
         const { token } = credentials;
         try {
           const decoded = jwt.verify(token, jwtSecret) as jwt.JwtPayload;
+          await connectToDB();
           const user = await User.findById(decoded.id);
           if (user) {
             return {
@@ -107,6 +108,7 @@ const handler = NextAuth({
 
       if (token.email) {
         try {
+          await connectToDB();
           const sessionUser = await User.findOne({ email: token.email });
 
           if (sessionUser) {
