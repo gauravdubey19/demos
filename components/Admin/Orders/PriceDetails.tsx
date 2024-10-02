@@ -9,8 +9,8 @@ const PriceDetails = ({ cartData }: PriceDetailsI) => {
     const [totals, setTotals] = useState({
         totalMRP: 0,
         totalDiscount: 0,
-        platformFee: 15,
-        shippingFee: 40,
+        platformFee: 0,
+        shippingFee: 0,
     });
 
     useEffect(() => {

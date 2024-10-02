@@ -33,6 +33,27 @@ const CheckoutPage = () => {
 useEffect(() => {
   console.log("selectedAddress: ",selectedAddress);
 }, [selectedAddress]);
+useEffect(() => {
+  const calculateTotals = () => {
+      let totalMRP = 0;
+      let totalDiscount = 0;
+
+      cartData.forEach((item: any) => {
+          if (item.selected) {
+              totalMRP += item.price * item.quantity;
+              totalDiscount += (item.discount || 0) * item.quantity;
+          }
+      });
+      setTotals((prevTotals:any) => ({
+          ...prevTotals,
+          totalMRP,
+          totalDiscount,
+      }));
+  };
+
+  calculateTotals();
+}, [cartData, selectedItems, setTotals]);
+
   useEffect(() => {
     if (selectedAddressId) {
       setSelectedAddress(addressData.find((item) => item._id === selectedAddressId));
@@ -45,7 +66,9 @@ useEffect(() => {
       return;
     }
     const userId = session.user.id;
-    const totalAmount = cartData.filter((item) => item.selected).reduce((acc, item) => acc + item.price, 0);
+    const { totalMRP, totalDiscount, platformFee, shippingFee } = totals;
+    const totalAmount = totalMRP - totalDiscount + platformFee + shippingFee;
+    console.log("TotalAmount: ",totalAmount);
     const orderDetails = {
       orderedProducts: cartData.filter((item) => item.selected),
       orderInfo: {

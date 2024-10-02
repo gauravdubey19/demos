@@ -4,24 +4,14 @@ import { X, Check, ChevronRight } from "lucide-react";
 import Image from "next/image";
 import Dropdown from "@/components/Checkout/dropdownSelect";
 import { useCart } from "@/context/CartProvider";
+import { Product } from "@/context/GlobalProvider";
 
 interface CartDataI {
-    data: {
-        title: string;
-        price: number;
-        image: any;
-        selectedSize: string;
-        selectedColor: { title: string; color: string };
-        quantity: number;
-        selected: boolean;
-        productId: any;
-        _id: any;
-    };
+    data: Product;
     onRemoveCartItem?: (id: any) => void;
 }
 
 const ProductCard = ({ data }: CartDataI) => {
-    console.log(data);
 
     return (
 
@@ -61,7 +51,7 @@ const ProductCard = ({ data }: CartDataI) => {
                         </div>
 
                         <div className="flex flex-wrap items-center gap-2 text-sm sm:text-base">
-                            <p className="font-semibold">Price:</p>
+                            <p className="font-semibold">Total Price:</p>
                             <p className="font-bold">{"₹ "}{data?.quantity * data?.price}</p>
                         </div>
                         <div className="text-blue-500 underline flex items-center mt-3 cursor-pointer">

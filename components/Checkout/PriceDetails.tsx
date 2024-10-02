@@ -10,35 +10,8 @@ interface PriceDetailsI {
     totals:any;
 }
 
-const PriceDetails = ({ totals,setTotals,onProceed, cartData, currentStep, selectedItems }: PriceDetailsI) => {
+const PriceDetails = ({ totals,onProceed,currentStep }: PriceDetailsI) => {
 
-    // const [totals, setTotals] = useState({
-    //     totalMRP: 0,
-    //     totalDiscount: 0,
-    //     platformFee: 15,
-    //     shippingFee: 40,
-    // });
-
-    useEffect(() => {
-        const calculateTotals = () => {
-            let totalMRP = 0;
-            let totalDiscount = 0;
-
-            cartData.forEach((item: any) => {
-                if (item.selected) {
-                    totalMRP += item.price * item.quantity;
-                    totalDiscount += (item.discount || 0) * item.quantity;
-                }
-            });
-            setTotals((prevTotals:any) => ({
-                ...prevTotals,
-                totalMRP,
-                totalDiscount,
-            }));
-        };
-
-        calculateTotals();
-    }, [cartData, selectedItems, setTotals]);
 
     const { totalMRP, totalDiscount, platformFee, shippingFee } = totals;
     const totalAmount = totalMRP - totalDiscount + platformFee + shippingFee;
