@@ -109,6 +109,15 @@ export type Order = {
   };
   timestamps: string;
 };
+export interface Review {
+  _id: string;
+  username: string;
+  userAvatar: string;
+  review_descr: string;
+  rating: number;
+  productId: string;
+  userId: string;
+}
 interface GlobalState {
   user: User | null;
   error: string | null;
@@ -155,6 +164,7 @@ interface GlobalState {
   fetchingOrders: boolean;
   setFetchingOrders: React.Dispatch<React.SetStateAction<boolean>>;
   setFetchedOrders: React.Dispatch<React.SetStateAction<Order[]>>;
+  fetchReviews: (productId: string) => Promise<Review[]>;
 }
 
 interface SessionExtended extends Session {
@@ -319,6 +329,32 @@ const GlobalProvider = ({ children }: { children: ReactNode }) => {
     }
   }, [session]);
 
+      // utils/fetchReviews.ts
+      const fetchReviews = async (productId: string) => {
+        try {
+          const res = await fetch(
+            `/api/reviews/get/getReviewsProduct?productId=${productId}`,
+            {
+              method: "GET",
+              headers: {
+                "Content-Type": "application/json",
+              },
+            }
+          );
+      
+          if (!res.ok) {
+            throw new Error("Failed to fetch reviews");
+          }
+      
+          const data = await res.json();
+          return data.reviews;
+        } catch (error) {
+          console.error("Error fetching reviews:", error);
+          throw error;
+        }
+      };
+
+      
   useEffect(() => {
     fetchUser();
   }, [fetchUser]);
@@ -551,7 +587,8 @@ const handleDeleteAddresses = async () => {
         selectedAddresses, setSelectedAddresses,
         handleDeleteAddresses, editAddressData, setEditAddressData, suggestions, setSuggestions, activeTab, setActiveTab,
         searchLoading, setSearchLoading,
-        searchQuery, setSearchQuery, fetchedOrders, fetchingOrders, setFetchingOrders, setFetchedOrders
+        searchQuery, setSearchQuery, fetchedOrders, fetchingOrders, setFetchingOrders, setFetchedOrders,
+        fetchReviews
       }}
     >
       {children}

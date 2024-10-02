@@ -1,3 +1,4 @@
+import { Review } from "@/context/GlobalProvider";
 import { IconType } from "react-icons/lib";
 
 // Product types
@@ -43,7 +44,7 @@ export interface CarouselProps {
 
 // Product Card types :
 export interface CardValues {
-  _id: string;
+  _id: string | null;
   mainImage: string;
   title: string;
   description: string;
@@ -121,6 +122,8 @@ export interface ProductDetailProps {
 export interface DetailsProps {
   product: ProductDetailValues;
   categorySlug: string;
+  avgRating: number;
+  reviewsLength: number;
 }
 
 export interface ImageGalleryProps {
@@ -128,7 +131,10 @@ export interface ImageGalleryProps {
   initialMainImage: string;
 }
 export interface ProductReviewsProps {
-  slug: string;
+  productId: string;
+  reviews: Review[];
+  setReviews: (reviews: Review[]) => void;
+  loading: boolean; 
 }
 export interface AdditionalInfoProps {
   product: {
