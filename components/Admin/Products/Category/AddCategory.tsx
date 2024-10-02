@@ -16,6 +16,8 @@ const AddCategory: React.FC = () => {
   const router = useRouter();
   const [categoryImage, setCategoryImage] = useState<File | null>(null);
   const [loadingSaving, setLoadingSaving] = useState<boolean>(false);
+  const [success, setSuccess] = useState<boolean>(false);
+
   const [category, setCategory] = useState<CategoryCollectionValues>({
     _id: "",
     createdAt: "",
@@ -181,7 +183,9 @@ const AddCategory: React.FC = () => {
       });
 
       if (data.message) {
-        router.back();
+        setLoadingSaving(false);
+        setSuccess(true);
+        router.push("/admin/all-categories");
       }
     } catch (error) {
       console.error("Error creating category:", error);
@@ -211,11 +215,12 @@ const AddCategory: React.FC = () => {
           </Button>
           <Button
             type="submit"
-            disabled={loadingSaving}
+            disabled={loadingSaving || success}
             onClick={handleSubmit}
             className="text-white"
           >
-            {!loadingSaving ? "Save" : "Saving..."}
+            {/* {!loadingSaving ? "Save" : "Saving..."} */}
+            {loadingSaving ? "Saving..." : success ? "Saved" : "Save"}
           </Button>
         </div>
       </header>

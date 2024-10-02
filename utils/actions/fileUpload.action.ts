@@ -22,17 +22,8 @@ export const uploadMultipleNewFiles = async (formData: FormData) => {
 
     const uploadedFiles = await utapi.uploadFiles(files);
 
-    // Extracting the URLs from the uploadedFiles array
     const uploadedFilesUrls = uploadedFiles.map((file) => file?.data?.url);
     // console.log(uploadedFiles, uploadedFilesUrls);
-
-    // const uploadedFilesUrls = await Promise.all(
-    //   files.map(async (file: File) => {
-    //     const { data } = await utapi.uploadFiles(file);
-    //     // console.log(data?.url);
-    //     return data?.url || null;
-    //   })
-    // );
 
     return uploadedFilesUrls;
   } catch (error) {

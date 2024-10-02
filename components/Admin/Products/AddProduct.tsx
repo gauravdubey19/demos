@@ -37,6 +37,7 @@ export interface Faq {
 const AddProduct = () => {
   const router = useRouter();
   const [loading, setLoading] = useState<boolean>(false);
+  const [success, setSuccess] = useState<boolean>(false);
 
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
@@ -239,7 +240,7 @@ const AddProduct = () => {
 
       if (!mainImageUrl) {
         toast({
-          title: "Category image upload failed.",
+          title: "Main image upload failed.",
           description: "Please try again later...",
           variant: "destructive",
         });
@@ -290,7 +291,9 @@ const AddProduct = () => {
       });
 
       if (res.ok) {
-        router.back();
+        setLoading(false);
+        setSuccess(true);
+        router.push("/admin/all-products");
       }
     } catch (error) {
       console.error("Error creating product:", error);
@@ -319,8 +322,12 @@ const AddProduct = () => {
             >
               Cancel
             </Button>
-            <Button type="submit" disabled={loading} className="text-white">
-              {!loading ? "Save" : "Saving..."}
+            <Button
+              type="submit"
+              disabled={loading || success}
+              className="text-white"
+            >
+              {loading ? "Saving..." : success ? "Saved" : "Save"}
             </Button>
           </div>
         </header>
