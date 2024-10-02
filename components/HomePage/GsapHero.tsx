@@ -133,7 +133,7 @@ const GsapHero: React.FC = () => {
   return (
     <>
       <section className="h-[400vh] bg-white">
-        <div className="w-full h-screen sticky top-0 flex flex-col md:flex-row overflow-hidden">
+        <div className="w-full h-screen sticky top-0 overflow-hidden">
           <>
             {/* left hero section */}
             <div
@@ -180,25 +180,34 @@ const GsapHero: React.FC = () => {
             </div>
           </>
           <>
-            <div
-              id="left-section"
-              className="h-full w-full md:w-[30vw] lg:w-[35vw] transition-transform duration-300 overflow-hidden"
-            >
-              <ScrollVideo videoUrl="/assets/heroVideo.mp4" />
-            </div>
+            <div className="relative w-full h-screen flex flex-col md:flex-row overflow-hidden">
+              <div
+                id="left-section"
+                className="absolute inset-0 -z-10 h-full w-full"
+              >
+                <ScrollVideo videoUrl="/videos/homePageHeroVideo.mp4" />
+              </div>
 
-            <div
-              id="middle-section"
-              className="relative h-full bg-primary flex items-center justify-center w-full md:w-[40vw] lg:w-[30vw] p-6 transition-transform duration-300"
-            >
-              <MiddleContainer />
-            </div>
+              <div
+                id="left-section"
+                className="h-full w-full md:w-[30vw] lg:w-[35vw] transition-transform duration-300 overflow-hidden"
+              >
+                {/* <ScrollVideo videoUrl="/assets/heroVideo.mp4" /> */}
+              </div>
 
-            <div
-              id="right-section"
-              className="h-full w-full md:w-[30vw] lg:w-[35vw] transition-transform duration-300 overflow-hidden"
-            >
-              <ScrollVideo videoUrl="/assets/heroVideo.mp4" />
+              <div
+                id="middle-section"
+                className="relative h-full bg-primary flex items-center justify-center w-full md:w-[40vw] lg:w-[30vw] p-6 transition-transform duration-300"
+              >
+                <MiddleContainer />
+              </div>
+
+              <div
+                id="right-section"
+                className="h-full w-full md:w-[30vw] lg:w-[35vw] transition-transform duration-300 overflow-hidden"
+              >
+                {/* <ScrollVideo videoUrl="/assets/heroVideo.mp4" /> */}
+              </div>
             </div>
           </>
         </div>

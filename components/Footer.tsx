@@ -14,7 +14,7 @@ const Footer: React.FC<{ appName?: string }> = ({ appName = "LOGO" }) => {
   if (pathname.includes("/admin")) return;
   return (
     <footer
-      className={`relative z-50 bg-background w-full text-foreground py-12 border-t border-border space-y-4 sm:space-y-6 md:space-y-8 lg:space-y-10 overflow-hidden`}
+      className={`relative z-40 bg-background w-full text-foreground py-12 border-t border-border space-y-4 sm:space-y-6 md:space-y-8 lg:space-y-10 overflow-hidden`}
     >
       <div className="container max-w-7xl w-full h-fit">
         {/* Logo */}

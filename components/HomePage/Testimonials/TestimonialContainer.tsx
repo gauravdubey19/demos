@@ -115,7 +115,7 @@ const TestimonialContainer = () => {
   useEffect(() => {
     const getData = async () => {
       try {
-        const response = await fetch("/api/Testimonials/get");
+        const response = await fetch("/api/testimonials/get-delete");
         if (!response.ok) {
           throw new Error("Failed to fetch testimonials");
         }

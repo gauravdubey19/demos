@@ -109,9 +109,6 @@
 
 // export default config;
 
-
-
-
 import type { Config } from "tailwindcss";
 import { withUt } from "uploadthing/tw";
 
@@ -139,10 +136,10 @@ const baseConfig: Config = {
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
-        color:{
-          tertiary:"#494949",
+        color: {
+          tertiary: "#494949",
         },
-        strokeLight:"#D8D8D8",
+        strokeLight: "#D8D8D8",
         green: "#2CD396",
         primary: {
           DEFAULT: "var(--primary)",
@@ -207,12 +204,20 @@ const baseConfig: Config = {
             transform: "translateY(0)",
           },
         },
+        shake: {
+          "0%": { transform: "translateX(0)" },
+          "25%": { transform: "translateX(-15px)" },
+          "50%": { transform: "translateX(10px)" },
+          "75%": { transform: "translateX(-20px)" },
+          "100%": { transform: "translateX(0)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
         "slide-up": "slide-up 0.5s ease-in-out",
         "slide-down": "slide-down 0.5s ease-in-out",
+        shake: "shake 0.3s ease-in-out",
       },
       fontFamily: {
         dmSansBold: ["DM-sans-bold", "sans-serif"],
@@ -223,8 +228,8 @@ const baseConfig: Config = {
         montSemiBold: ["Montserrat-semibold", "sans-serif"],
       },
       spacing: {
-        'word':'0.25em',
-      }
+        word: "0.25em",
+      },
     },
   },
   plugins: [require("tailwindcss-animate")],
