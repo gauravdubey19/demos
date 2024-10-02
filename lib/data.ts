@@ -1,4 +1,4 @@
-import { CardValues, FooterSection, LinkValues} from "./types";
+import { CardValues, FooterSection, LinkValues } from "./types";
 import { FaFacebookF, FaInstagram, FaYoutube } from "react-icons/fa";
 
 export const links: LinkValues[] = [
@@ -62,14 +62,14 @@ export const footer: FooterSection[] = [
   },
 ];
 
-
 export const cardList: CardValues[] = [
   {
     _id: null,
     mainImage: "/assets/card.jpeg",
     title: "Bold Red Shirt",
     slug: "bold-red-shirt",
-    description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugalaboriosam nesciunt voluptatibus ad reprehenderit magnivwev evprovident cumque, a cupiditate. Fuga laboriosam nesciuntvoluptatibus",
+    description:
+      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugalaboriosam nesciunt voluptatibus ad reprehenderit magnivwev evprovident cumque, a cupiditate. Fuga laboriosam nesciuntvoluptatibus",
     price: 19,
     oldPrice: 25,
     discount: 25,
@@ -78,14 +78,16 @@ export const cardList: CardValues[] = [
     type: [],
     availableSizes: [""],
     colorOptions: [],
-    categories: []
+    categories: [],
   },
   {
     _id: null,
-    mainImage: "https://image.made-in-china.com/2f0j00hswiAnGJiRoZ/Business-Suit-Men-s-Striped-Stretch-Business-Suit-Color-Textile-OEM-ODM.webp",
+    mainImage:
+      "https://image.made-in-china.com/2f0j00hswiAnGJiRoZ/Business-Suit-Men-s-Striped-Stretch-Business-Suit-Color-Textile-OEM-ODM.webp",
     title: "Bold Red Shirt",
     slug: "bold-red-shirt",
-    description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugalaboriosam nesciunt voluptatibus ad reprehenderit magnivwev evprovident cumque, a cupiditate. Fuga laboriosam nesciuntvoluptatibus",
+    description:
+      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugalaboriosam nesciunt voluptatibus ad reprehenderit magnivwev evprovident cumque, a cupiditate. Fuga laboriosam nesciuntvoluptatibus",
     price: 10,
     oldPrice: 10,
     discount: 5,
@@ -94,14 +96,16 @@ export const cardList: CardValues[] = [
     type: [],
     availableSizes: [""],
     colorOptions: [],
-    categories: []
+    categories: [],
   },
   {
     _id: null,
-    mainImage: "https://rukminim2.flixcart.com/image/850/1000/xif0q/kurta/j/h/f/xl-men-ethnic-premium-kurta-dhar-textile-original-imagy2tcphwu3jzh.jpeg?q=90&crop=false",
+    mainImage:
+      "https://rukminim2.flixcart.com/image/850/1000/xif0q/kurta/j/h/f/xl-men-ethnic-premium-kurta-dhar-textile-original-imagy2tcphwu3jzh.jpeg?q=90&crop=false",
     title: "Bold Red Shirt",
     slug: "bold-red-shirt",
-    description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugalaboriosam nesciunt voluptatibus ad reprehenderit magnivwev evprovident cumque, a cupiditate. Fuga laboriosam nesciuntvoluptatibus",
+    description:
+      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugalaboriosam nesciunt voluptatibus ad reprehenderit magnivwev evprovident cumque, a cupiditate. Fuga laboriosam nesciuntvoluptatibus",
     price: 19,
     oldPrice: 25,
     discount: 25,
@@ -110,14 +114,16 @@ export const cardList: CardValues[] = [
     type: [],
     availableSizes: [""],
     colorOptions: [],
-    categories: []
+    categories: [],
   },
   {
     _id: null,
-    mainImage: "https://cdn.linenclub.com/media/catalog/product/cache/41d32663a01600992c99bcd3aa36f0e1/l/c/lcsfsp0212930_1.jpg",
+    mainImage:
+      "https://cdn.linenclub.com/media/catalog/product/cache/41d32663a01600992c99bcd3aa36f0e1/l/c/lcsfsp0212930_1.jpg",
     title: "Bold Red Shirt",
     slug: "bold-red-shirt",
-    description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugalaboriosam nesciunt voluptatibus ad reprehenderit magnivwev evprovident cumque, a cupiditate. Fuga laboriosam nesciuntvoluptatibus",
+    description:
+      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugalaboriosam nesciunt voluptatibus ad reprehenderit magnivwev evprovident cumque, a cupiditate. Fuga laboriosam nesciuntvoluptatibus",
     price: 10,
     oldPrice: 10,
     discount: 5,
@@ -126,14 +132,16 @@ export const cardList: CardValues[] = [
     type: [],
     availableSizes: [""],
     colorOptions: [],
-    categories: []
+    categories: [],
   },
   {
     _id: null,
-    mainImage: "https://cdn.linenclub.com/media/catalog/product/cache/41d32663a01600992c99bcd3aa36f0e1/l/c/lcjkch3000701_0.jpg",
+    mainImage:
+      "https://cdn.linenclub.com/media/catalog/product/cache/41d32663a01600992c99bcd3aa36f0e1/l/c/lcjkch3000701_0.jpg",
     title: "Bold Red Shirt",
     slug: "bold-red-shirt",
-    description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugalaboriosam nesciunt voluptatibus ad reprehenderit magnivwev evprovident cumque, a cupiditate. Fuga laboriosam nesciuntvoluptatibus",
+    description:
+      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugalaboriosam nesciunt voluptatibus ad reprehenderit magnivwev evprovident cumque, a cupiditate. Fuga laboriosam nesciuntvoluptatibus",
     price: 19,
     oldPrice: 25,
     discount: 25,
@@ -142,14 +150,16 @@ export const cardList: CardValues[] = [
     type: [],
     availableSizes: [""],
     colorOptions: [],
-    categories: []
+    categories: [],
   },
   {
     _id: null,
-    mainImage: "https://5.imimg.com/data5/ANDROID/Default/2021/6/DJ/TP/HU/12881310/product-jpeg.jpg",
+    mainImage:
+      "https://5.imimg.com/data5/ANDROID/Default/2021/6/DJ/TP/HU/12881310/product-jpeg.jpg",
     title: "Bold Red Shirt",
     slug: "bold-red-shirt",
-    description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugalaboriosam nesciunt voluptatibus ad reprehenderit magnivwev evprovident cumque, a cupiditate. Fuga laboriosam nesciuntvoluptatibus",
+    description:
+      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugalaboriosam nesciunt voluptatibus ad reprehenderit magnivwev evprovident cumque, a cupiditate. Fuga laboriosam nesciuntvoluptatibus",
     price: 10,
     oldPrice: 10,
     discount: 5,
@@ -158,14 +168,16 @@ export const cardList: CardValues[] = [
     type: [],
     availableSizes: [""],
     colorOptions: [],
-    categories: []
+    categories: [],
   },
   {
     _id: null,
-    mainImage: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSEdFaWkG3JgjADdehk3p7PZni3qT4p5-4JBDBKSigPBj-cec8jEzOP2xesN3zf5LEhhG4&usqp=CAU",
+    mainImage:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSEdFaWkG3JgjADdehk3p7PZni3qT4p5-4JBDBKSigPBj-cec8jEzOP2xesN3zf5LEhhG4&usqp=CAU",
     title: "Bold Red Shirt",
     slug: "bold-red-shirt",
-    description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugalaboriosam nesciunt voluptatibus ad reprehenderit magnivwev evprovident cumque, a cupiditate. Fuga laboriosam nesciuntvoluptatibus",
+    description:
+      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugalaboriosam nesciunt voluptatibus ad reprehenderit magnivwev evprovident cumque, a cupiditate. Fuga laboriosam nesciuntvoluptatibus",
     price: 19,
     oldPrice: 25,
     discount: 25,
@@ -174,14 +186,16 @@ export const cardList: CardValues[] = [
     type: [],
     availableSizes: [""],
     colorOptions: [],
-    categories: []
+    categories: [],
   },
   {
     _id: null,
-    mainImage: "https://www.mkistore.co.uk/cdn/shop/files/MKI_30_5_240603.jpg?v=1719584934&width=1156",
+    mainImage:
+      "https://www.mkistore.co.uk/cdn/shop/files/MKI_30_5_240603.jpg?v=1719584934&width=1156",
     title: "Bold Red Shirt",
     slug: "bold-red-shirt",
-    description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugalaboriosam nesciunt voluptatibus ad reprehenderit magnivwev evprovident cumque, a cupiditate. Fuga laboriosam nesciuntvoluptatibus",
+    description:
+      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugalaboriosam nesciunt voluptatibus ad reprehenderit magnivwev evprovident cumque, a cupiditate. Fuga laboriosam nesciuntvoluptatibus",
     price: 10,
     oldPrice: 10,
     discount: 5,
@@ -190,7 +204,7 @@ export const cardList: CardValues[] = [
     type: [],
     availableSizes: [""],
     colorOptions: [],
-    categories: []
+    categories: [],
   },
 ];
 
