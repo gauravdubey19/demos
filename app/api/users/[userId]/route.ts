@@ -6,6 +6,7 @@ import Cart from "@/models/Cart";
 import Contact from "@/models/Contact";
 import Order from "@/models/Order";
 import Review from "@/models/Reviews";
+import Query from "@/models/Query";
 
 // Get User by ID
 export async function GET(req: NextRequest, { params }: { params: { userId: string } }) {
@@ -31,12 +32,22 @@ export async function DELETE(req: NextRequest, { params }: { params: { userId: s
     try {
         await connectToDB();
 
+        //check if user has any pending orders first
+        const orders = await Order.find({ userId });
+        
+        for (const order of orders) {
+          if (order.orderInfo.orderStatus === 'pending') {
+            console.log('Looks like you have pending orders. Either cancel orders or wait for them to be delivered before deleting your account');
+            return NextResponse.json({ error: 'Looks like you have pending orders. Either cancel orders or wait for them to be delivered before deleting your account' }, { status: 400 });
+          }
+        }
         await Promise.all([
             Address.deleteMany({ userId }),
             Cart.deleteMany({ userId }),
             Contact.deleteMany({ userId }),
             Order.deleteMany({ userId }),
             Review.deleteMany({ userId }),
+            Query.deleteMany({ userId }),
         ]);
 
         // Delete the user

@@ -14,6 +14,7 @@ import { signOut, useSession } from 'next-auth/react';
 import { Session } from 'next-auth';
 import { toast } from '@/hooks/use-toast';
 import { useGlobalContext } from '@/context/GlobalProvider';
+import { set } from 'mongoose';
 interface SessionExtended extends Session {
   user: {
     id: string;
@@ -91,10 +92,12 @@ const DeleteMyAccount = () => {
 
       } else {
         const errorData = await response.json();
+        console.error("Error deleting account:", errorData);
         toast({
           title: "Failed to delete account",
-          description: errorData.message || "Please try again",
+          description: errorData.error || "Please try again",
           variant: "destructive",
+          duration: 5000,
         });
       }
     } catch (error) {
@@ -104,7 +107,14 @@ const DeleteMyAccount = () => {
         description: "Please try again",
         variant: "destructive",
       });
-    } 
+    } finally{
+      setDeletingAccount(false);
+      setIsOtpOpen(false);
+      setOtp('');
+      setOtpSend(false);
+      setIsAccountVerified(false);
+      setEmailOtp('');
+    }
   };
 
   // Handler when the delete button is clicked
