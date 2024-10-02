@@ -25,7 +25,6 @@ useEffect(() => {
   const getReviews = async () => {
     if(!card._id) return;
     try {
-      console.log("Id: ", card._id);
       const fetchedReviews = await fetchReviews(card._id);
       let avgRating = 0;
       if (fetchedReviews.length > 0) {
