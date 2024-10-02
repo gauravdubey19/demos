@@ -28,13 +28,50 @@ import { BiEditAlt } from "react-icons/bi";
 import { useCart } from "@/context/CartProvider";
 import ReactCountUp from "../ui/ReactCountUp";
 import { GoHeart, GoHeartFill } from "react-icons/go";
+import { Review, useGlobalContext } from "@/context/GlobalProvider";
 
 const ProductDetail: React.FC<{ slug: string; categorySlug: string }> = ({
   slug,
   categorySlug,
 }) => {
   const [product, setProduct] = useState<ProductDetailValues | null>(null);
+  const {fetchReviews} = useGlobalContext();
   const [loading, setLoading] = useState<boolean>(true);
+  const [reviews, setReviews] = useState<Review[]>([]);
+  const [avgRating, setAvgRating] = useState<number>(0);
+  const [reviewLoading, setReviewLoading] = useState<boolean>(true);
+
+  useEffect(() => {
+    if(!product) return;
+    const getReviews = async () => {
+      setReviewLoading(true);
+      try {
+        const reviews = await fetchReviews(product?._id);
+        
+        setReviews(reviews);
+      } catch (error) {
+        console.error("Error fetching reviews:", error);
+      } finally {
+        setReviewLoading(false);
+      }
+    };
+
+    if (product?._id) getReviews();
+  }, [product]);
+  useEffect(() => {
+    let avgRating = 0;
+        if (reviews.length > 0) {
+          reviews.forEach((review) => {
+            avgRating += review.rating;
+          });
+          avgRating = avgRating / reviews.length;
+          avgRating = Number(avgRating.toFixed(1));
+          console.log("avgRating: ", avgRating);
+        } else {
+          avgRating = 0; // or any default value you prefer
+        }
+        setAvgRating(avgRating);
+}, [reviews]);
 
   useEffect(() => {
     const fetchProductBySlug = async () => {
@@ -83,9 +120,10 @@ const ProductDetail: React.FC<{ slug: string; categorySlug: string }> = ({
               images={product.images}
               initialMainImage={product.mainImage}
             />
-            <Details product={product} categorySlug={categorySlug} />
+            <Details product={product} categorySlug={categorySlug} avgRating={avgRating} reviewsLength={reviews.length} />
           </div>
-          <ProductReviews slug={slug} />
+          <ProductReviews productId
+          ={product._id} reviews={reviews} setReviews={setReviews} loading={reviewLoading} />
         </div>
       </section>
     </>
@@ -261,7 +299,7 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({
   );
 };
 
-const Details: React.FC<DetailsProps> = ({ product, categorySlug }) => {
+const Details: React.FC<DetailsProps> = ({ product, categorySlug, avgRating,reviewsLength }) => {
   const [size, setSize] = useState<string>("");
   const [color, setColor] = useState<string>("");
   const [colorTitle, setColorTitle] = useState<string>("");
@@ -274,7 +312,7 @@ const Details: React.FC<DetailsProps> = ({ product, categorySlug }) => {
     color: false,
     colorTitle: false,
   });
-
+ 
   const {
     handleAddToCart,
     itemExistInCart,
@@ -373,22 +411,25 @@ const Details: React.FC<DetailsProps> = ({ product, categorySlug }) => {
         </div>
 
         {/* Ratings and Reviews */}
+        {reviewsLength > 0 ?
         <div className="flex items-center gap-1 md:gap-4">
           <div className="flex items-center gap-0.5">
             {Array.from({ length: 5 }, (_, index) => (
               <IoMdStar
                 key={index}
                 size={15}
-                className={index < 3 ? "fill-primary" : "fill-gray-500"}
+                className={index < Math.floor(avgRating) ? "fill-primary" : "fill-gray-500"}
               />
             ))}
+            <span className="text-sm font-semibold ml-2">{avgRating}{" "}</span>
           </div>
           |{" "}
           <div>
-            <span className="text-primary">0</span> reviews
+            <span className="text-primary">{reviewsLength ?? 0}</span> reviews
           </div>
-        </div>
-
+        </div>:
+        <div className="text-muted-foreground">No reviews yet</div>
+}
         {/* Color & Size Selection and Buttons */}
         <div className="grid gap-4">
           {/* Color Selection */}
@@ -580,57 +621,29 @@ const AdditionalInfo: React.FC<AdditionalInfoProps> = ({ product }) => {
   );
 };
 
-interface Review {
-  _id: string;
-  username: string;
-  userAvatar: string;
-  review_descr: string;
-  rating: number;
-  productSlug: string;
-  userId: string;
-}
 
-const ProductReviews: React.FC<ProductReviewsProps> = ({ slug }) => {
+const ProductReviews: React.FC<ProductReviewsProps> = ({ productId,reviews,setReviews, loading }) => {
   const { data: session } = useSession();
-  const [loading, setLoading] = useState<boolean>(true);
-  const [reviews, setReviews] = useState<Review[]>([]);
-  const [newReview, setNewReview] = useState("");
   const [rating, setRating] = useState(5);
+  const [newReview, setNewReview] = useState("");
   const [postingReview, setPostingReview] = useState(false);
-  const [deletingReview, setDeletingReview] = useState(false);
+  const [deletingReviewId, setDeletingReviewId] = useState<string |null>('');
   const [editingReview, setEditingReview] = useState(false);
   const [handleEditId, setHandleEditId] = useState<string | null>(null);
-  const [editRating, setEditRating] = useState<number>(5);
+  const {fetchedOrders} = useGlobalContext();
+  const [productInOrders, setProductInOrders] = useState<boolean>(false);
   useEffect(() => {
-    const fetchReviews = async () => {
-      setLoading(true);
-      try {
-        const res = await fetch(
-          `/api/reviews/get/getReviewsProduct?productId=${slug}`,
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
+    if (fetchedOrders) {
+      const productInOrders = fetchedOrders.some(
+        (order:any) =>
+          order.orderedProducts.some((product:any) => product.productId === productId)
+      );
+      setProductInOrders(productInOrders);
+    }
+  }, [fetchedOrders, productId]);
+  const [editRating, setEditRating] = useState<number>(5);
 
-        if (!res.ok) {
-          throw new Error("Failed to fetch reviews");
-        }
 
-        const data = await res.json();
-        // console.log("fetched reviews: ", data);
-        setReviews(data.reviews);
-      } catch (error) {
-        console.error("Error fetching reviews:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchReviews();
-  }, [slug]);
 
   const handleSubmitReview = async () => {
     if (!session) {
@@ -643,7 +656,7 @@ const ProductReviews: React.FC<ProductReviewsProps> = ({ slug }) => {
         review_descr: newReview.trim(),
         userAvatar: session?.user?.image || "/assets/card.jpeg",
         rating: rating,
-        productSlug: slug,
+        productId: productId,
         userId: session?.user?.id,
       };
       console.log("new review: ", newReviewObj);
@@ -674,7 +687,7 @@ const ProductReviews: React.FC<ProductReviewsProps> = ({ slug }) => {
   };
   const handledelete = async (_id: string) => {
     try {
-      setDeletingReview(true);
+      setDeletingReviewId(_id);
       const response = await fetch(
         `/api/reviews/delete/deleteReview?reviewId=${_id}`,
         {
@@ -695,7 +708,7 @@ const ProductReviews: React.FC<ProductReviewsProps> = ({ slug }) => {
     } catch (error) {
       console.error("Error deleting review:", error);
     } finally {
-      setDeletingReview(false);
+      setDeletingReviewId(null);
     }
   };
   const handleEdit = async (
@@ -723,7 +736,10 @@ const ProductReviews: React.FC<ProductReviewsProps> = ({ slug }) => {
 
       const updatedReview = await response.json();
       console.log("Updated review:", updatedReview);
-
+      const updatedReviews = reviews.map((review) =>
+        review._id === _id ? updatedReview : review
+      );
+      setReviews(updatedReviews);
       setHandleEditId(null);
       setRating(5);
     } catch (error) {
@@ -741,7 +757,7 @@ const ProductReviews: React.FC<ProductReviewsProps> = ({ slug }) => {
       ) : (
         <>
           <div className="space-y-4">
-            {reviews.map((review) => (
+            {reviews.length>0?reviews.map((review) => (
               <div key={review._id} className="bg-white p-4 rounded-lg shadow">
                 <div className="flex items-start space-x-4">
                   <div className="w-10 h-10 rounded-full overflow-hidden">
@@ -786,13 +802,13 @@ const ProductReviews: React.FC<ProductReviewsProps> = ({ slug }) => {
                           </button>
                         )}
                         <button
-                          disabled={deletingReview}
+                          disabled={deletingReviewId === review._id}
                           onClick={() => handledelete(review._id)}
                           className={`flex items-center text-sm px-4 py-2 hover:bg-red-500 transition-all duration-300 hover:text-white text-red-500 rounded-lg ${
                             review.userId !== session?.user?.id && "hidden"
                           } `}
                         >
-                          {deletingReview ? (
+                          {deletingReviewId ===review._id ? (
                             "Deleting..."
                           ) : (
                             <RiDeleteBin6Line size={20} />
@@ -858,8 +874,9 @@ const ProductReviews: React.FC<ProductReviewsProps> = ({ slug }) => {
                   </div>
                 </div>
               </div>
-            ))}
+            )):<div className="text-center">No reviews yet</div>}
           </div>
+          { productInOrders && session &&
           <div className="mt-6 space-y-4">
             <textarea
               placeholder="Write your review here..."
@@ -888,6 +905,7 @@ const ProductReviews: React.FC<ProductReviewsProps> = ({ slug }) => {
               {postingReview ? "Posting review..." : "Post Review"}
             </Button>
           </div>
+          }
         </>
       )}
     </div>

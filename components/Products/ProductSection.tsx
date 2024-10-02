@@ -78,7 +78,7 @@ const ProductSection: React.FC<ProductSectionProps> = ({
               ))
             : cardList.map((card, index) => (
                 <Card
-                  key={index || card._id}
+                  key={null}
                   card={card}
                   category={categorySlug}
                   loading={loading}
