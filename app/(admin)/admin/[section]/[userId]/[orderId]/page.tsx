@@ -7,7 +7,7 @@ export default function SubOrderSectionPage({
 }) {
   return (
     <div className="w-full md:w-[68%] lg:w-[75%] xl:w-[82%] h-full overflow-hidden">
-      <OrderDetails userId={params.userId} orderId={params.orderId} />
+      <OrderDetails orderId={params.orderId} />
     </div>
   );
 }

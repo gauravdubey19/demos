@@ -106,6 +106,45 @@ export type Order = {
     shippingDate?: string;
     shippingAddress?: string;
     cancelledDate?: string;
+    zipCode?: string;
+  };
+  timestamps: string;
+};
+// {
+//   "_id": "66fb77709cce6f97e8444fc5",
+//   "email": "ashriarya.024@gmail.com",
+//   "firstName": "ashriIs",
+//   "lastName": "Mallick",
+//   "profile": "https://lh3.googleusercontent.com/a/ACg8ocKEbPo_II51vLVImp8p-oJOYRQBMckUaAToEVZ5Vsp9hbDVajS9=s96-c",
+//   "phone_number": "8887953505"
+// }
+export type UserDataAdmin = {
+  _id: string;
+  email?: string;
+  firstName?: string;
+  lastName?: string;
+  profile?: string;
+  phone_number?: string;
+};
+export type UserDataAddress = {
+  shippingAddress: string;
+  zipCode: string;
+}
+export type OrderAdminSide = {
+  _id: string;
+  userId: UserDataAdmin;
+  orderedProducts: Product[];
+  orderInfo: {
+    customerName?: string;
+    orderStatus: string;
+    totalPrice: number;
+    orderDate: string;
+    orderID: string;
+    deliveryDate?: string;
+    shippingDate?: string;
+    shippingAddress?: string;
+    cancelledDate?: string;
+    zipCode?: string;
   };
   timestamps: string;
 };
