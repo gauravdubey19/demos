@@ -4,11 +4,11 @@ import React, { useRef, useState } from "react";
 import { FaPlay } from "react-icons/fa";
 
 interface TestimonialCardsI{
-  file:any
+  testimonial:any
 }
 
 const TestimonialCards = (
-  { file }: TestimonialCardsI
+  { testimonial }: TestimonialCardsI
 ) => {
 
   // console.log(file.key);
@@ -66,7 +66,7 @@ const TestimonialCards = (
         onClick={handleVideoClick}
       >
         <source
-          src={`https://utfs.io/f/${file?.key}`}
+          src={testimonial?.videoLink}
           type="video/mp4"
         />
       </video>

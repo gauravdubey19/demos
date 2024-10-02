@@ -23,12 +23,15 @@ export const POST = async (request: NextRequest) => {
     // console.log(image);
 
     // uploading mainImage using UTApi
-    const uploadedImage = await utapi.uploadFiles([
-      new UTFile([image], image.name),
-    ]);
-    const imageUrl = uploadedImage[0].data?.url;
+    const uploadedImage = await utapi.uploadFiles(image);
+    const imageUrl = uploadedImage.data?.url;
 
-    // console.log(imageUrl);
+    console.log(
+      uploadedImage.data?.url,
+      uploadedImage.data?.appUrl,
+      uploadedImage.data?.key,
+      uploadedImage.data?.name
+    );
 
     await connectToDB();
 

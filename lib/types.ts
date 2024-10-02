@@ -227,6 +227,22 @@ export interface InputFieldProps {
 // | "account-settings"
 // | "customer-support-&-help"
 // |
+// export interface SectionValues {
+//   id: string;
+//   head: string;
+//   href: string;
+//   icon: IconType;
+//   sidebarHidden?: boolean;
+//   sectionNode: () => React.JSX.Element;
+//   subSections?: {
+//     id: string;
+//     head: string;
+//     href: string;
+//     sectionNode: () => React.JSX.Element;
+//   }[];
+// }
+
+
 export interface SectionValues {
   id: string;
   head: string;
