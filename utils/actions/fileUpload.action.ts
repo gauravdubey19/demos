@@ -20,12 +20,10 @@ export const uploadMultipleNewFiles = async (formData: FormData) => {
     const files = formData.getAll("files") as File[];
     if (!files || files.length === 0) throw new Error("No files provided");
 
-    const uploadedFilesUrls = await Promise.all(
-      files.map(async (file: File) => {
-        const { data } = await utapi.uploadFiles(file);
-        return data?.url || null;
-      })
-    );
+    const uploadedFiles = await utapi.uploadFiles(files);
+
+    const uploadedFilesUrls = uploadedFiles.map((file) => file?.data?.url);
+    // console.log(uploadedFiles, uploadedFilesUrls);
 
     return uploadedFilesUrls;
   } catch (error) {

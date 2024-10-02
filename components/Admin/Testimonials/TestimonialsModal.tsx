@@ -13,6 +13,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Plus } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
+import { uploadNewFile } from "@/utils/actions/fileUpload.action";
 
 interface ModalI {
   onRefresh?: () => void;
@@ -42,19 +43,49 @@ const TestimonialsModal = ({ onRefresh }: ModalI) => {
     event.preventDefault();
     setLoadingSave(true);
 
-    const formData = new FormData();
-    formData.append("fullName", fullName);
-    formData.append("personTitle", personTitle);
-    formData.append("testimony", testimony);
-    formData.append("rating", rating.toString());
-    if (videoFile) {
-      formData.append("video", videoFile);
+    if (!fullName || !personTitle || !testimony || !rating || !videoFile) {
+      setLoadingSave(false);
+      return toast({
+        title: "Missing Fields",
+        description: "Please fill in all required fields.",
+        variant: "destructive",
+      });
     }
+
+    const videoFormData = new FormData();
+    videoFormData.append("file", videoFile);
+
+    const videoUrl = await uploadNewFile(videoFormData);
+
+    if (!videoUrl) {
+      toast({
+        title: "Category image upload failed.",
+        description: "Please try again later...",
+        variant: "destructive",
+      });
+      return;
+    }
+    console.log(videoUrl);
+
+    // const testimonialData = {
+    //   fullName,
+    //   personTitle,
+    //   testimony,
+    //   rating: rating.toString(),
+    //   videoLink: videoUrl,
+    // };
 
     try {
       const response = await fetch("/api/testimonials/push", {
         method: "POST",
-        body: formData,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          fullName,
+          personTitle,
+          testimony,
+          rating: rating.toString(),
+          videoLink: videoUrl,
+        }),
       });
 
       if (!response.ok) {

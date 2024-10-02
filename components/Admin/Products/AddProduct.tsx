@@ -16,6 +16,10 @@ import {
 import ReactCountUp from "@/components/ui/ReactCountUp";
 import { FaPlus } from "react-icons/fa";
 import { BsPlus, BsTrash } from "react-icons/bs";
+import {
+  uploadMultipleNewFiles,
+  uploadNewFile,
+} from "@/utils/actions/fileUpload.action";
 
 interface ColorOptionValue {
   title: string;
@@ -25,7 +29,7 @@ interface CategoryValue {
   title: string;
   slug: string;
 }
-interface Faq {
+export interface Faq {
   question: string;
   answer: string;
 }
@@ -33,6 +37,7 @@ interface Faq {
 const AddProduct = () => {
   const router = useRouter();
   const [loading, setLoading] = useState<boolean>(false);
+  const [success, setSuccess] = useState<boolean>(false);
 
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
@@ -105,87 +110,10 @@ const AddProduct = () => {
     });
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setLoading(true);
-    // checking for missing fields...
-    if (
-      !title ||
-      !description ||
-      !images.length ||
-      !mainImage ||
-      !price ||
-      !quantityInStock ||
-      !availableSizes.length ||
-      !colorOptions.length ||
-      !categories.length ||
-      !types.length ||
-      !material
-    ) {
-      setLoading(false);
-      return toast({
-        title: "Missing Fields",
-        description: "Please fill in all required fields.",
-        variant: "destructive",
-      });
-    }
-
-    const formData = new FormData();
-
-    formData.append("mainImage", mainImage);
-    images.forEach((image) => {
-      formData.append(`images`, image);
-    });
-    formData.append("title", title);
-    formData.append("description", description);
-    formData.append("price", price.toString());
-    if (oldPrice) formData.append("oldPrice", oldPrice.toString());
-    formData.append("quantityInStock", quantityInStock.toString());
-    formData.append("material", material);
-    formData.append("fabricType", fabricType);
-    formData.append("careInstructions", careInstructions || "");
-    formData.append("origin", origin);
-    formData.append("brand", brand || "");
-    formData.append("availableSizes", JSON.stringify(availableSizes));
-    formData.append("colorOptions", JSON.stringify(colorOptions));
-    formData.append("categories", JSON.stringify(categories));
-    formData.append("types", JSON.stringify(types));
-    formData.append("faqs", JSON.stringify(faqs));
-
-    try {
-      const res = await fetch("/api/products/create/create-product", {
-        method: "POST",
-        body: formData,
-      });
-
-      const data = await res.json();
-      setLoading(false);
-      toast({
-        title: data.message || data.error,
-        description: data.message
-          ? "Now you can view the product."
-          : "Please try again later...",
-        variant: data.error ? "destructive" : "default",
-      });
-      if (res.ok) {
-        router.back();
-      }
-    } catch (error) {
-      setLoading(false);
-      console.error("Error creating product:", error);
-      toast({
-        title: "Error creating product",
-        description: "Please try again later...",
-        variant: "destructive",
-      });
-    }
-  };
-
   // const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
   //   e.preventDefault();
   //   setLoading(true);
-
-  //   // Checking for missing fields
+  //   // checking for missing fields...
   //   if (
   //     !title ||
   //     !description ||
@@ -207,58 +135,36 @@ const AddProduct = () => {
   //     });
   //   }
 
+  //   const formData = new FormData();
+
+  //   formData.append("mainImage", mainImage);
+  //   images.forEach((image) => {
+  //     formData.append(`images`, image);
+  //   });
+  //   formData.append("title", title);
+  //   formData.append("description", description);
+  //   formData.append("price", price.toString());
+  //   if (oldPrice) formData.append("oldPrice", oldPrice.toString());
+  //   formData.append("quantityInStock", quantityInStock.toString());
+  //   formData.append("material", material);
+  //   formData.append("fabricType", fabricType);
+  //   formData.append("careInstructions", careInstructions || "");
+  //   formData.append("origin", origin);
+  //   formData.append("brand", brand || "");
+  //   formData.append("availableSizes", JSON.stringify(availableSizes));
+  //   formData.append("colorOptions", JSON.stringify(colorOptions));
+  //   formData.append("categories", JSON.stringify(categories));
+  //   formData.append("types", JSON.stringify(types));
+  //   formData.append("faqs", JSON.stringify(faqs));
+
   //   try {
-  //     const mainImageUrl = await uploadNewFile(mainImage);
-  //     const imagesUrl = await uploadMultipleNewFiles(images);
-
-  //     // validating URLs
-  //     if (!mainImageUrl) {
-  //       return toast({
-  //         title: "Main image upload failed.",
-  //         description: "Please try again later...",
-  //         variant: "destructive",
-  //       });
-  //       // throw new Error("Main image upload failed.");
-  //     }
-  //     if (!imagesUrl || imagesUrl.some((url) => !url)) {
-  //       return toast({
-  //         title: "Some image uploads failed.",
-  //         description: "Please try again later...",
-  //         variant: "destructive",
-  //       });
-  //       // throw new Error("Some image uploads failed.");
-  //     }
-
-  //     const formData = new FormData();
-
-  //     formData.append("mainImage", mainImageUrl);
-  //     imagesUrl.forEach((image) => {
-  //       if (image) formData.append("images", image);
-  //     });
-
-  //     formData.append("title", title);
-  //     formData.append("description", description);
-  //     formData.append("price", price.toString());
-  //     if (oldPrice) formData.append("oldPrice", oldPrice.toString());
-  //     formData.append("quantityInStock", quantityInStock.toString());
-  //     formData.append("material", material);
-  //     formData.append("fabricType", fabricType);
-  //     formData.append("careInstructions", careInstructions || "");
-  //     formData.append("origin", origin);
-  //     formData.append("brand", brand || "");
-  //     formData.append("availableSizes", JSON.stringify(availableSizes));
-  //     formData.append("colorOptions", JSON.stringify(colorOptions));
-  //     formData.append("categories", JSON.stringify(categories));
-  //     formData.append("types", JSON.stringify(types));
-  //     formData.append("faqs", JSON.stringify(faqs));
-
   //     const res = await fetch("/api/products/create/create-product", {
   //       method: "POST",
   //       body: formData,
   //     });
 
   //     const data = await res.json();
-
+  //     setLoading(false);
   //     toast({
   //       title: data.message || data.error,
   //       description: data.message
@@ -266,23 +172,141 @@ const AddProduct = () => {
   //         : "Please try again later...",
   //       variant: data.error ? "destructive" : "default",
   //     });
-
   //     if (res.ok) {
   //       router.back();
-  //     } else {
-  //       throw new Error(data.error || "Product creation failed.");
   //     }
   //   } catch (error) {
+  //     setLoading(false);
   //     console.error("Error creating product:", error);
   //     toast({
   //       title: "Error creating product",
   //       description: "Please try again later...",
   //       variant: "destructive",
   //     });
-  //   } finally {
-  //     setLoading(false);
   //   }
   // };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setLoading(true);
+
+    if (
+      !title ||
+      !description ||
+      !images.length ||
+      !mainImage ||
+      !price ||
+      !quantityInStock ||
+      !availableSizes.length ||
+      !colorOptions.length ||
+      !categories.length ||
+      !types.length ||
+      !material
+    ) {
+      const fields = {
+        mainImage,
+        images,
+        title,
+        description,
+        price,
+        oldPrice,
+        quantityInStock,
+        availableSizes,
+        colorOptions,
+        categories,
+        types,
+        material,
+        fabricType,
+        careInstructions,
+        origin,
+        brand,
+        faqs,
+      };
+      console.log("fields", fields);
+
+      setLoading(false);
+      return toast({
+        title: "Missing Fields",
+        description: "Please fill in all required fields.",
+        variant: "destructive",
+      });
+    }
+
+    try {
+      const mainImageFormData = new FormData();
+      mainImageFormData.append("file", mainImage);
+
+      const mainImageUrl = await uploadNewFile(mainImageFormData);
+
+      if (!mainImageUrl) {
+        toast({
+          title: "Main image upload failed.",
+          description: "Please try again later...",
+          variant: "destructive",
+        });
+        setLoading(false);
+        return;
+      }
+
+      const imagesFormData = new FormData();
+      images.forEach((image) => {
+        imagesFormData.append("files", image);
+      });
+
+      const imagesUrl = await uploadMultipleNewFiles(imagesFormData);
+      // console.log(imagesUrl);
+
+      const res = await fetch("/api/products/create/create-product", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          mainImage: mainImageUrl,
+          images: imagesUrl,
+          title,
+          description,
+          price,
+          oldPrice,
+          quantityInStock,
+          availableSizes,
+          colorOptions,
+          categories,
+          type: types,
+          material,
+          fabricType,
+          careInstructions,
+          origin,
+          brand,
+          faqs,
+        }),
+      });
+
+      const data = await res.json();
+
+      toast({
+        title: data.message || data.error,
+        description: data.message
+          ? "Now you can view the product."
+          : "Please try again later...",
+        variant: data.error ? "destructive" : "default",
+      });
+
+      if (res.ok) {
+        setLoading(false);
+        setSuccess(true);
+        router.push("/admin/all-products");
+      }
+    } catch (error) {
+      console.error("Error creating product:", error);
+      toast({
+        title: "Error creating product",
+        description: "Please try again later...",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <>
       <form onSubmit={handleSubmit} className="w-full h-full overflow-hidden">
@@ -298,8 +322,12 @@ const AddProduct = () => {
             >
               Cancel
             </Button>
-            <Button type="submit" disabled={loading} className="text-white">
-              {!loading ? "Save" : "Saving..."}
+            <Button
+              type="submit"
+              disabled={loading || success}
+              className="text-white"
+            >
+              {loading ? "Saving..." : success ? "Saved" : "Save"}
             </Button>
           </div>
         </header>
