@@ -47,7 +47,7 @@ const ProductSection: React.FC<ProductSectionProps> = ({
 
   return (
     <>
-      <section className="w-full lg:h-[calc(100vh-60px)] bg-white flex justify-center flex-col pt-3 px-2 md:px-6 lg:px-8 overflow-hidden">
+      <section className="w-full h-fit bg-white flex justify-center flex-col pt-3 px-2 md:px-6 lg:px-8 overflow-hidden">
         <div className="w-full flex-between">
           <div className="text-md md:text-lg lg:text-2xl font-bold">
             {category}
