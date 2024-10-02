@@ -253,6 +253,7 @@ const AddProduct = () => {
       });
 
       const imagesUrl = await uploadMultipleNewFiles(imagesFormData);
+      // console.log(imagesUrl);
 
       const res = await fetch("/api/products/create/create-product", {
         method: "POST",
@@ -290,8 +291,6 @@ const AddProduct = () => {
 
       if (res.ok) {
         router.back();
-      } else {
-        throw new Error(data.error || "Product creation failed.");
       }
     } catch (error) {
       console.error("Error creating product:", error);
