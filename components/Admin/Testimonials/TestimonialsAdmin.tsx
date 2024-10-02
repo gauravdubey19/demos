@@ -1,8 +1,9 @@
-"use client"
+"use client";
 import React, { useState, useEffect } from "react";
 import TestimonialCards from "./TestimonialCards";
 import TestimonialsModal from "./TestimonialsModal";
 import { Skeleton } from "@/components/ui/skeleton";
+import ReactCountUp from "@/components/ui/ReactCountUp";
 
 interface Testimonial {
   _id: string;
@@ -13,16 +14,15 @@ interface Testimonial {
   videoLink?: string;
 }
 
-const TestimonialsAdmin: React.FC = () => {
+const TestimonialsAdmin = () => {
   const [testimonials, setTestimonials] = useState<Testimonial[] | null>(null);
   const [loading, setLoading] = useState(true);
   const [refresh, setRefresh] = useState(false);
-  // console.log(testimonials)
 
   useEffect(() => {
     const fetchTestimonials = async () => {
       try {
-        const response = await fetch("/api/Testimonials/get");
+        const response = await fetch("/api/testimonials/get");
         if (!response.ok) {
           throw new Error("Failed to fetch testimonials");
         }
@@ -36,36 +36,49 @@ const TestimonialsAdmin: React.FC = () => {
     };
     fetchTestimonials();
   }, [refresh]);
+  // console.log(testimonials)
 
   const handleRefresh = () => {
     setRefresh(!refresh);
   };
 
   return (
-    <div className="bg-white h-full text-black p-10 overflow-y-scroll ">
-      <div className="text-3xl">Testimonials</div>
-      <div className="pt-10 flex flex-row items-center justify-between">
-        <p className="text-lg"> Total Testimonials: {testimonials?.length || 0}</p>
-        <TestimonialsModal onRefresh={handleRefresh} />
-      </div>
-      {loading ? (
-        <div className="pt-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 overflow-y-scroll">
-          {[1, 2, 3, 4, 5, 6].map((_, index) => (
-            <div key={index} className="pt-4">
-              <Skeleton className="bg-gray-200 rounded-lg p-4 h-[17rem] md:h-[20rem] w-full animate-pulse" />
-            </div>
-          ))}
-        </div>
-      ) : (
-        <div className="pt-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 overflow-y-scroll">
-          {testimonials?.map((testimonial: Testimonial, index: number) => (
-            <div key={index} className="pt-4">
-              <TestimonialCards testimonial={testimonial} onRefresh={handleRefresh} />
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
+    <>
+      <section className="w-full h-full overflow-hidden select-none">
+        <header className="w-full h-fit space-y-2 p-4 md:py-6">
+          <h2 className="capitalize text-2xl md:text-3xl lg:text-4xl font-semibold tracking-tight">
+            Testimonials
+          </h2>
+          <div className="w-full h-fit flex-between gap-2">
+            <h2 className="capitalize text-md md:text-lg lg:text-xl">
+              Total Testimonials:{" "}
+              <ReactCountUp amt={testimonials?.length || 0} />
+            </h2>
+            <TestimonialsModal onRefresh={handleRefresh} />
+          </div>
+        </header>
+        {loading ? (
+          <div className="pt-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 overflow-y-scroll">
+            {[1, 2, 3, 4, 5, 6].map((_, index) => (
+              <div key={index} className="pt-4">
+                <Skeleton className="bg-gray-200 rounded-lg p-4 h-[17rem] md:h-[20rem] w-full animate-pulse" />
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="pt-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 overflow-y-scroll">
+            {testimonials?.map((testimonial: Testimonial, index: number) => (
+              <div key={index} className="pt-4">
+                <TestimonialCards
+                  testimonial={testimonial}
+                  onRefresh={handleRefresh}
+                />
+              </div>
+            ))}
+          </div>
+        )}
+      </section>
+    </>
   );
 };
 

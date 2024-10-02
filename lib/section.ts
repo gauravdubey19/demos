@@ -178,7 +178,7 @@ export const adminSections: SectionValues[] = [
     head: "Testimonials",
     href: "/admin/testimonials",
     icon: IoVideocamOutline,
-    sectionNode: TestimonialsAdmin ,
+    sectionNode: TestimonialsAdmin,
   },
   {
     id: "my-account",
