@@ -5,13 +5,13 @@ import TestimonialsModal from "./TestimonialsModal";
 import { Skeleton } from "@/components/ui/skeleton";
 import ReactCountUp from "@/components/ui/ReactCountUp";
 
-interface Testimonial {
+export interface Testimonial {
   _id: string;
   fullName: string;
   personTitle: string;
   testimony: string;
   rating: number;
-  videoLink?: string;
+  videoLink: string;
 }
 
 const TestimonialsAdmin = () => {
@@ -22,11 +22,15 @@ const TestimonialsAdmin = () => {
   useEffect(() => {
     const fetchTestimonials = async () => {
       try {
-        const response = await fetch("/api/testimonials/get");
+        const response = await fetch("/api/testimonials/get-delete", {
+          method: "GET",
+        });
         if (!response.ok) {
           throw new Error("Failed to fetch testimonials");
         }
         const data = await response.json();
+        console.log(data);
+
         setTestimonials(data.testimonials);
       } catch (error) {
         console.error("Error fetching testimonials:", error);
@@ -57,26 +61,24 @@ const TestimonialsAdmin = () => {
             <TestimonialsModal onRefresh={handleRefresh} />
           </div>
         </header>
-        {loading ? (
-          <div className="pt-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 overflow-y-scroll">
-            {[1, 2, 3, 4, 5, 6].map((_, index) => (
-              <div key={index} className="pt-4">
-                <Skeleton className="bg-gray-200 rounded-lg p-4 h-[17rem] md:h-[20rem] w-full animate-pulse" />
-              </div>
-            ))}
+        <div className="w-full h-[calc(100vh-130px)] space-y-2 p-4 overflow-hidden">
+          <div className="relative w-full h-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 overflow-auto">
+            {loading
+              ? [1, 2, 3, 4, 5, 6].map((_, index) => (
+                  <div key={index} className="pt-4">
+                    <Skeleton className="bg-gray-200 rounded-lg p-4 h-[17rem] md:h-[20rem] w-full animate-pulse" />
+                  </div>
+                ))
+              : testimonials?.map((testimonial: Testimonial, index: number) => (
+                  <div key={index} className="pt-4">
+                    <TestimonialCards
+                      testimonial={testimonial}
+                      onRefresh={handleRefresh}
+                    />
+                  </div>
+                ))}
           </div>
-        ) : (
-          <div className="pt-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 overflow-y-scroll">
-            {testimonials?.map((testimonial: Testimonial, index: number) => (
-              <div key={index} className="pt-4">
-                <TestimonialCards
-                  testimonial={testimonial}
-                  onRefresh={handleRefresh}
-                />
-              </div>
-            ))}
-          </div>
-        )}
+        </div>
       </section>
     </>
   );

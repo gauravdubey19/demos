@@ -14,6 +14,7 @@ import { BsPlus, BsTrash } from "react-icons/bs";
 const AddCategory: React.FC = () => {
   const router = useRouter();
   const [categoryImage, setCategoryImage] = useState<File | null>(null);
+  const [loadingSaving, setLoadingSaving] = useState<boolean>(false);
   const [category, setCategory] = useState<CategoryCollectionValues>({
     _id: "",
     createdAt: "",
@@ -82,6 +83,7 @@ const AddCategory: React.FC = () => {
       });
       return;
     }
+    setLoadingSaving(true);
 
     const formData = new FormData();
 
@@ -113,6 +115,8 @@ const AddCategory: React.FC = () => {
         description: "Please try again later...",
         variant: "destructive",
       });
+    } finally {
+      setLoadingSaving(false);
     }
   };
 
@@ -124,13 +128,19 @@ const AddCategory: React.FC = () => {
         </h2>
         <div className="w-fit flex-center gap-2 md:gap-4">
           <Button
+            type="button"
             onClick={() => router.back()}
             className="bg-red-500 text-white"
           >
             Cancel
           </Button>
-          <Button onClick={handleSubmit} className="text-white">
-            Save
+          <Button
+            type="submit"
+            disabled={loadingSaving}
+            onClick={handleSubmit}
+            className="text-white"
+          >
+            {!loadingSaving ? "Save" : "Saving..."}
           </Button>
         </div>
       </header>

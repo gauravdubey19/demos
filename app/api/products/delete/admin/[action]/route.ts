@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { connectToDB } from "@/utils/db";
+import { utapi } from "@/server/uploadthing";
+import { extractFileKey } from "@/lib/utils";
 import { Categories } from "@/models/Categories";
 import Products from "@/models/Products";
-import User from "@/models/User";
-import Cart from "@/models/Cart";
 
 export const DELETE = async (
   request: NextRequest,
@@ -50,32 +50,27 @@ export const DELETE = async (
         );
       }
 
-      await Categories.deleteOne({ _id: id });
+      const key = extractFileKey(category?.image);
+
+      // console.log("key:", key, category?.image);
+      const res = await utapi.deleteFiles(key);
+
+      // console.log(res);
+      if (res.success) {
+        await Categories.deleteOne({ _id: id });
+        return NextResponse.json(
+          {
+            message: "Testimonials deleted successfully",
+          },
+          { status: 200 }
+        );
+      }
 
       return NextResponse.json(
         { message: "Category deleted successfully!" },
         { status: 200 }
       );
     }
-
-    // if (action === "delete-user") {
-    //   const user = await User.findById(id);
-
-    //   if (!user) {
-    //     return NextResponse.json(
-    //       { error: "Product not found" },
-    //       { status: 404 }
-    //     );
-    //   }
-
-    //   await Cart.deleteOne({ userId: id });
-    //   await User.deleteOne({ _id: id });
-
-    //   return NextResponse.json(
-    //     { message: "Product deleted successfully!" },
-    //     { status: 200 }
-    //   );
-    // }
 
     return NextResponse.json({ error: "Invalid action" }, { status: 400 });
   } catch (error) {

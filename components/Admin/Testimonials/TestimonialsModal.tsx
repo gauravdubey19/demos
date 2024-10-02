@@ -12,12 +12,14 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Plus } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
+import { useRouter } from "next/navigation";
 
 interface ModalI {
   onRefresh?: () => void;
 }
 
 const TestimonialsModal = ({ onRefresh }: ModalI) => {
+  const router = useRouter();
   const [videoFile, setVideoFile] = useState<File | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [fullName, setFullName] = useState("");
@@ -72,6 +74,7 @@ const TestimonialsModal = ({ onRefresh }: ModalI) => {
       }
       setIsDialogOpen(false);
       resetForm();
+
       toast({
         title: result.message || result.error,
         description: result.message
@@ -79,6 +82,7 @@ const TestimonialsModal = ({ onRefresh }: ModalI) => {
           : "Please try again later...",
         variant: result.error ? "destructive" : "default",
       });
+      router.refresh();
     } catch (error) {
       console.error("Error uploading testimonial:", error);
       // alert("Failed to upload testimonial. Please try again.");
@@ -201,7 +205,6 @@ const TestimonialsModal = ({ onRefresh }: ModalI) => {
           className="w-full bg-[#ffb433] font-semibold hover:bg-[#9c6d1b]"
         >
           {loadingSave ? "Uploading Testimonial..." : "Upload Testimonial"}
-          Upload Testimonial
         </Button>
       </form>
     );

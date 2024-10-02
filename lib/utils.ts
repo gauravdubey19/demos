@@ -58,3 +58,9 @@ export const formatTimestamp = (timestamp: string): string => {
 
   return `${day}/${month}/${year}`;
 };
+
+export const extractFileKey = (url: string): string => {
+  const regex = /https:\/\/utfs\.io\/f\/([^\/]+)$/;
+  const match = url.match(regex);
+  return match ? match[1] : "";
+};

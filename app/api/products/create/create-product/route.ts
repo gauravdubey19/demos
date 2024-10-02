@@ -52,23 +52,28 @@ export const POST = async (request: NextRequest) => {
     const faqs = JSON.parse(formData.get("faqs") as string);
 
     // console.log(images);
-    let loading = true;
 
     // uploading mainImage using UTApi
-    const uploadedMainImage = await utapi.uploadFiles([
-      new UTFile([mainImage], mainImage.name),
-    ]);
-    const mainImageUrl = uploadedMainImage[0].data?.url;
+    const uploadedMainImage = await utapi.uploadFiles(mainImage);
+    const mainImageUrl = uploadedMainImage.data?.url;
 
     // uploading multiple images using UTApi
     const uploadedImagesUrls = await Promise.all(
       images.map(async (image: File) => {
-        const uploadResponse = await utapi.uploadFiles([
-          new UTFile([image], image.name),
-        ]);
-        return uploadResponse[0].data?.url;
+        const uploadResponse = await utapi.uploadFiles(image);
+        return uploadResponse.data?.url;
       })
     );
+    if (!uploadedMainImage.data?.key && !uploadedImagesUrls.length) {
+      return NextResponse.json(
+        {
+          error: `Image files aren't able to upload!`,
+        },
+        { status: 401 }
+      );
+    }
+    console.log(uploadedMainImage.data?.key, "\n", uploadedImagesUrls);
+
     await connectToDB();
 
     const slug: string = generateSlug(title as string);
