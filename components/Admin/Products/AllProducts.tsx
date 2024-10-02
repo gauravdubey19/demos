@@ -42,18 +42,17 @@ const AllProducts = () => {
         });
 
         if (!res.ok) {
-          throw new Error("Failed to fetch user collection");
+          return;
+          // throw new Error("Failed to fetch product collection");
         }
 
         const data = await res.json();
-        // console.log("products:", data.products);
-        if (res.ok)
-          setProductCollection(data.products as ProductCollectionValues[]);
+        setProductCollection(data.products as ProductCollectionValues[]);
       } catch (error) {
-        console.error("Error fetching user collections:", error);
+        console.error("Error fetching product collection:", error);
       }
     };
-    // if (productCollection.length === 0)
+
     fetchProductCollection();
   }, []);
 

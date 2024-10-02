@@ -30,22 +30,19 @@ const AllCategories = () => {
         });
 
         if (!res.ok) {
-          throw new Error("Failed to fetch user collection");
+          // throw new Error("Failed to fetch user collection");
+          return;
         }
 
         const data = await res.json();
-        // console.log("categories:", data.categories);
-        if (res.ok)
-          setCategoriesCollection(
-            data.categories as CategoryCollectionValues[]
-          );
+        setCategoriesCollection(data.categories as CategoryCollectionValues[]);
       } catch (error) {
         console.error("Error fetching user collections:", error);
       }
     };
-    // if (categoriesCollection.length === 0)
+
     fetchCategoriesCollection();
-  }, [categoriesCollection]);
+  }, []);
 
   if (categoriesCollection.length === 0) return <Loader />;
 
