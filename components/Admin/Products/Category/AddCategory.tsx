@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { IoSearchOutline } from "react-icons/io5";
 import { BsPlus, BsTrash } from "react-icons/bs";
+import { uploadNewFile } from "@/utils/actions/fileUpload.action";
 
 const AddCategory: React.FC = () => {
   const router = useRouter();
@@ -69,6 +70,57 @@ const AddCategory: React.FC = () => {
     }));
   };
 
+  // const handleSubmit = async (e: React.FormEvent) => {
+  //   e.preventDefault();
+  //   const { title, slug, description, types } = category;
+  //   const hasTypes = types.some((type) => type.title.trim() !== "");
+
+  //   if (!title || !slug || !description || !categoryImage || !hasTypes) {
+  //     toast({
+  //       title: "Missing Fields",
+  //       description:
+  //         "Please fill in all required fields, including at least one type.",
+  //       variant: "destructive",
+  //     });
+  //     return;
+  //   }
+  //   setLoadingSaving(true);
+
+  //   const formData = new FormData();
+
+  //   formData.append("image", categoryImage);
+  //   formData.append("title", title);
+  //   formData.append("slug", slug);
+  //   formData.append("description", description);
+  //   formData.append("types", JSON.stringify(types));
+
+  //   try {
+  //     const res = await fetch("/api/products/create/create-category", {
+  //       method: "POST",
+  //       body: formData,
+  //     });
+
+  //     const data = await res.json();
+  //     toast({
+  //       title: data.message || data.error,
+  //       description: data.message
+  //         ? "Now you can view the Category."
+  //         : "Please try again later...",
+  //       variant: data.error && "destructive",
+  //     });
+  //     router.back();
+  //   } catch (error) {
+  //     console.error("Error creating category:", error);
+  //     toast({
+  //       title: "Error creating category",
+  //       description: "Please try again later...",
+  //       variant: "destructive",
+  //     });
+  //   } finally {
+  //     setLoadingSaving(false);
+  //   }
+  // };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const { title, slug, description, types } = category;
@@ -83,31 +135,51 @@ const AddCategory: React.FC = () => {
       });
       return;
     }
+
     setLoadingSaving(true);
 
-    const formData = new FormData();
-
-    formData.append("image", categoryImage);
-    formData.append("title", title);
-    formData.append("slug", slug);
-    formData.append("description", description);
-    formData.append("types", JSON.stringify(types));
-
     try {
+      const imageFormData = new FormData();
+      imageFormData.append("file", categoryImage);
+
+      const categoryImageUrl = await uploadNewFile(imageFormData);
+
+      if (!categoryImageUrl) {
+        toast({
+          title: "Category image upload failed.",
+          description: "Please try again later...",
+          variant: "destructive",
+        });
+        return;
+      }
+      console.log(categoryImageUrl);
+
+      const formData = new FormData();
+      formData.append("image", categoryImageUrl);
+      formData.append("title", title);
+      formData.append("slug", slug);
+      formData.append("description", description);
+      formData.append("types", JSON.stringify(types));
+
       const res = await fetch("/api/products/create/create-category", {
         method: "POST",
         body: formData,
       });
 
       const data = await res.json();
+
+      // Show appropriate toast messages based on the response
       toast({
         title: data.message || data.error,
         description: data.message
           ? "Now you can view the Category."
           : "Please try again later...",
-        variant: data.error && "destructive",
+        variant: data.error ? "destructive" : undefined,
       });
-      router.back();
+
+      if (data.message) {
+        router.back(); // Redirect after successful category creation
+      }
     } catch (error) {
       console.error("Error creating category:", error);
       toast({

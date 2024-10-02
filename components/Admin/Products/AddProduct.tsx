@@ -181,6 +181,108 @@ const AddProduct = () => {
     }
   };
 
+  // const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  //   e.preventDefault();
+  //   setLoading(true);
+
+  //   // Checking for missing fields
+  //   if (
+  //     !title ||
+  //     !description ||
+  //     !images.length ||
+  //     !mainImage ||
+  //     !price ||
+  //     !quantityInStock ||
+  //     !availableSizes.length ||
+  //     !colorOptions.length ||
+  //     !categories.length ||
+  //     !types.length ||
+  //     !material
+  //   ) {
+  //     setLoading(false);
+  //     return toast({
+  //       title: "Missing Fields",
+  //       description: "Please fill in all required fields.",
+  //       variant: "destructive",
+  //     });
+  //   }
+
+  //   try {
+  //     const mainImageUrl = await uploadNewFile(mainImage);
+  //     const imagesUrl = await uploadMultipleNewFiles(images);
+
+  //     // validating URLs
+  //     if (!mainImageUrl) {
+  //       return toast({
+  //         title: "Main image upload failed.",
+  //         description: "Please try again later...",
+  //         variant: "destructive",
+  //       });
+  //       // throw new Error("Main image upload failed.");
+  //     }
+  //     if (!imagesUrl || imagesUrl.some((url) => !url)) {
+  //       return toast({
+  //         title: "Some image uploads failed.",
+  //         description: "Please try again later...",
+  //         variant: "destructive",
+  //       });
+  //       // throw new Error("Some image uploads failed.");
+  //     }
+
+  //     const formData = new FormData();
+
+  //     formData.append("mainImage", mainImageUrl);
+  //     imagesUrl.forEach((image) => {
+  //       if (image) formData.append("images", image);
+  //     });
+
+  //     formData.append("title", title);
+  //     formData.append("description", description);
+  //     formData.append("price", price.toString());
+  //     if (oldPrice) formData.append("oldPrice", oldPrice.toString());
+  //     formData.append("quantityInStock", quantityInStock.toString());
+  //     formData.append("material", material);
+  //     formData.append("fabricType", fabricType);
+  //     formData.append("careInstructions", careInstructions || "");
+  //     formData.append("origin", origin);
+  //     formData.append("brand", brand || "");
+  //     formData.append("availableSizes", JSON.stringify(availableSizes));
+  //     formData.append("colorOptions", JSON.stringify(colorOptions));
+  //     formData.append("categories", JSON.stringify(categories));
+  //     formData.append("types", JSON.stringify(types));
+  //     formData.append("faqs", JSON.stringify(faqs));
+
+  //     const res = await fetch("/api/products/create/create-product", {
+  //       method: "POST",
+  //       body: formData,
+  //     });
+
+  //     const data = await res.json();
+
+  //     toast({
+  //       title: data.message || data.error,
+  //       description: data.message
+  //         ? "Now you can view the product."
+  //         : "Please try again later...",
+  //       variant: data.error ? "destructive" : "default",
+  //     });
+
+  //     if (res.ok) {
+  //       router.back();
+  //     } else {
+  //       throw new Error(data.error || "Product creation failed.");
+  //     }
+  //   } catch (error) {
+  //     console.error("Error creating product:", error);
+  //     toast({
+  //       title: "Error creating product",
+  //       description: "Please try again later...",
+  //       variant: "destructive",
+  //     });
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
   return (
     <>
       <form onSubmit={handleSubmit} className="w-full h-full overflow-hidden">
