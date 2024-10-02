@@ -43,7 +43,8 @@ const AllCategories = () => {
         console.error("Error fetching user collections:", error);
       }
     };
-    if (categoriesCollection.length === 0) fetchCategoriesCollection();
+    // if (categoriesCollection.length === 0)
+    fetchCategoriesCollection();
   }, [categoriesCollection]);
 
   if (categoriesCollection.length === 0) return <Loader />;
