@@ -134,7 +134,7 @@ export interface ProductReviewsProps {
   productId: string;
   reviews: Review[];
   setReviews: (reviews: Review[]) => void;
-  loading: boolean; 
+  loading: boolean;
 }
 export interface AdditionalInfoProps {
   product: {
@@ -242,7 +242,6 @@ export interface InputFieldProps {
 //   }[];
 // }
 
-
 export interface SectionValues {
   id: string;
   head: string;
@@ -318,6 +317,14 @@ export interface CategoryCollectionValues {
   description: string;
   types: Type[];
   createdAt: string;
+}
+
+export interface CategoryReq {
+  image: string;
+  title: string;
+  slug: string;
+  description: string;
+  types: Type[];
 }
 
 export interface Type {

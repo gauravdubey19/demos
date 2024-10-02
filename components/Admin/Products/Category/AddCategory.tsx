@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { capitalizeString, generateSlug } from "@/lib/utils";
-import { CategoryCollectionValues, Type } from "@/lib/types";
+import { CategoryCollectionValues, CategoryReq, Type } from "@/lib/types";
 import { toast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
@@ -154,21 +154,25 @@ const AddCategory: React.FC = () => {
       }
       console.log(categoryImageUrl);
 
-      const formData = new FormData();
-      formData.append("image", categoryImageUrl);
-      formData.append("title", title);
-      formData.append("slug", slug);
-      formData.append("description", description);
-      formData.append("types", JSON.stringify(types));
+      const category: CategoryReq = {
+        image: categoryImageUrl,
+        title,
+        slug,
+        description,
+        types,
+      };
+
+      console.log(category);
+      
 
       const res = await fetch("/api/products/create/create-category", {
         method: "POST",
-        body: formData,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(category),
       });
 
       const data = await res.json();
 
-      // Show appropriate toast messages based on the response
       toast({
         title: data.message || data.error,
         description: data.message
@@ -178,7 +182,7 @@ const AddCategory: React.FC = () => {
       });
 
       if (data.message) {
-        router.back(); // Redirect after successful category creation
+        router.back();
       }
     } catch (error) {
       console.error("Error creating category:", error);
