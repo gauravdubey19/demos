@@ -163,7 +163,6 @@ const AddCategory: React.FC = () => {
       };
 
       console.log(category);
-      
 
       const res = await fetch("/api/products/create/create-category", {
         method: "POST",

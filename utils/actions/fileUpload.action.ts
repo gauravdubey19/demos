@@ -23,6 +23,7 @@ export const uploadMultipleNewFiles = async (formData: FormData) => {
     const uploadedFilesUrls = await Promise.all(
       files.map(async (file: File) => {
         const { data } = await utapi.uploadFiles(file);
+        console.log(data?.url);
         return data?.url || null;
       })
     );
