@@ -35,7 +35,12 @@ const TestimonialsModal = ({ onRefresh }: ModalI) => {
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
     const videoFile = e.target.files?.[0];
-    if (!videoFile) return;
+    if (!videoFile)
+      return toast({
+        title: "Video file not found.",
+        description: "Please try again later...",
+        variant: "destructive",
+      });
 
     setLoadingVideoUpload(true);
 
