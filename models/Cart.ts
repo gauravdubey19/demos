@@ -31,6 +31,10 @@ const CartItemSchema = new Schema(
       type: Number,
       required: true,
     },
+    quantityInStock: {
+      type: Number,
+      required: true,
+    },
     availableSizes: {
       type: [String],
       required: true,

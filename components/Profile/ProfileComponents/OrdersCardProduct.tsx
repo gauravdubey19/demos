@@ -64,7 +64,7 @@ const OrderCardProduct
 
                         <div className="flex flex-wrap items-center gap-2 text-sm sm:text-base">
                             <p className="font-semibold">Price:</p>
-                            <p className="font-bold">{"₹ "}{data?.quantity * data?.price}</p>
+                            <p className="font-bold">{"₹ "}{(data?.quantity * data?.price).toFixed(2)}</p>
                         </div>
                     </div>
                     <FaChevronRight size={30} className="mr-2" />

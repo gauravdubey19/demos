@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { connectToDB } from '@/utils/db';
 import Order from '@/models/Order';
+import Products from '@/models/Products';
 
 // Get Orders by User ID
 export async function GET(req: NextRequest, { params }: { params: { userId: string } }) {
@@ -38,14 +39,37 @@ export async function POST(req: NextRequest, { params }: { params: { userId: str
             orderInfo: orderDetails.orderInfo,
             orderedProducts: orderDetails.orderedProducts
         };
-        //keep generating uniuqe order ID until it is unique
-        if(!newOrder.orderInfo){
+
+        // Keep generating unique order ID until it is unique
+        if (!newOrder.orderInfo) {
             console.log('Valid Order Info is required');
             return NextResponse.json({ error: 'Valid Order Info is required' }, { status: 400 });
         }
-          do {
+
+        do {
             newOrder.orderInfo.orderID = Math.floor(100000 + Math.random() * 900000).toString();
         } while (await Order.findOne({ 'orderInfo.orderID': newOrder.orderInfo.orderID }));
+
+        // Decrease the stocks of the orderedProducts
+        for (const product of newOrder.orderedProducts) {
+            const productToUpdate = await Products.findOne({ _id: product.productId });
+            if (!productToUpdate) {
+                console.error(`Product ${product.title} not found`);
+                return NextResponse.json({ error: `Product ${product.title} not found` }, { status: 404 });
+            }
+
+            console.log("product quantity: ", product.quantity);
+            console.log("productToUpdate.quantityInStock: ", productToUpdate.quantityInStock);
+
+            if (productToUpdate.quantityInStock < product.quantity) {
+                console.error(`Insufficient stock for product ${product.title}`);
+                return NextResponse.json({ error: `Insufficient stock for product ${product.title}` }, { status: 400 });
+            }
+
+            productToUpdate.quantityInStock -= product.quantity;
+            await productToUpdate.save();
+            console.log(`Product ${product.title} updated successfully`);
+        }
 
         const createdOrder = await Order.create(newOrder);
         return NextResponse.json({ message: 'Order added successfully', order: createdOrder }, { status: 201 });

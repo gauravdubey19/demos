@@ -90,6 +90,7 @@ const handleVerifyOTP = async () => {
           <label htmlFor="otp" className="block mb-2 text-sm font-medium text-gray-900">
             Enter OTP sent to +91 {selectedAddress.phone_number}:
           </label>
+          {verifiedOtp && <p className="text-green bg-emerald-50 p-2">OTP verified successfully</p>}
           <input
             type="text"
             id="otp"
@@ -107,7 +108,7 @@ const handleVerifyOTP = async () => {
                 handleVerifyOTP();
               }}
             }
-            className="bg-gray-50 border w-[40] border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-[white] focus:border-[white] block  p-2.5 disabled:opacity-70"
+            className={`bg-gray-50 border w-[40] border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-[white] focus:border-[white] block  p-2.5 disabled:opacity-70 ${!sentOtp && 'hidden'}`}
             placeholder="Enter OTP"
             required
           />

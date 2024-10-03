@@ -248,6 +248,7 @@ const GlobalProvider = ({ children }: { children: ReactNode }) => {
   const [fetchingOrders, setFetchingOrders] = useState<boolean>(false);
   const [fetchedOrders, setFetchedOrders] = useState<Order[]>([]);
   useEffect(()=>{
+    console.log("Session: ", session);
     if(!session?.user?.id) return;
     const fetchOrders = async () => {
       const userId = session?.user?.id;

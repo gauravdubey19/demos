@@ -18,7 +18,7 @@ interface CartContextType {
   cart: CartItem[];
   isOpen: boolean;
   setOpen: (isOpen: boolean) => void;
-  handleIncrement: (productId: string) => void;
+  handleIncrement: (productId: string, quantityInStock:number, currentCount:number) => void;
   handleDecrement: (productId: string) => void;
   handleRemoveFromCart: (productId: string) => void;
   handleClearCart: () => void;
@@ -39,7 +39,8 @@ interface CartContextType {
     }[],
     colorTitle: string,
     color: string,
-    categorySlug: string
+    categorySlug: string,
+    quantityInStock: number,
   ) => void;
   handleColorSize: (
     action: string,
@@ -52,6 +53,8 @@ interface CartContextType {
   handleRemoveProductFromWishlist: (productId: string) => void;
   productExistInWishlist: (productId: string) => boolean;
   setCart: React.Dispatch<React.SetStateAction<CartItem[]>>;
+  cartLoading: string | null;
+  setCartLoading: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -124,7 +127,8 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
       }[],
       colorTitle: string,
       color: string,
-      categorySlug: string
+      categorySlug: string,
+      quantityInStock: number,
     ) => {
       if (status !== "authenticated") {
         router.replace("/sign-in");
@@ -146,6 +150,7 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
         price,
         image,
         quantity: 1,
+        quantityInStock,
         availableSizes,
         selectedSize,
         colorOptions,
@@ -155,7 +160,7 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
         },
         categorySlug,
       };
-
+      console.log("New Item added to cart: ", newItem);
       try {
         const res = await fetch("/api/products/create/create-cart", {
           method: "POST",
@@ -300,17 +305,32 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
     }
   }, [status, router, session]);
 
+  const [cartLoading, setCartLoading] = useState<string | null>(null);
+  
   const handleIncrement = useCallback(
-    async (productId: string) => {
+    async (productId: string, quantityInStock: number, currentCount: number) => {
       if (status !== "authenticated") {
         router.replace("/sign-in");
         return;
       }
-
+  
+      console.log("Quantity In stock and currentCount", quantityInStock, currentCount);
+      if (quantityInStock <= currentCount) {
+  
+        return toast({
+          title: "Product out of stock!",
+          description: "Uh oh! Can't add more than available stock.",
+          variant: "destructive",
+        });
+      }
+  
       const item = cart.find((item) => item.productId === productId);
-
+  
       if (!item) return;
-
+  
+      // Set loading state to disable the button
+      setCartLoading(productId);
+  
       try {
         const res = await fetch(
           "/api/products/update/update-cart-items/increment",
@@ -323,9 +343,9 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
             }),
           }
         );
-
+  
         const data = await res.json();
-
+  
         if (res.ok) {
           setCart((prevCart) =>
             prevCart.map((item) =>
@@ -351,6 +371,9 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
           description: "Please try again later.",
           variant: "destructive",
         });
+      } finally {
+        // Reset loading state
+        setCartLoading(null);
       }
     },
     [status, cart, router, session]
@@ -616,6 +639,8 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
         handleAddProductToWhistlist,
         handleRemoveProductFromWishlist,
         productExistInWishlist,
+        cartLoading,
+        setCartLoading,
       }}
     >
       {children}

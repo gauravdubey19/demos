@@ -14,7 +14,7 @@ export const InputField: React.FC<InputFieldProps> = ({
     setValue,
     required = false,
   }) => (
-    <div className="flex flex-col font-dmSans tracking-wider">
+    <div className="flex flex-col font-dmSans tracking-wider w-full">
     <label htmlFor={id} className="block text-sm font-medium text-color-tertiary px-2">
       {label}
     </label>

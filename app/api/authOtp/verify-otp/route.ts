@@ -1,9 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import twilio from 'twilio';
+import { connectToDB } from '@/utils/db';
+import User from '@/models/User';
+import jwt from 'jsonwebtoken';
 
 const twilioAccountSid = process.env.TWILIO_ACCOUNT_SID;
 const twilioAuthToken = process.env.TWILIO_AUTH_TOKEN;
 const twilioServiceSid = process.env.TWILIO_SERVICE_SID;
+const jwtSecret = process.env.JWT_SECRET;
 
 const client = twilio(twilioAccountSid, twilioAuthToken);
 
@@ -15,6 +19,7 @@ export async function POST(req: NextRequest) {
   }
 
   try {
+    await connectToDB();
     if (!twilioAccountSid || !twilioAuthToken || !twilioServiceSid) {
       throw new Error("Missing Twilio environment variables");
     }
@@ -25,8 +30,25 @@ export async function POST(req: NextRequest) {
       .create({ to: extendedPhone, code: otp });
 
     if (verificationCheck.status === 'approved') {
+      // Find or create user
+      let user = await User.findOne({ phone_number });
+      if (!user) {
+        user = await User.create({ phone_number });
+      }
+      
+      // Ensure user._id and jwtSecret are defined
+      if (!user._id || !jwtSecret) {
+        throw new Error('User ID or JWT secret is undefined');
+      }
 
-      return NextResponse.json({ verified: true }, { status: 200 });
+      // Generate JWT token
+      const token = jwt.sign(
+        { id: user._id, phone_number: user.phone_number },
+        jwtSecret,
+        { expiresIn: '3d' } // Set JWT to expire in 3 days
+      );
+
+      return NextResponse.json({ verified: true, user, token }, { status: 200 });
     } else {
       return NextResponse.json({ error: 'Invalid OTP' }, { status: 400 });
     }

@@ -52,7 +52,7 @@ const ProductCard = ({ data }: CartDataI) => {
 
                         <div className="flex flex-wrap items-center gap-2 text-sm sm:text-base">
                             <p className="font-semibold">Total Price:</p>
-                            <p className="font-bold">{"₹ "}{data?.quantity * data?.price}</p>
+                            <p className="font-bold">{"₹ "}{(data?.quantity * data?.price).toFixed(2)}</p>
                         </div>
                         <div className="text-blue-500 underline flex items-center mt-3 cursor-pointer">
                             View Product <ChevronRight />

@@ -114,7 +114,7 @@ const AllOrders: React.FC<AllOrdersProps> = ({ fetchedOrders, isSearch = false, 
                   <p className='font-mont text-color-tertiary text-sm'>Total Price</p>
                   <p className='font-dmSansSemiBold flex flex-row items-center'>
                     <MdOutlineCurrencyRupee size={18} />
-                    {clientRendered ? order.orderInfo.totalPrice : '...'}
+                    {clientRendered ? order.orderInfo.totalPrice.toFixed(2) : '...'}
                   </p>
                 </div>
               </div>

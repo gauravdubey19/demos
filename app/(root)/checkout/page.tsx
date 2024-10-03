@@ -34,6 +34,7 @@ useEffect(() => {
   console.log("selectedAddress: ",selectedAddress);
 }, [selectedAddress]);
 useEffect(() => {
+  console.log("cartData: ",cartData);
   const calculateTotals = () => {
       let totalMRP = 0;
       let totalDiscount = 0;
@@ -93,8 +94,9 @@ useEffect(() => {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to place order');
-      }
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to place order');
+    }
 
       const data = await response.json();
       setCart([]);
@@ -102,11 +104,11 @@ useEffect(() => {
       setFetchedOrders((prevOrders) => [data.order, ...prevOrders]);
       router.push(`/profile/order-history`);
       toast({ title: "Order placed successfully", description: "Please wait while we redirect you to order history page." });
-    } catch (error) {
-      console.error('Error placing order:', error);
+    } catch (error:any) {
+      console.error('Error placing order:', error.message);
       setCheckoutStep('cart');
       setInitiatedProcess(false);
-      toast({ title: "Error placing order", variant: "destructive" });
+      toast({ title: "Error placing order", variant: "destructive", description: error.message || "Something went wrong. Please try again." });
     } finally {
       setPlacingOrder(false);
     }
