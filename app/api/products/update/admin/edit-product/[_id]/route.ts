@@ -1,10 +1,7 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { connectToDB } from "@/utils/db";
 import Products from "@/models/Products";
-import { UTFile } from "uploadthing/server";
-import { utapi } from "@/server/uploadthing";
 import { generateSlug } from "@/lib/utils";
-// import { generateUniqueSlug } from "@/app/api/products/create/create-product/route";
 
 const generateUniqueSlug = async (slug: string) => {
   let uniqueSlug = slug;
@@ -21,7 +18,7 @@ const generateUniqueSlug = async (slug: string) => {
 };
 
 export async function PUT(
-  request: Request,
+  request: NextRequest,
   { params }: { params: { _id: string } }
 ) {
   const { _id } = params;
@@ -29,41 +26,71 @@ export async function PUT(
     return NextResponse.json({ error: "Missing product ID" }, { status: 400 });
   }
 
+  const {
+    mainImage,
+    images,
+    title,
+    description,
+    price,
+    oldPrice,
+    quantityInStock,
+    availableSizes,
+    colorOptions,
+    categories,
+    type,
+    material,
+    fabricType,
+    careInstructions,
+    origin,
+    brand,
+    faqs,
+  }: {
+    mainImage: string;
+    images: string[];
+    title: string;
+    description: string;
+    price: number;
+    oldPrice: number;
+    quantityInStock: number;
+    availableSizes: string[];
+    colorOptions: {
+      title: string;
+      color: string;
+    }[];
+    categories: { title: string; slug: string }[];
+    type: string[];
+    material: string;
+    fabricType: string;
+    careInstructions: string;
+    origin: string;
+    brand: string;
+    faqs: {
+      question: string;
+      answer: string;
+    }[];
+  } = await request.json();
+
+  console.log(
+    mainImage,
+    images,
+    title,
+    description,
+    price,
+    oldPrice,
+    quantityInStock,
+    availableSizes,
+    colorOptions,
+    categories,
+    type,
+    material,
+    fabricType,
+    careInstructions,
+    origin,
+    brand,
+    faqs
+  );
+
   try {
-    const contentType = request.headers.get("Content-Type");
-
-    if (!contentType?.startsWith("multipart/form-data")) {
-      throw new Error("Content-Type must be multipart/form-data");
-    }
-
-    const formData = await request.formData();
-    const mainImage = formData.get("mainImage") as File;
-    const images = formData.getAll("images") as File[]; // getting multiple images
-    const title = formData.get("title") as string;
-    const description = formData.get("description") as string;
-    const price = parseFloat(formData.get("price") as string);
-    const oldPrice = formData.get("oldPrice")
-      ? parseFloat(formData.get("oldPrice") as string)
-      : undefined;
-    const quantityInStock = parseInt(
-      formData.get("quantityInStock") as string,
-      10
-    );
-    const availableSizes = JSON.parse(formData.get("availableSizes") as string);
-    const colorOptions = JSON.parse(formData.get("colorOptions") as string);
-    const categories = JSON.parse(formData.get("categories") as string);
-    const type = formData.get("types")
-      ? JSON.parse(formData.get("types") as string)
-      : undefined;
-    const material = formData.get("material") as string;
-    const fabricType = formData.get("fabricType") as string;
-    const careInstructions = formData.get("careInstructions") as string;
-    const origin = (formData.get("origin") as string) || "India";
-    const brand = formData.get("brand") as string;
-    const faqs = formData.get("faqs")
-      ? JSON.parse(formData.get("faqs") as string)
-      : [];
-
     await connectToDB();
 
     const existingProduct = await Products.findById(_id);
@@ -72,68 +99,126 @@ export async function PUT(
       return NextResponse.json({ error: "Product not found" }, { status: 404 });
     }
 
-    // Checking and updating the mainImage
-    let mainImageUrl = existingProduct.mainImage;
-    if (mainImage) {
-      // checking if the new mainImage is already uploaded
-      if (!existingProduct.mainImage.includes(mainImage.name)) {
-        const uploadedMainImage = await utapi.uploadFiles([
-          new UTFile([mainImage], mainImage.name),
-        ]);
-        mainImageUrl = uploadedMainImage[0].data?.url;
-      }
+    // tracking the fields that have been updated
+    const updatedFields: string[] = [];
+
+    if (title && title !== existingProduct.title) {
+      const newSlug = await generateUniqueSlug(generateSlug(title));
+      updatedFields.push("title");
+      existingProduct.title = title;
+      existingProduct.slug = newSlug;
     }
 
-    // checking and updating the images
-    let updatedImages = existingProduct.images;
-    if (images && images.length > 0) {
-      // uploading new images only if they aren't already uploaded
-      const newImagesUrls = await Promise.all(
-        images.map(async (image: File) => {
-          if (!existingProduct.images.includes(image.name)) {
-            const uploadResponse = await utapi.uploadFiles([
-              new UTFile([image], image.name),
-            ]);
-            return uploadResponse[0].data?.url;
-          }
-          return image.name; // keeping existing image if it's already there
-        })
-      );
-
-      // converting Set to Array
-      updatedImages = Array.from(new Set([...updatedImages, ...newImagesUrls]));
+    if (description && description !== existingProduct.description) {
+      updatedFields.push("description");
+      existingProduct.description = description;
     }
 
-    const updatedProduct = await Products.findByIdAndUpdate(
-      _id,
-      {
-        title,
-        slug:
-          existingProduct.slug ||
-          (await generateUniqueSlug(generateSlug(title))),
-        description,
-        mainImage: mainImageUrl,
-        images: updatedImages,
-        price,
-        oldPrice,
-        quantityInStock,
-        availableSizes,
-        colorOptions,
-        categories,
-        type,
-        material,
-        fabricType,
-        careInstructions,
-        origin,
-        brand,
-        faqs,
-      },
-      { new: true }
-    );
+    if (price && price !== existingProduct.price) {
+      updatedFields.push("price");
+      existingProduct.price = price;
+    }
+
+    if (oldPrice && oldPrice !== existingProduct.oldPrice) {
+      updatedFields.push("oldPrice");
+      existingProduct.oldPrice = oldPrice;
+    }
+
+    if (
+      quantityInStock !== undefined &&
+      quantityInStock !== existingProduct.quantityInStock
+    ) {
+      updatedFields.push("quantityInStock");
+      existingProduct.quantityInStock = quantityInStock;
+    }
+
+    if (mainImage && mainImage !== existingProduct.mainImage) {
+      updatedFields.push("mainImage");
+      existingProduct.mainImage = mainImage;
+    }
+
+    if (
+      images &&
+      JSON.stringify(images) !== JSON.stringify(existingProduct.images)
+    ) {
+      updatedFields.push("images");
+      existingProduct.images = images;
+    }
+
+    if (
+      availableSizes &&
+      JSON.stringify(availableSizes) !==
+        JSON.stringify(existingProduct.availableSizes)
+    ) {
+      updatedFields.push("availableSizes");
+      existingProduct.availableSizes = availableSizes;
+    }
+
+    if (
+      colorOptions &&
+      JSON.stringify(colorOptions) !==
+        JSON.stringify(existingProduct.colorOptions)
+    ) {
+      updatedFields.push("colorOptions");
+      existingProduct.colorOptions = colorOptions;
+    }
+
+    if (
+      categories &&
+      JSON.stringify(categories) !== JSON.stringify(existingProduct.categories)
+    ) {
+      updatedFields.push("categories");
+      existingProduct.categories = categories;
+    }
+
+    if (type && JSON.stringify(type) !== JSON.stringify(existingProduct.type)) {
+      updatedFields.push("type");
+      existingProduct.type = type;
+    }
+
+    if (material && material !== existingProduct.material) {
+      updatedFields.push("material");
+      existingProduct.material = material;
+    }
+
+    if (fabricType && fabricType !== existingProduct.fabricType) {
+      updatedFields.push("fabricType");
+      existingProduct.fabricType = fabricType;
+    }
+
+    if (
+      careInstructions &&
+      careInstructions !== existingProduct.careInstructions
+    ) {
+      updatedFields.push("careInstructions");
+      existingProduct.careInstructions = careInstructions;
+    }
+
+    if (origin && origin !== existingProduct.origin) {
+      updatedFields.push("origin");
+      existingProduct.origin = origin;
+    }
+
+    if (brand && brand !== existingProduct.brand) {
+      updatedFields.push("brand");
+      existingProduct.brand = brand;
+    }
+
+    if (faqs && JSON.stringify(faqs) !== JSON.stringify(existingProduct.faqs)) {
+      updatedFields.push("faqs");
+      existingProduct.faqs = faqs;
+    }
+
+    await existingProduct.save();
+
+    // sending a message listing the updated fields
+    const updatedFieldsMessage = updatedFields.length
+      ? `Updated fields: ${updatedFields.join(", ")}`
+      : "No fields were updated";
 
     return NextResponse.json(
       {
-        message: `Product ${updatedProduct.title} updated successfully!`,
+        message: `Product updated successfully! ${updatedFieldsMessage}`,
       },
       { status: 200 }
     );
