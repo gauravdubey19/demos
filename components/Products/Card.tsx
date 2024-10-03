@@ -13,7 +13,7 @@ import { Review, useGlobalContext } from "@/context/GlobalProvider";
 
 const Card: React.FC<CardDetails> = ({ card, category, loading = false }) => {
   // console.log(card);
-  const {fetchReviews} = useGlobalContext();
+  const { fetchReviews } = useGlobalContext();
   const [reviews, setReviews] = useState<Review[]>([]);
   const [avgRating, setAvgRating] = useState<number>(0);
   const {
@@ -21,29 +21,29 @@ const Card: React.FC<CardDetails> = ({ card, category, loading = false }) => {
     handleRemoveProductFromWishlist,
     productExistInWishlist,
   } = useCart();
-useEffect(() => {
-  const getReviews = async () => {
-    if(!card._id) return;
-    try {
-      const fetchedReviews = await fetchReviews(card._id);
-      let avgRating = 0;
-      if (fetchedReviews.length > 0) {
-        fetchedReviews.forEach((review) => {
-          avgRating += review.rating;
-        });
-        avgRating = avgRating / fetchedReviews.length;
-        avgRating = Number(avgRating.toFixed(1));
-      } else {
-        avgRating = 0; // or any default value you prefer
+  useEffect(() => {
+    const getReviews = async () => {
+      if (!card._id) return;
+      try {
+        const fetchedReviews = await fetchReviews(card._id);
+        let avgRating = 0;
+        if (fetchedReviews.length > 0) {
+          fetchedReviews.forEach((review) => {
+            avgRating += review.rating;
+          });
+          avgRating = avgRating / fetchedReviews.length;
+          avgRating = Number(avgRating.toFixed(1));
+        } else {
+          avgRating = 0; // or any default value you prefer
+        }
+        setAvgRating(avgRating);
+        setReviews(fetchedReviews);
+      } catch (error) {
+        console.error("Error fetching reviews:", error);
       }
-      setAvgRating(avgRating);
-      setReviews(fetchedReviews);
-    } catch (error) {
-      console.error("Error fetching reviews:", error);
-    } 
-  };
-  if (card._id) getReviews();
-}, [card._id])
+    };
+    if (card._id) getReviews();
+  }, [card._id]);
   return (
     <>
       {/* Link href={"#"} */}
@@ -51,15 +51,16 @@ useEffect(() => {
         <div className="relative h-[240px] sm:h-[240px] md:h-[220px] lg:h-[340px] w-full flex-center select-none overflow-hidden">
           {!loading && (
             <div
-              onClick={() =>{
-                if(card._id){
-                 return !productExistInWishlist(card._id) ? handleAddProductToWhistlist(card._id): handleRemoveProductFromWishlist(card._id)
+              onClick={() => {
+                if (card._id) {
+                  return !productExistInWishlist(card._id)
+                    ? handleAddProductToWhistlist(card._id)
+                    : handleRemoveProductFromWishlist(card._id);
                 }
-              } 
-            }
+              }}
               className="absolute group top-1 right-1 z-10 cursor-pointer w-8 h-8 flex-center bg-white/50 backdrop-blur-md p-1 rounded-full shadow-[0_0_1.5px_black] ease-in-out duration-300"
             >
-              {card._id&&!productExistInWishlist(card._id) ? (
+              {card._id && !productExistInWishlist(card._id) ? (
                 <GoHeart
                   size={20}
                   color="#FF6464"
@@ -84,7 +85,7 @@ useEffect(() => {
           >
             {!loading && (
               <Image
-                src={card.mainImage}
+                src={card.image_link}
                 alt={card.title}
                 width={600}
                 height={600}
@@ -108,37 +109,44 @@ useEffect(() => {
                 <span className="mt-1 w-24 h-2 md:h-3 bg-gray-200 animate-pulse"></span>
               ) : (
                 <div className="flex flex-row gap-2">
-                  {reviews.length ? 
-                  <>
-                  <div className="flex gap-0.5">
-                   {Array.from({ length: 5 }, (_, index) => (
-                      <IoMdStar
-                        key={index}
-                        size={15}
-                        className={index < Math.floor(avgRating) ? "fill-primary" : "fill-gray-500"}
-                      />
-                    ))}
-                    </div>
-                    <span className="text-xs font-semibold">{avgRating}{" "}</span>
-                </>
-                :
-                <span className="text-xs font-semibold">No reviews</span>
-              }
-              </div> 
+                  {reviews.length ? (
+                    <>
+                      <div className="flex gap-0.5">
+                        {Array.from({ length: 5 }, (_, index) => (
+                          <IoMdStar
+                            key={index}
+                            size={15}
+                            className={
+                              index < Math.floor(avgRating)
+                                ? "fill-primary"
+                                : "fill-gray-500"
+                            }
+                          />
+                        ))}
+                      </div>
+                      <span className="text-xs font-semibold">
+                        {avgRating}{" "}
+                      </span>
+                    </>
+                  ) : (
+                    <span className="text-xs font-semibold">No reviews</span>
+                  )}
+                </div>
               )}
-              { reviews.length >0 &&
-              <>
-              |{" "}
-              <span
-                className={`line-clamp-1 ${
-                  loading && "mt-1 w-20 h-2 md:h-3 bg-gray-200 animate-pulse"
-                }`}
-              >
-                {!loading && reviews.length + " reviews"}
-                {/* | {card.reviews.length} reviews */}
-              </span>
-              </>
-              }
+              {reviews.length > 0 && (
+                <>
+                  |{" "}
+                  <span
+                    className={`line-clamp-1 ${
+                      loading &&
+                      "mt-1 w-20 h-2 md:h-3 bg-gray-200 animate-pulse"
+                    }`}
+                  >
+                    {!loading && reviews.length + " reviews"}
+                    {/* | {card.reviews.length} reviews */}
+                  </span>
+                </>
+              )}
             </div>
             <div
               className={`w-full text-[11px] md:text-xs text-[#818181] line-clamp-1 ${

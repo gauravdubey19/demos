@@ -67,7 +67,12 @@ const Sidebar: React.FC<SectionProps> = ({ section, sections }) => {
           )
         )}
         <nav className="mt-6 flex flex-1 flex-col space-y-1">
-          <Accordion type="single" collapsible defaultValue="item-2" className="w-full px-2">
+          <Accordion
+            type="single"
+            collapsible
+            defaultValue="item-2"
+            className="w-full px-2"
+          >
             {sections.map((sec, index) =>
               sec.sidebarHidden ? null : (
                 <div key={index}>
@@ -90,7 +95,7 @@ const Sidebar: React.FC<SectionProps> = ({ section, sections }) => {
                       value={`item-${index + 1}`}
                       className="border-none"
                     >
-                      <AccordionTrigger className="flex gap-5">
+                      <AccordionTrigger className="flex gap-5 py-2">
                         <Link
                           href={sec.href}
                           className={`flex items-center ml-2 gap-3 text-md font-medium transition-colors hover:text-primary ${
@@ -103,7 +108,7 @@ const Sidebar: React.FC<SectionProps> = ({ section, sections }) => {
                           <span>{sec.head}</span>
                         </Link>
                       </AccordionTrigger>
-                      <AccordionContent className="flex flex-col gap-1">
+                      <AccordionContent className="w-fit ml-7 flex flex-col gap-1">
                         {sec.subSections.map((subSec, index) => (
                           <Link
                             key={index}

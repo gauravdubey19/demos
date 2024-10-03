@@ -20,7 +20,7 @@ export interface ProductDetailValues {
   slug: string;
   description: string;
   images: string[];
-  mainImage: string;
+  image_link: string;
   price: number;
   oldPrice?: number;
   quantityInStock: number;
@@ -69,7 +69,7 @@ const EditProduct: React.FC<{ slug: string }> = ({ slug }) => {
   const [loadingSave, setLoadingSave] = useState<boolean>(false);
   const [success, setSuccess] = useState<boolean>(false);
 
-  const [mainImage, setMainImage] = useState<string>("");
+  const [image_link, setImage_link] = useState<string>("");
   const [fetchImages, setFetchImages] = useState<string[]>([]);
   const [images, setImages] = useState<string[]>([]);
 
@@ -119,8 +119,8 @@ const EditProduct: React.FC<{ slug: string }> = ({ slug }) => {
           });
         }
         setImages((prevImages) => [...prevImages, ...imagesUrl]);
-        if (!mainImage) {
-          setMainImage(imagesUrl[0]);
+        if (!image_link) {
+          setImage_link(imagesUrl[0]);
         }
       }
     };
@@ -137,10 +137,10 @@ const EditProduct: React.FC<{ slug: string }> = ({ slug }) => {
           (image) => image !== imageToRemove
         );
 
-        if (mainImage === imageToRemove && updatedImages.length > 0) {
-          setMainImage(updatedImages[0]);
+        if (image_link === imageToRemove && updatedImages.length > 0) {
+          setImage_link(updatedImages[0]);
         } else if (updatedImages.length === 0) {
-          setMainImage("");
+          setImage_link("");
         }
 
         return updatedImages;
@@ -191,7 +191,7 @@ const EditProduct: React.FC<{ slug: string }> = ({ slug }) => {
 
     if (!product) fetchProductBySlug();
     else {
-      setMainImage(product?.mainImage);
+      setImage_link(product?.image_link);
       setFetchImages(product?.images);
       setTitle(product.title);
       setDescription(product?.description);
@@ -215,7 +215,7 @@ const EditProduct: React.FC<{ slug: string }> = ({ slug }) => {
   useEffect(() => {
     const handleFieldChange = () => {
       const hasChanges =
-        mainImage !== product?.mainImage ||
+        image_link !== product?.image_link ||
         JSON.stringify(images) !== JSON.stringify(product?.images) ||
         title !== product?.title ||
         description !== product?.description ||
@@ -239,7 +239,7 @@ const EditProduct: React.FC<{ slug: string }> = ({ slug }) => {
     };
     handleFieldChange();
   }, [
-    mainImage,
+    image_link,
     images,
     title,
     description,
@@ -256,7 +256,7 @@ const EditProduct: React.FC<{ slug: string }> = ({ slug }) => {
     origin,
     brand,
     faqs,
-    product?.mainImage,
+    product?.image_link,
     product?.images,
     product?.title,
     product?.description,
@@ -281,7 +281,7 @@ const EditProduct: React.FC<{ slug: string }> = ({ slug }) => {
     const updatedImages = [...fetchImages, ...images];
 
     // const fields = {
-    //   mainImage,
+    //   image_link,
     //   images: updatedImages,
     //   title,
     //   description,
@@ -307,7 +307,7 @@ const EditProduct: React.FC<{ slug: string }> = ({ slug }) => {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            mainImage,
+            image_link,
             images: updatedImages,
             title,
             description,
@@ -396,9 +396,9 @@ const EditProduct: React.FC<{ slug: string }> = ({ slug }) => {
             <div className="w-[60%] h-full overflow-hidden">
               <h4>Main Image</h4>
               <div className="relative w-full h-[95%] bg-[#F8F8F8] flex-center">
-                {mainImage ? (
+                {image_link ? (
                   <Image
-                    src={mainImage}
+                    src={image_link}
                     alt="Main Image"
                     width={800}
                     height={800}
@@ -439,9 +439,9 @@ const EditProduct: React.FC<{ slug: string }> = ({ slug }) => {
                       <div
                         key={index}
                         className={`relative group w-full h-56 br ${
-                          image === mainImage && "bg-primary shadow-md"
+                          image === image_link && "bg-primary shadow-md"
                         }`}
-                        onClick={() => setMainImage(image)}
+                        onClick={() => setImage_link(image)}
                       >
                         <button
                           type="button"
@@ -451,7 +451,7 @@ const EditProduct: React.FC<{ slug: string }> = ({ slug }) => {
                         >
                           x
                         </button>
-                        {image === mainImage && (
+                        {image === image_link && (
                           <div className="absolute inset-0 cursor-not-allowed bg-black/40 flex-center text-primary animate-slide-down">
                             Main Image
                           </div>
@@ -473,9 +473,9 @@ const EditProduct: React.FC<{ slug: string }> = ({ slug }) => {
                       <div
                         key={index}
                         className={`relative group w-full h-56 br ${
-                          image === mainImage && "bg-primary shadow-xl"
+                          image === image_link && "bg-primary shadow-xl"
                         }`}
-                        onClick={() => setMainImage(image)}
+                        onClick={() => setImage_link(image)}
                       >
                         <button
                           type="button"
@@ -485,7 +485,7 @@ const EditProduct: React.FC<{ slug: string }> = ({ slug }) => {
                         >
                           x
                         </button>
-                        {image === mainImage && (
+                        {image === image_link && (
                           <div className="absolute inset-0 bg-black/40 flex-center text-primary animate-slide-down">
                             Main Image
                           </div>

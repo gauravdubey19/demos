@@ -6,7 +6,7 @@
 // interface Product {
 //     id: number;
 //     title: string;
-//     mainImage: string; // Changed from 'image' to 'mainImage' to match the API response
+//     image_link: string; // Changed from 'image' to 'image_link' to match the API response
 //     price: number;
 // }
 
@@ -105,7 +105,7 @@
 //                             <div key={index} className="border p-4 relative">
 //                                 {product ? (
 //                                     <img
-//                                         src={product.mainImage}
+//                                         src={product.image_link}
 //                                         alt={product.title}
 //                                         className="w-full h-40 object-cover"
 //                                     />
@@ -202,7 +202,7 @@ import CollectionGrid from '../OutfitCollection/CollectionGrid';
 interface Product {
     id: number;
     title: string;
-    mainImage: string;
+    image_link: string;
     price: number;
 }
 
@@ -315,7 +315,7 @@ const NewOutfit = () => {
     };
 
     const allProductsSelected = selectedProducts.every(product => product !== null);
-    const mainImageSelected = outfitImage !== "https://placehold.co/600x400";
+    const image_linkSelected = outfitImage !== "https://placehold.co/600x400";
 
     return (
         <div className='h-screen overflow-y-auto'>
@@ -331,7 +331,7 @@ const NewOutfit = () => {
                             <div key={index} className="border p-4 relative">
                                 {product ? (
                                     <img
-                                        src={product.mainImage}
+                                        src={product.image_link}
                                         alt={product.title}
                                         className="w-full h-40 object-cover"
                                     />
@@ -412,7 +412,7 @@ const NewOutfit = () => {
                 </div>
             </div>
 
-            {allProductsSelected && mainImageSelected && (
+            {allProductsSelected && image_linkSelected && (
                 <>
                     <h2 className="text-xl p-5 px-10 font-medium mb-4">Preview</h2>
 

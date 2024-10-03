@@ -27,7 +27,7 @@ export async function PUT(
   }
 
   const {
-    mainImage,
+    image_link,
     images,
     title,
     description,
@@ -45,7 +45,7 @@ export async function PUT(
     brand,
     faqs,
   }: {
-    mainImage: string;
+    image_link: string;
     images: string[];
     title: string;
     description: string;
@@ -71,7 +71,7 @@ export async function PUT(
   } = await request.json();
 
   console.log(
-    mainImage,
+    image_link,
     images,
     title,
     description,
@@ -132,9 +132,9 @@ export async function PUT(
       existingProduct.quantityInStock = quantityInStock;
     }
 
-    if (mainImage && mainImage !== existingProduct.mainImage) {
-      updatedFields.push("mainImage");
-      existingProduct.mainImage = mainImage;
+    if (image_link && image_link !== existingProduct.image_link) {
+      updatedFields.push("image_link");
+      existingProduct.image_link = image_link;
     }
 
     if (

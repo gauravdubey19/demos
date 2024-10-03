@@ -7,7 +7,6 @@ import ScrollVideo from "../ui/ScrollVideo";
 import { Button } from "../ui/button";
 import { IoArrowBackSharp, IoArrowForwardSharp } from "react-icons/io5";
 import ImagePracticles from "../ui/ImagePracticles";
-import { img } from "@/lib/data";
 import { useCursor } from "@/context/CursorProvider";
 
 gsap.registerPlugin(Draggable);
@@ -180,39 +179,23 @@ const GsapHero: React.FC = () => {
             </div>
           </>
           <>
-            <div className="relative w-full h-screen flex flex-col md:flex-row overflow-hidden">
+            <div className="relative w-full h-screen flex-center overflow-hidden">
               <div
-                id="left-section"
+                id="bg-section"
                 className="absolute inset-0 -z-10 h-full w-full"
               >
                 <ScrollVideo videoUrl="/videos/homePageHeroVideo.mp4" />
               </div>
-
-              <div
-                id="left-section"
-                className="h-full w-full md:w-[30vw] lg:w-[35vw] transition-transform duration-300 overflow-hidden"
-              >
-                {/* <ScrollVideo videoUrl="/assets/heroVideo.mp4" /> */}
-              </div>
-
               <div
                 id="middle-section"
                 className="relative h-full bg-primary flex items-center justify-center w-full md:w-[40vw] lg:w-[30vw] p-6 transition-transform duration-300"
               >
                 <MiddleContainer />
               </div>
-
-              <div
-                id="right-section"
-                className="h-full w-full md:w-[30vw] lg:w-[35vw] transition-transform duration-300 overflow-hidden"
-              >
-                {/* <ScrollVideo videoUrl="/assets/heroVideo.mp4" /> */}
-              </div>
             </div>
           </>
         </div>
       </section>
-      {/* <section className="w-full h-screen bg-gray-900"></section> */}
     </>
   );
 };
@@ -220,19 +203,21 @@ const GsapHero: React.FC = () => {
 export default GsapHero;
 
 const MiddleContainer: React.FC = () => {
-  const handleScrollDown = () => {
-    window.scrollTo({
-      top: window.innerHeight * 3.91,
-      behavior: "smooth",
-    });
-  };
+  // const handleScrollDown = () => {
+  //   window.scrollTo({
+  //     top: window.innerHeight * 3.91,
+  //     behavior: "smooth",
+  //   });
+  // };
 
   return (
     <div className="w-full flex flex-col items-center gap-10 md:gap-16">
       <div className="w-full flex flex-col gap-2">
         <div className="relative w-full h-[230px] flex items-end justify-center bg-white text-primary p-4">
-          <div className="absolute md:-left-[6.8rem] top-7 gap-1 text-[90px] font-medium">
-            <span className="md:text-white">Ex</span>
+          <div className="absolute md:-left-[6.8rem] top-7 z-10 gap-1 text-[90px] font-medium">
+            <span className="md:text-white drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.5)]">
+              Ex
+            </span>
             <span>plore</span>
           </div>
           <span className="text-6xl lg:text-7xl font-light">Textiles</span>
@@ -274,8 +259,7 @@ const RightContainer: React.FC<{ showRight: boolean }> = ({ showRight }) => {
         </div>
       </div>
       <div className="h-[calc(100vh-60px)] w-full mt-[60px] overflow-hidden">
-        {/* <ImagePracticles img={img} /> */}
-        {showRight && <ImagePracticles img={img} />}
+        {showRight && <ImagePracticles img="/assets/rightImage.png" />}
       </div>
     </div>
   );

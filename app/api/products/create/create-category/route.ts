@@ -22,7 +22,7 @@
 
 //     // console.log(image);
 
-//     // uploading mainImage using UTApi
+//     // uploading image_link using UTApi
 //     const uploadedImage = await utapi.uploadFiles(image);
 //     const imageUrl = uploadedImage.data?.url;
 

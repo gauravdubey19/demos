@@ -60,15 +60,15 @@ export const DELETE = async (
         await Categories.deleteOne({ _id: id });
         return NextResponse.json(
           {
-            message: "Testimonials deleted successfully",
+            message: "Category deleted successfully",
           },
           { status: 200 }
         );
       }
 
       return NextResponse.json(
-        { message: "Category deleted successfully!" },
-        { status: 200 }
+        { error: "Category Image wasn't able to deleted!" },
+        { status: 500 }
       );
     }
 

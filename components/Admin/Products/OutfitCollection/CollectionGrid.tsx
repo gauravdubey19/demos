@@ -12,7 +12,7 @@ const CollectionGrid = ({ outfitCollection }: CollectionGridProps) => {
                 {outfitCollection && outfitCollection[0]?.productCollection.slice(0, 2).map((product: any, index: any) => (
                     <div key={index} title={product.title} className="h-[50%] bg-gray-100 rounded-xl flex justify-center items-center p-2">
                         <Image
-                            src={product.mainImage}
+                            src={product.image_link}
                             alt={product.title}
                             width={300}
                             height={300}
@@ -41,7 +41,7 @@ const CollectionGrid = ({ outfitCollection }: CollectionGridProps) => {
                 {outfitCollection && outfitCollection[0].productCollection.slice(2, 4).map((product: any, index: any) => (
                     <div key={index + 2} title={product.title} className="h-[50%] bg-gray-100 rounded-xl flex justify-center items-center p-2">
                         <Image
-                            src={product.mainImage}
+                            src={product.image_link}
                             alt={product.title}
                             width={300}
                             height={300}

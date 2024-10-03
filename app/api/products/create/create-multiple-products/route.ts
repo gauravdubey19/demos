@@ -17,7 +17,7 @@ export const POST = async (request: NextRequest) => {
           slug: string;
           description: string;
           images: string[];
-          mainImage: string;
+          image_link: string;
           price: number;
           oldPrice?: number;
           availableSizes: string[];
@@ -37,7 +37,7 @@ export const POST = async (request: NextRequest) => {
             slug,
             description,
             images,
-            mainImage,
+            image_link,
             price,
             oldPrice,
             availableSizes,
@@ -58,7 +58,7 @@ export const POST = async (request: NextRequest) => {
             slug,
             description,
             images,
-            mainImage,
+            image_link,
             price,
             oldPrice,
             availableSizes,
@@ -106,7 +106,7 @@ export const POST = async (request: NextRequest) => {
 //           slug: string;
 //           description: string;
 //           images: string[];
-//           mainImage: string;
+//           image_link: string;
 //           price: number;
 //           oldPrice?: number;
 //           availableSizes: string[];
@@ -126,7 +126,7 @@ export const POST = async (request: NextRequest) => {
 //             slug,
 //             description,
 //             images,
-//             mainImage,
+//             image_link,
 //             price,
 //             oldPrice,
 //             availableSizes,
@@ -157,7 +157,7 @@ export const POST = async (request: NextRequest) => {
 //             slug,
 //             description,
 //             images,
-//             mainImage,
+//             image_link,
 //             price,
 //             oldPrice,
 //             availableSizes,

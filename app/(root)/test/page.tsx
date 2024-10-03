@@ -198,7 +198,7 @@ const sampleProducts = [
       "https://ramrajcotton.in/cdn/shop/products/1_aef60397-cbc9-4dee-903b-8d3ed0f9c1e3.jpg?v=1662636401",
       "https://lablerahulsingh.com/wp-content/uploads/2023/09/LONG-KURTA-MEN-64.jpeg",
     ],
-    mainImage:
+    image_link:
       "https://manyavar.scene7.com/is/image/manyavar/I07_IMGL5556+copy_11-10-2021-06-01:650x900",
     price: 29.99,
     oldPrice: 34.99,
@@ -235,7 +235,7 @@ const sampleProducts = [
       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRPcT3zGVPQ5qD82aIOvkUmjHIp8F3iQ96ffIehjFcAkxwo3Rol-m6PONC6LVIGBj3YLzE&usqp=CAU",
       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSCp6FTf_TnqHO9kp6kJzVmjDIvvviNbTnKi75j3UazRgFreY-1c5co4R8eHDYqTRTq_N8&usqp=CAU",
     ],
-    mainImage:
+    image_link:
       "https://absolutelydesi.com/wp-content/uploads/2023/08/VASTRAMAY-Men-s-Multicolor-Base-Blue-Silk-Blend-Sherwani-With-Kurta-Pant-Set-1.jpg",
     price: 199.99,
     oldPrice: 249.99,
@@ -276,7 +276,7 @@ const sampleProducts = [
       "https://img.perniaspopupshop.com/catalog/product/d/m/DMMC012123_1.jpg?impolicy=detailimageprod",
       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTSaNoQ11eOV83k8WGr18mcLoKzFbrWj0-n_gzH-zObAWPQzEukNo-zGHOSQcGIzjqsM8c&usqp=CAU",
     ],
-    mainImage:
+    image_link:
       "https://paithanistore.com/cdn/shop/collections/Men-Dhoti-Paithanistore-9454.jpg?v=1710223989",
     price: 49.99,
     oldPrice: 59.99,
@@ -313,7 +313,7 @@ const sampleProducts = [
       "https://m.media-amazon.com/images/I/41BukCw6jbL._AC_UY1100_.jpg",
       "https://images-eu.ssl-images-amazon.com/images/I/41l2YRF+6VS._AC_SR462,693_.jpg",
     ],
-    mainImage:
+    image_link:
       "https://m.media-amazon.com/images/I/31aDoXnUcKS._AC_UY1100_.jpg",
     price: 19.99,
     oldPrice: 24.99,
@@ -351,7 +351,7 @@ const sampleProducts = [
       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRdDc2yyOrwdBaWw14EZLtXTmvRA00Wji6Ex1_KxVlYNBphH-0SAP9nPsDprPf6aCgzImY&usqp=CAU",
       "https://www.bootlegger.com/dw/image/v2/BKBQ_PRD/on/demandware.static/-/Sites-bootlegger-master/default/dw9d6ea27f/images/bootlegger/men/general_apparel/1016723340130_400_2.jpg?sw=864&sh=1152&sm=fit&q=88",
     ],
-    mainImage:
+    image_link:
       "https://www.psychobunny.com/cdn/shop/products/B6J741X1CO-MTS_1.jpg?v=1694617082",
     price: 59.99,
     oldPrice: 69.99,
@@ -386,7 +386,7 @@ const sampleProducts = [
       "https://assets.mediamodifier.com/mockups/63f5cba3de66f826d40ae702/t-shirt-on-bright-decorated-background-psd-mockup.jpg",
       "https://assets.mediamodifier.com/mockups/63d8c0e7922c616db0a99778/man-wearing-t-shirt-mockup-generator.jpg",
     ],
-    mainImage:
+    image_link:
       "https://assets.mediamodifier.com/mockups/64c3fb78b5c1b14f5bd1597e/asian-male-model-with-t-shirt-mockup-in-simple-background.jpg",
     price: 29.99,
     oldPrice: 34.99,
@@ -424,7 +424,7 @@ const sampleProducts = [
       "https://rukminim2.flixcart.com/image/850/1000/xif0q/sweater/3/m/u/xl-hlsw000092-highlander-original-imagxy37p6yhvgaz.jpeg?q=90&crop=true",
       "https://rukminim1.flixcart.com/image/300/300/xif0q/sweater/i/w/3/xl-hlsw000091-highlander-original-imagxy37xwmvyvpj.jpeg",
     ],
-    mainImage:
+    image_link:
       "https://rukminim2.flixcart.com/image/850/1000/xif0q/sweater/b/q/a/xl-hlsw000092-highlander-original-imagxy37zav8hayg.jpeg?q=90&crop=true",
     price: 39.99,
     oldPrice: 49.99,
@@ -466,7 +466,7 @@ const sampleProducts = [
       "https://media.debenhams.com/i/debenhams/m5056611983558_blue_xl_1.jpeg",
       "https://www.makrom.co.uk/cdn/shop/files/Image_3_3_838b802d-7502-4fde-93f8-af6f17d6b8a2.jpg?v=1710514544&width=800",
     ],
-    mainImage:
+    image_link:
       "https://5.imimg.com/data5/SELLER/Default/2022/6/ZU/IA/VA/154385615/mens-suit-741-3-500x500.jpeg",
     price: 79.99,
     oldPrice: 89.99,
@@ -507,7 +507,7 @@ const sampleProducts = [
       "https://theethnic.co/cdn/shop/files/3_aa9dc4e1-fbeb-4307-9b8a-8e639e6322ee.jpg?v=1683266657&width=2160",
       "https://5.imimg.com/data5/SU/YU/KE/SELLER-23689159/men-s-pathani-shalwar-kurta-500x500.jpg",
     ],
-    mainImage:
+    image_link:
       "https://assets0.mirraw.com/images/5552039/1551_long_webp.webp?1710776131",
     price: 89.99,
     oldPrice: 109.99,
@@ -545,7 +545,7 @@ const sampleProducts = [
       "https://5.imimg.com/data5/SELLER/Default/2022/7/WU/NC/IB/157166947/mt230-08-2--500x500.JPG",
       "https://shahzebsaeed.com/cdn/shop/products/CHINOCAMEL29-1.jpg?v=1681122944",
     ],
-    mainImage:
+    image_link:
       "https://www.tistabene.com/cdn/shop/products/PNT-0030A_a835537d-95b7-4f50-b692-2ae1accbad94.jpg?v=1658386894&width=1080",
     price: 49.99,
     oldPrice: 59.99,
@@ -717,7 +717,7 @@ const categoriesData = [
 //     "https://www.textale.tech/cdn/shop/files/Tee_1efc19c3-e426-46c5-a315-e27b9bd9c241.jpg?v=1714473708&width=1200",
 //     "https://www.textale.tech/cdn/shop/files/Tee_c4a29b07-e4e0-43b1-a20f-98a57d4dbbdb.jpg?v=1714473708&width=1200",
 //   ],
-//   mainImage:
+//   image_link:
 //     "https://www.textale.tech/cdn/shop/files/FRESH_Stain-Repel_Tee_Relaxed_Fit__textale_LR.jpg?v=1698207711&width=720",
 //   title: "Soft Cotton T-Shirt",
 //   slug: "soft-cotton-t-shirt",

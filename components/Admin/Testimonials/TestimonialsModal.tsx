@@ -30,6 +30,24 @@ const TestimonialsModal = ({ onRefresh }: ModalI) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [loadingSave, setLoadingSave] = useState(false);
   const [loadingVideoUpload, setLoadingVideoUpload] = useState<boolean>(false);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+  const [isPlaying, setIsPlaying] = useState<boolean>(true);
+  const [isHovering, setIsHovering] = useState<boolean>(false);
+
+  const handleMouseEnter = () => {
+    setIsHovering(true);
+    if (videoRef.current && isPlaying) {
+      videoRef.current.play();
+    }
+  };
+
+  const handleMouseLeave = () => {
+    setIsHovering(false);
+    if (videoRef.current) {
+      videoRef.current.pause();
+      setIsPlaying(true);
+    }
+  };
 
   const handleVideoFileChange = async (
     e: React.ChangeEvent<HTMLInputElement>
@@ -37,7 +55,7 @@ const TestimonialsModal = ({ onRefresh }: ModalI) => {
     const videoFile = e.target.files?.[0];
     if (!videoFile) {
       toast({
-        title: "Video file not found.",
+        title: "Video file wasn't provided.",
         description: "Please try again later...",
         variant: "destructive",
       });
@@ -180,7 +198,11 @@ const TestimonialsModal = ({ onRefresh }: ModalI) => {
           <form onSubmit={handleSubmit} className="w-full space-y-4">
             <div className="w-full h-[65%] p-1 space-y-2 overflow-x-hidden overflow-y-auto">
               <div className="w-full h-fit flex-center">
-                <div className="relative group w-fit h-60 rounded-lg overflow-hidden">
+                <div
+                  onMouseEnter={handleMouseEnter}
+                  onMouseLeave={handleMouseLeave}
+                  className="relative group w-40 h-60 rounded-lg overflow-hidden"
+                >
                   <input
                     type="file"
                     accept="video/*"
@@ -189,25 +211,27 @@ const TestimonialsModal = ({ onRefresh }: ModalI) => {
                     className="absolute inset-0 z-30 opacity-0 cursor-pointer"
                   />
                   {loadingVideoUpload ? (
-                    <div className="absolute inset-0 w-60 text-sm px-4 text-primary flex-center bg-black/50 animate-pulse">
+                    <div className="absolute inset-0 text-sm px-4 text-black flex-center bg-zinc-300 animate-pulse">
                       Uploading Video...
                     </div>
                   ) : (
                     <>
                       {video && (
-                        <div className="absolute inset-0 z-10 text-sm text-primary cursor-pointer flex-center bg-black/40 opacity-0 group-hover:opacity-100 ease-in-out duration-300">
-                          Change Video
+                        <div>
+                          <div className="absolute inset-0 z-10 text-sm text-primary cursor-pointer flex items-end justify-center py-4 bg-black/40 opacity-0 group-hover:opacity-100 ease-in-out duration-300">
+                            Change Video
+                          </div>
+                          <video
+                            ref={videoRef}
+                            src={video}
+                            playsInline
+                            className="w-full h-full object-cover"
+                            // controls // Added controls for better UX
+                          />
                         </div>
                       )}
-                      {video && (
-                        <video
-                          src={video}
-                          className="w-full h-full object-cover"
-                          controls // Added controls for better UX
-                        />
-                      )}
                       {!video && !loadingVideoUpload && (
-                        <div className="flex items-center justify-center w-full h-full px-4 rounded-lg text-black bg-zinc-200 group-hover:bg-zinc-300 ease-in-out duration-300 overflow-hidden">
+                        <div className="flex-center w-full h-full px-4 rounded-lg text-black bg-zinc-200 group-hover:bg-zinc-300 ease-in-out duration-300 overflow-hidden">
                           Choose Video
                         </div>
                       )}

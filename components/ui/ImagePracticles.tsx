@@ -108,6 +108,26 @@ const ImagePracticles: React.FC<{
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const animationFrameRef = useRef<number | null>(null);
 
+  const [base64ImageString, setBase64ImageString] = useState<string>("");
+
+  useEffect(() => {
+    const convertToBase64 = async (url: string) => {
+      const response = await fetch(url);
+      const blob = await response.blob();
+      const reader = new FileReader();
+
+      reader.onloadend = () => {
+        setBase64ImageString(reader.result as string);
+      };
+
+      reader.readAsDataURL(blob);
+    };
+
+    if (img) {
+      convertToBase64(img || "/logo.png");
+    }
+  }, [img]);
+
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -140,7 +160,7 @@ const ImagePracticles: React.FC<{
         cancelAnimationFrame(animationFrameRef.current);
       }
     };
-  }, [animateEase, img, pixelsGap]);
+  }, [animateEase, base64ImageString, pixelsGap]);
 
   return (
     <div className="relative w-full h-full bg-transparent overflow-hidden">
@@ -152,7 +172,7 @@ const ImagePracticles: React.FC<{
       <canvas ref={canvasRef} className="w-full h-full object-cover"></canvas>
       <img
         id="image1"
-        src={img}
+        src={base64ImageString}
         alt="Particle Image"
         onLoad={() => setIsLoaded(true)}
         className="hidden"

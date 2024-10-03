@@ -45,7 +45,7 @@ export interface CarouselProps {
 // Product Card types :
 export interface CardValues {
   _id: string | null;
-  mainImage: string;
+  image_link: string;
   title: string;
   description: string;
   slug: string;
@@ -81,7 +81,7 @@ export interface ProductDetailValues {
   slug: string;
   description: string;
   images: string[];
-  mainImage: string;
+  image_link: string;
   price: number;
   oldPrice?: number;
   quantityInStock: number;
@@ -128,7 +128,7 @@ export interface DetailsProps {
 
 export interface ImageGalleryProps {
   images: string[];
-  initialMainImage: string;
+  initialImageLink: string;
 }
 export interface ProductReviewsProps {
   productId: string;
@@ -161,7 +161,7 @@ export interface AddProductValues {
   title: string;
   description: string;
   images: string[];
-  mainImage: string;
+  image_link: string;
   price: number;
   oldPrice?: number;
   availableSizes: string[];

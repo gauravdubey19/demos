@@ -7,8 +7,7 @@ export const GET = async (request: NextRequest) => {
   try {
     await connectToDB();
 
-    // Fetch all testimonials from the database
-    const testimonials = await Testimonial.find({}).sort({ _id: -1 }); // Sort by newest first
+    const testimonials = await Testimonial.find().sort({ _id: -1 }); // Sort by newest first
 
     return NextResponse.json(
       {

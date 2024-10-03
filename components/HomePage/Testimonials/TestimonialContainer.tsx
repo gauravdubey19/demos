@@ -113,7 +113,10 @@ const TestimonialContainer = () => {
   useEffect(() => {
     const getData = async () => {
       try {
-        const response = await fetch("/api/testimonials/get-delete");
+        const response = await fetch("/api/testimonials/get-delete", {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+        });
         if (!response.ok) {
           throw new Error("Failed to fetch testimonials");
         }

@@ -35,19 +35,19 @@ const ProductDetail: React.FC<{ slug: string; categorySlug: string }> = ({
   categorySlug,
 }) => {
   const [product, setProduct] = useState<ProductDetailValues | null>(null);
-  const {fetchReviews} = useGlobalContext();
+  const { fetchReviews } = useGlobalContext();
   const [loading, setLoading] = useState<boolean>(true);
   const [reviews, setReviews] = useState<Review[]>([]);
   const [avgRating, setAvgRating] = useState<number>(0);
   const [reviewLoading, setReviewLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    if(!product) return;
+    if (!product) return;
     const getReviews = async () => {
       setReviewLoading(true);
       try {
         const reviews = await fetchReviews(product?._id);
-        
+
         setReviews(reviews);
       } catch (error) {
         console.error("Error fetching reviews:", error);
@@ -60,18 +60,18 @@ const ProductDetail: React.FC<{ slug: string; categorySlug: string }> = ({
   }, [product]);
   useEffect(() => {
     let avgRating = 0;
-        if (reviews.length > 0) {
-          reviews.forEach((review) => {
-            avgRating += review.rating;
-          });
-          avgRating = avgRating / reviews.length;
-          avgRating = Number(avgRating.toFixed(1));
-          console.log("avgRating: ", avgRating);
-        } else {
-          avgRating = 0; // or any default value you prefer
-        }
-        setAvgRating(avgRating);
-}, [reviews]);
+    if (reviews.length > 0) {
+      reviews.forEach((review) => {
+        avgRating += review.rating;
+      });
+      avgRating = avgRating / reviews.length;
+      avgRating = Number(avgRating.toFixed(1));
+      console.log("avgRating: ", avgRating);
+    } else {
+      avgRating = 0; // or any default value you prefer
+    }
+    setAvgRating(avgRating);
+  }, [reviews]);
 
   useEffect(() => {
     const fetchProductBySlug = async () => {
@@ -118,12 +118,21 @@ const ProductDetail: React.FC<{ slug: string; categorySlug: string }> = ({
           <div className="w-full h-full grid grid-cols-1 lg:grid-cols-[1fr_1fr] gap-6 lg:gap-12 items-start">
             <ImageGallery
               images={product.images}
-              initialMainImage={product.mainImage}
+              initialImageLink={product.image_link}
             />
-            <Details product={product} categorySlug={categorySlug} avgRating={avgRating} reviewsLength={reviews.length} />
+            <Details
+              product={product}
+              categorySlug={categorySlug}
+              avgRating={avgRating}
+              reviewsLength={reviews.length}
+            />
           </div>
-          <ProductReviews productId
-          ={product._id} reviews={reviews} setReviews={setReviews} loading={reviewLoading} />
+          <ProductReviews
+            productId={product._id}
+            reviews={reviews}
+            setReviews={setReviews}
+            loading={reviewLoading}
+          />
         </div>
       </section>
     </>
@@ -134,9 +143,9 @@ export default ProductDetail;
 
 const ImageGallery: React.FC<ImageGalleryProps> = ({
   images,
-  initialMainImage,
+  initialImageLink,
 }) => {
-  const [currentImage, setCurrentImage] = useState<string>(initialMainImage);
+  const [currentImage, setCurrentImage] = useState<string>(initialImageLink);
   const [showArrowLeft, setShowArrowLeft] = useState<boolean>(false);
   const [showArrowRight, setShowArrowRight] = useState<boolean>(true);
   const [isMobileView, setIsMobileView] = useState<boolean>(
@@ -299,7 +308,12 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({
   );
 };
 
-const Details: React.FC<DetailsProps> = ({ product, categorySlug, avgRating,reviewsLength }) => {
+const Details: React.FC<DetailsProps> = ({
+  product,
+  categorySlug,
+  avgRating,
+  reviewsLength,
+}) => {
   const [size, setSize] = useState<string>("");
   const [color, setColor] = useState<string>("");
   const [colorTitle, setColorTitle] = useState<string>("");
@@ -312,7 +326,7 @@ const Details: React.FC<DetailsProps> = ({ product, categorySlug, avgRating,revi
     color: false,
     colorTitle: false,
   });
- 
+
   const {
     handleAddToCart,
     itemExistInCart,
@@ -337,7 +351,7 @@ const Details: React.FC<DetailsProps> = ({ product, categorySlug, avgRating,revi
         product.slug,
         product.description,
         product.price,
-        product.mainImage,
+        product.image_link,
         product.availableSizes,
         size,
         product.colorOptions,
@@ -411,25 +425,30 @@ const Details: React.FC<DetailsProps> = ({ product, categorySlug, avgRating,revi
         </div>
 
         {/* Ratings and Reviews */}
-        {reviewsLength > 0 ?
-        <div className="flex items-center gap-1 md:gap-4">
-          <div className="flex items-center gap-0.5">
-            {Array.from({ length: 5 }, (_, index) => (
-              <IoMdStar
-                key={index}
-                size={15}
-                className={index < Math.floor(avgRating) ? "fill-primary" : "fill-gray-500"}
-              />
-            ))}
-            <span className="text-sm font-semibold ml-2">{avgRating}{" "}</span>
+        {reviewsLength > 0 ? (
+          <div className="flex items-center gap-1 md:gap-4">
+            <div className="flex items-center gap-0.5">
+              {Array.from({ length: 5 }, (_, index) => (
+                <IoMdStar
+                  key={index}
+                  size={15}
+                  className={
+                    index < Math.floor(avgRating)
+                      ? "fill-primary"
+                      : "fill-gray-500"
+                  }
+                />
+              ))}
+              <span className="text-sm font-semibold ml-2">{avgRating} </span>
+            </div>
+            |{" "}
+            <div>
+              <span className="text-primary">{reviewsLength ?? 0}</span> reviews
+            </div>
           </div>
-          |{" "}
-          <div>
-            <span className="text-primary">{reviewsLength ?? 0}</span> reviews
-          </div>
-        </div>:
-        <div className="text-muted-foreground">No reviews yet</div>
-}
+        ) : (
+          <div className="text-muted-foreground">No reviews yet</div>
+        )}
         {/* Color & Size Selection and Buttons */}
         <div className="grid gap-4">
           {/* Color Selection */}
@@ -621,29 +640,32 @@ const AdditionalInfo: React.FC<AdditionalInfoProps> = ({ product }) => {
   );
 };
 
-
-const ProductReviews: React.FC<ProductReviewsProps> = ({ productId,reviews,setReviews, loading }) => {
+const ProductReviews: React.FC<ProductReviewsProps> = ({
+  productId,
+  reviews,
+  setReviews,
+  loading,
+}) => {
   const { data: session } = useSession();
   const [rating, setRating] = useState(5);
   const [newReview, setNewReview] = useState("");
   const [postingReview, setPostingReview] = useState(false);
-  const [deletingReviewId, setDeletingReviewId] = useState<string |null>('');
+  const [deletingReviewId, setDeletingReviewId] = useState<string | null>("");
   const [editingReview, setEditingReview] = useState(false);
   const [handleEditId, setHandleEditId] = useState<string | null>(null);
-  const {fetchedOrders} = useGlobalContext();
+  const { fetchedOrders } = useGlobalContext();
   const [productInOrders, setProductInOrders] = useState<boolean>(false);
   useEffect(() => {
     if (fetchedOrders) {
-      const productInOrders = fetchedOrders.some(
-        (order:any) =>
-          order.orderedProducts.some((product:any) => product.productId === productId)
+      const productInOrders = fetchedOrders.some((order: any) =>
+        order.orderedProducts.some(
+          (product: any) => product.productId === productId
+        )
       );
       setProductInOrders(productInOrders);
     }
   }, [fetchedOrders, productId]);
   const [editRating, setEditRating] = useState<number>(5);
-
-
 
   const handleSubmitReview = async () => {
     if (!session) {
@@ -757,155 +779,162 @@ const ProductReviews: React.FC<ProductReviewsProps> = ({ productId,reviews,setRe
       ) : (
         <>
           <div className="space-y-4">
-            {reviews.length>0?reviews.map((review) => (
-              <div key={review._id} className="bg-white p-4 rounded-lg shadow">
-                <div className="flex items-start space-x-4">
-                  <div className="w-10 h-10 rounded-full overflow-hidden">
-                    <Image
-                      src={review.userAvatar}
-                      alt={review.username + " avatar"}
-                      width={200}
-                      height={200}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <div className="flex-1">
-                    <div className="flex flex-row justify-between items-center">
-                      <h3 className="font-semibold ">{review.username}</h3>
-                      <div className="flex flex-row gap-x-1">
-                        {review._id === handleEditId ? (
-                          <button
-                            disabled={editingReview}
-                            onClick={() => {
-                              review.review_descr = editReview;
-                              review.rating = editRating;
-                              handleEdit(review._id, editReview, editRating);
-                            }}
-                            className={`flex items-center text-sm px-4 py-2 hover:bg-blue-500 transition-all duration-300 hover:text-white text-blue-500 rounded-lg ${
-                              review.userId !== session?.user?.id && "hidden"
-                            } `}
-                          >
-                            {editingReview ? "Updating..." : "Update"}
-                          </button>
-                        ) : (
-                          <button
-                            onClick={() => {
-                              setEditRating(review.rating);
-                              setEditReview(review.review_descr);
-                              setHandleEditId(review._id);
-                            }}
-                            className={`flex items-center text-sm px-4 py-2 hover:bg-blue-500 transition-all duration-300 hover:text-white text-blue-500 rounded-lg ${
-                              review.userId !== session?.user?.id && "hidden"
-                            } `}
-                          >
-                            <BiEditAlt size={20} />
-                          </button>
-                        )}
-                        <button
-                          disabled={deletingReviewId === review._id}
-                          onClick={() => handledelete(review._id)}
-                          className={`flex items-center text-sm px-4 py-2 hover:bg-red-500 transition-all duration-300 hover:text-white text-red-500 rounded-lg ${
-                            review.userId !== session?.user?.id && "hidden"
-                          } `}
-                        >
-                          {deletingReviewId ===review._id ? (
-                            "Deleting..."
-                          ) : (
-                            <RiDeleteBin6Line size={20} />
-                          )}
-                        </button>
-                      </div>
-                    </div>
-                    {handleEditId === review._id.toString() ? (
-                      <div className=" flex items-center">
-                        {[1, 2, 3, 4, 5].map((star) => (
-                          <IoMdStar
-                            key={star}
-                            className={`w-6 h-6 cursor-pointer ${
-                              star <= editRating
-                                ? "fill-primary"
-                                : "fill-gray-500"
-                            }`}
-                            onClick={() => setEditRating(star)}
-                          />
-                        ))}
-                      </div>
-                    ) : (
-                      <div className=" flex items-center">
-                        {[1, 2, 3, 4, 5].map((star) => (
-                          <IoMdStar
-                            key={star}
-                            className={`w-4 h-4 ${
-                              star <= review.rating
-                                ? "fill-primary"
-                                : "fill-gray-500"
-                            }`}
-                          />
-                        ))}
-                      </div>
-                    )}
-                    {handleEditId === review._id.toString() ? (
-                      <textarea
-                        value={editReview}
-                        onChange={(e) => setEditReview(e.target.value)}
-                        className="min-h-[100px] w-full shadow-lg p-2 outline-none"
+            {reviews.length > 0 ? (
+              reviews.map((review) => (
+                <div
+                  key={review._id}
+                  className="bg-white p-4 rounded-lg shadow"
+                >
+                  <div className="flex items-start space-x-4">
+                    <div className="w-10 h-10 rounded-full overflow-hidden">
+                      <Image
+                        src={review.userAvatar}
+                        alt={review.username + " avatar"}
+                        width={200}
+                        height={200}
+                        className="w-full h-full object-cover"
                       />
-                    ) : (
-                      <p className="text-sm text-gray-600 mt-2">
-                        {review.review_descr}
-                      </p>
-                    )}
-                    <div className="flex items-center space-x-4 mt-2">
-                      {/* <button
+                    </div>
+                    <div className="flex-1">
+                      <div className="flex flex-row justify-between items-center">
+                        <h3 className="font-semibold ">{review.username}</h3>
+                        <div className="flex flex-row gap-x-1">
+                          {review._id === handleEditId ? (
+                            <button
+                              disabled={editingReview}
+                              onClick={() => {
+                                review.review_descr = editReview;
+                                review.rating = editRating;
+                                handleEdit(review._id, editReview, editRating);
+                              }}
+                              className={`flex items-center text-sm px-4 py-2 hover:bg-blue-500 transition-all duration-300 hover:text-white text-blue-500 rounded-lg ${
+                                review.userId !== session?.user?.id && "hidden"
+                              } `}
+                            >
+                              {editingReview ? "Updating..." : "Update"}
+                            </button>
+                          ) : (
+                            <button
+                              onClick={() => {
+                                setEditRating(review.rating);
+                                setEditReview(review.review_descr);
+                                setHandleEditId(review._id);
+                              }}
+                              className={`flex items-center text-sm px-4 py-2 hover:bg-blue-500 transition-all duration-300 hover:text-white text-blue-500 rounded-lg ${
+                                review.userId !== session?.user?.id && "hidden"
+                              } `}
+                            >
+                              <BiEditAlt size={20} />
+                            </button>
+                          )}
+                          <button
+                            disabled={deletingReviewId === review._id}
+                            onClick={() => handledelete(review._id)}
+                            className={`flex items-center text-sm px-4 py-2 hover:bg-red-500 transition-all duration-300 hover:text-white text-red-500 rounded-lg ${
+                              review.userId !== session?.user?.id && "hidden"
+                            } `}
+                          >
+                            {deletingReviewId === review._id ? (
+                              "Deleting..."
+                            ) : (
+                              <RiDeleteBin6Line size={20} />
+                            )}
+                          </button>
+                        </div>
+                      </div>
+                      {handleEditId === review._id.toString() ? (
+                        <div className=" flex items-center">
+                          {[1, 2, 3, 4, 5].map((star) => (
+                            <IoMdStar
+                              key={star}
+                              className={`w-6 h-6 cursor-pointer ${
+                                star <= editRating
+                                  ? "fill-primary"
+                                  : "fill-gray-500"
+                              }`}
+                              onClick={() => setEditRating(star)}
+                            />
+                          ))}
+                        </div>
+                      ) : (
+                        <div className=" flex items-center">
+                          {[1, 2, 3, 4, 5].map((star) => (
+                            <IoMdStar
+                              key={star}
+                              className={`w-4 h-4 ${
+                                star <= review.rating
+                                  ? "fill-primary"
+                                  : "fill-gray-500"
+                              }`}
+                            />
+                          ))}
+                        </div>
+                      )}
+                      {handleEditId === review._id.toString() ? (
+                        <textarea
+                          value={editReview}
+                          onChange={(e) => setEditReview(e.target.value)}
+                          className="min-h-[100px] w-full shadow-lg p-2 outline-none"
+                        />
+                      ) : (
+                        <p className="text-sm text-gray-600 mt-2">
+                          {review.review_descr}
+                        </p>
+                      )}
+                      <div className="flex items-center space-x-4 mt-2">
+                        {/* <button
                     onClick={() => handleLike(review._id)}
                     className="flex items-center text-sm text-gray-500 hover:text-blue-600"
                   >
                     <ThumbsUp className="w-4 h-4 mr-1" />
                     {review.likes}
                   </button> */}
-                      {/* <button
+                        {/* <button
                     onClick={() => handleDislike(review._id)}
                     className="flex items-center text-sm text-gray-500 hover:text-red-600"
                   >
                     <ThumbsDown className="w-4 h-4 mr-1" />
                     {review.dislikes}
                   </button> */}
+                      </div>
                     </div>
                   </div>
                 </div>
+              ))
+            ) : (
+              <div className="text-center">No reviews yet</div>
+            )}
+          </div>
+          {productInOrders && session && (
+            <div className="mt-6 space-y-4">
+              <textarea
+                placeholder="Write your review here..."
+                value={newReview}
+                onChange={(e) => setNewReview(e.target.value)}
+                className="min-h-[100px] w-full shadow-lg p-2 outline-none"
+              />
+              <div className="flex space-x-1">
+                <span className="">Your rating:</span>
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <IoMdStar
+                    key={star}
+                    className={`w-6 h-6 cursor-pointer ${
+                      star <= rating ? "fill-primary" : "fill-gray-500"
+                    }`}
+                    onClick={() => setRating(star)}
+                  />
+                ))}
               </div>
-            )):<div className="text-center">No reviews yet</div>}
-          </div>
-          { productInOrders && session &&
-          <div className="mt-6 space-y-4">
-            <textarea
-              placeholder="Write your review here..."
-              value={newReview}
-              onChange={(e) => setNewReview(e.target.value)}
-              className="min-h-[100px] w-full shadow-lg p-2 outline-none"
-            />
-            <div className="flex space-x-1">
-              <span className="">Your rating:</span>
-              {[1, 2, 3, 4, 5].map((star) => (
-                <IoMdStar
-                  key={star}
-                  className={`w-6 h-6 cursor-pointer ${
-                    star <= rating ? "fill-primary" : "fill-gray-500"
-                  }`}
-                  onClick={() => setRating(star)}
-                />
-              ))}
+              <Button
+                onClick={handleSubmitReview}
+                className="mt-4"
+                disabled={postingReview}
+              >
+                <Send className="w-4 h-4 mr-2" />
+                {postingReview ? "Posting review..." : "Post Review"}
+              </Button>
             </div>
-            <Button
-              onClick={handleSubmitReview}
-              className="mt-4"
-              disabled={postingReview}
-            >
-              <Send className="w-4 h-4 mr-2" />
-              {postingReview ? "Posting review..." : "Post Review"}
-            </Button>
-          </div>
-          }
+          )}
         </>
       )}
     </div>

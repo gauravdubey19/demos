@@ -17,8 +17,8 @@ const TestimonialCards = ({ testimonial }: TestimonialCardsI) => {
   const router = useRouter();
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const [isPlaying, setIsPlaying] = useState<boolean>(true);
-  const [isHovering, setIsHovering] = useState<boolean>(false);
   const [loading, setLoading] = useState(false);
+  const [isHovering, setIsHovering] = useState<boolean>(false);
 
   const handleMouseEnter = () => {
     setIsHovering(true);

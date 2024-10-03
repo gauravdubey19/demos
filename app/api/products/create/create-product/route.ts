@@ -28,7 +28,7 @@
 //     }
 
 //     const formData = await request.formData();
-//     const mainImage = formData.get("mainImage") as File;
+//     const image_link = formData.get("image_link") as File;
 //     const images = formData.getAll("images") as File[]; // getting multiple images
 //     const title = formData.get("title") as string;
 //     const description = formData.get("description") as string;
@@ -53,9 +53,9 @@
 
 //     // console.log(images);
 
-//     // uploading mainImage using UTApi
-//     const uploadedMainImage = await utapi.uploadFiles(mainImage);
-//     const mainImageUrl = uploadedMainImage.data?.url;
+//     // uploading image_link using UTApi
+//     const uploadedMainImage = await utapi.uploadFiles(image_link);
+//     const image_linkUrl = uploadedMainImage.data?.url;
 
 //     // uploading multiple images using UTApi
 //     const uploadedImagesUrls = await Promise.all(
@@ -83,7 +83,7 @@
 //       title,
 //       slug: uniqueSlug,
 //       description,
-//       mainImage: mainImageUrl,
+//       image_link: image_linkUrl,
 //       images: uploadedImagesUrls,
 //       price,
 //       oldPrice,
@@ -141,7 +141,7 @@ const generateUniqueSlug = async (slug: string) => {
 export const POST = async (request: NextRequest) => {
   try {
     const {
-      mainImage,
+      image_link,
       images,
       title,
       description,
@@ -159,7 +159,7 @@ export const POST = async (request: NextRequest) => {
       brand,
       faqs,
     }: {
-      mainImage: string;
+      image_link: string;
       images: string[];
       title: string;
       description: string;
@@ -184,7 +184,7 @@ export const POST = async (request: NextRequest) => {
       }[];
     } = await request.json();
 
-    // console.log(mainImage,
+    // console.log(image_link,
     //   images,
     //   title,
     //   description,
@@ -211,7 +211,7 @@ export const POST = async (request: NextRequest) => {
       title,
       slug: uniqueSlug,
       description,
-      mainImage,
+      image_link,
       images,
       price,
       oldPrice,

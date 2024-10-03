@@ -1,4 +1,4 @@
-import { Schema, model, models } from 'mongoose';
+import { Schema, model, models } from "mongoose";
 
 const TestimonialSchema = new Schema({
   fullName: {
@@ -25,6 +25,7 @@ const TestimonialSchema = new Schema({
   },
 });
 
-const Testimonial = models.Testimonial || model('Testimonial', TestimonialSchema);
+const Testimonial =
+  models.Testimonial || model("Testimonial", TestimonialSchema);
 
 export default Testimonial;

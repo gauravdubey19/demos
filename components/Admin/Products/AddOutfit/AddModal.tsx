@@ -68,7 +68,7 @@
 //                                         >
 //                                             <div className="w-full h-fit flex items-center space-x-2">
 //                                                 <Image
-//                                                     src={suggestion.mainImage}
+//                                                     src={suggestion.image_link}
 //                                                     alt={suggestion.title}
 //                                                     width={40}
 //                                                     height={40}
@@ -92,7 +92,7 @@
 //                                 <Image
 //                                     height={160}
 //                                     width={200}
-//                                     src={selectedProduct.mainImage}
+//                                     src={selectedProduct.image_link}
 //                                     alt="img"
 //                                     className="mb-6 object-cover rounded-lg"
 //                                 />
@@ -200,7 +200,7 @@ const AddModal: React.FC<AddModalProps> = ({
                                         >
                                             <div className="w-full h-fit flex items-center space-x-2">
                                                 <Image
-                                                    src={suggestion.mainImage}
+                                                    src={suggestion.image_link}
                                                     alt={suggestion.title}
                                                     width={40}
                                                     height={40}
@@ -224,7 +224,7 @@ const AddModal: React.FC<AddModalProps> = ({
                                 <Image
                                     height={160}
                                     width={200}
-                                    src={selectedProduct.mainImage}
+                                    src={selectedProduct.image_link}
                                     alt="img"
                                     className="mb-6 object-cover rounded-lg"
                                 />

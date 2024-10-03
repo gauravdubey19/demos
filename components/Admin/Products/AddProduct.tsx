@@ -43,7 +43,7 @@ const AddProduct = () => {
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [images, setImages] = useState<string[]>([]);
-  const [mainImage, setMainImage] = useState<string>("");
+  const [image_link, setImage_link] = useState<string>("");
   const [price, setPrice] = useState<number>();
   const [oldPrice, setOldPrice] = useState<number>();
   const [quantityInStock, setQuantityInStock] = useState<number>();
@@ -88,8 +88,8 @@ const AddProduct = () => {
           });
         }
         setImages((prevImages) => [...prevImages, ...imagesUrl]);
-        if (!mainImage) {
-          setMainImage(imagesUrl[0]);
+        if (!image_link) {
+          setImage_link(imagesUrl[0]);
         }
       }
     };
@@ -106,10 +106,10 @@ const AddProduct = () => {
           (image) => image !== imageToRemove
         );
 
-        if (mainImage === imageToRemove && updatedImages.length > 0) {
-          setMainImage(updatedImages[0]);
+        if (image_link === imageToRemove && updatedImages.length > 0) {
+          setImage_link(updatedImages[0]);
         } else if (updatedImages.length === 0) {
-          setMainImage("");
+          setImage_link("");
         }
 
         return updatedImages;
@@ -139,7 +139,7 @@ const AddProduct = () => {
     e.preventDefault();
     setLoading(true);
     const fields = {
-      mainImage,
+      image_link,
       images,
       title,
       description,
@@ -161,7 +161,7 @@ const AddProduct = () => {
       !title ||
       !description ||
       !images.length ||
-      !mainImage ||
+      !image_link ||
       !price ||
       !quantityInStock ||
       !availableSizes.length ||
@@ -182,12 +182,12 @@ const AddProduct = () => {
 
     try {
       console.log("fields", fields);
-      // const mainImageFormData = new FormData();
-      // mainImageFormData.append("file", mainImage);
+      // const image_linkFormData = new FormData();
+      // image_linkFormData.append("file", image_link);
 
-      // const mainImageUrl = await uploadNewFile(mainImageFormData);
+      // const image_linkUrl = await uploadNewFile(image_linkFormData);
 
-      // if (!mainImageUrl) {
+      // if (!image_linkUrl) {
       //   toast({
       //     title: "Main image upload failed.",
       //     description: "Please try again later...",
@@ -209,7 +209,7 @@ const AddProduct = () => {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          mainImage,
+          image_link,
           images,
           title,
           description,
@@ -287,9 +287,9 @@ const AddProduct = () => {
                 Main Image<span className="text-[red]">*</span>
               </h4>
               <div className="relative w-full h-[95%] bg-[#F8F8F8] br flex-center">
-                {mainImage ? (
+                {image_link ? (
                   <Image
-                    src={mainImage}
+                    src={image_link}
                     alt="Main Image"
                     width={800}
                     height={800}
@@ -332,9 +332,9 @@ const AddProduct = () => {
                       <div
                         key={index}
                         className={`relative group w-full h-56 br ${
-                          image === mainImage && "bg-primary shadow-xl"
+                          image === image_link && "bg-primary shadow-xl"
                         }`}
-                        onClick={() => setMainImage(image)}
+                        onClick={() => setImage_link(image)}
                       >
                         <button
                           type="button"
@@ -344,7 +344,7 @@ const AddProduct = () => {
                         >
                           x
                         </button>
-                        {image === mainImage && (
+                        {image === image_link && (
                           <div className="absolute inset-0 cursor-not-allowed bg-black/40 flex-center text-primary animate-slide-down">
                             Main Image
                           </div>

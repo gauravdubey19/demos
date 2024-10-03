@@ -16,7 +16,7 @@ import { useRouter } from "next/navigation";
 
 interface ProductCollectionValues {
   _id: string;
-  mainImage: string;
+  image_link: string;
   title: string;
   slug: string;
   price: number;
@@ -171,7 +171,7 @@ const ProductTable: React.FC<{
                     href={`/products/${product.categories[0].slug}/${product.slug}`}
                   >
                     <Image
-                      src={product.mainImage}
+                      src={product.image_link}
                       alt={product.title}
                       width={200}
                       height={200}
@@ -262,7 +262,7 @@ export default AllProducts;
 // const products = [
 //   {
 //     _id: "1",
-//     mainImage: "/images/product1.jpg",
+//     image_link: "/images/product1.jpg",
 //     title: "Floral Summer Dress",
 //     slug: "Floral Summer Dress",
 //     price: 1999,
@@ -273,7 +273,7 @@ export default AllProducts;
 //   },
 //   {
 //     _id: "2",
-//     mainImage: "/images/product2.jpg",
+//     image_link: "/images/product2.jpg",
 //     title: "Classic Denim Jacket",
 //     slug: "Classic Denim Jacket",
 //     price: 2499,
@@ -284,7 +284,7 @@ export default AllProducts;
 //   },
 //   {
 //     _id: "3",
-//     mainImage: "/images/product3.jpg",
+//     image_link: "/images/product3.jpg",
 //     title: "Cotton Striped T-Shirt",
 //     slug: "Cotton Striped T-Shirt",
 //     price: 999,
@@ -295,7 +295,7 @@ export default AllProducts;
 //   },
 //   {
 //     _id: "4",
-//     mainImage: "/images/product4.jpg",
+//     image_link: "/images/product4.jpg",
 //     title: "Woolen Knit Scarf",
 //     slug: "Woolen Knit Scarf",
 //     price: 799,
@@ -306,7 +306,7 @@ export default AllProducts;
 //   },
 //   {
 //     _id: "5",
-//     mainImage: "/images/product5.jpg",
+//     image_link: "/images/product5.jpg",
 //     title: "Silk Evening Gown",
 //     slug: "Silk Evening Gown",
 //     price: 3499,
@@ -317,7 +317,7 @@ export default AllProducts;
 //   },
 //   {
 //     _id: "6",
-//     mainImage: "/images/product6.jpg",
+//     image_link: "/images/product6.jpg",
 //     title: "Plaid Cotton Shirt",
 //     slug: "Plaid Cotton Shirt",
 //     price: 1499,
@@ -328,7 +328,7 @@ export default AllProducts;
 //   },
 //   {
 //     _id: "7",
-//     mainImage: "/images/product7.jpg",
+//     image_link: "/images/product7.jpg",
 //     title: "Leather Biker Jacket",
 //     slug: "Leather Biker Jacket",
 //     price: 4999,
@@ -339,7 +339,7 @@ export default AllProducts;
 //   },
 //   {
 //     _id: "8",
-//     mainImage: "/images/product8.jpg",
+//     image_link: "/images/product8.jpg",
 //     title: "Casual Linen Pants",
 //     slug: "Casual Linen Pants",
 //     price: 1799,
@@ -350,7 +350,7 @@ export default AllProducts;
 //   },
 //   {
 //     _id: "9",
-//     mainImage: "/images/product9.jpg",
+//     image_link: "/images/product9.jpg",
 //     title: "Cashmere Wool Sweater",
 //     slug: "Cashmere Wool Sweater",
 //     price: 2999,
@@ -361,7 +361,7 @@ export default AllProducts;
 //   },
 //   {
 //     _id: "10",
-//     mainImage: "/images/product10.jpg",
+//     image_link: "/images/product10.jpg",
 //     title: "High-Waisted Jeans",
 //     slug: "High-Waisted Jeans",
 //     price: 2199,
@@ -372,7 +372,7 @@ export default AllProducts;
 //   },
 //   {
 //     _id: "11",
-//     mainImage: "/images/product11.jpg",
+//     image_link: "/images/product11.jpg",
 //     title: "Faux Fur Winter Coat",
 //     slug: "Faux Fur Winter Coat",
 //     price: 3799,
@@ -383,7 +383,7 @@ export default AllProducts;
 //   },
 //   {
 //     _id: "12",
-//     mainImage: "/images/product12.jpg",
+//     image_link: "/images/product12.jpg",
 //     title: "Graphic Print Hoodie",
 //     slug: "Graphic Print Hoodie",
 //     price: 1899,
@@ -394,7 +394,7 @@ export default AllProducts;
 //   },
 //   {
 //     _id: "13",
-//     mainImage: "/images/product13.jpg",
+//     image_link: "/images/product13.jpg",
 //     title: "Slim Fit Chinos",
 //     slug: "Slim Fit Chinos",
 //     price: 1599,
@@ -405,7 +405,7 @@ export default AllProducts;
 //   },
 //   {
 //     _id: "14",
-//     mainImage: "/images/product14.jpg",
+//     image_link: "/images/product14.jpg",
 //     title: "Sporty Nylon Windbreaker",
 //     slug: "Sporty Nylon Windbreaker",
 //     price: 2299,
@@ -416,7 +416,7 @@ export default AllProducts;
 //   },
 //   {
 //     _id: "15",
-//     mainImage: "/images/product15.jpg",
+//     image_link: "/images/product15.jpg",
 //     title: "Linen Blouse",
 //     slug: "Linen Blouse",
 //     price: 1299,
@@ -427,7 +427,7 @@ export default AllProducts;
 //   },
 //   {
 //     _id: "16",
-//     mainImage: "/images/product16.jpg",
+//     image_link: "/images/product16.jpg",
 //     title: "Polka Dot Skirt",
 //     slug: "Polka Dot Skirt",
 //     price: 1399,
@@ -438,7 +438,7 @@ export default AllProducts;
 //   },
 //   {
 //     _id: "17",
-//     mainImage: "/images/product17.jpg",
+//     image_link: "/images/product17.jpg",
 //     title: "Vintage Denim Shorts",
 //     slug: "Vintage Denim Shorts",
 //     price: 1199,
@@ -449,7 +449,7 @@ export default AllProducts;
 //   },
 //   {
 //     _id: "18",
-//     mainImage: "/images/product18.jpg",
+//     image_link: "/images/product18.jpg",
 //     title: "Cargo Pants",
 //     slug: "Cargo Pants",
 //     price: 1699,
@@ -460,7 +460,7 @@ export default AllProducts;
 //   },
 //   {
 //     _id: "19",
-//     mainImage: "/images/product19.jpg",
+//     image_link: "/images/product19.jpg",
 //     title: "Embroidered Kurta",
 //     slug: "Embroidered Kurta",
 //     price: 2199,
@@ -471,7 +471,7 @@ export default AllProducts;
 //   },
 //   {
 //     _id: "20",
-//     mainImage: "/images/product20.jpg",
+//     image_link: "/images/product20.jpg",
 //     title: "Wool Blend Overcoat",
 //     slug: "Wool Blend Overcoat",
 //     price: 3999,
