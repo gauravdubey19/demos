@@ -59,7 +59,7 @@ const TestimonialsModal = ({ onRefresh }: ModalI) => {
 
     if (!videoUrl) {
       toast({
-        title: "Category image upload failed.",
+        title: "Testimonials video upload failed.",
         description: "Please try again later...",
         variant: "destructive",
       });
