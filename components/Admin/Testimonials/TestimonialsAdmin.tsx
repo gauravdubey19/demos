@@ -61,8 +61,8 @@ const TestimonialsAdmin = () => {
             <TestimonialsModal onRefresh={handleRefresh} />
           </div>
         </header>
-        <div className="w-full h-[calc(100vh-130px)] space-y-2 p-4 overflow-hidden">
-          <div className="relative w-full h-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 overflow-auto">
+        <div className="w-full h-[calc(100vh-130px)] space-y-2 py-4 px-3 overflow-hidden">
+          <div className="relative w-full h-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 px-1 overflow-auto">
             {loading
               ? [1, 2, 3, 4, 5, 6, 7, 8].map((_, index) => (
                   <div key={index} className="pt-4">

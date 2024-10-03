@@ -94,8 +94,6 @@
 
 // export default TestimonialContainer;
 
-
-
 "use client";
 
 import React, { useEffect, useState, useRef } from "react";
@@ -120,12 +118,7 @@ const TestimonialContainer = () => {
           throw new Error("Failed to fetch testimonials");
         }
         const data = await response.json();
-        // if (Array.isArray(data)) {
-        //   setTestimonials(data);
-        // } else {
-        //   console.error("Expected an array of testimonials, but received:", data);
-        // }
-        setTestimonials(data.testimonials)
+        setTestimonials(data.testimonials);
       } catch (error) {
         console.error("Error fetching testimonials:", error);
       } finally {
@@ -141,7 +134,7 @@ const TestimonialContainer = () => {
         containerRef.current,
         {
           opacity: 0,
-          y: 50
+          y: 50,
         },
         {
           opacity: 1,
@@ -154,7 +147,7 @@ const TestimonialContainer = () => {
             end: "top center",
             scrub: 1,
             // markers: true, // Uncomment this line to see the trigger points during development
-          }
+          },
         }
       );
     }
@@ -171,7 +164,10 @@ const TestimonialContainer = () => {
   );
 
   return (
-    <div ref={containerRef} className="w-full h-full md:px-20 p-6 overflow-hidden opacity-0">
+    <div
+      ref={containerRef}
+      className="w-full h-full md:px-20 p-6 overflow-hidden opacity-0"
+    >
       <h1 className="text-4xl font-bold text-center mb-10">Our Testimonies</h1>
 
       <div className="relative w-full overflow-hidden">
@@ -182,14 +178,12 @@ const TestimonialContainer = () => {
           {loading
             ? renderSkeletons()
             : Array.isArray(testimonials)
-              ? testimonials.map((testimonial, index) => (
+            ? testimonials.map((testimonial, index) => (
                 <div key={index} className="panel w-screen">
-                  <TestimonialCards
-                    testimonial={testimonial}
-                  />
+                  <TestimonialCards testimonial={testimonial} />
                 </div>
               ))
-              : null}
+            : null}
         </div>
       </div>
     </div>

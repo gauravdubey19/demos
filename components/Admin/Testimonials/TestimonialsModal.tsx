@@ -13,7 +13,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Plus } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
-import { uploadNewFile } from "@/utils/actions/fileUpload.action";
+import { removeFile, uploadNewFile } from "@/utils/actions/fileUpload.action";
 
 interface ModalI {
   onRefresh?: () => void;
@@ -21,7 +21,7 @@ interface ModalI {
 
 const TestimonialsModal = ({ onRefresh }: ModalI) => {
   const router = useRouter();
-  const [videoFile, setVideoFile] = useState<File | null>(null);
+  const [video, setVideo] = useState<string>("");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [fullName, setFullName] = useState("");
   const [personTitle, setPersonTitle] = useState("");
@@ -29,21 +29,52 @@ const TestimonialsModal = ({ onRefresh }: ModalI) => {
   const [rating, setRating] = useState<number>(1);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [loadingSave, setLoadingSave] = useState(false);
+  const [loadingVideoUpload, setLoadingVideoUpload] = useState<boolean>(false);
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file && file.type.startsWith("video/")) {
-      setVideoFile(file);
-    } else {
-      alert("Please select a valid video file.");
+  const handleVideoFileChange = async (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const videoFile = e.target.files?.[0];
+    if (!videoFile) return;
+
+    setLoadingVideoUpload(true);
+
+    if (video) {
+      const rmVideo = await removeFile(video);
+      if (!rmVideo) {
+        toast({
+          title: "Failed to remove previour video.",
+          description: "Please try again later...",
+          variant: "destructive",
+        });
+        setLoadingVideoUpload(false);
+        return;
+      }
     }
+
+    const videoFileFormData = new FormData();
+    videoFileFormData.append("file", videoFile);
+    const videoUrl = (await uploadNewFile(videoFileFormData)) as string;
+
+    if (!videoUrl) {
+      toast({
+        title: "Category image upload failed.",
+        description: "Please try again later...",
+        variant: "destructive",
+      });
+      setLoadingVideoUpload(false);
+      return;
+    }
+
+    setVideo(videoUrl);
+    setLoadingVideoUpload(false);
   };
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     setLoadingSave(true);
 
-    if (!fullName || !personTitle || !testimony || !rating || !videoFile) {
+    if (!fullName || !personTitle || !testimony || !rating || !video) {
       setLoadingSave(false);
       return toast({
         title: "Missing Fields",
@@ -51,29 +82,6 @@ const TestimonialsModal = ({ onRefresh }: ModalI) => {
         variant: "destructive",
       });
     }
-
-    const videoFormData = new FormData();
-    videoFormData.append("file", videoFile);
-
-    const videoUrl = await uploadNewFile(videoFormData);
-
-    if (!videoUrl) {
-      toast({
-        title: "Testimonials video upload failed.",
-        description: "Please try again later...",
-        variant: "destructive",
-      });
-      return;
-    }
-    console.log(videoUrl);
-
-    // const testimonialData = {
-    //   fullName,
-    //   personTitle,
-    //   testimony,
-    //   rating: rating.toString(),
-    //   videoLink: videoUrl,
-    // };
 
     try {
       const response = await fetch("/api/testimonials/push", {
@@ -84,7 +92,7 @@ const TestimonialsModal = ({ onRefresh }: ModalI) => {
           personTitle,
           testimony,
           rating: rating.toString(),
-          videoLink: videoUrl,
+          videoLink: video,
         }),
       });
 
@@ -132,17 +140,11 @@ const TestimonialsModal = ({ onRefresh }: ModalI) => {
     setPersonTitle("");
     setTestimony("");
     setRating(1);
-    setVideoFile(null);
+    // setVideo("");
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }
   };
-
-  // const renderContent = () => {
-  //   return (
-
-  //   );
-  // };
 
   return (
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
@@ -157,13 +159,49 @@ const TestimonialsModal = ({ onRefresh }: ModalI) => {
           </Button>
         </div>
       </DialogTrigger>
-      <DialogContent className="bg-white text-black p-4 w-[30rem] max-w-full h-fit rounded-md">
+      <DialogContent className="bg-white text-black p-4 w-[30rem] max-w-full h-fit max-h-[85%] rounded-md overflow-hidden">
         <DialogHeader className="w-full">
           <DialogTitle className="text-2xl font-normal text-center w-full mb-4">
             Upload Testimonial
           </DialogTitle>
           <form onSubmit={handleSubmit} className="w-full space-y-4">
-            <div className="w-full h-[80%] p-1 space-y-2 overflow-x-hidden overflow-y-auto">
+            <div className="w-full h-[65%] p-1 space-y-2 overflow-x-hidden overflow-y-auto">
+              <div className="w-full h-fit flex-center">
+                <div className="relative group w-fit h-60 rounded-lg overflow-hidden">
+                  <input
+                    type="file"
+                    accept="video/*"
+                    onChange={handleVideoFileChange}
+                    ref={fileInputRef}
+                    className="absolute inset-0 z-30 opacity-0 cursor-pointer"
+                  />
+                  {loadingVideoUpload ? (
+                    <div className="absolute inset-0 w-60 text-sm px-4 text-primary flex-center bg-black/50 animate-pulse">
+                      Uploading Video...
+                    </div>
+                  ) : (
+                    <>
+                      {video && (
+                        <div className="absolute inset-0 z-10 text-sm text-primary cursor-pointer flex-center bg-black/40 opacity-0 group-hover:opacity-100 ease-in-out duration-300">
+                          Change Video
+                        </div>
+                      )}
+                      {video && (
+                        <video
+                          src={video}
+                          // controls
+                          className="w-full h-full object-cover"
+                        />
+                      )}
+                      {!video && !loadingVideoUpload && (
+                        <div className="flex items-center justify-center w-full h-full px-4 rounded-lg text-black bg-zinc-200 group-hover:bg-zinc-300 ease-in-out duration-300 overflow-hidden">
+                          Chooes video
+                        </div>
+                      )}
+                    </>
+                  )}
+                </div>
+              </div>
               <div>
                 <label className="block mb-1 text-sm font-medium text-gray-900">
                   Full Name
@@ -219,38 +257,6 @@ const TestimonialsModal = ({ onRefresh }: ModalI) => {
                   <option value={5}>5</option>
                 </select>
               </div>
-
-              <div>
-                <label className="block mb-1 text-sm font-medium text-gray-900">
-                  Video
-                </label>
-                <input
-                  type="file"
-                  accept="video/*"
-                  onChange={handleFileChange}
-                  ref={fileInputRef}
-                  className="w-full border border-gray-300 rounded-lg p-2 bg-white text-gray-900 cursor-pointer hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                />
-              </div>
-
-              {/* <div className="w-full">
-                    <label className="block mb-2 text-lg font-medium text-gray-900">
-                        Video Preview:
-                    </label>
-                    <div className="w-full h-64 border-2 border-gray-300 border-dashed rounded-lg bg-gray-50 relative overflow-hidden">
-                        {videoFile ? (
-                            <video
-                                src={URL.createObjectURL(videoFile)}
-                                controls
-                                className="w-full h-full object-cover"
-                            />
-                        ) : (
-                            <div className="flex items-center justify-center w-full h-full text-gray-500">
-                                No video selected
-                            </div>
-                        )}
-                    </div>
-                </div> */}
             </div>
 
             <Button
