@@ -81,12 +81,12 @@ const TestimonialCards = ({ testimonial }: TestimonialCardsI) => {
 
   return (
     <div
-      className="relative card w-full sm:w-[15rem] h-[17rem] sm:h-[22rem] rounded-xl overflow-hidden bg-white flex items-center justify-between flex-col transition-shadow duration-300"
+      className="relative card w-full sm:w-[15rem] h-[17rem] sm:h-[22rem] rounded-xl bg-white flex items-center justify-between flex-col transition-shadow duration-300 overflow-hidden"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
       <div
-        className={`absolute inset-0 z-10 w-full h-full flex items-center justify-center ${
+        className={`absolute inset-0 z-10 w-full h-full flex items-center justify-center cursor-pointer ${
           isHovering ? "shadow-none" : "shadow-[inset_0_0_30px_rgba(0,0,0,0.5)]"
         }`}
         onClick={handleVideoClick}
@@ -100,7 +100,7 @@ const TestimonialCards = ({ testimonial }: TestimonialCardsI) => {
           ref={videoRef}
           loop
           playsInline
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover cursor-pointer"
           onClick={handleVideoClick}
         >
           <source src={`${testimonial?.videoLink}`} type="video/mp4" />
@@ -109,11 +109,11 @@ const TestimonialCards = ({ testimonial }: TestimonialCardsI) => {
 
       {/* View Details button with animation */}
       <div
-        className={`absolute bottom-[-100px] left-1/2 w-full h-20 bg-white flex items-center justify-center transform -translate-x-1/2 transition-all duration-500 ease-in-out z-50 ${
-          isHovering ? "translate-y-[-100%]" : "translate-y-0"
-        }`}
+        className={`absolute left-0 z-50 w-full h-[60px] bg-white/25 backdrop-blur-md flex-center ${
+          !isHovering ? "-bottom-[60px]" : "bottom-0"
+        } transform transition-all ease-in-out duration-500 overflow-hidden`}
       >
-        <Button disabled={loading} onClick={handleDelete}>
+        <Button size="sm" disabled={loading} onClick={handleDelete}>
           {loading ? "Deleting..." : "Delete"}
         </Button>
       </div>
