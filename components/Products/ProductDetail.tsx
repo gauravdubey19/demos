@@ -57,7 +57,7 @@ const ProductDetail: React.FC<{ slug: string; categorySlug: string }> = ({
     };
 
     if (product?._id) getReviews();
-  }, [product]);
+  }, [fetchReviews, product]);
   useEffect(() => {
     let avgRating = 0;
     if (reviews.length > 0) {
@@ -535,8 +535,19 @@ const Details: React.FC<DetailsProps> = ({
             </div>
           </div>
           <div className="flex flex-col gap-y-2">
-            <span className={`text-sm py-2 px-2 ${product.quantityInStock >5 ? "text-green bg-emerald-50":"text-red-500 bg-red-50"}`}>
-              {product.quantityInStock >0 ? product.quantityInStock < 5?"Hurry Up! Only " + product.quantityInStock:product.quantityInStock:"No "} products available in stock
+            <span
+              className={`text-sm py-2 px-2 ${
+                product.quantityInStock > 5
+                  ? "text-green bg-emerald-50"
+                  : "text-red-500 bg-red-50"
+              }`}
+            >
+              {product.quantityInStock > 0
+                ? product.quantityInStock < 5
+                  ? "Hurry Up! Only " + product.quantityInStock
+                  : product.quantityInStock
+                : "No "}{" "}
+              products available in stock
             </span>
             <span>
               {itemExistInCart(product._id) && (
@@ -547,7 +558,9 @@ const Details: React.FC<DetailsProps> = ({
           {/* Action Buttons */}
           <div className="grid gap-2">
             <Button
-              disabled={itemExistInCart(product._id) || product.quantityInStock === 0}
+              disabled={
+                itemExistInCart(product._id) || product.quantityInStock === 0
+              }
               onClick={handleAddToCartBtn}
               size="lg"
               className="w-full select-none z-10 flex gap-1 bg-transparent text-lg text-primary border border-primary rounded-none hover:shadow-md active:translate-y-0.5 ease-in-out duration-300"
@@ -561,8 +574,8 @@ const Details: React.FC<DetailsProps> = ({
               )}
             </Button>
             <Button
-            disabled={product.quantityInStock === 0}
-              onClick={handleBuyNowBtn }
+              disabled={product.quantityInStock === 0}
+              onClick={handleBuyNowBtn}
               size="lg"
               className="w-full text-lg rounded-none hover:shadow-md active:translate-y-0.5 ease-in-out duration-300"
             >
