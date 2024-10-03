@@ -291,6 +291,7 @@ export interface CartItem {
   slug: string;
   price: number;
   quantity: number;
+  quantityInStock: number;
   image: string;
   selectedSize: string;
   selectedColor: {

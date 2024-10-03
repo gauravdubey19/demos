@@ -4,7 +4,6 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { CardDetails } from "@/lib/types";
-import { Button } from "../ui/button";
 import { IoMdStar } from "react-icons/io";
 import { GoHeart, GoHeartFill } from "react-icons/go";
 import { calculateDiscount } from "@/lib/utils";

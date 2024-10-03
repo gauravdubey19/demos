@@ -9,6 +9,9 @@ import { BiSolidEditAlt } from "react-icons/bi";
 import { Session } from "next-auth";
 import { InputField } from "../ProfileComponents/InputFields";
 import { Dropdown } from "../ProfileComponents/DropDown";
+import {  IoCheckmarkOutline } from "react-icons/io5";
+import VerifyDialog from "../ProfileComponents/VerifyDialog";
+import { set } from "mongoose";
 
 interface SessionExtended extends Session {
   user: {
@@ -69,161 +72,222 @@ export default MyProfile;
 
 export const PersonalSection = () => {
   const { error, isProfileEditing, setProfileEditing, userData, setUserData } =
-    useGlobalContext();
-  const { data: session } = useSession();
-  const [userDataCopy, setUserDataCopy] = useState<User | null>(
-    userData ?? null
-  );
-  const [isPhoneLogin, setIsPhoneLogin] = useState(false);
-  useEffect(() => {
-    const exSession = session as SessionExtended;
-    if (exSession?.user?.phone_number) {
-      setIsPhoneLogin(true);
-    }
-  }, [session]);
-  useEffect(() => {
-    if (!userDataCopy && userData) {
-      console.log("userDataCopy is empty and userData is not empty");
-      setUserDataCopy(userData);
-    }
-  }, [userData, userDataCopy]);
-  const [saving, setSaving] = useState(false);
-  if (error) {
-    return <div>Error: {error}</div>;
-  }
+  useGlobalContext();
+const { data: session } = useSession();
+const [isPhoneVerified, setIsPhoneVerified] = useState(false);
+const [isEmailVerified, setIsEmailVerified] = useState(false);
+const [userDataCopy, setUserDataCopy] = useState<User | null>(userData ?? null);
+const [saveDisabled, setSaveDisabled] = useState(false);
+const [saving, setSaving] = useState(false);
+const [isPhoneLogin, setIsPhoneLogin] = useState(false);
+const [isCancelDialogOpen, setIsCancelDialogOpen] = useState(false);
 
+useEffect(() => {
+  const exSession = session as SessionExtended;
+  if (exSession?.user?.phone_number) {
+    setIsPhoneLogin(true);
+  }
+}, [session]);
+
+useEffect(() => {
+  if (!userDataCopy && userData) {
+    console.log("userDataCopy is empty and userData is not empty");
+    setUserDataCopy(userData);
+  }
+}, [userData, userDataCopy]);
+
+useEffect(() => {
+  const handleSaveDisabled = () => {
+    console.log("Checking if save is disabled: ", saving, isPhoneLogin, userData?.phone_number, userDataCopy?.phone_number);
+    if (saving) {
+      setSaveDisabled(true);
+      return;
+    }
+    if (!isPhoneLogin) {
+      console.log("Phone number changed so need to verify");
+      if (!userData?.phone_number) {
+        setSaveDisabled(false);
+        return;
+      }
+      if (userData?.phone_number !== userDataCopy?.phone_number && !isPhoneVerified) {
+        setSaveDisabled(true);
+        return;
+      }
+    }
+
+    if (isPhoneLogin && userData?.email !== userDataCopy?.email && !isEmailVerified) {
+      console.log("Email changed so need to verify");
+      setSaveDisabled(true);
+      return;
+    }
+
+    setSaveDisabled(false);
+    return;
+  };
+  handleSaveDisabled();
+}, [saving, isPhoneLogin, userData, userDataCopy, isPhoneVerified, isEmailVerified]);
+
+useEffect(() => {
+  setIsCancelDialogOpen(false);
+}, [userData]);
+
+const handleEditProfile = async () => {
   if (!userData) {
-    return <div>Loading...</div>;
+    return;
   }
-
-  const handleEditProfile = async () => {
-    if (!userData) {
-      return;
-    }
-    if (
-      userData.phone_number &&
-      userData.phone_number.length < 10 &&
-      userData.phone_number.length > 0
-    ) {
-      alert("Phone number must be 10 digits");
-      return;
-    }
-    const userDataObj = {
-      firstName: userData.firstName,
-      lastName: userData.lastName,
-      phone_number: userData.phone_number,
-      gender: userData.gender,
-      email: userData.email,
-    };
-
-    if (
-      userData.firstName === userDataCopy?.firstName &&
-      userData.lastName === userDataCopy?.lastName &&
-      userData.phone_number === userDataCopy?.phone_number &&
-      userData.gender === userData?.gender &&
-      userData.email === userDataCopy?.email
-    ) {
-      // alert("No changes made to the profile");
-      setProfileEditing(false);
-      return;
-    }
-    try {
-      setSaving(true);
-      const extendedSession = session as SessionExtended;
-      console.log("userDataObj: ", userDataObj);
-      const response = await fetch(`/api/users/${extendedSession.user.id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(userDataObj),
-      });
-
-      if (response.ok) {
-        setUserDataCopy(userData);
-        setProfileEditing(false);
-      } else {
-        const errorData = await response.json();
-        alert(`Error: ${errorData.message}`);
-      }
-    } catch (error) {
-      console.error("Error updating user:", error);
-      alert(
-        "An error occurred while updating user information. Please try again later."
-      );
-    } finally {
-      setSaving(false);
-    }
+  if (
+    userData.phone_number &&
+    userData.phone_number.length < 10 &&
+    userData.phone_number.length > 0
+  ) {
+    alert("Phone number must be 10 digits");
+    return;
+  }
+  const userDataObj = {
+    firstName: userData.firstName,
+    lastName: userData.lastName,
+    phone_number: userData.phone_number,
+    gender: userData.gender,
+    email: userData.email,
   };
-  const handleInputChange = (field: keyof User, value: string) => {
-    setUserData((prevData: any) => {
-      if (!prevData) {
-        return prevData; // Return the previous data if it's null
-      }
-      return {
-        ...prevData,
-        [field]: value,
-      };
+
+  if (
+    userData.firstName === userDataCopy?.firstName &&
+    userData.lastName === userDataCopy?.lastName &&
+    userData.phone_number === userDataCopy?.phone_number &&
+    userData.gender === userData?.gender &&
+    userData.email === userDataCopy?.email
+  ) {
+    setProfileEditing(false);
+    return;
+  }
+  try {
+    setSaving(true);
+    const extendedSession = session as SessionExtended;
+    console.log("userDataObj: ", userDataObj);
+    const response = await fetch(`/api/users/${extendedSession.user.id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(userDataObj),
     });
-  };
-  const handleResetValues = () => {
-    if (userDataCopy) {
-      setUserData(userDataCopy);
+
+    if (response.ok) {
+      setUserDataCopy(userData);
+      setProfileEditing(false);
+    } else {
+      const errorData = await response.json();
+      alert(`Error: ${errorData.message}`);
     }
-  };
-  return (
-    <section className="">
-      <div className="justify-between flex flex-row  items-center mb-6">
-        <h3 className="text-xl font-semibold ">Personal Information</h3>
-        {isProfileEditing ? (
-          <div className="flex gap-x-2">
-            <Button
-              className="bg-white text-red-500 border border-red-500 rounded-none active:translate-y-0.5 hover:bg-red-500 hover:text-white
-            disabled:opacity-80 disabled:cursor-not-allowed
-            "
-              onClick={handleResetValues}
-            >
-              Reset
-            </Button>
-            <Button
-              className="bg-primary text-white border border-primary rounded-none active:translate-y-0.5 hover:bg-transparent hover:text-primary
-            disabled:opacity-80 disabled:cursor-not-allowed
-            "
-              onClick={handleEditProfile}
-              disabled={saving}
-            >
-              {saving ? "Saving..." : "Save"}
-            </Button>
-          </div>
-        ) : (
+  } catch (error) {
+    console.error("Error updating user:", error);
+    alert(
+      "An error occurred while updating user information. Please try again later."
+    );
+  } finally {
+    setSaving(false);
+    setSaveDisabled(false);
+    setIsPhoneVerified(false);
+    setIsEmailVerified(false);
+  }
+};
+
+const handleInputChange = (field: keyof User, value: string) => {
+  setUserData((prevData: any) => {
+    if (!prevData) {
+      return prevData; // Return the previous data if it's null
+    }
+    return {
+      ...prevData,
+      [field]: value,
+    };
+  });
+};
+
+const handleResetValues = () => {
+  if (userDataCopy) {
+    setUserData(userDataCopy);
+    setProfileEditing(false);
+    setSaveDisabled(false);
+    setIsPhoneVerified(false);
+    setIsEmailVerified(false);
+  }
+};
+
+if (error) {
+  return <div>Error: {error}</div>;
+}
+
+if (!userData) {
+  return <div>Loading...</div>;
+}
+
+return (
+  <section className="">
+    {isCancelDialogOpen &&
+      <VerifyDialog
+        onClose={() => setIsCancelDialogOpen(false)}
+        setIsPhoneVerified={setIsPhoneVerified}
+        setIsEmailVerified={setIsEmailVerified}
+        phoneNumberToVerify={userData?.phone_number}
+        emailToVerify={userData?.email}
+        verifyType={!isPhoneLogin ? "phone" : "email"}
+        setIsCancelDialogOpen={setIsCancelDialogOpen}
+      />
+    }
+    <div className="justify-between flex flex-row  items-center mb-6">
+      <h3 className="text-xl font-semibold ">Personal Information</h3>
+      {isProfileEditing ? (
+        <div className="flex gap-x-2">
           <Button
-            className="bg-transparent text-primary rounded-none active:translate-y-0.5  hover:bg-yellow-500 hover:text-white"
-            onClick={() => setProfileEditing(true)}
+            className="bg-white text-red-500 border border-red-500 rounded-none active:translate-y-0.5 hover:bg-red-500 hover:text-white
+          disabled:opacity-80 disabled:cursor-not-allowed
+          "
+            onClick={handleResetValues}
           >
-            <BiSolidEditAlt size={24} />
+            Cancel
           </Button>
-        )}
-      </div>
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-        <InputField
-          id="firstName"
-          label="First Name"
-          value={userData?.firstName}
-          isDisabled={!isProfileEditing}
-          capitalize
-          setValue={(value) => {
-            const noSpacesValue = value.replace(/\s+/g, "");
-            handleInputChange("firstName", noSpacesValue);
-          }}
-        />
-        <InputField
-          id="lastName"
-          label="Last Name"
-          value={userData?.lastName}
-          isDisabled={!isProfileEditing}
-          capitalize
-          setValue={(value) => handleInputChange("lastName", value)}
-        />
+          <Button
+            className="bg-primary text-white border border-primary rounded-none active:translate-y-0.5 hover:bg-transparent hover:text-primary
+          disabled:opacity-70 disabled:cursor-not-allowed
+          "
+            onClick={handleEditProfile}
+            disabled={saveDisabled}
+          >
+            {saving ? "Saving..." : "Save"}
+          </Button>
+        </div>
+      ) : (
+        <Button
+          className="bg-transparent text-primary rounded-none active:translate-y-0.5  hover:bg-yellow-500 hover:text-white"
+          onClick={() => setProfileEditing(true)}
+        >
+          <BiSolidEditAlt size={24} />
+        </Button>
+      )}
+    </div>
+    <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+      <InputField
+        id="firstName"
+        label="First Name"
+        value={userData?.firstName}
+        isDisabled={!isProfileEditing}
+        capitalize
+        setValue={(value) => {
+          const noSpacesValue = value.replace(/\s+/g, "");
+          handleInputChange("firstName", noSpacesValue);
+        }}
+      />
+      <InputField
+        id="lastName"
+        label="Last Name"
+        value={userData?.lastName}
+        isDisabled={!isProfileEditing}
+        capitalize
+        setValue={(value) => handleInputChange("lastName", value)}
+      />
+      <div className="flex flex-row gap-2 items-end justify-end">
         <InputField
           id="email"
           label="Email"
@@ -232,6 +296,15 @@ export const PersonalSection = () => {
           value={userData?.email}
           setValue={(value) => handleInputChange("email", value)}
         />
+        <Button
+          disabled={(!userData?.email || isEmailVerified) || (!isProfileEditing || userData?.email === userDataCopy?.email || !isPhoneLogin)}
+          className={`hover:opacity-70 ${(!isProfileEditing || userData?.email === userDataCopy?.email || !isPhoneLogin) && "hidden"} ${isEmailVerified && "bg-green cursor-not-allowed px-3"}`}
+          onClick={() => setIsCancelDialogOpen(true)}
+        >
+          {isEmailVerified ? <IoCheckmarkOutline color="#fff" size={22} /> : "Verify"}
+        </Button>
+      </div>
+      <div className="flex flex-row gap-2 items-end justify-end">
         <InputField
           id="phone"
           label="Phone"
@@ -247,19 +320,27 @@ export const PersonalSection = () => {
             handleInputChange("phone_number", numericValue);
           }}
         />
-        <Dropdown
-          id="gender"
-          label="Gender"
-          value={userData?.gender}
-          options={["male", "female", "other"]}
-          isDisabled={!isProfileEditing}
-          setValue={(value) => {
-            handleInputChange("gender", value);
-          }}
-        />
+        <Button
+          disabled={(!userData?.phone_number || userData?.phone_number?.length !== 10) || (isPhoneLogin ? isEmailVerified : isPhoneVerified)}
+          className={`hover:opacity-70 ${(!isProfileEditing || userData?.phone_number === userDataCopy?.phone_number || isPhoneLogin) && "hidden"} ${isPhoneVerified && "bg-green cursor-not-allowed px-3"}`}
+          onClick={() => setIsCancelDialogOpen(true)}
+        >
+          {isPhoneVerified ? <IoCheckmarkOutline color="#fff" size={22} /> : "Verify"}
+        </Button>
       </div>
-    </section>
-  );
+      <Dropdown
+        id="gender"
+        label="Gender"
+        value={userData?.gender}
+        options={["male", "female", "other"]}
+        isDisabled={!isProfileEditing}
+        setValue={(value) => {
+          handleInputChange("gender", value);
+        }}
+      />
+    </div>
+  </section>
+);
 };
 
 export const ContactSection = () => {
@@ -437,14 +518,14 @@ export const ContactSection = () => {
             "
               onClick={handleResetValues}
             >
-              Reset
+              Cancel
             </Button>
             <Button
               className="bg-primary text-white border border-primary rounded-none active:translate-y-0.5 hover:bg-transparent hover:text-primary
             disabled:opacity-80 disabled:cursor-not-allowed
             "
               onClick={handleEditContact}
-              disabled={saving}
+              disabled={saving }
             >
               {saving ? "Saving..." : "Save"}
             </Button>

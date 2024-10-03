@@ -25,7 +25,7 @@ export default function LoginForm() {
     }
     try {
       setSendingOTP(true);
-      const response = await fetch("/api/send-otp", {
+      const response = await fetch("/api/authOtp/send-otp", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -72,7 +72,7 @@ export default function LoginForm() {
     }
     try {
       setVerifyingOTP(true);
-      const response = await fetch("/api/verify-otp", {
+      const response = await fetch("/api/authOtp/verify-otp", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

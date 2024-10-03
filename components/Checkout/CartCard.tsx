@@ -74,18 +74,16 @@ const CartCard = ({ data, onSelectItem }: CartDataI) => {
                                 <span className="text-sm">Color:</span>
                                 <span
                                     style={{ backgroundColor: data?.selectedColor.color }}
-                                    className="flex items-center justify-center p-1 rounded-full border border-[#8888]"
+                                    className="flex items-center justify-center rounded-full border border-[#8888] h-6 w-6"
                                 >
-                                    <Check className="h-3 w-3 sm:h-4 sm:w-4 text-white" />
+                                    {/* <Check className="h-3 w-3 sm:h-4 sm:w-4 text-white" /> */}
                                 </span>
                             </div>
                         </div>
 
                         <div className="flex flex-wrap items-center gap-2 text-sm sm:text-base">
                             <p className="font-semibold">Price:</p>
-                            <p className="font-bold">{"₹ "}{data?.quantity * data?.price}</p>
-                            <p className="text-xs sm:text-sm text-gray-500 line-through">{"₹ "}1,350</p>
-                            <p className="text-xs sm:text-sm text-[#2ed396]">20% off</p>
+                            <p className="font-bold">{"₹ "}{(data?.quantity * data?.price).toFixed(2)}</p>
                         </div>
                     </div>
                 </div>

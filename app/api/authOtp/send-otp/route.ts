@@ -1,5 +1,8 @@
+import { NextApiRequest } from 'next';
 import { NextRequest, NextResponse } from 'next/server';
 import twilio from 'twilio';
+import { connectToDB } from '@/utils/db';
+import User from '@/models/User';
 
 const twilioAccountSid = process.env.TWILIO_ACCOUNT_SID;
 const twilioAuthToken = process.env.TWILIO_AUTH_TOKEN;
@@ -15,6 +18,15 @@ export async function POST(req: NextRequest) {
   }
   let extendedPhone = '+91' + phone_number;
   try {
+    await connectToDB();
+
+    // Check if the user exists
+    let user = await User.findOne({ phone_number });
+    if (!user) {
+      // Create a new user with the phone number if not exists
+      user = await User.create({ phone_number });
+    }
+
     if (!twilioAccountSid || !twilioAuthToken || !twilioServiceSid) {
       throw new Error("Missing Twilio environment variables");
     }
@@ -34,3 +46,4 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Failed to send OTP' }, { status: 500 });
   }
 }
+

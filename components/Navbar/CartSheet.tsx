@@ -107,6 +107,7 @@ interface CartItem {
   description: string;
   price: number;
   quantity: number;
+  quantityInStock: number;
   availableSizes: string[];
   selectedSize: string;
   colorOptions: {
@@ -147,7 +148,7 @@ const CartItemCard: React.FC<{ item: CartItem }> = ({ item }) => {
   const [color, setColor] = useState<{ title: string; color: string }>(
     item?.selectedColor
   );
-
+  const {cartLoading} = useCart();
   const sizeLabels: { [key: string]: string } = {
     S: "Small",
     M: "Medium",
@@ -265,10 +266,11 @@ const CartItemCard: React.FC<{ item: CartItem }> = ({ item }) => {
             <span className="text-sm text-primary select-none">
               {item.quantity}
             </span>
-            <AiOutlinePlus
-              onClick={() => handleIncrement(item.productId)}
-              className="cursor-pointer"
-            />
+            <Button onClick={() => handleIncrement(item.productId,item.quantityInStock,item.quantity)}
+            disabled={cartLoading===item.productId}
+              className="cursor-pointer bg-transparent p-0 disabled:opacity-60 disabled:cursor-pointer">
+              <AiOutlinePlus color="#000"/>
+            </Button>
           </div>
         </div>
         <ReactCountUp
