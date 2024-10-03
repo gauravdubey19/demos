@@ -17,6 +17,7 @@ import ReactCountUp from "@/components/ui/ReactCountUp";
 import { FaPlus } from "react-icons/fa";
 import { BsPlus, BsTrash } from "react-icons/bs";
 import {
+  removeFile,
   uploadMultipleNewFiles,
   uploadNewFile,
 } from "@/utils/actions/fileUpload.action";
@@ -41,8 +42,8 @@ const AddProduct = () => {
 
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
-  const [images, setImages] = useState<File[]>([]);
-  const [mainImage, setMainImage] = useState<File | null>(null);
+  const [images, setImages] = useState<string[]>([]);
+  const [mainImage, setMainImage] = useState<string>("");
   const [price, setPrice] = useState<number>();
   const [oldPrice, setOldPrice] = useState<number>();
   const [quantityInStock, setQuantityInStock] = useState<number>();
@@ -59,43 +60,92 @@ const AddProduct = () => {
   );
   const [faqs, setFaqs] = useState<Faq[]>([]);
 
-  const handleAddImage = (event: React.MouseEvent<HTMLDivElement>) => {
+  // const handleAddImage = (event: React.MouseEvent<HTMLDivElement>) => {
+  //   const input = document.createElement("input");
+  //   input.type = "file";
+  //   input.accept = "image/*, .gif";
+  //   input.multiple = true;
+
+  //   input.onchange = (e: Event) => {
+  //     const target = e.target as HTMLInputElement;
+  //     const files = Array.from(target.files || []);
+  //     setImages((prevImages) => [...prevImages, ...files]);
+
+  //     if (!mainImage && files.length > 0) {
+  //       setMainImage(files[0]);
+  //     }
+  //   };
+
+  //   input.click();
+  // };
+
+  const handleAddImage = async (event: React.MouseEvent<HTMLDivElement>) => {
     const input = document.createElement("input");
     input.type = "file";
     input.accept = "image/*, .gif";
     input.multiple = true;
 
-    input.onchange = (e: Event) => {
+    input.onchange = async (e: Event) => {
       const target = e.target as HTMLInputElement;
       const files = Array.from(target.files || []);
-      setImages((prevImages) => [...prevImages, ...files]);
 
-      if (!mainImage && files.length > 0) {
-        setMainImage(files[0]);
+      if (files.length > 0) {
+        // Prepare FormData to upload the images
+        const imagesFormData = new FormData();
+        files.forEach((file) => {
+          imagesFormData.append("files", file);
+        });
+
+        // Call the server action to upload images and get URLs
+        const imagesUrl = (await uploadMultipleNewFiles(
+          imagesFormData
+        )) as string[];
+
+        if (!imagesUrl.length) {
+          return toast({
+            title: "Images upload failed.",
+            description: "Please try again later...",
+            variant: "destructive",
+          });
+        }
+
+        // Update the images state with the URLs
+        setImages((prevImages) => [...prevImages, ...imagesUrl]);
+
+        // Set the main image if it's not set
+        if (!mainImage) {
+          setMainImage(images[0]);
+        }
       }
     };
 
     input.click();
   };
 
-  const handleSetMainImage = (image: File) => {
-    setMainImage(image);
-  };
+  const handleRemoveImage = async (imageToRemove: string) => {
+    const success = await removeFile(imageToRemove);
 
-  const handleRemoveImage = (imageToRemove: File) => {
-    setImages((prevImages) => {
-      const updatedImages = prevImages.filter(
-        (image) => image !== imageToRemove
-      );
+    if (success) {
+      setImages((prevImages) => {
+        const updatedImages = prevImages.filter(
+          (image) => image !== imageToRemove
+        );
 
-      if (mainImage === imageToRemove && updatedImages.length > 0) {
-        setMainImage(updatedImages[0]);
-      } else if (updatedImages.length === 0) {
-        setMainImage(null);
-      }
+        if (mainImage === imageToRemove && updatedImages.length > 0) {
+          setMainImage(updatedImages[0]);
+        } else if (updatedImages.length === 0) {
+          setMainImage("");
+        }
 
-      return updatedImages;
-    });
+        return updatedImages;
+      });
+    } else {
+      toast({
+        title: "Image removal failed.",
+        description: "Please try again later...",
+        variant: "destructive",
+      });
+    }
   };
 
   const toggleSize = (size: string) => {
@@ -110,86 +160,28 @@ const AddProduct = () => {
     });
   };
 
-  // const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-  //   e.preventDefault();
-  //   setLoading(true);
-  //   // checking for missing fields...
-  //   if (
-  //     !title ||
-  //     !description ||
-  //     !images.length ||
-  //     !mainImage ||
-  //     !price ||
-  //     !quantityInStock ||
-  //     !availableSizes.length ||
-  //     !colorOptions.length ||
-  //     !categories.length ||
-  //     !types.length ||
-  //     !material
-  //   ) {
-  //     setLoading(false);
-  //     return toast({
-  //       title: "Missing Fields",
-  //       description: "Please fill in all required fields.",
-  //       variant: "destructive",
-  //     });
-  //   }
-
-  //   const formData = new FormData();
-
-  //   formData.append("mainImage", mainImage);
-  //   images.forEach((image) => {
-  //     formData.append(`images`, image);
-  //   });
-  //   formData.append("title", title);
-  //   formData.append("description", description);
-  //   formData.append("price", price.toString());
-  //   if (oldPrice) formData.append("oldPrice", oldPrice.toString());
-  //   formData.append("quantityInStock", quantityInStock.toString());
-  //   formData.append("material", material);
-  //   formData.append("fabricType", fabricType);
-  //   formData.append("careInstructions", careInstructions || "");
-  //   formData.append("origin", origin);
-  //   formData.append("brand", brand || "");
-  //   formData.append("availableSizes", JSON.stringify(availableSizes));
-  //   formData.append("colorOptions", JSON.stringify(colorOptions));
-  //   formData.append("categories", JSON.stringify(categories));
-  //   formData.append("types", JSON.stringify(types));
-  //   formData.append("faqs", JSON.stringify(faqs));
-
-  //   try {
-  //     const res = await fetch("/api/products/create/create-product", {
-  //       method: "POST",
-  //       body: formData,
-  //     });
-
-  //     const data = await res.json();
-  //     setLoading(false);
-  //     toast({
-  //       title: data.message || data.error,
-  //       description: data.message
-  //         ? "Now you can view the product."
-  //         : "Please try again later...",
-  //       variant: data.error ? "destructive" : "default",
-  //     });
-  //     if (res.ok) {
-  //       router.back();
-  //     }
-  //   } catch (error) {
-  //     setLoading(false);
-  //     console.error("Error creating product:", error);
-  //     toast({
-  //       title: "Error creating product",
-  //       description: "Please try again later...",
-  //       variant: "destructive",
-  //     });
-  //   }
-  // };
-
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
-
+    const fields = {
+      mainImage,
+      images,
+      title,
+      description,
+      price,
+      oldPrice,
+      quantityInStock,
+      availableSizes,
+      colorOptions,
+      categories,
+      types,
+      material,
+      fabricType,
+      careInstructions,
+      origin,
+      brand,
+      faqs,
+    };
     if (
       !title ||
       !description ||
@@ -203,25 +195,6 @@ const AddProduct = () => {
       !types.length ||
       !material
     ) {
-      const fields = {
-        mainImage,
-        images,
-        title,
-        description,
-        price,
-        oldPrice,
-        quantityInStock,
-        availableSizes,
-        colorOptions,
-        categories,
-        types,
-        material,
-        fabricType,
-        careInstructions,
-        origin,
-        brand,
-        faqs,
-      };
       console.log("fields", fields);
 
       setLoading(false);
@@ -233,35 +206,36 @@ const AddProduct = () => {
     }
 
     try {
-      const mainImageFormData = new FormData();
-      mainImageFormData.append("file", mainImage);
+      console.log("fields", fields);
+      // const mainImageFormData = new FormData();
+      // mainImageFormData.append("file", mainImage);
 
-      const mainImageUrl = await uploadNewFile(mainImageFormData);
+      // const mainImageUrl = await uploadNewFile(mainImageFormData);
 
-      if (!mainImageUrl) {
-        toast({
-          title: "Main image upload failed.",
-          description: "Please try again later...",
-          variant: "destructive",
-        });
-        setLoading(false);
-        return;
-      }
+      // if (!mainImageUrl) {
+      //   toast({
+      //     title: "Main image upload failed.",
+      //     description: "Please try again later...",
+      //     variant: "destructive",
+      //   });
+      //   setLoading(false);
+      //   return;
+      // }
 
-      const imagesFormData = new FormData();
-      images.forEach((image) => {
-        imagesFormData.append("files", image);
-      });
+      // const imagesFormData = new FormData();
+      // images.forEach((image) => {
+      //   imagesFormData.append("files", image);
+      // });
 
-      const imagesUrl = await uploadMultipleNewFiles(imagesFormData);
+      // const imagesUrl = await uploadMultipleNewFiles(imagesFormData);
       // console.log(imagesUrl);
 
       const res = await fetch("/api/products/create/create-product", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          mainImage: mainImageUrl,
-          images: imagesUrl,
+          mainImage,
+          images,
           title,
           description,
           price,
@@ -340,7 +314,7 @@ const AddProduct = () => {
               <div className="relative w-full h-[95%] bg-[#F8F8F8] br flex-center">
                 {mainImage ? (
                   <Image
-                    src={URL.createObjectURL(mainImage)}
+                    src={mainImage}
                     alt="Main Image"
                     width={800}
                     height={800}
@@ -385,7 +359,7 @@ const AddProduct = () => {
                         className={`relative group w-full h-56 br ${
                           image === mainImage && "bg-primary shadow-xl"
                         }`}
-                        onClick={() => handleSetMainImage(image)}
+                        onClick={() => setMainImage(image)}
                       >
                         <button
                           type="button"
@@ -401,7 +375,7 @@ const AddProduct = () => {
                           </div>
                         )}
                         <Image
-                          src={URL.createObjectURL(image)}
+                          src={image}
                           alt={`Image ${index + 1}`}
                           width={400}
                           height={400}

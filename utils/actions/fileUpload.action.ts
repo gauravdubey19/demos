@@ -23,11 +23,33 @@ export const uploadMultipleNewFiles = async (formData: FormData) => {
     const uploadedFiles = await utapi.uploadFiles(files);
 
     const uploadedFilesUrls = uploadedFiles.map((file) => file?.data?.url);
-    // console.log(uploadedFiles, uploadedFilesUrls);
+    console.log("uploadedFiles", uploadedFilesUrls);
 
     return uploadedFilesUrls;
   } catch (error) {
     console.error("Error uploading multiple files:", error);
     throw new Error("Multiple file upload failed");
+  }
+};
+
+export const removeFile = async (file: string) => {
+  try {
+    const res = await utapi.deleteFiles(file);
+    console.log(res);
+
+    return res.success;
+  } catch (error) {
+    console.error("Error deleting file:", error);
+    throw new Error("Deleting file failed");
+  }
+};
+
+export const removeMultipleFiles = async (files: string[]) => {
+  try {
+    const res = await utapi.deleteFiles(files);
+    return res.success;
+  } catch (error) {
+    console.error("Error deleting file:", error);
+    throw new Error("Deleting file failed");
   }
 };

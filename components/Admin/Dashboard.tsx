@@ -36,6 +36,7 @@ interface CollectionsLengthValues {
   products: number;
   orders: number;
   users: number;
+  totalSales: number;
 }
 
 const Dashboard = () => {
@@ -57,7 +58,7 @@ const Dashboard = () => {
         }
 
         const data = await res.json();
-        // console.log("res:", data);
+        console.log("res:", data);
         setCollectionsLength(data);
       } catch (error) {
         console.error("Error fetching collections:", error);
@@ -74,25 +75,25 @@ const Dashboard = () => {
   const totals = [
     {
       head: "products",
-      value: collectionsLength?.products,
+      value: collectionsLength?.products || 0,
       color: "#704324",
       icon: PiCubeLight,
     },
     {
       head: "orders",
-      value: collectionsLength?.orders,
+      value: collectionsLength?.orders || 0,
       color: "#2cd369",
       icon: BsCartCheck,
     },
     {
       head: "sales",
-      value: 20.81,
+      value: collectionsLength?.totalSales || 0,
       color: "#962cd3",
       icon: GiProgression,
     },
     {
       head: "customers",
-      value: collectionsLength?.users || 6584,
+      value: collectionsLength?.users || 0,
       color: "#1743BE",
       icon: HiOutlineUsers,
     },
@@ -264,7 +265,7 @@ const Dashboard = () => {
                     </p>
                     <p style={{ color: t.color }}>
                       <ReactCountUp
-                        amt={t.value as number}
+                        amt={t.value as number || 0}
                         duration={1}
                         decimals={t.head === "sales" && true}
                         className="text-4xl md:text-3xl xl:text-4xl font-semibold"
@@ -283,9 +284,9 @@ const Dashboard = () => {
               </div>
             ))}
           </div>
-          <div className="p-4">
+          <div className="p-4 space-y-4">
             {/* charts section */}
-            <div className="w-full h-fit grid grid-cols-1 lg:grid-cols-2 gap-6 p-4">
+            <div className="w-full h-fit grid grid-cols-1 lg:grid-cols-2 gap-6">
               {/* Total Orders Line Chart */}
               <div className="chart-container h-full bg-[#F8F8F8] shadow-md rounded-lg p-4 hover:shadow-lg ease-in-out duration-300">
                 <h2 className="text-xl font-bold">Total Orders</h2>

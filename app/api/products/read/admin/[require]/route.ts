@@ -39,10 +39,13 @@ export const GET = async (
           { status: 404 }
         );
       }
+      const totalSales = orders.reduce((sum, order) => sum + order.orderInfo.totalPrice,0);
+
       const collectionsLength = {
         products: products.length,
         orders: orders.length,
         users: users.length,
+        totalSales: totalSales,
       };
       return NextResponse.json(collectionsLength, { status: 200 });
     }
