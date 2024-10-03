@@ -252,7 +252,7 @@ const Dashboard = () => {
             {totals.map((t, index) => (
               <div
                 key={index}
-                className="w-full xl:w-60 h-32 flex items-center gap-2 p-2 shadow-xl rounded-xl hover:shadow-2xl ease-in-out duration-300"
+                className="w-full xl:w-64 h-32 flex items-center gap-2 p-2 shadow-xl rounded-xl hover:shadow-2xl ease-in-out duration-300"
               >
                 <div
                   className="h-full w-1"
@@ -267,7 +267,7 @@ const Dashboard = () => {
                       <ReactCountUp
                         amt={t.value as number || 0}
                         duration={1}
-                        decimals={t.head === "sales" && true}
+                        // decimals={t.head === "sales" && true}
                         className="text-4xl md:text-3xl xl:text-4xl font-semibold"
                       >
                         {t.head === "sales" && "K"}
