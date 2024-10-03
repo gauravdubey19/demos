@@ -35,20 +35,23 @@ const TestimonialsModal = ({ onRefresh }: ModalI) => {
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
     const videoFile = e.target.files?.[0];
-    if (!videoFile)
-      return toast({
+    if (!videoFile) {
+      toast({
         title: "Video file not found.",
         description: "Please try again later...",
         variant: "destructive",
       });
+      return;
+    }
 
     setLoadingVideoUpload(true);
 
     if (video) {
       const rmVideo = await removeFile(video);
       if (!rmVideo) {
+        // toast.error("Failed to remove previous video. Please try again later...");
         toast({
-          title: "Failed to remove previour video.",
+          title: "Failed to remove previous video.",
           description: "Please try again later...",
           variant: "destructive",
         });
@@ -59,20 +62,27 @@ const TestimonialsModal = ({ onRefresh }: ModalI) => {
 
     const videoFileFormData = new FormData();
     videoFileFormData.append("file", videoFile);
-    const videoUrl = (await uploadNewFile(videoFileFormData)) as string;
 
-    if (!videoUrl) {
+    try {
+      const videoUrl = (await uploadNewFile(videoFileFormData)) as string;
+      if (!videoUrl) {
+        return toast({
+          title: "Testimonial video upload failed.",
+          description: "Please try again later...",
+          variant: "destructive",
+        });
+      }
+
+      setVideo(videoUrl);
+    } catch (error) {
       toast({
         title: "Testimonial video upload failed.",
         description: "Please try again later...",
         variant: "destructive",
       });
+    } finally {
       setLoadingVideoUpload(false);
-      return;
     }
-
-    setVideo(videoUrl);
-    setLoadingVideoUpload(false);
   };
 
   const handleSubmit = async (event: React.FormEvent) => {
@@ -145,7 +155,7 @@ const TestimonialsModal = ({ onRefresh }: ModalI) => {
     setPersonTitle("");
     setTestimony("");
     setRating(1);
-    // setVideo("");
+    setVideo("");
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }
@@ -154,15 +164,13 @@ const TestimonialsModal = ({ onRefresh }: ModalI) => {
   return (
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <DialogTrigger asChild>
-        <div className="inline-flex">
-          <Button
-            variant={"default"}
-            className="bg-[#ffb433] font-semibold hover:bg-[#9c6d1b]"
-            onClick={() => setIsDialogOpen(true)}
-          >
-            <Plus /> Add Testimonials
-          </Button>
-        </div>
+        <Button
+          variant="default"
+          className="bg-[#ffb433] font-semibold hover:bg-[#9c6d1b]"
+          onClick={() => setIsDialogOpen(true)}
+        >
+          <Plus /> Add Testimonials
+        </Button>
       </DialogTrigger>
       <DialogContent className="bg-white text-black p-4 w-[30rem] max-w-full h-fit max-h-[85%] rounded-md overflow-hidden">
         <DialogHeader className="w-full">
@@ -194,74 +202,38 @@ const TestimonialsModal = ({ onRefresh }: ModalI) => {
                       {video && (
                         <video
                           src={video}
-                          // controls
                           className="w-full h-full object-cover"
+                          controls // Added controls for better UX
                         />
                       )}
                       {!video && !loadingVideoUpload && (
                         <div className="flex items-center justify-center w-full h-full px-4 rounded-lg text-black bg-zinc-200 group-hover:bg-zinc-300 ease-in-out duration-300 overflow-hidden">
-                          Chooes video
+                          Choose Video
                         </div>
                       )}
                     </>
                   )}
                 </div>
               </div>
-              <div>
-                <label className="block mb-1 text-sm font-medium text-gray-900">
-                  Full Name
-                </label>
-                <Input
-                  type="text"
-                  value={fullName}
-                  onChange={(e) => setFullName(e.target.value)}
-                  required
-                  className="w-full"
-                />
-              </div>
-
-              <div>
-                <label className="block mb-1 text-sm font-medium text-gray-900">
-                  Person Title
-                </label>
-                <Input
-                  type="text"
-                  value={personTitle}
-                  onChange={(e) => setPersonTitle(e.target.value)}
-                  required
-                  className="w-full"
-                />
-              </div>
-
-              <div>
-                <label className="block mb-1 text-sm font-medium text-gray-900">
-                  Testimony
-                </label>
-                <Textarea
-                  value={testimony}
-                  onChange={(e) => setTestimony(e.target.value)}
-                  required
-                  className=" w-full"
-                />
-              </div>
-
-              <div>
-                <label className="block mb-1 text-sm font-medium text-gray-900">
-                  Rating
-                </label>
-                <select
-                  value={rating}
-                  onChange={(e) => setRating(parseInt(e.target.value))}
-                  required
-                  className="w-full p-2 border border-gray-300 rounded-lg"
-                >
-                  <option value={1}>1</option>
-                  <option value={2}>2</option>
-                  <option value={3}>3</option>
-                  <option value={4}>4</option>
-                  <option value={5}>5</option>
-                </select>
-              </div>
+              <InputField
+                label="Full Name"
+                value={fullName}
+                onChange={setFullName}
+                required
+              />
+              <InputField
+                label="Person Title"
+                value={personTitle}
+                onChange={setPersonTitle}
+                required
+              />
+              <TextareaField
+                label="Testimony"
+                value={testimony}
+                onChange={setTestimony}
+                required
+              />
+              <RatingField rating={rating} setRating={setRating} />
             </div>
 
             <Button
@@ -278,5 +250,83 @@ const TestimonialsModal = ({ onRefresh }: ModalI) => {
     </Dialog>
   );
 };
+
+interface InputFieldProps {
+  label: string;
+  value: string;
+  onChange: (value: string) => void;
+  required?: boolean;
+}
+
+const InputField: React.FC<InputFieldProps> = ({
+  label,
+  value,
+  onChange,
+  required,
+}) => (
+  <div>
+    <label className="block mb-1 text-sm font-medium text-gray-900">
+      {label}
+    </label>
+    <Input
+      type="text"
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
+      required={required}
+      className="w-full"
+    />
+  </div>
+);
+
+interface TextareaFieldProps {
+  label: string;
+  value: string;
+  onChange: (value: string) => void;
+  required?: boolean;
+}
+
+const TextareaField: React.FC<TextareaFieldProps> = ({
+  label,
+  value,
+  onChange,
+  required,
+}) => (
+  <div>
+    <label className="block mb-1 text-sm font-medium text-gray-900">
+      {label}
+    </label>
+    <Textarea
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
+      required={required}
+      className="w-full"
+    />
+  </div>
+);
+
+interface RatingFieldProps {
+  rating: number;
+  setRating: (value: number) => void;
+}
+
+const RatingField: React.FC<RatingFieldProps> = ({ rating, setRating }) => (
+  <div>
+    <label className="block mb-1 text-sm font-medium text-gray-900">
+      Rating
+    </label>
+    <select
+      value={rating}
+      onChange={(e) => setRating(parseInt(e.target.value))}
+      required
+      className="w-full p-2 border border-gray-300 rounded-lg"
+    >
+      {[1, 2, 3, 4, 5].map((num) => (
+        <option key={num} value={num}>
+          {num}
+        </option>
+      ))}
+    </select>
+  </div>
+);
 
 export default TestimonialsModal;
