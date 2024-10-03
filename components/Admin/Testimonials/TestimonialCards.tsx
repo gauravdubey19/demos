@@ -81,41 +81,44 @@ const TestimonialCards = ({ testimonial }: TestimonialCardsI) => {
 
   return (
     <div
-      className="relative card w-full sm:w-[15rem] h-[17rem] sm:h-[22rem] rounded-xl overflow-hidden bg-white flex items-center justify-between flex-col transition-shadow duration-300"
+      className="group card w-full sm:w-[15rem] h-[19rem] sm:h-[24rem] space-y-2 rounded-xl overflow-hidden"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
-      <div
-        className={`absolute inset-0 z-10 w-full h-full flex items-center justify-center ${
-          isHovering ? "shadow-none" : "shadow-[inset_0_0_30px_rgba(0,0,0,0.5)]"
-        }`}
-        onClick={handleVideoClick}
-      >
-        {!isPlaying && <FaPlay className="text-primary text-4xl" />}
-      </div>
-
-      {/* Video section */}
-      <div>
-        <video
-          ref={videoRef}
-          loop
-          playsInline
-          className="w-full h-full object-cover"
+      <div className="relative z-10 h-[17rem] sm:h-[22rem] rounded-xl bg-white flex-between flex-col overflow-hidden">
+        <div
+          className={`absolute inset-0 z-10 w-full h-full flex items-center justify-center cursor-pointer ${
+            isHovering
+              ? "shadow-none"
+              : "shadow-[inset_0_0_30px_rgba(0,0,0,0.5)]"
+          }`}
           onClick={handleVideoClick}
         >
-          <source src={`${testimonial?.videoLink}`} type="video/mp4" />
-        </video>
-      </div>
+          {!isPlaying && <FaPlay className="text-primary text-4xl" />}
+        </div>
 
-      {/* View Details button with animation */}
-      <div
-        className={`absolute bottom-[-100px] left-1/2 w-full h-20 bg-white flex items-center justify-center transform -translate-x-1/2 transition-all duration-500 ease-in-out z-50 ${
-          isHovering ? "translate-y-[-100%]" : "translate-y-0"
-        }`}
-      >
-        <Button disabled={loading} onClick={handleDelete}>
-          {loading ? "Deleting..." : "Delete"}
-        </Button>
+        {/* Video section */}
+        <div>
+          <video
+            ref={videoRef}
+            loop
+            playsInline
+            className="w-full h-full object-cover cursor-pointer"
+            onClick={handleVideoClick}
+          >
+            <source src={`${testimonial?.videoLink}`} type="video/mp4" />
+          </video>
+        </div>
+
+        {/* View Details button with animation */}
+        <div className="absolute left-0 -bottom-[60px] group-hover:bottom-0 z-50 w-full h-[60px] bg-white/25 backdrop-blur-md flex-center transform transition-all ease-in-out duration-500 overflow-hidden">
+          <Button size="sm" disabled={loading} onClick={handleDelete}>
+            {loading ? "Deleting..." : "Delete"}
+          </Button>
+        </div>
+      </div>
+      <div className="w-full h-fit z-0 text-center -translate-y-10 group-hover:translate-y-0 line-clamp-1 ease-in-out duration-300 overflow-hidden">
+        {testimonial.testimony}
       </div>
     </div>
   );

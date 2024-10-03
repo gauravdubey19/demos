@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { removeFile, uploadNewFile } from "@/utils/actions/fileUpload.action";
 import { capitalizeString, generateSlug } from "@/lib/utils";
 import { CategoryCollectionValues, CategoryReq, Type } from "@/lib/types";
 import { toast } from "@/hooks/use-toast";
@@ -10,11 +11,11 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { IoSearchOutline } from "react-icons/io5";
 import { BsPlus, BsTrash } from "react-icons/bs";
-import { uploadNewFile } from "@/utils/actions/fileUpload.action";
 
 const AddCategory: React.FC = () => {
   const router = useRouter();
-  const [categoryImage, setCategoryImage] = useState<File | null>(null);
+  const [categoryImage, setCategoryImage] = useState<string>("");
+  const [loadingImageUpload, setLoadingImageUpload] = useState<boolean>(false);
   const [loadingSaving, setLoadingSaving] = useState<boolean>(false);
   const [success, setSuccess] = useState<boolean>(false);
 
@@ -46,16 +47,47 @@ const AddCategory: React.FC = () => {
     });
   };
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const fileImage = e.target.files?.[0];
-    if (fileImage) {
-      const imageUrl = URL.createObjectURL(fileImage);
-      setCategoryImage(fileImage);
-      setCategory((prevCategory) => ({
-        ...prevCategory,
-        image: imageUrl,
-      }));
+  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const categoryImageFile = e.target.files?.[0];
+    if (!categoryImageFile) return;
+
+    setLoadingImageUpload(true);
+
+    if (categoryImage) {
+      const rmImage = await removeFile(categoryImage);
+      if (!rmImage) {
+        toast({
+          title: "Failed to remove old category image.",
+          description: "Please try again later...",
+          variant: "destructive",
+        });
+        setLoadingImageUpload(false);
+        return;
+      }
     }
+
+    const categoryImageFileFormData = new FormData();
+    categoryImageFileFormData.append("file", categoryImageFile);
+    const categoryImageUrl = (await uploadNewFile(
+      categoryImageFileFormData
+    )) as string;
+
+    if (!categoryImageUrl) {
+      toast({
+        title: "Category image upload failed.",
+        description: "Please try again later...",
+        variant: "destructive",
+      });
+      setLoadingImageUpload(false);
+      return;
+    }
+
+    setCategoryImage(categoryImageUrl);
+    setCategory((prevCategory) => ({
+      ...prevCategory,
+      image: categoryImageUrl,
+    }));
+    setLoadingImageUpload(false);
   };
 
   const handleAddTypes = (newTypes: Type[]) => {
@@ -72,63 +104,12 @@ const AddCategory: React.FC = () => {
     }));
   };
 
-  // const handleSubmit = async (e: React.FormEvent) => {
-  //   e.preventDefault();
-  //   const { title, slug, description, types } = category;
-  //   const hasTypes = types.some((type) => type.title.trim() !== "");
-
-  //   if (!title || !slug || !description || !categoryImage || !hasTypes) {
-  //     toast({
-  //       title: "Missing Fields",
-  //       description:
-  //         "Please fill in all required fields, including at least one type.",
-  //       variant: "destructive",
-  //     });
-  //     return;
-  //   }
-  //   setLoadingSaving(true);
-
-  //   const formData = new FormData();
-
-  //   formData.append("image", categoryImage);
-  //   formData.append("title", title);
-  //   formData.append("slug", slug);
-  //   formData.append("description", description);
-  //   formData.append("types", JSON.stringify(types));
-
-  //   try {
-  //     const res = await fetch("/api/products/create/create-category", {
-  //       method: "POST",
-  //       body: formData,
-  //     });
-
-  //     const data = await res.json();
-  //     toast({
-  //       title: data.message || data.error,
-  //       description: data.message
-  //         ? "Now you can view the Category."
-  //         : "Please try again later...",
-  //       variant: data.error && "destructive",
-  //     });
-  //     router.back();
-  //   } catch (error) {
-  //     console.error("Error creating category:", error);
-  //     toast({
-  //       title: "Error creating category",
-  //       description: "Please try again later...",
-  //       variant: "destructive",
-  //     });
-  //   } finally {
-  //     setLoadingSaving(false);
-  //   }
-  // };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const { title, slug, description, types } = category;
+    const { title, slug, description, image, types } = category;
     const hasTypes = types.some((type) => type.title.trim() !== "");
 
-    if (!title || !slug || !description || !categoryImage || !hasTypes) {
+    if (!title || !slug || !description || !categoryImage || !image || !hasTypes) {
       toast({
         title: "Missing Fields",
         description:
@@ -141,23 +122,8 @@ const AddCategory: React.FC = () => {
     setLoadingSaving(true);
 
     try {
-      const imageFormData = new FormData();
-      imageFormData.append("file", categoryImage);
-
-      const categoryImageUrl = await uploadNewFile(imageFormData);
-
-      if (!categoryImageUrl) {
-        toast({
-          title: "Category image upload failed.",
-          description: "Please try again later...",
-          variant: "destructive",
-        });
-        return;
-      }
-      console.log(categoryImageUrl);
-
       const category: CategoryReq = {
-        image: categoryImageUrl,
+        image,
         title,
         slug,
         description,
@@ -234,28 +200,34 @@ const AddCategory: React.FC = () => {
               <h4 className="w-full h-fit capitalize text-md md:text-lg lg:text-xl font-medium">
                 Category Image
               </h4>
-              <div className="relative w-full h-[37vh] bg-[#EAEAEA] border-2 border-gray-200 rounded-2xl flex-center cursor-pointer group overflow-hidden">
-                {category.image ? (
+              <div className="relative w-full h-[37vh] bg-[#EAEAEA] border-2 border-gray-200 rounded-2xl flex-center group overflow-hidden">
+                {loadingImageUpload ? (
+                  <div className="absolute inset-0 z-20 bg-gray-300 flex-center animate-pulse cursor-not-allowed">
+                    Uploading Image...
+                  </div>
+                ) : category.image ? (
                   <Image
                     src={category.image}
                     alt="Category Image"
                     layout="fill"
                     objectFit="contain"
-                    className="w-full h-full rounded-2xl overflow-hidden"
+                    className="w-full h-full rounded-2xl cursor-pointer overflow-hidden"
                   />
                 ) : (
-                  <div className="w-full h-full flex-center text-gray-500">
-                    No Image Selected
+                  <div className="w-full h-full flex-center text-gray-500 cursor-pointer">
+                    Chooes Image
                   </div>
                 )}
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleImageChange}
-                  className="absolute inset-0 z-30 opacity-0 cursor-pointer"
-                />
+                {!loadingImageUpload && (
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageChange}
+                    className="absolute inset-0 z-30 opacity-0 cursor-pointer"
+                  />
+                )}
                 <div className="absolute inset-0 z-10 group-hover:bg-black/10 ease-in-out duration-300" />
-                {category.image && (
+                {category.image && !loadingImageUpload && (
                   <>
                     <div className="absolute inset-0 z-20 hidden group-hover:flex-center text-primary">
                       Change Image
@@ -376,7 +348,7 @@ export const CategoryTypesTable: React.FC<CategoryTypesTableProps> = ({
               </tr>
             </thead>
             {filteredTypes.length === 0 ? (
-              <tbody className="relative w-full h-40">
+              <tbody className="relative w-full h-10">
                 <div className="absolute inset-0 flex-center text-lg md:text-lg lg:text-xl font-semibold">
                   No Types in this category created
                 </div>

@@ -3,21 +3,16 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { toast } from "@/hooks/use-toast";
-import { calculateDiscount, capitalizeString } from "@/lib/utils";
-import { CategoryCollectionValues, Type } from "@/lib/types";
-import { Button } from "@/components/ui/button";
 import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
+  removeFile,
+  uploadMultipleNewFiles,
+} from "@/utils/actions/fileUpload.action";
+import { calculateDiscount } from "@/lib/utils";
+import { toast } from "@/hooks/use-toast";
+import { Button } from "@/components/ui/button";
+import { ColorOption, FAQs, SelectCategoriesAndTypes } from "./AddProduct";
 import ReactCountUp from "@/components/ui/ReactCountUp";
-import { FaPlus } from "react-icons/fa";
-import { BsPlus, BsTrash } from "react-icons/bs";
 import Loader from "@/components/ui/Loader";
-import { ColorOption, FAQs } from "./AddProduct";
 
 export interface ProductDetailValues {
   _id: string;
@@ -70,11 +65,13 @@ const EditProduct: React.FC<{ slug: string }> = ({ slug }) => {
   const router = useRouter();
   const [product, setProduct] = useState<ProductDetailValues | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const [changedFields, setChangedFields] = useState<boolean>(false);
   const [loadingSave, setLoadingSave] = useState<boolean>(false);
+  const [success, setSuccess] = useState<boolean>(false);
 
-  const [mainImage, setMainImage] = useState<File | string | null>(null);
-  const [fetchImages, setFeachImages] = useState<string[]>([]);
-  const [images, setImages] = useState<File[]>([]);
+  const [mainImage, setMainImage] = useState<string>("");
+  const [fetchImages, setFetchImages] = useState<string[]>([]);
+  const [images, setImages] = useState<string[]>([]);
 
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
@@ -93,6 +90,79 @@ const EditProduct: React.FC<{ slug: string }> = ({ slug }) => {
     "Chimanlal Suresh Kumar (CSK) Textiles"
   );
   const [faqs, setFaqs] = useState<Faq[]>([]);
+
+  const handleAddImage = async (event: React.MouseEvent<HTMLDivElement>) => {
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = "image/*, .gif";
+    input.multiple = true;
+
+    input.onchange = async (e: Event) => {
+      const target = e.target as HTMLInputElement;
+      const files = Array.from(target.files || []);
+
+      if (files.length > 0) {
+        const imagesFormData = new FormData();
+        files.forEach((file) => {
+          imagesFormData.append("files", file);
+        });
+
+        const imagesUrl = (await uploadMultipleNewFiles(
+          imagesFormData
+        )) as string[];
+
+        if (!imagesUrl.length) {
+          return toast({
+            title: "Images upload failed.",
+            description: "Please try again later...",
+            variant: "destructive",
+          });
+        }
+        setImages((prevImages) => [...prevImages, ...imagesUrl]);
+        if (!mainImage) {
+          setMainImage(imagesUrl[0]);
+        }
+      }
+    };
+
+    input.click();
+  };
+
+  const handleRemoveImage = async (imageToRemove: string) => {
+    const success = await removeFile(imageToRemove);
+
+    if (success) {
+      setImages((prevImages) => {
+        const updatedImages = prevImages.filter(
+          (image) => image !== imageToRemove
+        );
+
+        if (mainImage === imageToRemove && updatedImages.length > 0) {
+          setMainImage(updatedImages[0]);
+        } else if (updatedImages.length === 0) {
+          setMainImage("");
+        }
+
+        return updatedImages;
+      });
+    } else {
+      toast({
+        title: "Image removal failed.",
+        description: "Please try again later...",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const toggleSize = (size: string) => {
+    setAvailableSizes((prevSizes) => {
+      if (prevSizes.includes(size)) {
+        return prevSizes.filter((s) => s !== size);
+      } else {
+        return [...prevSizes, size];
+      }
+    });
+  };
 
   useEffect(() => {
     const fetchProductBySlug = async () => {
@@ -122,7 +192,7 @@ const EditProduct: React.FC<{ slug: string }> = ({ slug }) => {
     if (!product) fetchProductBySlug();
     else {
       setMainImage(product?.mainImage);
-      setFeachImages(product?.images);
+      setFetchImages(product?.images);
       setTitle(product.title);
       setDescription(product?.description);
       setPrice(product?.price);
@@ -142,129 +212,141 @@ const EditProduct: React.FC<{ slug: string }> = ({ slug }) => {
     }
   }, [product, slug]);
 
-  console.log(product);
+  useEffect(() => {
+    const handleFieldChange = () => {
+      const hasChanges =
+        mainImage !== product?.mainImage ||
+        JSON.stringify(images) !== JSON.stringify(product?.images) ||
+        title !== product?.title ||
+        description !== product?.description ||
+        price !== product?.price ||
+        oldPrice !== product?.oldPrice ||
+        quantityInStock !== product?.quantityInStock ||
+        JSON.stringify(availableSizes) !==
+          JSON.stringify(product?.availableSizes) ||
+        JSON.stringify(colorOptions) !==
+          JSON.stringify(product?.colorOptions) ||
+        JSON.stringify(categories) !== JSON.stringify(product?.categories) ||
+        JSON.stringify(types) !== JSON.stringify(product?.type) ||
+        material !== product?.material ||
+        fabricType !== product?.fabricType ||
+        careInstructions !== product?.careInstructions ||
+        origin !== product?.origin ||
+        brand !== product?.brand ||
+        JSON.stringify(faqs) !== JSON.stringify(product?.faqs);
 
-  const handleAddImage = (event: React.MouseEvent<HTMLDivElement>) => {
-    const input = document.createElement("input");
-    input.type = "file";
-    input.accept = "image/*, .gif";
-    input.multiple = true;
-
-    input.onchange = (e: Event) => {
-      const target = e.target as HTMLInputElement;
-      const files = Array.from(target.files || []);
-      setImages((prevImages) => [...prevImages, ...files]);
-
-      if (!mainImage && files.length > 0) {
-        setMainImage(files[0]);
-      }
+      setChangedFields(hasChanges);
     };
+    handleFieldChange();
+  }, [
+    mainImage,
+    images,
+    title,
+    description,
+    price,
+    oldPrice,
+    quantityInStock,
+    availableSizes,
+    colorOptions,
+    categories,
+    types,
+    material,
+    fabricType,
+    careInstructions,
+    origin,
+    brand,
+    faqs,
+    product?.mainImage,
+    product?.images,
+    product?.title,
+    product?.description,
+    product?.price,
+    product?.oldPrice,
+    product?.quantityInStock,
+    product?.availableSizes,
+    product?.colorOptions,
+    product?.categories,
+    product?.type,
+    product?.material,
+    product?.fabricType,
+    product?.careInstructions,
+    product?.origin,
+    product?.brand,
+    product?.faqs,
+  ]);
 
-    input.click();
-  };
-
-  const handleSetMainImage = (image: File) => {
-    setMainImage(image);
-  };
-
-  const handleRemoveImage = (imageToRemove: File) => {
-    setImages((prevImages) => {
-      const updatedImages = prevImages.filter(
-        (image) => image !== imageToRemove
-      );
-
-      if (mainImage === imageToRemove && updatedImages.length > 0) {
-        setMainImage(updatedImages[0]);
-      } else if (updatedImages.length === 0) {
-        setMainImage(null);
-      }
-
-      return updatedImages;
-    });
-  };
-
-  const toggleSize = (size: string) => {
-    setAvailableSizes((prevSizes) => {
-      if (prevSizes.includes(size)) {
-        // removing size if it's already selected
-        return prevSizes.filter((s) => s !== size);
-      } else {
-        // adding size if it's not selected
-        return [...prevSizes, size];
-      }
-    });
-  };
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleEditSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoadingSave(true);
+    const updatedImages = [...fetchImages, ...images];
 
-    if (
-      !title ||
-      !description ||
-      !images.length ||
-      !mainImage ||
-      !price ||
-      !quantityInStock ||
-      !availableSizes.length ||
-      !colorOptions.length ||
-      !categories.length ||
-      !types.length ||
-      !material
-    ) {
-      setLoadingSave(false);
-      return toast({
-        title: "Missing Fields",
-        description: "Please fill in all required fields.",
-        variant: "destructive",
-      });
-    }
+    // const fields = {
+    //   mainImage,
+    //   images: updatedImages,
+    //   title,
+    //   description,
+    //   price,
+    //   oldPrice,
+    //   quantityInStock,
+    //   availableSizes,
+    //   colorOptions,
+    //   categories,
+    //   types,
+    //   material,
+    //   fabricType,
+    //   careInstructions,
+    //   origin,
+    //   brand,
+    //   faqs,
+    // };
 
-    const formData = new FormData();
     try {
-      formData.append("mainImage", mainImage); // Main image
-      images.forEach((image) => {
-        formData.append("images", image); // Multiple images
-      });
-      formData.append("title", title);
-      formData.append("description", description);
-      formData.append("price", price.toString());
-      if (oldPrice) formData.append("oldPrice", oldPrice.toString());
-      formData.append("quantityInStock", quantityInStock.toString());
-      formData.append("material", material);
-      if (fabricType) formData.append("fabricType", fabricType);
-      if (careInstructions)
-        formData.append("careInstructions", careInstructions);
-      formData.append("origin", origin || "India");
-      if (brand) formData.append("brand", brand);
-      formData.append("availableSizes", JSON.stringify(availableSizes));
-      formData.append("colorOptions", JSON.stringify(colorOptions));
-      formData.append("categories", JSON.stringify(categories));
-      formData.append("types", JSON.stringify(types));
-      if (faqs.length) formData.append("faqs", JSON.stringify(faqs));
-
       const res = await fetch(
         `/api/products/update/admin/edit-product/${product?._id}`,
         {
           method: "PUT",
-          body: formData,
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            mainImage,
+            images: updatedImages,
+            title,
+            description,
+            price,
+            oldPrice,
+            quantityInStock,
+            availableSizes,
+            colorOptions,
+            categories,
+            type: types,
+            material,
+            fabricType,
+            careInstructions,
+            origin,
+            brand,
+            faqs,
+          }),
         }
       );
 
       const data = await res.json();
+
       toast({
         title: data.message || data.error,
         description: data.message
-          ? "Now you can view the updated product details."
+          ? "Product updated successfully."
           : "Please try again later...",
         variant: data.error ? "destructive" : "default",
       });
-      if (res.ok) router.refresh();
+
+      if (res.ok) {
+        setSuccess(true);
+        // router.push("/admin/all-products");
+      }
     } catch (error) {
-      console.error("Error creating product:", error);
+      console.error("Error updating product:", error);
       toast({
-        title: "Error",
-        description: "Something went wrong. Please try again later.",
+        title: "Error updating product",
+        description: "Please try again later...",
         variant: "destructive",
       });
     } finally {
@@ -280,10 +362,13 @@ const EditProduct: React.FC<{ slug: string }> = ({ slug }) => {
 
   return (
     <>
-      <form onSubmit={handleSubmit} className="w-full h-full overflow-hidden">
+      <form
+        onSubmit={handleEditSubmit}
+        className="w-full h-full overflow-hidden"
+      >
         <header className="w-full h-fit flex justify-between p-4 md:py-6">
           <h2 className="capitalize text-2xl md:text-3xl lg:text-4xl font-semibold tracking-tight">
-            Add New Product
+            Edit Product
           </h2>
           <div className="w-fit flex-center gap-2">
             <Button
@@ -293,36 +378,32 @@ const EditProduct: React.FC<{ slug: string }> = ({ slug }) => {
             >
               Cancel
             </Button>
-            <Button type="submit" disabled={loadingSave} className="text-white">
-              {!loadingSave ? "Save" : "Saving..."}
+            <Button
+              type="submit"
+              disabled={!changedFields || loadingSave || success}
+              className="text-white"
+            >
+              {!loadingSave
+                ? "Save Edit"
+                : success
+                ? "Saved Edits"
+                : "Saving Edit..."}
             </Button>
           </div>
         </header>
         <div className="w-full h-[calc(100vh-90px)] space-y-2 p-4 overflow-y-auto">
           <div className="w-full h-[calc(100vh-140px)] flex gap-2">
             <div className="w-[60%] h-full overflow-hidden">
-              <h4>
-                Main Image<span className="text-[red]">*</span>
-              </h4>
+              <h4>Main Image</h4>
               <div className="relative w-full h-[95%] bg-[#F8F8F8] flex-center">
                 {mainImage ? (
-                  typeof mainImage === "string" ? (
-                    <Image
-                      src={mainImage}
-                      alt="Main Image"
-                      width={800}
-                      height={800}
-                      className="w-full h-full object-contain animate-slide-down"
-                    />
-                  ) : (
-                    <Image
-                      src={URL.createObjectURL(mainImage)}
-                      alt="Main Image"
-                      width={800}
-                      height={800}
-                      className="w-full h-full object-contain animate-slide-down"
-                    />
-                  )
+                  <Image
+                    src={mainImage}
+                    alt="Main Image"
+                    width={800}
+                    height={800}
+                    className="w-full h-full object-contain animate-slide-down"
+                  />
                 ) : (
                   <>
                     <Image
@@ -333,16 +414,14 @@ const EditProduct: React.FC<{ slug: string }> = ({ slug }) => {
                       className="w-full h-full object-contain"
                     />
                     <div className="absolute inset-0 bg-black/50 flex-center text-primary animate-slide-down">
-                      Choose an Image
+                      Choose a Image
                     </div>
                   </>
                 )}
               </div>
             </div>
             <div className="w-[40%] h-full overflow-hidden">
-              <h4>
-                Images<span className="text-[red]">*</span>
-              </h4>
+              <h4>Images</h4>
               <div className="w-full h-[95%] bg-[#F8F8F8] overflow-x-hidden overflow-y-scroll">
                 <div className="w-full h-fit grid grid-cols-1 md:grid-cols-2 gap-2">
                   <div
@@ -360,25 +439,25 @@ const EditProduct: React.FC<{ slug: string }> = ({ slug }) => {
                       <div
                         key={index}
                         className={`relative group w-full h-56 br ${
-                          image === mainImage && "bg-primary shadow-xl"
+                          image === mainImage && "bg-primary shadow-md"
                         }`}
-                        onClick={() => handleSetMainImage(image)}
+                        onClick={() => setMainImage(image)}
                       >
                         <button
                           type="button"
                           onClick={() => handleRemoveImage(image)}
                           title="Remove"
-                          className="absolute top-1 right-2 z-10 text-xl text-red opacity-0 group-hover:opacity-100 ease-in-out duration-300"
+                          className="absolute top-1 right-2 z-10 text-xl text-[red] opacity-0 group-hover:opacity-100 ease-in-out duration-300"
                         >
                           x
                         </button>
                         {image === mainImage && (
-                          <div className="absolute inset-0 bg-black/40 flex-center text-primary animate-slide-down">
+                          <div className="absolute inset-0 cursor-not-allowed bg-black/40 flex-center text-primary animate-slide-down">
                             Main Image
                           </div>
                         )}
                         <Image
-                          src={URL.createObjectURL(image)}
+                          src={image}
                           alt={`Image ${index + 1}`}
                           width={400}
                           height={400}
@@ -396,7 +475,7 @@ const EditProduct: React.FC<{ slug: string }> = ({ slug }) => {
                         className={`relative group w-full h-56 br ${
                           image === mainImage && "bg-primary shadow-xl"
                         }`}
-                        // onClick={() => handleSetMainImage(image)}
+                        onClick={() => setMainImage(image)}
                       >
                         <button
                           type="button"
@@ -429,7 +508,7 @@ const EditProduct: React.FC<{ slug: string }> = ({ slug }) => {
               {/* Product Title and Description */}
               <div>
                 <label className="block text-sm font-medium text-gray-700">
-                  Title<span className="text-[red]">*</span>
+                  Title
                 </label>
                 <input
                   type="text"
@@ -442,7 +521,7 @@ const EditProduct: React.FC<{ slug: string }> = ({ slug }) => {
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700">
-                  Description<span className="text-[red]">*</span>
+                  Description
                 </label>
                 <textarea
                   value={description}
@@ -458,7 +537,7 @@ const EditProduct: React.FC<{ slug: string }> = ({ slug }) => {
                 <div className="flex gap-2">
                   <div className="flex-1">
                     <label className="block text-sm font-medium text-gray-700">
-                      Price<span className="text-[red]">*</span>
+                      Price
                     </label>
                     <input
                       type="number"
@@ -508,7 +587,7 @@ const EditProduct: React.FC<{ slug: string }> = ({ slug }) => {
               {/* Material */}
               <div>
                 <label className="block text-sm font-medium text-gray-700">
-                  Material<span className="text-[red]">*</span>
+                  Material
                 </label>
                 <input
                   type="text"
@@ -522,6 +601,7 @@ const EditProduct: React.FC<{ slug: string }> = ({ slug }) => {
 
               {/* Color Section */}
               <ColorOption
+                section="edit"
                 colorOptions={colorOptions}
                 setColorOptions={setColorOptions}
               />
@@ -530,7 +610,7 @@ const EditProduct: React.FC<{ slug: string }> = ({ slug }) => {
               <div className="flex gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700">
-                    Available Sizes<span className="text-[red]">*</span>
+                    Available Sizes
                   </label>
                   <div className="flex space-x-2 mt-1">
                     {["XS", "S", "M", "L", "XL", "XXL"].map((size) => (
@@ -551,7 +631,7 @@ const EditProduct: React.FC<{ slug: string }> = ({ slug }) => {
                 </div>
                 <div className="">
                   <label className="block text-sm font-medium text-gray-700">
-                    Quantity In Stock<span className="text-[red]">*</span>
+                    Quantity In Stock
                   </label>
                   <input
                     type="number"
@@ -605,6 +685,7 @@ const EditProduct: React.FC<{ slug: string }> = ({ slug }) => {
                 />
               </div>
               <SelectCategoriesAndTypes
+                section="edit"
                 categories={categories}
                 types={types}
                 setCategories={setCategories}
@@ -631,237 +712,3 @@ const EditProduct: React.FC<{ slug: string }> = ({ slug }) => {
 };
 
 export default EditProduct;
-
-interface SelectCategoriesAndTypesProps {
-  categories: CategoryValue[];
-  types: string[];
-  setCategories: React.Dispatch<React.SetStateAction<CategoryValue[]>>;
-  setTypes: React.Dispatch<React.SetStateAction<string[]>>;
-}
-
-const SelectCategoriesAndTypes: React.FC<SelectCategoriesAndTypesProps> = ({
-  setCategories,
-  setTypes,
-  categories,
-  types,
-}) => {
-  const [categoriesCollection, setCategoriesCollection] = useState<
-    CategoryCollectionValues[]
-  >([]);
-  const [categorySelections, setCategorySelections] = useState<
-    { category: CategoryCollectionValues; type: Type }[]
-  >([]);
-
-  useEffect(() => {
-    const fetchCategoriesCollection = async () => {
-      try {
-        const res = await fetch(`/api/products/read/get-categories`, {
-          method: "GET",
-          headers: { "Content-Type": "application/json" },
-        });
-
-        if (!res.ok) {
-          throw new Error("Failed to fetch categories");
-        }
-
-        const data = await res.json();
-        setCategoriesCollection(data.categories as CategoryCollectionValues[]);
-      } catch (error) {
-        console.error("Error fetching categories:", error);
-      }
-    };
-
-    fetchCategoriesCollection();
-  }, []);
-
-  useEffect(() => {
-    // Update initial selections based on categories and types from props
-    const initialSelections = categories.map((category) => {
-      const matchedCategory = categoriesCollection.find(
-        (cat) => cat.slug === category.slug
-      ) || {
-        _id: "",
-        image: "",
-        title: "",
-        slug: "",
-        description: "",
-        types: [],
-        createdAt: "",
-      };
-
-      return {
-        category: matchedCategory,
-        type: { title: "", slug: "" },
-      };
-    });
-
-    setCategorySelections(initialSelections);
-  }, [categories, categoriesCollection]);
-
-  useEffect(() => {
-    // Update the types based on category selections
-    const selectedTypes = categorySelections.map(
-      (selection) => selection.type.slug
-    );
-    setTypes(selectedTypes);
-  }, [categorySelections, setTypes]);
-
-  const handleCategoryChange = (index: number, slug: string) => {
-    const selectedCategory = categoriesCollection.find(
-      (category) => category.slug === slug
-    );
-    if (selectedCategory) {
-      const updatedSelections = [...categorySelections];
-      updatedSelections[index] = {
-        category: selectedCategory,
-        type: updatedSelections[index]?.type || { title: "", slug: "" },
-      };
-      setCategorySelections(updatedSelections);
-
-      // Update selected categories in parent
-      setCategories(
-        updatedSelections.map((sel) => ({
-          title: sel.category.title,
-          slug: sel.category.slug,
-        }))
-      );
-    }
-  };
-
-  const handleTypeChange = (index: number, slug: string) => {
-    const selectedType = categorySelections[index].category.types.find(
-      (type) => type.slug === slug
-    );
-    if (selectedType) {
-      const updatedSelections = [...categorySelections];
-      updatedSelections[index].type = selectedType;
-      setCategorySelections(updatedSelections);
-    }
-  };
-
-  const handleAddMoreCategory = () => {
-    setCategorySelections([
-      ...categorySelections,
-      {
-        category: {
-          _id: "",
-          image: "",
-          title: "",
-          slug: "",
-          description: "",
-          types: [],
-          createdAt: "",
-        },
-        type: { title: "", slug: "" },
-      },
-    ]);
-  };
-
-  const handleRemoveSelection = (index: number) => {
-    const updatedSelections = categorySelections.filter((_, i) => i !== index);
-    setCategorySelections(updatedSelections);
-
-    // Update parent state after removal
-    setCategories(
-      updatedSelections.map((sel) => ({
-        title: sel.category.title,
-        slug: sel.category.slug,
-      }))
-    );
-  };
-
-  const availableCategories = categoriesCollection.filter(
-    (category) =>
-      !categorySelections.some(
-        (selection) => selection.category.slug === category.slug
-      )
-  );
-
-  const isAddButtonDisabled = categorySelections.some(
-    (selection) => !selection.category.slug || !selection.type.slug
-  );
-
-  if (categoriesCollection.length === 0)
-    return <h2 className="text-primary">Loading categories...</h2>;
-
-  return (
-    <div className="col-span-2 grid grid-cols-1 gap-2">
-      <div className="font-semibold">
-        Categories and Types<span className="text-[red]">*</span>
-      </div>
-      <div className="col-span-2 grid grid-cols-2 gap-4">
-        {categorySelections.map((selection, index) => (
-          <div key={index} className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Category<span className="text-[red]">*</span>
-              </label>
-              {selection.category.slug ? (
-                <div className="mt-1 p-2 py-2.5 border border-gray-300 rounded-md shadow-sm bg-gray-100">
-                  {selection.category.title}
-                </div>
-              ) : (
-                <select
-                  value={selection.category.slug || ""}
-                  onChange={(e) => handleCategoryChange(index, e.target.value)}
-                  className="mt-1 block w-full p-2 py-2.5 border border-gray-300 rounded-md shadow-sm bg-[#F8F8F8]"
-                >
-                  <option>Select Category</option>
-                  {availableCategories.map((category) => (
-                    <option key={category.slug} value={category.slug}>
-                      {category.title}
-                    </option>
-                  ))}
-                </select>
-              )}
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Type<span className="text-[red]">*</span>
-              </label>
-              <div className="flex gap-2">
-                {selection.type.slug ? (
-                  <div className="mt-1 w-full p-2 py-2.5 border border-gray-300 rounded-md shadow-sm bg-gray-100">
-                    {selection.type.title}
-                  </div>
-                ) : (
-                  <select
-                    value={selection.type.slug || ""}
-                    onChange={(e) => handleTypeChange(index, e.target.value)}
-                    className="mt-1 block w-full p-2 py-2.5 border border-gray-300 rounded-md shadow-sm bg-[#F8F8F8]"
-                  >
-                    <option>Select Type</option>
-                    {selection.category.types.map((type) => (
-                      <option key={type.slug} value={type.slug}>
-                        {type.title}
-                      </option>
-                    ))}
-                  </select>
-                )}
-                <button
-                  type="button"
-                  onClick={() => handleRemoveSelection(index)}
-                  className="w-fit h-fit p-2 rounded bg-red-100 hover:bg-red-200 text-red-600"
-                >
-                  <BsTrash size={16} />
-                </button>
-              </div>
-            </div>
-          </div>
-        ))}
-
-        <div className="col-span-2">
-          <Button
-            type="button"
-            onClick={handleAddMoreCategory}
-            disabled={isAddButtonDisabled}
-            className="w-full py-2 mt-2 text-white"
-          >
-            Add More Category
-          </Button>
-        </div>
-      </div>
-    </div>
-  );
-};

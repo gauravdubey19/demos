@@ -67,61 +67,63 @@ const Sidebar: React.FC<SectionProps> = ({ section, sections }) => {
           )
         )}
         <nav className="mt-6 flex flex-1 flex-col space-y-1">
-          {sections.map((sec, index) => (
-            sec.sidebarHidden ? null :
-            <div key={index}>
-              {!sec.subSections ? (
-                <Link
-                  // key={index}
-                  href={sec.href}
-                  className={`flex items-center gap-3 px-2 py-2 text-md font-medium transition-colors hover:text-primary ${
-                    section === sec.id
-                      ? "text-primary fill-primary underline underline-offset-8"
-                      : ""
-                  } ease-in-out duration-200`}
-                >
-                  <sec.icon size={20} />
-                  <span>{sec.head}</span>
-                </Link>
-              ) : (
-                <Accordion type="single" collapsible className="w-full px-2">
-                  <AccordionItem
-                    value={`item-${index + 1}`}
-                    className="border-none"
-                  >
-                    <AccordionTrigger className="flex gap-5">
-                      <Link
-                        href={sec.href}
-                        className={`flex items-center gap-3 text-md font-medium transition-colors hover:text-primary ${
-                          section === sec.id
-                            ? "text-primary fill-primary underline underline-offset-8"
-                            : ""
-                        } ease-in-out duration-200`}
-                      >
-                        <sec.icon size={20} />
-                        <span>{sec.head}</span>
-                      </Link>
-                    </AccordionTrigger>
-                    <AccordionContent className="flex flex-col gap-1">
-                      {sec.subSections.map((subSec, index) => (
+          <Accordion type="single" collapsible defaultValue="item-2" className="w-full px-2">
+            {sections.map((sec, index) =>
+              sec.sidebarHidden ? null : (
+                <div key={index}>
+                  {!sec.subSections ? (
+                    <Link
+                      // key={index}
+                      href={sec.href}
+                      className={`flex items-center gap-3 px-2 py-2 text-md font-medium transition-colors hover:text-primary ${
+                        section === sec.id
+                          ? "text-primary fill-primary underline underline-offset-8"
+                          : ""
+                      } ease-in-out duration-200`}
+                    >
+                      <sec.icon size={20} />
+                      <span>{sec.head}</span>
+                    </Link>
+                  ) : (
+                    <AccordionItem
+                      data-state="open"
+                      value={`item-${index + 1}`}
+                      className="border-none"
+                    >
+                      <AccordionTrigger className="flex gap-5">
                         <Link
-                          key={index}
-                          href={subSec.href}
-                          className={`px-3 text-md font-medium transition-colors hover:text-primary ${
-                            section === subSec.id
-                              ? "text-primary fill-primary underline underline-offset-4"
+                          href={sec.href}
+                          className={`flex items-center ml-2 gap-3 text-md font-medium transition-colors hover:text-primary ${
+                            section === sec.id
+                              ? "text-primary fill-primary underline underline-offset-8"
                               : ""
                           } ease-in-out duration-200`}
                         >
-                          {subSec.head}
+                          <sec.icon size={20} />
+                          <span>{sec.head}</span>
                         </Link>
-                      ))}
-                    </AccordionContent>
-                  </AccordionItem>
-                </Accordion>
-              )}
-            </div>
-          ))}
+                      </AccordionTrigger>
+                      <AccordionContent className="flex flex-col gap-1">
+                        {sec.subSections.map((subSec, index) => (
+                          <Link
+                            key={index}
+                            href={subSec.href}
+                            className={`px-3 text-md font-medium transition-colors hover:text-primary ${
+                              section === subSec.id
+                                ? "text-primary fill-primary underline underline-offset-4"
+                                : ""
+                            } ease-in-out duration-200`}
+                          >
+                            {subSec.head}
+                          </Link>
+                        ))}
+                      </AccordionContent>
+                    </AccordionItem>
+                  )}
+                </div>
+              )
+            )}
+          </Accordion>
         </nav>
       </aside>
     </>

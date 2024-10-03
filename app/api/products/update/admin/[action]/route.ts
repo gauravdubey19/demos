@@ -55,7 +55,6 @@ export const PUT = async (
         updatedCategory.description || category.description;
       category.image = updatedCategory.image || category.image;
 
-      // saving the updated category to the database
       await category.save();
 
       return NextResponse.json(

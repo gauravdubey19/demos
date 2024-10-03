@@ -60,25 +60,6 @@ const AddProduct = () => {
   );
   const [faqs, setFaqs] = useState<Faq[]>([]);
 
-  // const handleAddImage = (event: React.MouseEvent<HTMLDivElement>) => {
-  //   const input = document.createElement("input");
-  //   input.type = "file";
-  //   input.accept = "image/*, .gif";
-  //   input.multiple = true;
-
-  //   input.onchange = (e: Event) => {
-  //     const target = e.target as HTMLInputElement;
-  //     const files = Array.from(target.files || []);
-  //     setImages((prevImages) => [...prevImages, ...files]);
-
-  //     if (!mainImage && files.length > 0) {
-  //       setMainImage(files[0]);
-  //     }
-  //   };
-
-  //   input.click();
-  // };
-
   const handleAddImage = async (event: React.MouseEvent<HTMLDivElement>) => {
     const input = document.createElement("input");
     input.type = "file";
@@ -90,13 +71,11 @@ const AddProduct = () => {
       const files = Array.from(target.files || []);
 
       if (files.length > 0) {
-        // Prepare FormData to upload the images
         const imagesFormData = new FormData();
         files.forEach((file) => {
           imagesFormData.append("files", file);
         });
 
-        // Call the server action to upload images and get URLs
         const imagesUrl = (await uploadMultipleNewFiles(
           imagesFormData
         )) as string[];
@@ -108,13 +87,9 @@ const AddProduct = () => {
             variant: "destructive",
           });
         }
-
-        // Update the images state with the URLs
         setImages((prevImages) => [...prevImages, ...imagesUrl]);
-
-        // Set the main image if it's not set
         if (!mainImage) {
-          setMainImage(images[0]);
+          setMainImage(imagesUrl[0]);
         }
       }
     };
@@ -365,12 +340,12 @@ const AddProduct = () => {
                           type="button"
                           onClick={() => handleRemoveImage(image)}
                           title="Remove"
-                          className="absolute top-1 right-2 z-10 text-xl text-red opacity-0 group-hover:opacity-100 ease-in-out duration-300"
+                          className="absolute top-1 right-2 z-10 text-xl text-[red] opacity-0 group-hover:opacity-100 ease-in-out duration-300"
                         >
                           x
                         </button>
                         {image === mainImage && (
-                          <div className="absolute inset-0 bg-black/40 flex-center text-primary animate-slide-down">
+                          <div className="absolute inset-0 cursor-not-allowed bg-black/40 flex-center text-primary animate-slide-down">
                             Main Image
                           </div>
                         )}
@@ -581,7 +556,9 @@ const AddProduct = () => {
                 />
               </div>
               <SelectCategoriesAndTypes
+                categories={categories}
                 setCategories={setCategories}
+                types={types}
                 setTypes={setTypes}
               />
               <div className="col-span-2">
@@ -607,9 +584,10 @@ const AddProduct = () => {
 export default AddProduct;
 
 export const ColorOption: React.FC<{
+  section?: string;
   colorOptions: ColorOptionValue[];
   setColorOptions: React.Dispatch<React.SetStateAction<ColorOptionValue[]>>;
-}> = ({ colorOptions, setColorOptions }) => {
+}> = ({ section = "add", colorOptions, setColorOptions }) => {
   const [newColor, setNewColor] = useState<{
     title: string;
     color: string;
@@ -703,7 +681,8 @@ export const ColorOption: React.FC<{
           <div className="flex-between gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700">
-                Choose Color<span className="text-[red]">*</span>
+                Choose Color
+                {section === "add" && <span className="text-[red]">*</span>}
               </label>
               <input
                 type="color"
@@ -714,7 +693,8 @@ export const ColorOption: React.FC<{
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700">
-                HEX Color<span className="text-[red]">*</span>
+                HEX Color
+                {section === "add" && <span className="text-[red]">*</span>}
               </label>
               <input
                 type="text"
@@ -726,7 +706,8 @@ export const ColorOption: React.FC<{
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700">
-                Color Title<span className="text-[red]">*</span>
+                Color Title
+                {section === "add" && <span className="text-[red]">*</span>}
               </label>
               <input
                 type="text"
@@ -760,203 +741,6 @@ export const ColorOption: React.FC<{
             </button>
           </div>
         )}
-      </div>
-    </div>
-  );
-};
-
-const SelectCategoriesAndTypes: React.FC<{
-  setCategories: React.Dispatch<React.SetStateAction<CategoryValue[]>>;
-  setTypes: React.Dispatch<React.SetStateAction<string[]>>;
-}> = ({ setCategories, setTypes }) => {
-  const [categoriesCollection, setCategoriesCollection] = useState<
-    CategoryCollectionValues[]
-  >([]);
-  const [categorySelections, setCategorySelections] = useState<
-    { category: CategoryCollectionValues; type: Type }[]
-  >([]);
-
-  useEffect(() => {
-    const fetchCategoriesCollection = async () => {
-      try {
-        const res = await fetch(`/api/products/read/get-categories`, {
-          method: "GET",
-          headers: { "Content-Type": "application/json" },
-        });
-
-        if (!res.ok) {
-          throw new Error("Failed to fetch categories");
-        }
-
-        const data = await res.json();
-        setCategoriesCollection(data.categories as CategoryCollectionValues[]);
-      } catch (error) {
-        console.error("Error fetching categories:", error);
-      }
-    };
-
-    fetchCategoriesCollection();
-  }, []);
-
-  const handleCategoryChange = (index: number, slug: string) => {
-    const selectedCategory = categoriesCollection.find(
-      (category) => category.slug === slug
-    );
-    if (selectedCategory) {
-      const updatedSelections = [...categorySelections];
-      updatedSelections[index] = {
-        category: selectedCategory,
-        type: updatedSelections[index]?.type || { title: "", slug: "" },
-      };
-      setCategorySelections(updatedSelections);
-
-      // Update selected categories in parent
-      setCategories(
-        updatedSelections.map((sel) => ({
-          title: sel.category.title,
-          slug: sel.category.slug,
-        }))
-      );
-    }
-  };
-
-  const handleTypeChange = (index: number, slug: string) => {
-    const selectedType = categorySelections[index].category.types.find(
-      (type) => type.slug === slug
-    );
-    if (selectedType) {
-      const updatedSelections = [...categorySelections];
-      updatedSelections[index].type = selectedType;
-      setCategorySelections(updatedSelections);
-
-      // Update selected types in parent
-      setTypes(updatedSelections.map((sel) => sel.type.slug));
-    }
-  };
-
-  const handleAddMoreCategory = () => {
-    setCategorySelections([
-      ...categorySelections,
-      {
-        category: {
-          _id: "",
-          image: "",
-          title: "",
-          slug: "",
-          description: "",
-          types: [],
-          createdAt: "",
-        },
-        type: { title: "", slug: "" },
-      },
-    ]);
-  };
-
-  const handleRemoveSelection = (index: number) => {
-    const updatedSelections = categorySelections.filter((_, i) => i !== index);
-    setCategorySelections(updatedSelections);
-
-    // Update parent state after removal
-    setCategories(
-      updatedSelections.map((sel) => ({
-        title: sel.category.title,
-        slug: sel.category.slug,
-      }))
-    );
-    setTypes(updatedSelections.map((sel) => sel.type.slug));
-  };
-
-  const availableCategories = categoriesCollection.filter(
-    (category) =>
-      !categorySelections.some(
-        (selection) => selection.category.slug === category.slug
-      )
-  );
-
-  const isAddButtonDisabled = categorySelections.some(
-    (selection) => !selection.category.slug || !selection.type.slug
-  );
-
-  if (categoriesCollection.length === 0)
-    return <h2 className="text-primary">Loading categories...</h2>;
-
-  return (
-    <div className="col-span-2 grid grid-cols-1 gap-2">
-      <div className="font-semibold">
-        Categories and Types<span className="text-[red]">*</span>
-      </div>
-      <div className="col-span-2 grid grid-cols-2 gap-4">
-        {categorySelections.map((selection, index) => (
-          <div key={index} className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Category<span className="text-[red]">*</span>
-              </label>
-              {selection.category.slug ? (
-                <div className="mt-1 p-2 py-2.5 border border-gray-300 rounded-md shadow-sm bg-gray-100">
-                  {selection.category.title}
-                </div>
-              ) : (
-                <select
-                  value={selection.category.slug || ""}
-                  onChange={(e) => handleCategoryChange(index, e.target.value)}
-                  className="mt-1 block w-full p-2 py-2.5 border border-gray-300 rounded-md shadow-sm bg-[#F8F8F8]"
-                >
-                  <option>Select Category</option>
-                  {availableCategories.map((category) => (
-                    <option key={category.slug} value={category.slug}>
-                      {category.title}
-                    </option>
-                  ))}
-                </select>
-              )}
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Type<span className="text-[red]">*</span>
-              </label>
-              <div className="flex-between gap-2">
-                {selection.type.slug ? (
-                  <div className="mt-1 w-full p-2 py-2.5 border border-gray-300 rounded-md shadow-sm bg-gray-100">
-                    {selection.type.title}
-                  </div>
-                ) : (
-                  <select
-                    value={selection.type.slug || ""}
-                    onChange={(e) => handleTypeChange(index, e.target.value)}
-                    className="mt-1 block w-full p-2 py-2.5 border border-gray-300 rounded-md shadow-sm bg-[#F8F8F8]"
-                  >
-                    <option>Select Type</option>
-                    {selection.category.types.map((type) => (
-                      <option key={type.slug} value={type.slug}>
-                        {type.title}
-                      </option>
-                    ))}
-                  </select>
-                )}
-                <button
-                  type="button"
-                  onClick={() => handleRemoveSelection(index)}
-                  className="w-fit h-fit p-2 rounded bg-red-100 hover:bg-red-200 text-red-600"
-                >
-                  <BsTrash size={16} />
-                </button>
-              </div>
-            </div>
-          </div>
-        ))}
-
-        <div className="col-span-2">
-          <Button
-            type="button"
-            onClick={handleAddMoreCategory}
-            disabled={isAddButtonDisabled}
-            className="w-full py-2 mt-2 text-white"
-          >
-            Add More Category
-          </Button>
-        </div>
       </div>
     </div>
   );
@@ -1089,3 +873,391 @@ export const FAQs: React.FC<{
     </>
   );
 };
+
+interface SelectCategoriesAndTypesProps {
+  section?: string;
+  categories: CategoryValue[];
+  types: string[];
+  setCategories: React.Dispatch<React.SetStateAction<CategoryValue[]>>;
+  setTypes: React.Dispatch<React.SetStateAction<string[]>>;
+}
+
+export const SelectCategoriesAndTypes: React.FC<
+  SelectCategoriesAndTypesProps
+> = ({ section = "add", setCategories, setTypes, categories, types }) => {
+  const [categoriesCollection, setCategoriesCollection] = useState<
+    CategoryCollectionValues[]
+  >([]);
+
+  useEffect(() => {
+    const fetchCategoriesCollection = async () => {
+      try {
+        const res = await fetch(`/api/products/read/get-categories`, {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+        });
+
+        if (!res.ok) {
+          throw new Error("Failed to fetch categories");
+        }
+
+        const data = await res.json();
+        setCategoriesCollection(data.categories as CategoryCollectionValues[]);
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      }
+    };
+
+    fetchCategoriesCollection();
+  }, []);
+
+  const handleCategoryChange = (index: number, slug: string) => {
+    const selectedCategory = categoriesCollection.find(
+      (category) => category.slug === slug
+    );
+    if (selectedCategory) {
+      const updatedCategories = [...categories];
+      updatedCategories[index] = {
+        title: selectedCategory.title,
+        slug: selectedCategory.slug,
+      };
+
+      setCategories(updatedCategories);
+
+      // reseting the corresponding type
+      const updatedTypes = [...types];
+      updatedTypes[index] = ""; // reseting type for selected category
+      setTypes(updatedTypes);
+    }
+  };
+
+  const handleTypeChange = (index: number, slug: string) => {
+    if (!slug) return;
+
+    setTypes((prevTypes) => {
+      const updatedTypes = [...prevTypes];
+      if (!updatedTypes.includes(slug)) {
+        updatedTypes[index] = slug; // setting the type for the respective index
+      }
+      return updatedTypes;
+    });
+  };
+
+  const handleAddMoreCategory = () => {
+    setCategories([...categories, { title: "", slug: "" }]);
+    setTypes([...types, ""]);
+  };
+
+  const handleRemoveSelection = (index: number) => {
+    const updatedCategories = categories.filter((_, i) => i !== index);
+    const updatedTypes = types.filter((_, i) => i !== index);
+    setCategories(updatedCategories);
+    setTypes(updatedTypes);
+  };
+
+  const availableCategories = categoriesCollection.filter(
+    (category) =>
+      !categories.some(
+        (selectedCategory) => selectedCategory.slug === category.slug
+      )
+  );
+
+  const isAddButtonDisabled = categories.some(
+    (category, index) => !category.slug || !types[index]
+  );
+
+  if (categoriesCollection.length === 0)
+    return <h2 className="text-primary">Loading categories...</h2>;
+
+  // console.log(categories, types);
+
+  return (
+    <div className="col-span-2 grid grid-cols-1 gap-2">
+      <div className="font-semibold">Categories and Types</div>
+      <div className="col-span-2 grid grid-cols-2 gap-4">
+        {categories.map((category, index) => (
+          <div key={index} className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700">
+                Category
+                {section === "add" && <span className="text-[red]">*</span>}
+              </label>
+              {category.slug ? (
+                <div className="mt-1 p-2 py-2.5 border border-gray-300 rounded-md shadow-sm bg-gray-100">
+                  {category.title}
+                </div>
+              ) : (
+                <select
+                  value={category.slug || ""}
+                  onChange={(e) => handleCategoryChange(index, e.target.value)}
+                  className="mt-1 block w-full p-2 py-2.5 border border-gray-300 rounded-md shadow-sm bg-[#F8F8F8]"
+                >
+                  <option>Select Category</option>
+                  {availableCategories.map((cat) => (
+                    <option key={cat.slug} value={cat.slug}>
+                      {cat.title}
+                    </option>
+                  ))}
+                </select>
+              )}
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700">
+                Type{section === "add" && <span className="text-[red]">*</span>}
+              </label>
+              <div className="flex gap-2">
+                {types[index] ? (
+                  <div className="mt-1 w-full p-2 py-2.5 border border-gray-300 rounded-md shadow-sm bg-gray-100">
+                    {
+                      categoriesCollection
+                        .find((cat) => cat.slug === category.slug)
+                        ?.types.find((type) => type.slug === types[index])
+                        ?.title
+                    }
+                  </div>
+                ) : (
+                  <select
+                    onChange={(e) => handleTypeChange(index, e.target.value)}
+                    disabled={!category.slug}
+                    className="mt-1 block w-full p-2 py-2.5 border border-gray-300 rounded-md shadow-sm bg-[#F8F8F8]"
+                  >
+                    {!category.slug ? (
+                      <option value="">Select Category first</option>
+                    ) : (
+                      <option value="">Select Type</option>
+                    )}
+                    {categoriesCollection
+                      .find((cat) => cat.slug === categories[index]?.slug)
+                      ?.types.map((type) => (
+                        <option key={type.slug} value={type.slug}>
+                          {type.title}
+                        </option>
+                      ))}
+                  </select>
+                )}
+                <button
+                  type="button"
+                  onClick={() => handleRemoveSelection(index)}
+                  className="w-fit h-fit p-2 mt-2.5 rounded bg-red-100 hover:bg-red-200 text-red-600"
+                >
+                  <BsTrash size={16} />
+                </button>
+              </div>
+            </div>
+          </div>
+        ))}
+
+        <div className="col-span-2">
+          <Button
+            type="button"
+            onClick={handleAddMoreCategory}
+            disabled={isAddButtonDisabled}
+            className="w-full py-2 mt-2 text-white"
+          >
+            Add More Category
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// const SelectCategoriesAndTypes: React.FC<{
+//   setCategories: React.Dispatch<React.SetStateAction<CategoryValue[]>>;
+//   setTypes: React.Dispatch<React.SetStateAction<string[]>>;
+// }> = ({ setCategories, setTypes }) => {
+//   const [categoriesCollection, setCategoriesCollection] = useState<
+//     CategoryCollectionValues[]
+//   >([]);
+//   const [categorySelections, setCategorySelections] = useState<
+//     { category: CategoryCollectionValues; type: Type }[]
+//   >([]);
+
+//   useEffect(() => {
+//     const fetchCategoriesCollection = async () => {
+//       try {
+//         const res = await fetch(`/api/products/read/get-categories`, {
+//           method: "GET",
+//           headers: { "Content-Type": "application/json" },
+//         });
+
+//         if (!res.ok) {
+//           throw new Error("Failed to fetch categories");
+//         }
+
+//         const data = await res.json();
+//         setCategoriesCollection(data.categories as CategoryCollectionValues[]);
+//       } catch (error) {
+//         console.error("Error fetching categories:", error);
+//       }
+//     };
+
+//     fetchCategoriesCollection();
+//   }, []);
+
+//   const handleCategoryChange = (index: number, slug: string) => {
+//     const selectedCategory = categoriesCollection.find(
+//       (category) => category.slug === slug
+//     );
+//     if (selectedCategory) {
+//       const updatedSelections = [...categorySelections];
+//       updatedSelections[index] = {
+//         category: selectedCategory,
+//         type: updatedSelections[index]?.type || { title: "", slug: "" },
+//       };
+//       setCategorySelections(updatedSelections);
+
+//       // Update selected categories in parent
+//       setCategories(
+//         updatedSelections.map((sel) => ({
+//           title: sel.category.title,
+//           slug: sel.category.slug,
+//         }))
+//       );
+//     }
+//   };
+
+//   const handleTypeChange = (index: number, slug: string) => {
+//     const selectedType = categorySelections[index].category.types.find(
+//       (type) => type.slug === slug
+//     );
+//     if (selectedType) {
+//       const updatedSelections = [...categorySelections];
+//       updatedSelections[index].type = selectedType;
+//       setCategorySelections(updatedSelections);
+
+//       // Update selected types in parent
+//       setTypes(updatedSelections.map((sel) => sel.type.slug));
+//     }
+//   };
+
+//   const handleAddMoreCategory = () => {
+//     setCategorySelections([
+//       ...categorySelections,
+//       {
+//         category: {
+//           _id: "",
+//           image: "",
+//           title: "",
+//           slug: "",
+//           description: "",
+//           types: [],
+//           createdAt: "",
+//         },
+//         type: { title: "", slug: "" },
+//       },
+//     ]);
+//   };
+
+//   const handleRemoveSelection = (index: number) => {
+//     const updatedSelections = categorySelections.filter((_, i) => i !== index);
+//     setCategorySelections(updatedSelections);
+
+//     // Update parent state after removal
+//     setCategories(
+//       updatedSelections.map((sel) => ({
+//         title: sel.category.title,
+//         slug: sel.category.slug,
+//       }))
+//     );
+//     setTypes(updatedSelections.map((sel) => sel.type.slug));
+//   };
+
+//   const availableCategories = categoriesCollection.filter(
+//     (category) =>
+//       !categorySelections.some(
+//         (selection) => selection.category.slug === category.slug
+//       )
+//   );
+
+//   const isAddButtonDisabled = categorySelections.some(
+//     (selection) => !selection.category.slug || !selection.type.slug
+//   );
+
+//   if (categoriesCollection.length === 0)
+//     return <h2 className="text-primary">Loading categories...</h2>;
+
+//   return (
+//     <div className="col-span-2 grid grid-cols-1 gap-2">
+//       <div className="font-semibold">
+//         Categories and Types
+//         {section === "add" && <span className="text-[red]">*</span>}
+//       </div>
+//       <div className="col-span-2 grid grid-cols-2 gap-4">
+//         {categorySelections.map((selection, index) => (
+//           <div key={index} className="grid grid-cols-2 gap-4">
+//             <div>
+//               <label className="block text-sm font-medium text-gray-700">
+//                 Category
+//                 {section === "add" && <span className="text-[red]">*</span>}
+//               </label>
+//               {selection.category.slug ? (
+//                 <div className="mt-1 p-2 py-2.5 border border-gray-300 rounded-md shadow-sm bg-gray-100">
+//                   {selection.category.title}
+//                 </div>
+//               ) : (
+//                 <select
+//                   value={selection.category.slug || ""}
+//                   onChange={(e) => handleCategoryChange(index, e.target.value)}
+//                   className="mt-1 block w-full p-2 py-2.5 border border-gray-300 rounded-md shadow-sm bg-[#F8F8F8]"
+//                 >
+//                   <option>Select Category</option>
+//                   {availableCategories.map((category) => (
+//                     <option key={category.slug} value={category.slug}>
+//                       {category.title}
+//                     </option>
+//                   ))}
+//                 </select>
+//               )}
+//             </div>
+
+//             <div>
+//               <label className="block text-sm font-medium text-gray-700">
+//                 Type{section === "add" && <span className="text-[red]">*</span>}
+//               </label>
+//               <div className="flex-between gap-2">
+//                 {selection.type.slug ? (
+//                   <div className="mt-1 w-full p-2 py-2.5 border border-gray-300 rounded-md shadow-sm bg-gray-100">
+//                     {selection.type.title}
+//                   </div>
+//                 ) : (
+//                   <select
+//                     value={selection.type.slug || ""}
+//                     onChange={(e) => handleTypeChange(index, e.target.value)}
+//                     className="mt-1 block w-full p-2 py-2.5 border border-gray-300 rounded-md shadow-sm bg-[#F8F8F8]"
+//                   >
+//                     <option>Select Type</option>
+//                     {selection.category.types.map((type) => (
+//                       <option key={type.slug} value={type.slug}>
+//                         {type.title}
+//                       </option>
+//                     ))}
+//                   </select>
+//                 )}
+//                 <button
+//                   type="button"
+//                   onClick={() => handleRemoveSelection(index)}
+//                   className="w-fit h-fit p-2 rounded bg-red-100 hover:bg-red-200 text-red-600"
+//                 >
+//                   <BsTrash size={16} />
+//                 </button>
+//               </div>
+//             </div>
+//           </div>
+//         ))}
+
+//         <div className="col-span-2">
+//           <Button
+//             type="button"
+//             onClick={handleAddMoreCategory}
+//             disabled={isAddButtonDisabled}
+//             className="w-full py-2 mt-2 text-white"
+//           >
+//             Add More Category
+//           </Button>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };

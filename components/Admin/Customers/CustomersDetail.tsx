@@ -13,6 +13,7 @@ import { HiOutlineMail } from "react-icons/hi";
 import { DeletePopUp } from "../Products/Category/CategoryDetail";
 import { Order } from "@/context/GlobalProvider";
 import Link from "next/link";
+import ReactCountUp from "@/components/ui/ReactCountUp";
 
 interface UserValues {
   _id: string;
@@ -357,14 +358,26 @@ export const OrderTable = ({
                       </Link>
                     </td>
                   )}
-                  <td className="px-4 py-2">{order.orderInfo.orderDate}</td>
                   <td className="px-4 py-2">
-                    {order.orderInfo.shippingDate || "-"}
+                    {formatTimestamp(order.orderInfo.orderDate)}
                   </td>
                   <td className="px-4 py-2">
-                    {order.orderInfo.deliveryDate || "-"}
+                    {(order.orderInfo.shippingDate &&
+                      formatTimestamp(order.orderInfo.shippingDate)) ||
+                      "-"}
                   </td>
-                  <td className="px-4 py-2">₹ {order.orderInfo?.totalPrice}</td>
+                  <td className="px-4 py-2">
+                    {(order.orderInfo.deliveryDate &&
+                      formatTimestamp(order.orderInfo.deliveryDate)) ||
+                      "-"}
+                  </td>
+                  <td className="px-4 py-2">
+                    <ReactCountUp
+                      prefix="₹"
+                      amt={order.orderInfo?.totalPrice}
+                      decimals={true}
+                    />
+                  </td>
                   <td className="px-2 py-1 capitalize">
                     <span
                       className={`text-white text-xs px-2 py-1 rounded-full ${

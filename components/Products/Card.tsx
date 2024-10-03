@@ -140,7 +140,7 @@ useEffect(() => {
               }
             </div>
             <div
-              className={`w-full text-[11px] md:text-xs text-[#818181] line-clamp-2 ${
+              className={`w-full text-[11px] md:text-xs text-[#818181] line-clamp-1 ${
                 loading ? "mt-2 h-7 bg-gray-200 animate-pulse" : "h-fit"
               }`}
             >
@@ -158,7 +158,7 @@ useEffect(() => {
             {card.oldPrice && (
               <div className="flex flex-wrap gap-2">
                 <span
-                  className={`text-sm md:text-md line-through text-gray-400 ${
+                  className={`text-xs md:text-md line-through text-gray-400 ${
                     loading &&
                     "mt-1 lg:mt-0 w-14 h-3 md:h-5 bg-gray-200 animate-pulse"
                   }`}
@@ -166,7 +166,7 @@ useEffect(() => {
                   {!loading && "₹" + card.oldPrice}
                 </span>
                 <span
-                  className={`text-xs md:text-sm text-[#2CD396] ${
+                  className={`text-[10px] md:text-xs text-[#2CD396] ${
                     loading &&
                     "mt-1 lg:mt-0 w-14 h-3 md:h-5 bg-gray-200 animate-pulse"
                   }`}
