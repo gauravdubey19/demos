@@ -215,7 +215,7 @@ const AddCategory: React.FC = () => {
                   />
                 ) : (
                   <div className="w-full h-full flex-center text-gray-500 cursor-pointer">
-                    No Image Selected
+                    Chooes Image
                   </div>
                 )}
                 {!loadingImageUpload && (

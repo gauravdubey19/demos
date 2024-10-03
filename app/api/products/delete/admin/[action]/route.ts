@@ -51,11 +51,11 @@ export const DELETE = async (
       }
 
       const key = extractFileKey(category?.image);
-
       // console.log("key:", key, category?.image);
-      const res = await utapi.deleteFiles(key);
 
+      const res = await utapi.deleteFiles(key);
       // console.log(res);
+
       if (res.success) {
         await Categories.deleteOne({ _id: id });
         return NextResponse.json(
