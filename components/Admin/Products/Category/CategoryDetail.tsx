@@ -19,6 +19,7 @@ import { Button } from "@/components/ui/button";
 import { BsPencilSquare, BsPlus, BsTrash } from "react-icons/bs";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { removeFile, uploadNewFile } from "@/utils/actions/fileUpload.action";
 
 const CategoryDetail: React.FC<{ categoryId: string }> = ({ categoryId }) => {
   const [category, setCategory] = useState<CategoryCollectionValues | null>(
@@ -116,14 +117,51 @@ export const PopUpEditCategory: React.FC<{
   const [description, setDescription] = useState<string>(category.description);
   const [image, setImage] = useState<string>(category.image);
   const [loading, setLoading] = useState<boolean>(false);
-  const [isImageRemoved, setIsImageRemoved] = useState<boolean>(false);
+  const [loadingImageUpload, setLoadingImageUpload] = useState<boolean>(false);
 
   const isChanged =
     title !== category.title ||
     slug !== category.slug ||
     description !== category.description ||
-    image !== category.image ||
-    isImageRemoved;
+    image !== category.image;
+  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const categoryImageFile = e.target.files?.[0];
+    if (!categoryImageFile) return;
+
+    setLoadingImageUpload(true);
+
+    if (image) {
+      const rmImage = await removeFile(image);
+      if (!rmImage) {
+        toast({
+          title: "Failed to remove old category image.",
+          description: "Please try again later...",
+          variant: "destructive",
+        });
+        setLoadingImageUpload(false);
+        return;
+      }
+    }
+
+    const categoryImageFileFormData = new FormData();
+    categoryImageFileFormData.append("file", categoryImageFile);
+    const categoryImageUrl = (await uploadNewFile(
+      categoryImageFileFormData
+    )) as string;
+
+    if (!categoryImageUrl) {
+      toast({
+        title: "Category image upload failed.",
+        description: "Please try again later...",
+        variant: "destructive",
+      });
+      setLoadingImageUpload(false);
+      return;
+    }
+
+    setImage(categoryImageUrl);
+    setLoadingImageUpload(false);
+  };
 
   const handleUpdateCategory = async () => {
     setLoading(true);
@@ -182,72 +220,55 @@ export const PopUpEditCategory: React.FC<{
     }
   };
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImage(reader.result as string);
-        setIsImageRemoved(false);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const removeImage = () => {
-    setImage("");
-    setIsImageRemoved(true);
-  };
-
   return (
     <Dialog open={isCategoryEditOpen} onOpenChange={handleCategoryEditClose}>
-      <DialogContent className="w-full h-fit max-h-[85%] flex-center flex-col gap-8 overflow-hidden">
+      <DialogContent className="w-full h-fit max-h-[90%] flex-center flex-col gap-4 overflow-hidden">
         <DialogTitle className="text-lg md:text-xl lg:text-2xl text-center">
           Edit Category - <span className="text-primary">{title}</span>
         </DialogTitle>
 
-        <div className="w-full h-fit max-h-[60%] flex flex-col gap-2 overflow-x-hidden overflow-y-scroll">
-          {!isImageRemoved && image && (
-            <div className="flex flex-col items-center">
-              <Image
-                src={image}
-                alt="Category"
-                width={400}
-                height={400}
-                className="w-full h-full max-h-40 object-contain mb-2"
-              />
-              <Button
-                size="sm"
-                onClick={removeImage}
-                className="bg-red-500 text-white"
-              >
-                Remove Image
-              </Button>
-            </div>
-          )}
-
-          {isImageRemoved && (
-            <>
-              Change Image
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleImageChange}
-                className="w-full bg-[#EAEAEA] outline-none px-4 py-2"
-              />
-            </>
-          )}
+        <div className="w-full h-[80%] flex flex-col items-center gap-2 overflow-x-hidden overflow-y-scroll">
+          <div className="relative group w-fit h-60 overflow-hidden">
+            <Image
+              src={image}
+              alt="Category"
+              width={400}
+              height={400}
+              className="w-full h-full z-0 max-h-60 object-contain mb-2"
+            />
+            {loadingImageUpload ? (
+              <div className="absolute inset-0 text-sm text-primary flex-center bg-black/50 animate-pulse">
+                Image Uploading...
+              </div>
+            ) : (
+              <>
+                <div className="absolute inset-0 z-10 text-sm text-primary cursor-pointer flex-center bg-black/60 opacity-0 group-hover:opacity-100 ease-in-out duration-300">
+                  Change Image
+                </div>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  className="absolute inset-0 z-30 opacity-0 cursor-pointer"
+                />
+              </>
+            )}
+          </div>
 
           <input
             // value={title}
-            onChange={(e) => setTitle(e.target.value)}
+            onChange={(e) => {
+              setTitle(capitalizeString(e.target.value));
+              setSlug(generateSlug(e.target.value));
+            }}
             placeholder={`Category Title - ${title}`}
             className="w-full bg-[#EAEAEA] outline-none px-4 py-2"
           />
           <input
-            // value={slug}
-            onChange={(e) => setSlug(e.target.value)}
-            placeholder={`Category Slug - ${slug}`}
+            value={slug}
+            disabled
+            // onChange={(e) => setSlug(e.target.value || title)}
+            // placeholder={`Category Slug - ${slug}`}
             className="w-full bg-[#EAEAEA] outline-none px-4 py-2"
           />
           <textarea
@@ -259,7 +280,7 @@ export const PopUpEditCategory: React.FC<{
           />
         </div>
 
-        <div className="w-full flex-between gap-4 mt-4">
+        <div className="w-full flex-between gap-4">
           <Button
             onClick={handleCategoryEditClose}
             className="w-full h-full bg-transparent border border-primary text-primary rounded-none"
