@@ -128,8 +128,8 @@ const TestimonialContainer = () => {
         setLoading(false);
       }
     };
-    getData();
-  }, []);
+    if (testimonials.length === 0) getData();
+  }, [testimonials]);
 
   useEffect(() => {
     if (!loading && containerRef.current) {

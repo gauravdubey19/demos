@@ -42,7 +42,7 @@ const Card: React.FC<CardDetails> = ({ card, category, loading = false }) => {
       }
     };
     if (card._id) getReviews();
-  }, [card._id]);
+  }, [card._id, fetchReviews]);
   return (
     <>
       {/* Link href={"#"} */}
