@@ -32,14 +32,14 @@ const OrderItemSchema = new Schema(
       required: true,
     },
     selectedColor: {
-      title:{
+      title: {
         type: String,
-        required: true
+        required: true,
       },
-      color:{
+      color: {
         type: String,
-        required: true
-      }
+        required: true,
+      },
     },
     categorySlug: {
       type: String,
