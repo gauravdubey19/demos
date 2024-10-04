@@ -100,7 +100,7 @@ const AllProducts = () => {
               />
             </div>
             <Button
-              onClick={() => router.push("/admin/all-categories/add-product")}
+              onClick={() => router.push("/admin/all-products/add-product")}
               className="w-full h-full text-white rounded-none"
             >
               <BsPlus size={20} className="ml-1" /> Create New Product

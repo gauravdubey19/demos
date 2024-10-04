@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { toast } from "@/hooks/use-toast";
 import { calculateDiscount, capitalizeString } from "@/lib/utils";
-import { CategoryCollectionValues, Type } from "@/lib/types";
+import { CategoryCollectionValues } from "@/lib/types";
 import { Button } from "@/components/ui/button";
 import {
   Accordion,
@@ -19,8 +19,9 @@ import { BsPlus, BsTrash } from "react-icons/bs";
 import {
   removeFile,
   uploadMultipleNewFiles,
-  uploadNewFile,
 } from "@/utils/actions/fileUpload.action";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 
 interface ColorOptionValue {
   title: string;
@@ -39,6 +40,7 @@ const AddProduct = () => {
   const router = useRouter();
   const [loading, setLoading] = useState<boolean>(false);
   const [success, setSuccess] = useState<boolean>(false);
+  const [isUploading, setIsUploading] = useState<boolean>(false);
 
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
@@ -71,6 +73,7 @@ const AddProduct = () => {
       const files = Array.from(target.files || []);
 
       if (files.length > 0) {
+        setIsUploading(true);
         const imagesFormData = new FormData();
         files.forEach((file) => {
           imagesFormData.append("files", file);
@@ -81,6 +84,7 @@ const AddProduct = () => {
         )) as string[];
 
         if (!imagesUrl.length) {
+          setIsUploading(false);
           return toast({
             title: "Images upload failed.",
             description: "Please try again later...",
@@ -91,6 +95,7 @@ const AddProduct = () => {
         if (!image_link) {
           setImage_link(imagesUrl[0]);
         }
+        setIsUploading(false);
       }
     };
 
@@ -167,7 +172,6 @@ const AddProduct = () => {
       !availableSizes.length ||
       !colorOptions.length ||
       !categories.length ||
-      !types.length ||
       !material
     ) {
       console.log("fields", fields);
@@ -181,29 +185,7 @@ const AddProduct = () => {
     }
 
     try {
-      console.log("fields", fields);
-      // const image_linkFormData = new FormData();
-      // image_linkFormData.append("file", image_link);
-
-      // const image_linkUrl = await uploadNewFile(image_linkFormData);
-
-      // if (!image_linkUrl) {
-      //   toast({
-      //     title: "Main image upload failed.",
-      //     description: "Please try again later...",
-      //     variant: "destructive",
-      //   });
-      //   setLoading(false);
-      //   return;
-      // }
-
-      // const imagesFormData = new FormData();
-      // images.forEach((image) => {
-      //   imagesFormData.append("files", image);
-      // });
-
-      // const imagesUrl = await uploadMultipleNewFiles(imagesFormData);
-      // console.log(imagesUrl);
+      // console.log("fields", fields);
 
       const res = await fetch("/api/products/create/create-product", {
         method: "POST",
@@ -258,7 +240,10 @@ const AddProduct = () => {
 
   return (
     <>
-      <form onSubmit={handleSubmit} className="w-full h-full overflow-hidden">
+      <form
+        onSubmit={handleSubmit}
+        className="w-full h-full select-none overflow-hidden"
+      >
         <header className="w-full h-fit flex justify-between p-4 md:py-6">
           <h2 className="capitalize text-2xl md:text-3xl lg:text-4xl font-semibold tracking-tight">
             Add New Product
@@ -295,19 +280,36 @@ const AddProduct = () => {
                     height={800}
                     className="w-full h-full object-contain animate-slide-down"
                   />
-                ) : (
-                  <>
+                ) : !isUploading ? (
+                  <div
+                    onClick={handleAddImage}
+                    className="cursor-pointer select-none group"
+                  >
                     <Image
                       src="/logo.png"
                       alt="Main Image"
                       width={800}
                       height={800}
-                      className="w-full h-full object-contain"
+                      className="w-full h-full object-contain group-hover:scale-110 ease-in-out duration-300"
                     />
                     <div className="absolute inset-0 bg-black/50 flex-center text-primary animate-slide-down">
                       Choose a Image
                     </div>
-                  </>
+                  </div>
+                ) : (
+                  <div className="cursor-not-allowed select-none">
+                    <Image
+                      src="/logo.png"
+                      alt="Main Image"
+                      width={800}
+                      height={800}
+                      className="w-full h-full object-contain animate-pulse"
+                    />
+                    <div className="absolute inset-0 bg-gray-300/70 animate-pulse" />
+                    <div className="absolute inset-0 flex-center text-black">
+                      Uploading Images...
+                    </div>
+                  </div>
                 )}
               </div>
             </div>
@@ -317,14 +319,20 @@ const AddProduct = () => {
               </h4>
               <div className="w-full h-[95%] bg-[#F8F8F8] overflow-x-hidden overflow-y-scroll">
                 <div className="w-full h-fit grid grid-cols-1 md:grid-cols-2 gap-2">
-                  <div
-                    className="w-full h-56 flex-center cursor-pointer select-none br active:scale-95 ease-in-out duration-300"
-                    onClick={handleAddImage}
-                  >
-                    <div className="w-12 h-12 rounded-full flex-center bg-primary text-2xl md:text-4xl lg:text-5xl text-white p-4">
-                      +
+                  {!isUploading ? (
+                    <div
+                      className="w-full h-56 flex-center cursor-pointer select-none group br active:scale-95 ease-in-out duration-300"
+                      onClick={handleAddImage}
+                    >
+                      <div className="w-12 h-12 rounded-full flex-center bg-primary text-2xl md:text-4xl lg:text-5xl text-white p-4 group-hover:scale-110 ease-in-out duration-300">
+                        +
+                      </div>
                     </div>
-                  </div>
+                  ) : (
+                    <div className="w-full h-56 flex-center cursor-not-allowed select-none animate-pulse bg-gray-300">
+                      Uploading Images...
+                    </div>
+                  )}
                   {images
                     .slice()
                     .reverse()
@@ -365,32 +373,18 @@ const AddProduct = () => {
           <div className="w-full h-fit grid grid-cols-1 md:grid-cols-2 gap-6">
             <>
               {/* Product Title and Description */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700">
-                  Title<span className="text-[red]">*</span>
-                </label>
-                <input
-                  type="text"
-                  value={title}
-                  onChange={(e) => setTitle(e.target.value)}
-                  required
-                  className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm bg-[#F8F8F8]"
-                  placeholder="Enter Title"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700">
-                  Description<span className="text-[red]">*</span>
-                </label>
-                <textarea
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                  required
-                  placeholder="Enter Description"
-                  className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm bg-[#F8F8F8]"
-                ></textarea>
-              </div>
-
+              <InputField
+                label="Title"
+                value={title}
+                onChange={setTitle}
+                required
+              />
+              <TextareaField
+                label="Description"
+                value={description}
+                onChange={setDescription}
+                required
+              />
               {/* Price and Old Price */}
               <div className="space-y-2">
                 <div className="flex gap-2">
@@ -444,27 +438,19 @@ const AddProduct = () => {
               </div>
 
               {/* Material */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700">
-                  Material<span className="text-[red]">*</span>
-                </label>
-                <input
-                  type="text"
-                  value={material}
-                  onChange={(e) => setMaterial(e.target.value)}
-                  required
-                  placeholder="Enter"
-                  className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm bg-[#F8F8F8]"
-                />
-              </div>
-
+              <InputField
+                label="Material"
+                value={material}
+                onChange={setMaterial}
+                required
+              />
               {/* Color Section */}
               <ColorOption
                 colorOptions={colorOptions}
                 setColorOptions={setColorOptions}
               />
 
-              {/* Available Sizes Section */}
+              {/* Available Sizes Section & Quantity In Stock */}
               <div className="flex gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700">
@@ -505,73 +491,31 @@ const AddProduct = () => {
               </div>
 
               {/* Fabric Type, Origin, Care Instructions */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700">
-                  Fabric Type
-                </label>
-                <input
-                  type="text"
-                  value={fabricType}
-                  onChange={(e) => setFabricType(e.target.value)}
-                  className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm bg-[#F8F8F8]"
-                  placeholder="Enter"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700">
-                  Origin
-                </label>
-                <input
-                  type="text"
-                  value={origin}
-                  onChange={(e) => setOrigin(e.target.value)}
-                  placeholder="Enter"
-                  className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm bg-[#F8F8F8]"
-                />
-              </div>
-              {/* Country Of Manufacture */}
-              {/* <div className="">
-                <label className="block text-sm font-medium text-gray-700">
-                  Country Of Manufacture
-                </label>
-                <input
-                  type="text"
-                  value={countryOfManufacture}
-                  onChange={(e) => setCountryOfManufacture(e.target.value)}
-                  placeholder="Enter"
-                  className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm bg-[#F8F8F8]"
-                />
-              </div> */}
+              <InputField
+                label="Fabric Type"
+                value={fabricType}
+                onChange={setFabricType}
+              />
+              <InputField label="Origin" value={origin} onChange={setOrigin} />
               {/* Brand */}
-              <div className="col-span-2">
-                <label className="block text-sm font-medium text-gray-700">
-                  Brand
-                </label>
-                <input
-                  type="text"
-                  value={brand}
-                  onChange={(e) => setBrand(e.target.value)}
-                  className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm bg-[#F8F8F8]"
-                  placeholder="Enter"
-                />
-              </div>
+              <InputField
+                label="Brand"
+                full
+                value={brand}
+                onChange={setBrand}
+              />
               <SelectCategoriesAndTypes
                 categories={categories}
                 setCategories={setCategories}
                 types={types}
                 setTypes={setTypes}
               />
-              <div className="col-span-2">
-                <label className="block text-sm font-medium text-gray-700">
-                  Care Instructions
-                </label>
-                <textarea
-                  value={careInstructions}
-                  onChange={(e) => setCareInstructions(e.target.value)}
-                  placeholder="Enter"
-                  className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm bg-[#F8F8F8]"
-                ></textarea>
-              </div>
+              <TextareaField
+                label="Care Instructions"
+                full
+                value={careInstructions}
+                onChange={setCareInstructions}
+              />
             </>
             <FAQs faqs={faqs} setFaqs={setFaqs} />
           </div>
@@ -1063,201 +1007,67 @@ export const SelectCategoriesAndTypes: React.FC<
   );
 };
 
-// const SelectCategoriesAndTypes: React.FC<{
-//   setCategories: React.Dispatch<React.SetStateAction<CategoryValue[]>>;
-//   setTypes: React.Dispatch<React.SetStateAction<string[]>>;
-// }> = ({ setCategories, setTypes }) => {
-//   const [categoriesCollection, setCategoriesCollection] = useState<
-//     CategoryCollectionValues[]
-//   >([]);
-//   const [categorySelections, setCategorySelections] = useState<
-//     { category: CategoryCollectionValues; type: Type }[]
-//   >([]);
+interface InputFieldProps {
+  label: string;
+  value: string;
+  onChange: (value: string) => void;
+  required?: boolean;
+  full?: boolean;
+  className?: string;
+}
 
-//   useEffect(() => {
-//     const fetchCategoriesCollection = async () => {
-//       try {
-//         const res = await fetch(`/api/products/read/get-categories`, {
-//           method: "GET",
-//           headers: { "Content-Type": "application/json" },
-//         });
+export const InputField: React.FC<InputFieldProps> = ({
+  label,
+  value,
+  onChange,
+  required,
+  full,
+  className = "mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm bg-[#F8F8F8]",
+}) => (
+  <div className={full ? "col-span-2" : ""}>
+    <label className="block text-sm font-medium text-gray-700">
+      {label}
+      {required && <span className="text-[red]">*</span>}
+    </label>
+    <Input
+      type="text"
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
+      required={required}
+      placeholder="Enter"
+      className={className}
+    />
+  </div>
+);
 
-//         if (!res.ok) {
-//           throw new Error("Failed to fetch categories");
-//         }
+interface TextareaFieldProps {
+  label: string;
+  value: string;
+  onChange: (value: string) => void;
+  required?: boolean;
+  full?: boolean;
+  className?: string;
+}
 
-//         const data = await res.json();
-//         setCategoriesCollection(data.categories as CategoryCollectionValues[]);
-//       } catch (error) {
-//         console.error("Error fetching categories:", error);
-//       }
-//     };
-
-//     fetchCategoriesCollection();
-//   }, []);
-
-//   const handleCategoryChange = (index: number, slug: string) => {
-//     const selectedCategory = categoriesCollection.find(
-//       (category) => category.slug === slug
-//     );
-//     if (selectedCategory) {
-//       const updatedSelections = [...categorySelections];
-//       updatedSelections[index] = {
-//         category: selectedCategory,
-//         type: updatedSelections[index]?.type || { title: "", slug: "" },
-//       };
-//       setCategorySelections(updatedSelections);
-
-//       // Update selected categories in parent
-//       setCategories(
-//         updatedSelections.map((sel) => ({
-//           title: sel.category.title,
-//           slug: sel.category.slug,
-//         }))
-//       );
-//     }
-//   };
-
-//   const handleTypeChange = (index: number, slug: string) => {
-//     const selectedType = categorySelections[index].category.types.find(
-//       (type) => type.slug === slug
-//     );
-//     if (selectedType) {
-//       const updatedSelections = [...categorySelections];
-//       updatedSelections[index].type = selectedType;
-//       setCategorySelections(updatedSelections);
-
-//       // Update selected types in parent
-//       setTypes(updatedSelections.map((sel) => sel.type.slug));
-//     }
-//   };
-
-//   const handleAddMoreCategory = () => {
-//     setCategorySelections([
-//       ...categorySelections,
-//       {
-//         category: {
-//           _id: "",
-//           image: "",
-//           title: "",
-//           slug: "",
-//           description: "",
-//           types: [],
-//           createdAt: "",
-//         },
-//         type: { title: "", slug: "" },
-//       },
-//     ]);
-//   };
-
-//   const handleRemoveSelection = (index: number) => {
-//     const updatedSelections = categorySelections.filter((_, i) => i !== index);
-//     setCategorySelections(updatedSelections);
-
-//     // Update parent state after removal
-//     setCategories(
-//       updatedSelections.map((sel) => ({
-//         title: sel.category.title,
-//         slug: sel.category.slug,
-//       }))
-//     );
-//     setTypes(updatedSelections.map((sel) => sel.type.slug));
-//   };
-
-//   const availableCategories = categoriesCollection.filter(
-//     (category) =>
-//       !categorySelections.some(
-//         (selection) => selection.category.slug === category.slug
-//       )
-//   );
-
-//   const isAddButtonDisabled = categorySelections.some(
-//     (selection) => !selection.category.slug || !selection.type.slug
-//   );
-
-//   if (categoriesCollection.length === 0)
-//     return <h2 className="text-primary">Loading categories...</h2>;
-
-//   return (
-//     <div className="col-span-2 grid grid-cols-1 gap-2">
-//       <div className="font-semibold">
-//         Categories and Types
-//         {section === "add" && <span className="text-[red]">*</span>}
-//       </div>
-//       <div className="col-span-2 grid grid-cols-2 gap-4">
-//         {categorySelections.map((selection, index) => (
-//           <div key={index} className="grid grid-cols-2 gap-4">
-//             <div>
-//               <label className="block text-sm font-medium text-gray-700">
-//                 Category
-//                 {section === "add" && <span className="text-[red]">*</span>}
-//               </label>
-//               {selection.category.slug ? (
-//                 <div className="mt-1 p-2 py-2.5 border border-gray-300 rounded-md shadow-sm bg-gray-100">
-//                   {selection.category.title}
-//                 </div>
-//               ) : (
-//                 <select
-//                   value={selection.category.slug || ""}
-//                   onChange={(e) => handleCategoryChange(index, e.target.value)}
-//                   className="mt-1 block w-full p-2 py-2.5 border border-gray-300 rounded-md shadow-sm bg-[#F8F8F8]"
-//                 >
-//                   <option>Select Category</option>
-//                   {availableCategories.map((category) => (
-//                     <option key={category.slug} value={category.slug}>
-//                       {category.title}
-//                     </option>
-//                   ))}
-//                 </select>
-//               )}
-//             </div>
-
-//             <div>
-//               <label className="block text-sm font-medium text-gray-700">
-//                 Type{section === "add" && <span className="text-[red]">*</span>}
-//               </label>
-//               <div className="flex-between gap-2">
-//                 {selection.type.slug ? (
-//                   <div className="mt-1 w-full p-2 py-2.5 border border-gray-300 rounded-md shadow-sm bg-gray-100">
-//                     {selection.type.title}
-//                   </div>
-//                 ) : (
-//                   <select
-//                     value={selection.type.slug || ""}
-//                     onChange={(e) => handleTypeChange(index, e.target.value)}
-//                     className="mt-1 block w-full p-2 py-2.5 border border-gray-300 rounded-md shadow-sm bg-[#F8F8F8]"
-//                   >
-//                     <option>Select Type</option>
-//                     {selection.category.types.map((type) => (
-//                       <option key={type.slug} value={type.slug}>
-//                         {type.title}
-//                       </option>
-//                     ))}
-//                   </select>
-//                 )}
-//                 <button
-//                   type="button"
-//                   onClick={() => handleRemoveSelection(index)}
-//                   className="w-fit h-fit p-2 rounded bg-red-100 hover:bg-red-200 text-red-600"
-//                 >
-//                   <BsTrash size={16} />
-//                 </button>
-//               </div>
-//             </div>
-//           </div>
-//         ))}
-
-//         <div className="col-span-2">
-//           <Button
-//             type="button"
-//             onClick={handleAddMoreCategory}
-//             disabled={isAddButtonDisabled}
-//             className="w-full py-2 mt-2 text-white"
-//           >
-//             Add More Category
-//           </Button>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };
+export const TextareaField: React.FC<TextareaFieldProps> = ({
+  label,
+  value,
+  onChange,
+  required,
+  full,
+  className = "mt-1 block w-full min-h-[40px] p-2 border border-gray-300 rounded-md shadow-sm bg-[#F8F8F8]",
+}) => (
+  <div className={full ? "col-span-2" : ""}>
+    <label className="block text-sm font-medium text-gray-700">
+      {label}
+      {required && <span className="text-[red]">*</span>}
+    </label>
+    <Textarea
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
+      required={required}
+      placeholder="Enter"
+      className={className}
+    />
+  </div>
+);

@@ -1145,3 +1145,202 @@ export const a = "b";
 //       "https://csk-demo.netlify.app/assets/img/media_20240710_190937_9152305180124524051.png",
 //   },
 // ];
+
+// const SelectCategoriesAndTypes: React.FC<{
+//   setCategories: React.Dispatch<React.SetStateAction<CategoryValue[]>>;
+//   setTypes: React.Dispatch<React.SetStateAction<string[]>>;
+// }> = ({ setCategories, setTypes }) => {
+//   const [categoriesCollection, setCategoriesCollection] = useState<
+//     CategoryCollectionValues[]
+//   >([]);
+//   const [categorySelections, setCategorySelections] = useState<
+//     { category: CategoryCollectionValues; type: Type }[]
+//   >([]);
+
+//   useEffect(() => {
+//     const fetchCategoriesCollection = async () => {
+//       try {
+//         const res = await fetch(`/api/products/read/get-categories`, {
+//           method: "GET",
+//           headers: { "Content-Type": "application/json" },
+//         });
+
+//         if (!res.ok) {
+//           throw new Error("Failed to fetch categories");
+//         }
+
+//         const data = await res.json();
+//         setCategoriesCollection(data.categories as CategoryCollectionValues[]);
+//       } catch (error) {
+//         console.error("Error fetching categories:", error);
+//       }
+//     };
+
+//     fetchCategoriesCollection();
+//   }, []);
+
+//   const handleCategoryChange = (index: number, slug: string) => {
+//     const selectedCategory = categoriesCollection.find(
+//       (category) => category.slug === slug
+//     );
+//     if (selectedCategory) {
+//       const updatedSelections = [...categorySelections];
+//       updatedSelections[index] = {
+//         category: selectedCategory,
+//         type: updatedSelections[index]?.type || { title: "", slug: "" },
+//       };
+//       setCategorySelections(updatedSelections);
+
+//       // Update selected categories in parent
+//       setCategories(
+//         updatedSelections.map((sel) => ({
+//           title: sel.category.title,
+//           slug: sel.category.slug,
+//         }))
+//       );
+//     }
+//   };
+
+//   const handleTypeChange = (index: number, slug: string) => {
+//     const selectedType = categorySelections[index].category.types.find(
+//       (type) => type.slug === slug
+//     );
+//     if (selectedType) {
+//       const updatedSelections = [...categorySelections];
+//       updatedSelections[index].type = selectedType;
+//       setCategorySelections(updatedSelections);
+
+//       // Update selected types in parent
+//       setTypes(updatedSelections.map((sel) => sel.type.slug));
+//     }
+//   };
+
+//   const handleAddMoreCategory = () => {
+//     setCategorySelections([
+//       ...categorySelections,
+//       {
+//         category: {
+//           _id: "",
+//           image: "",
+//           title: "",
+//           slug: "",
+//           description: "",
+//           types: [],
+//           createdAt: "",
+//         },
+//         type: { title: "", slug: "" },
+//       },
+//     ]);
+//   };
+
+//   const handleRemoveSelection = (index: number) => {
+//     const updatedSelections = categorySelections.filter((_, i) => i !== index);
+//     setCategorySelections(updatedSelections);
+
+//     // Update parent state after removal
+//     setCategories(
+//       updatedSelections.map((sel) => ({
+//         title: sel.category.title,
+//         slug: sel.category.slug,
+//       }))
+//     );
+//     setTypes(updatedSelections.map((sel) => sel.type.slug));
+//   };
+
+//   const availableCategories = categoriesCollection.filter(
+//     (category) =>
+//       !categorySelections.some(
+//         (selection) => selection.category.slug === category.slug
+//       )
+//   );
+
+//   const isAddButtonDisabled = categorySelections.some(
+//     (selection) => !selection.category.slug || !selection.type.slug
+//   );
+
+//   if (categoriesCollection.length === 0)
+//     return <h2 className="text-primary">Loading categories...</h2>;
+
+//   return (
+//     <div className="col-span-2 grid grid-cols-1 gap-2">
+//       <div className="font-semibold">
+//         Categories and Types
+//         {section === "add" && <span className="text-[red]">*</span>}
+//       </div>
+//       <div className="col-span-2 grid grid-cols-2 gap-4">
+//         {categorySelections.map((selection, index) => (
+//           <div key={index} className="grid grid-cols-2 gap-4">
+//             <div>
+//               <label className="block text-sm font-medium text-gray-700">
+//                 Category
+//                 {section === "add" && <span className="text-[red]">*</span>}
+//               </label>
+//               {selection.category.slug ? (
+//                 <div className="mt-1 p-2 py-2.5 border border-gray-300 rounded-md shadow-sm bg-gray-100">
+//                   {selection.category.title}
+//                 </div>
+//               ) : (
+//                 <select
+//                   value={selection.category.slug || ""}
+//                   onChange={(e) => handleCategoryChange(index, e.target.value)}
+//                   className="mt-1 block w-full p-2 py-2.5 border border-gray-300 rounded-md shadow-sm bg-[#F8F8F8]"
+//                 >
+//                   <option>Select Category</option>
+//                   {availableCategories.map((category) => (
+//                     <option key={category.slug} value={category.slug}>
+//                       {category.title}
+//                     </option>
+//                   ))}
+//                 </select>
+//               )}
+//             </div>
+
+//             <div>
+//               <label className="block text-sm font-medium text-gray-700">
+//                 Type{section === "add" && <span className="text-[red]">*</span>}
+//               </label>
+//               <div className="flex-between gap-2">
+//                 {selection.type.slug ? (
+//                   <div className="mt-1 w-full p-2 py-2.5 border border-gray-300 rounded-md shadow-sm bg-gray-100">
+//                     {selection.type.title}
+//                   </div>
+//                 ) : (
+//                   <select
+//                     value={selection.type.slug || ""}
+//                     onChange={(e) => handleTypeChange(index, e.target.value)}
+//                     className="mt-1 block w-full p-2 py-2.5 border border-gray-300 rounded-md shadow-sm bg-[#F8F8F8]"
+//                   >
+//                     <option>Select Type</option>
+//                     {selection.category.types.map((type) => (
+//                       <option key={type.slug} value={type.slug}>
+//                         {type.title}
+//                       </option>
+//                     ))}
+//                   </select>
+//                 )}
+//                 <button
+//                   type="button"
+//                   onClick={() => handleRemoveSelection(index)}
+//                   className="w-fit h-fit p-2 rounded bg-red-100 hover:bg-red-200 text-red-600"
+//                 >
+//                   <BsTrash size={16} />
+//                 </button>
+//               </div>
+//             </div>
+//           </div>
+//         ))}
+
+//         <div className="col-span-2">
+//           <Button
+//             type="button"
+//             onClick={handleAddMoreCategory}
+//             disabled={isAddButtonDisabled}
+//             className="w-full py-2 mt-2 text-white"
+//           >
+//             Add More Category
+//           </Button>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };

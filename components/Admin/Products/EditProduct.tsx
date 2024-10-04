@@ -10,7 +10,13 @@ import {
 import { calculateDiscount } from "@/lib/utils";
 import { toast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
-import { ColorOption, FAQs, SelectCategoriesAndTypes } from "./AddProduct";
+import {
+  ColorOption,
+  FAQs,
+  InputField,
+  SelectCategoriesAndTypes,
+  TextareaField,
+} from "./AddProduct";
 import ReactCountUp from "@/components/ui/ReactCountUp";
 import Loader from "@/components/ui/Loader";
 
@@ -68,6 +74,7 @@ const EditProduct: React.FC<{ slug: string }> = ({ slug }) => {
   const [changedFields, setChangedFields] = useState<boolean>(false);
   const [loadingSave, setLoadingSave] = useState<boolean>(false);
   const [success, setSuccess] = useState<boolean>(false);
+  const [isUploading, setIsUploading] = useState<boolean>(false);
 
   const [image_link, setImage_link] = useState<string>("");
   const [fetchImages, setFetchImages] = useState<string[]>([]);
@@ -404,19 +411,36 @@ const EditProduct: React.FC<{ slug: string }> = ({ slug }) => {
                     height={800}
                     className="w-full h-full object-contain animate-slide-down"
                   />
-                ) : (
-                  <>
+                ) : !isUploading ? (
+                  <div
+                    onClick={handleAddImage}
+                    className="cursor-pointer select-none group"
+                  >
                     <Image
                       src="/logo.png"
                       alt="Main Image"
                       width={800}
                       height={800}
-                      className="w-full h-full object-contain"
+                      className="w-full h-full object-contain group-hover:scale-110 ease-in-out duration-300"
                     />
                     <div className="absolute inset-0 bg-black/50 flex-center text-primary animate-slide-down">
                       Choose a Image
                     </div>
-                  </>
+                  </div>
+                ) : (
+                  <div className="cursor-not-allowed select-none">
+                    <Image
+                      src="/logo.png"
+                      alt="Main Image"
+                      width={800}
+                      height={800}
+                      className="w-full h-full object-contain animate-pulse"
+                    />
+                    <div className="absolute inset-0 bg-gray-300/70 animate-pulse" />
+                    <div className="absolute inset-0 flex-center text-black">
+                      Uploading Images...
+                    </div>
+                  </div>
                 )}
               </div>
             </div>
@@ -424,14 +448,20 @@ const EditProduct: React.FC<{ slug: string }> = ({ slug }) => {
               <h4>Images</h4>
               <div className="w-full h-[95%] bg-[#F8F8F8] overflow-x-hidden overflow-y-scroll">
                 <div className="w-full h-fit grid grid-cols-1 md:grid-cols-2 gap-2">
-                  <div
-                    className="w-full h-56 flex-center cursor-pointer select-none br active:scale-95 ease-in-out duration-300"
-                    onClick={handleAddImage}
-                  >
-                    <div className="w-12 h-12 rounded-full flex-center bg-primary text-2xl md:text-4xl lg:text-5xl text-white p-4">
-                      +
+                  {!isUploading ? (
+                    <div
+                      className="w-full h-56 flex-center cursor-pointer select-none group br active:scale-95 ease-in-out duration-300"
+                      onClick={handleAddImage}
+                    >
+                      <div className="w-12 h-12 rounded-full flex-center bg-primary text-2xl md:text-4xl lg:text-5xl text-white p-4 group-hover:scale-110 ease-in-out duration-300">
+                        +
+                      </div>
                     </div>
-                  </div>
+                  ) : (
+                    <div className="w-full h-56 flex-center cursor-not-allowed select-none animate-pulse bg-gray-300">
+                      Uploading Images...
+                    </div>
+                  )}
                   {images
                     .slice()
                     .reverse()
@@ -506,31 +536,12 @@ const EditProduct: React.FC<{ slug: string }> = ({ slug }) => {
           <div className="w-full h-fit grid grid-cols-1 md:grid-cols-2 gap-6">
             <>
               {/* Product Title and Description */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700">
-                  Title
-                </label>
-                <input
-                  type="text"
-                  value={title}
-                  onChange={(e) => setTitle(e.target.value)}
-                  required
-                  className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm bg-[#F8F8F8]"
-                  placeholder="Enter Title"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700">
-                  Description
-                </label>
-                <textarea
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                  required
-                  placeholder="Enter Description"
-                  className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm bg-[#F8F8F8]"
-                ></textarea>
-              </div>
+              <InputField label="Title" value={title} onChange={setTitle} />
+              <TextareaField
+                label="Description"
+                value={description}
+                onChange={setDescription}
+              />
 
               {/* Price and Old Price */}
               <div className="space-y-2">
@@ -545,7 +556,6 @@ const EditProduct: React.FC<{ slug: string }> = ({ slug }) => {
                       onChange={(e) =>
                         setPrice(e.target.value as unknown as number)
                       }
-                      required
                       placeholder="Enter"
                       className="custom-number-input mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm bg-[#F8F8F8]"
                     />
@@ -585,19 +595,11 @@ const EditProduct: React.FC<{ slug: string }> = ({ slug }) => {
               </div>
 
               {/* Material */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700">
-                  Material
-                </label>
-                <input
-                  type="text"
-                  value={material}
-                  onChange={(e) => setMaterial(e.target.value)}
-                  required
-                  placeholder="Enter"
-                  className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm bg-[#F8F8F8]"
-                />
-              </div>
+              <InputField
+                label="Material"
+                value={material}
+                onChange={setMaterial}
+              />
 
               {/* Color Section */}
               <ColorOption
@@ -639,7 +641,6 @@ const EditProduct: React.FC<{ slug: string }> = ({ slug }) => {
                     onChange={(e) =>
                       setQuantityInStock(e.target.value as unknown as number)
                     }
-                    required
                     placeholder="Enter"
                     className="custom-number-input mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm bg-[#F8F8F8]"
                   />
@@ -647,43 +648,19 @@ const EditProduct: React.FC<{ slug: string }> = ({ slug }) => {
               </div>
 
               {/* Fabric Type, Origin, Care Instructions */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700">
-                  Fabric Type
-                </label>
-                <input
-                  type="text"
-                  value={fabricType}
-                  onChange={(e) => setFabricType(e.target.value)}
-                  className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm bg-[#F8F8F8]"
-                  placeholder="Enter"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700">
-                  Origin
-                </label>
-                <input
-                  type="text"
-                  value={origin}
-                  onChange={(e) => setOrigin(e.target.value)}
-                  placeholder="Enter"
-                  className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm bg-[#F8F8F8]"
-                />
-              </div>
+              <InputField
+                label="Fabric Type"
+                value={fabricType}
+                onChange={setFabricType}
+              />
+              <InputField label="Origin" value={origin} onChange={setOrigin} />
               {/* Brand */}
-              <div className="col-span-2">
-                <label className="block text-sm font-medium text-gray-700">
-                  Brand
-                </label>
-                <input
-                  type="text"
-                  value={brand}
-                  onChange={(e) => setBrand(e.target.value)}
-                  className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm bg-[#F8F8F8]"
-                  placeholder="Enter"
-                />
-              </div>
+              <InputField
+                label="Brand"
+                full
+                value={brand}
+                onChange={setBrand}
+              />
               <SelectCategoriesAndTypes
                 section="edit"
                 categories={categories}
@@ -691,17 +668,12 @@ const EditProduct: React.FC<{ slug: string }> = ({ slug }) => {
                 setCategories={setCategories}
                 setTypes={setTypes}
               />
-              <div className="col-span-2">
-                <label className="block text-sm font-medium text-gray-700">
-                  Care Instructions
-                </label>
-                <textarea
-                  value={careInstructions}
-                  onChange={(e) => setCareInstructions(e.target.value)}
-                  placeholder="Enter"
-                  className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm bg-[#F8F8F8]"
-                ></textarea>
-              </div>
+              <TextareaField
+                label="Care Instructions"
+                full
+                value={careInstructions}
+                onChange={setCareInstructions}
+              />
             </>
             <FAQs faqs={faqs} setFaqs={setFaqs} />
           </div>
