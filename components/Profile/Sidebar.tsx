@@ -70,7 +70,9 @@ const Sidebar: React.FC<SectionProps> = ({ section, sections }) => {
           <Accordion
             type="single"
             collapsible
-            defaultValue="item-2"
+            defaultValue={
+              section === "queries" || section === "faqs" ? "item-5" : "item-2"
+            }
             className="w-full px-2"
           >
             {sections.map((sec, index) =>
