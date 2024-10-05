@@ -121,6 +121,8 @@ const TestimonialContainer = () => {
           throw new Error("Failed to fetch testimonials");
         }
         const data = await response.json();
+        console.log(data);
+
         setTestimonials(data.testimonials);
       } catch (error) {
         console.error("Error fetching testimonials:", error);
@@ -130,6 +132,7 @@ const TestimonialContainer = () => {
     };
     if (testimonials.length === 0) getData();
   }, [testimonials]);
+  console.log(testimonials);
 
   useEffect(() => {
     if (!loading && containerRef.current) {

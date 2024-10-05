@@ -188,7 +188,7 @@ const GsapHero: React.FC = () => {
               </div>
               <div
                 id="middle-section"
-                className="relative lg:h-full bg-primary flex items-center justify-center w-full md:w-[40vw] lg:w-[30vw] p-6 transition-transform duration-300"
+                className="relative lg:h-full bg-[#ffb43320] backdrop-blur-md flex items-center justify-center w-full md:w-[40vw] lg:w-[30vw] p-6 transition-transform duration-300"
               >
                 <MiddleContainer />
               </div>
@@ -213,7 +213,7 @@ const MiddleContainer: React.FC = () => {
   return (
     <div className="w-full flex flex-col items-center gap-10 md:gap-16">
       <div className="w-full flex flex-col gap-2">
-        <div className="relative w-full h-[230px] flex items-end justify-center bg-white text-primary p-4">
+        <div className="relative w-full h-[230px] flex items-end justify-center bg-white/60 text-primary p-4">
           <div className="absolute md:-left-[6.8rem] top-7 z-10 gap-1 text-[90px] font-medium drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.5)]">
             <span className="md:text-white">Ex</span>
             <span>plore</span>
