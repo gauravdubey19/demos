@@ -82,50 +82,10 @@ const handler = NextAuth({
     maxAge: 7 * 24 * 60 * 60, // 7 days
   },
   callbacks: {
-    async jwt({ token, user }) {
-      const extendedUser = user as ExtendedUser;
-      if (extendedUser) {
-        token.id = extendedUser.id;
-        token.name = extendedUser.name;
-        token.email = extendedUser.email;
-        token.image = extendedUser.image;
-        token.phone_number = extendedUser.phone_number;
-        token.role = extendedUser.role;
-        token.favProducts = extendedUser.favProducts;
-      }
-      return token;
-    },
-    async session({ session, token }) {
-      const extendedSession = session as SessionExtended;
-
-      extendedSession.user.id = token.id as string;
-      extendedSession.user.name = token.name as string;
-      extendedSession.user.email = token.email as string;
-      extendedSession.user.image = token.image as string;
-      extendedSession.user.phone_number = token.phone_number as string;
-      extendedSession.user.favProducts = token.favProducts as string[];
-      extendedSession.user.role = token.role as string;
-
-      if (token.email) {
-        try {
-          await connectToDB();
-          const sessionUser = await User.findOne({ email: token.email });
-
-          if (sessionUser) {
-            extendedSession.user.id = sessionUser._id.toString();
-            extendedSession.user.favProducts = sessionUser.favProducts;
-            extendedSession.user.role = sessionUser.role;
-          }
-        } catch (error) {
-          console.error("Error fetching user data:", error);
-        }
-      }
-      return extendedSession;
-    },
     async signIn({ account, profile }) {
       const extendedProfile = profile as ExtendedProfile;
-
-      if (account?.type === "credentials") {
+      console.log("account: ", account);
+      if (account?.provider === "credentials") {
         try {
           await connectToDB();
           const userExists = await User.findById(account.providerAccountId);
@@ -137,7 +97,7 @@ const handler = NextAuth({
           console.error("Error checking if user exists:", error);
           return false;
         }
-      } else {
+      } else if(account?.provider === "google") {
         try {
           await connectToDB();
 
@@ -180,7 +140,49 @@ const handler = NextAuth({
           return false;
         }
       }
+      return false;
     },
+    async jwt({ token, user }) {
+      const extendedUser = user as ExtendedUser;
+      if (extendedUser) {
+        token.id = extendedUser.id;
+        token.name = extendedUser.name;
+        token.email = extendedUser.email;
+        token.image = extendedUser.image;
+        token.phone_number = extendedUser.phone_number;
+        token.role = extendedUser.role;
+        token.favProducts = extendedUser.favProducts;
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      const extendedSession = session as SessionExtended;
+
+      extendedSession.user.id = token.id as string;
+      extendedSession.user.name = token.name as string;
+      extendedSession.user.email = token.email as string;
+      extendedSession.user.image = token.image as string;
+      extendedSession.user.phone_number = token.phone_number as string;
+      extendedSession.user.favProducts = token.favProducts as string[];
+      extendedSession.user.role = token.role as string;
+
+      if (token.email) {
+        try {
+          await connectToDB();
+          const sessionUser = await User.findOne({ email: token.email });
+
+          if (sessionUser) {
+            extendedSession.user.id = sessionUser._id.toString();
+            extendedSession.user.favProducts = sessionUser.favProducts;
+            extendedSession.user.role = sessionUser.role;
+          }
+        } catch (error) {
+          console.error("Error fetching user data:", error);
+        }
+      }
+      return extendedSession;
+    },
+    
   },
   pages: {
     error: '/auth/error', // Custom error page

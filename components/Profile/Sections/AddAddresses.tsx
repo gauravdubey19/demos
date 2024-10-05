@@ -6,13 +6,15 @@ import { State, City } from 'country-state-city';
 import { toast } from "@/hooks/use-toast";
 import { useSession } from "next-auth/react";
 import { Address, useGlobalContext } from "@/context/GlobalProvider";
+import { useRouter } from "next/navigation";
 // import { useRouter } from "next/router";
 
 const AddNewAddress = () => {
     const { data: session } = useSession();
     const {setAddresses} = useGlobalContext();
     const [addingAddress, setAddingAddress] = useState(false);
-    // const router = useRouter();
+    const router = useRouter();
+
   const [addressData, setAddressData] = useState({
     firstName: "",
     lastName: "",
@@ -63,7 +65,7 @@ const AddNewAddress = () => {
 
   const handleSaveAddress = async (e: any) => {
     e.preventDefault();
-
+    
     if (!session?.user?.id) {
       toast({
         title: "Error",
@@ -148,6 +150,7 @@ const AddNewAddress = () => {
       city: { name: "Select a city", code: "" },
       pincode: "",
     });
+    router.back();
   };
 
   return (
