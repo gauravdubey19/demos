@@ -24,7 +24,7 @@ import { Button } from "../ui/button";
 import { useCart } from "@/context/CartProvider";
 import { FaUserCircle } from "react-icons/fa";
 import { useGlobalContext } from "@/context/GlobalProvider";
-import { stat } from "fs";
+
 //adding comment
 const profileOption = [
   { _id: "my-profile", title: "My Profile", href: "/profile/my-profile" },
@@ -50,8 +50,6 @@ const Navbar: React.FC<{ appName?: string }> = ({ appName = "LOGO" }) => {
   const pathname = usePathname(); // console.log("pathname :", pathname);
   const [isVisible, setIsVisible] = useState<boolean>(false);
   const { data: session,status } = useSession();
-  // console.log(session?.user?.role);
-
   const navbarRef = useRef<HTMLDivElement>(null);
   const { showLeft, showRight } = useCursor();
   const visible = showLeft || showRight;
@@ -131,9 +129,9 @@ const Navbar: React.FC<{ appName?: string }> = ({ appName = "LOGO" }) => {
       }
     }
   }, [isVisible, pathname]);
-useEffect(() => {
-  console.log("Status: ",status);
-}, [status]);
+// useEffect(() => {
+//   console.log("Status: ",status);
+// }, [status]);
   return (
     <div
       ref={navbarRef}
@@ -190,7 +188,7 @@ useEffect(() => {
       <div className="hidden md:flex-center md:gap-4 lg:gap-6 relative">
         {/* search */}
         <Search />
-        {session?.user?.id ? (
+        {session?.user?.id? (
           <>
             <Link href="/profile/wishlist" className="relative mr-1">
               {pathname.includes("/profile/wishlist") ? (
@@ -312,7 +310,7 @@ useEffect(() => {
             </NavigationMenu>
           </>
         ) : status === "loading" ? (
-          <div className="w-8 h-8 bg-gray-200 rounded-full animate-pulse">Loading</div>
+          <div className="w-8 h-8 bg-gray-200 rounded-full animate-pulse"></div>
         ) :
          (
           <Link
