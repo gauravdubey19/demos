@@ -8,7 +8,14 @@ export const GET = async (request: NextRequest) => {
     await connectToDB();
 
     const testimonials = await Testimonial.find().sort({ _id: -1 }); // Sort by newest first
-
+    if (!testimonials) {
+      return NextResponse.json(
+        {
+          message: "Dataset Testimonials not found!",
+        },
+        { status: 400 }
+      );
+    }
     return NextResponse.json(
       {
         message: "Testimonials fetched successfully",

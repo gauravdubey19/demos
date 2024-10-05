@@ -84,7 +84,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import Loader from "./Loader";
+// import Loader from "./Loader";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -103,7 +103,7 @@ const ScrollVideo: React.FC<VideoProps> = ({
   const containerRef = useRef<HTMLDivElement>(null);
   const scrollTriggerRef = useRef<ScrollTrigger | null>(null);
 
-  const [isVideoLoaded, setIsVideoLoaded] = useState(false);
+  // const [isVideoLoaded, setIsVideoLoaded] = useState(false);
 
   useEffect(() => {
     const video = videoRef.current;
@@ -111,29 +111,30 @@ const ScrollVideo: React.FC<VideoProps> = ({
 
     if (!video || !container) return;
 
-    const onVideoLoaded = () => {
-      setIsVideoLoaded(true); // updating state to indicate the video is ready
-      video.playbackRate = playbackConst;
+    // const onVideoLoaded = () => {
+    //   setIsVideoLoaded(true); // updating state to indicate the video is ready
+    video.playbackRate = playbackConst;
 
-      // setting up ScrollTrigger after video is loaded
-      scrollTriggerRef.current = ScrollTrigger.create({
-        trigger: container,
-        start: "top top",
-        end: "bottom bottom",
-        scrub: 3,
-        onUpdate: (self) => {
-          const scrollProgress = self.progress;
-          const videoDuration = video.duration || 1;
-          video.currentTime = scrollProgress * videoDuration;
-        },
-      });
-    };
+    // setting up ScrollTrigger after video is loaded
+    scrollTriggerRef.current = ScrollTrigger.create({
+      trigger: container,
+      start: "top top",
+      end: "bottom bottom",
+      scrub: 3,
+      onUpdate: (self) => {
+        const scrollProgress = self.progress;
+        const videoDuration = video.duration || 1;
+        video.currentTime = scrollProgress * videoDuration;
+      },
+    });
+    // };
+    const onMetadataLoaded = () => (video.currentTime = 0);
 
     // listening for the video to fully load its data
-    video.addEventListener("loadeddata", onVideoLoaded);
+    video.addEventListener("loadeddata", onMetadataLoaded);
 
     return () => {
-      video.removeEventListener("loadeddata", onVideoLoaded);
+      video.removeEventListener("loadeddata", onMetadataLoaded);
 
       // cleaning up ScrollTrigger instance
       if (scrollTriggerRef.current) {
@@ -145,22 +146,24 @@ const ScrollVideo: React.FC<VideoProps> = ({
 
   return (
     <div ref={containerRef} className={className}>
-      {!isVideoLoaded && (
+      {/* {isVideoLoaded && (
         // <div className="absolute inset-0 flex items-center justify-center">
-          <Loader text="Video" />
+        <Loader text="Video" />
         // </div>/
-      )}
+      )} */}
       <video
         ref={videoRef}
         src={videoUrl}
         playsInline
         muted
-        className={`h-screen w-auto object-cover scale-125 transition-opacity duration-500 ${
-          isVideoLoaded ? "opacity-100" : "opacity-0"
-        }`}
+        className={`h-screen w-auto object-cover scale-125 transition-opacity duration-500`}
       />
     </div>
   );
 };
 
 export default ScrollVideo;
+
+// ${
+// isVideoLoaded ? "opacity-100" : "opacity-0"
+// }
