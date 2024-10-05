@@ -7,6 +7,7 @@ import { generateSlug } from "@/lib/utils";
 import React, { useEffect, useState } from "react";
 import ImageMagnify from "@/components/ui/ImageMagnify";
 import { Button } from "@/components/ui/button";
+import PaymentGateway from "@/components/Payment/PaymentGateway";
 
 export default function TestPage() {
   const [image, setImage] = useState<string>("");
@@ -116,7 +117,8 @@ export default function TestPage() {
     <div className="mt-[60px] w-full h-screen bg-zinc-200 p-10">
       {/* un-comment this below for creating sample data */}
       {/* <CreateCategories /> */}
-      <CreateProducts />
+      {/* <CreateProducts /> */}
+      <PaymentGateway />
     </div>
   );
 }
