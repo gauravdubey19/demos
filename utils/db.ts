@@ -1,4 +1,3 @@
-import Testimonial from "@/models/Testimonial";
 import mongoose from "mongoose";
 
 let isConnected = false;
@@ -27,35 +26,59 @@ export const connectToDB = async () => {
     isConnected = true;
     console.log("MongoDB connected");
 
+    // Call addNewFields after the connection is established
+    // await addNewFields();
     // await updateProducts();
   } catch (error) {
     console.error("Failed to connect to MongoDB:", error);
   }
-  // finally {
-  //   // closing the connection in case of any issues or after successful connection
-  //   if (mongoose.connection.readyState !== 0) {
-  //     await mongoose.disconnect();
-  //     isConnected = false;
-  //     console.log("MongoDB connection closed");
-  //   }
-  // }
 };
 
-// async function updateProducts() {
-//   try {
-//     const result = await mongoose.connection.db
-//       .collection("products")
-//       .updateMany({}, { $rename: { image_link: "image_link" } });
+// Function to add new fields to the productCollection array
+async function addNewFields() {
+  try {
+    if (!mongoose.connection.db) {
+      console.log("No database connection");
+      return;
+    }
 
-//     console.log("Update result:", result);
+    const result = await mongoose.connection.db
+      .collection("Outfits")
+      .updateMany(
+        {},
+        {
+          $set: {
+            "productCollection.$[].productId": "", // Add default value for productId
+            "productCollection.$[].price": 0, // Add default value for price
+          },
+        }
+      );
 
-//     console.log(`Updated documents: ${result.modifiedCount}`);
-//   } catch (error) {
-//     console.error("Error updating products:", error);
-//   } finally {
-//     await mongoose.connection.close();
-//   }
-// }
+    console.log("Update result:", result);
+    console.log(`Updated documents: ${result.modifiedCount}`);
+  } catch (error) {
+    console.error("Error updating products:", error);
+  }
+}
+async function updateProducts() {
+  try {
+    if(!mongoose.connection.db) {
+      console.log("No database connection");
+      return;
+    }
+    const result = await mongoose.connection.db
+      .collection("Outfits")
+      .updateMany({}, { $rename: { image_link: "image_link" } });
+
+    console.log("Update result:", result);
+
+    console.log(`Updated documents: ${result.modifiedCount}`);
+  } catch (error) {
+    console.error("Error updating products:", error);
+  } finally {
+    await mongoose.connection.close();
+  }
+}
 
 // async function removeFullNameField() {
 //   try {

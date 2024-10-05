@@ -5,10 +5,8 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog";
-import React from 'react';
-import { Button } from "@/components/ui/button";
-import { Plus } from 'lucide-react';
 import Image from "next/image";
+import React from 'react';
 
 const EditModal = () => {
     return (
@@ -24,8 +22,8 @@ const EditModal = () => {
                         Image Name
                     </DialogTitle>
                         <div className="bg-white p-6 rounded-lg ">
-                            <img
-                               
+                            <Image
+                            
                                 src="https://placehold.co/600x400"
                                 alt="img"
                                 className="w-full h-auto mb-6 rounded-lg"

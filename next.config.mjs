@@ -1,7 +1,14 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  images: { remotePatterns: [{ protocol: "https", hostname: "*" }] },
-  // matcher: ["/((?!api|_next|.*\\..*).*)"],
+  images: {
+    dangerouslyAllowSVG: true,
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '**', // Allow all HTTPS domains
+      },
+    ],
+  },
 };
 
 export default nextConfig;

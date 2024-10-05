@@ -123,7 +123,7 @@ const GridCards = () => {
                   <div className="w-full h-full bg-gray-200 rounded-3xl"></div>
                 </div>
               ))
-              : productCollection.slice(0, 2).map((product, index) => (
+              : productCollection.slice(0, 2).reverse().map((product, index) => (
                 <div
                   key={index}
                   title={product.title}
@@ -202,7 +202,7 @@ const GridCards = () => {
         </div>
 
         <div className="flex flex-row gap-4 mt-5 md:gap-10 items-end justify-center pb-10">
-          {outfitCollection.slice(0, 4).map((_, index) => (
+          {outfitCollection.slice(0, 4).reverse().map((_, index) => (
             <CircularButton
               pic={icon}
               index={index}
