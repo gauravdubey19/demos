@@ -39,8 +39,8 @@ const TestimonialsAdmin = () => {
         setLoading(false);
       }
     };
-    fetchTestimonials();
-  }, [refresh]);
+    if (testimonials?.length === 0) fetchTestimonials();
+  }, [refresh, testimonials]);
   // console.log(testimonials)
 
   const handleRefresh = () => {

@@ -22,7 +22,7 @@ const Sidebar: React.FC<SectionProps> = ({ section, sections }) => {
   const pathname = usePathname();
   return (
     <>
-      <aside className="hidden h-full w-fit md:w-[32%] lg:w-[25%] xl:w-[20%] flex-col border-r bg-[#F8F8F8] p-4 md:flex drop-shadow-lg overflow-hidden">
+      <aside className="hidden h-full w-fit md:w-[32%] lg:w-[25%] xl:w-[20%] select-none flex-col border-r bg-[#F8F8F8] p-4 md:flex drop-shadow-lg overflow-hidden">
         {pathname.includes("/admin") ? (
           <Link
             href="/"
@@ -70,7 +70,9 @@ const Sidebar: React.FC<SectionProps> = ({ section, sections }) => {
           <Accordion
             type="single"
             collapsible
-            defaultValue="item-2"
+            defaultValue={
+              section === "queries" || section === "faqs" ? "item-5" : "item-2"
+            }
             className="w-full px-2"
           >
             {sections.map((sec, index) =>

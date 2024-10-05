@@ -166,7 +166,7 @@ const ImagePracticles: React.FC<{
     <div className="relative w-full h-full bg-transparent overflow-hidden">
       {!isLoaded && (
         <div className="absolute inset-0 flex items-center justify-center">
-          <div className="animate-spin h-8 w-8 border-4 border-blue-500 border-t-transparent rounded-full"></div>
+          <div className="animate-spin h-8 w-8 border-4 border-primary border-t-transparent rounded-full"></div>
         </div>
       )}
       <canvas ref={canvasRef} className="w-full h-full object-cover"></canvas>
