@@ -333,6 +333,59 @@ const AddProduct = () => {
                       Uploading Images...
                     </div>
                   )}
+                  {/* <CldUploadWidget
+                    uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_Preset}
+                    options={{ multiple: true, maxFiles: 5 }}
+                    onSuccess={(result, { widget }) => {
+                      const info = result?.info;
+                      console.log(info);
+
+                      const urls: string[] = Array.isArray(info)
+                        ? info.map(
+                            (file: { secure_url: string }) =>
+                              file.secure_url || ""
+                          )
+                        : [];
+
+                      if (urls.length > 0) {
+                        setImages((prevUrls) => [...prevUrls, ...urls]);
+                        if (!image_link) {
+                          setImage_link(urls[0]);
+                        }
+                      }
+                    }}
+                    onQueuesEnd={(result, { widget }) => {
+                      widget.close();
+                      setIsUploading(false);
+                    }}
+                  >
+                    {({ open }) => {
+                      function handleOnClick() {
+                        setImages([]);
+                        open();
+                        setIsUploading(true);
+                      }
+                      return (
+                        <>
+                          {!isUploading ? (
+                            <button
+                              type="button"
+                              onClick={handleOnClick}
+                              className="w-full h-56 flex-center cursor-pointer select-none group br active:scale-95 ease-in-out duration-300"
+                            >
+                              <div className="w-12 h-12 rounded-full flex-center bg-primary text-2xl md:text-4xl lg:text-5xl text-white p-4 group-hover:scale-110 ease-in-out duration-300">
+                                +
+                              </div>
+                            </button>
+                          ) : (
+                            <div className="w-full h-56 flex-center cursor-not-allowed select-none animate-pulse bg-gray-300">
+                              Uploading Images...
+                            </div>
+                          )}
+                        </>
+                      );
+                    }}
+                  </CldUploadWidget> */}
                   {images
                     .slice()
                     .reverse()

@@ -54,7 +54,7 @@ const ProductSection: React.FC<ProductSectionProps> = ({
           </div>
           <Link
             href={`/products/${categorySlug}`}
-            className="group w-fit flex-center md:gap-1 lg:gap-2 p-1 px-3 md:p-1.5 md:px-4 rounded-3xl cursor-pointer lg:hover:bg-primary active:scale-95 ease-in-out duration-300"
+            className="group w-fit flex-center md:gap-1 lg:gap-2 p-1 px-3 md:p-1.5 md:px-4 rounded-3xl cursor-pointer bg-primary active:scale-95 ease-in-out duration-300"
           >
             {/* bg-primary md:bg-transparent active:bg-primary*/}
             <span className="text-sm md:text-md lg:text-xl font-medium translate-x-0.5">
@@ -62,7 +62,7 @@ const ProductSection: React.FC<ProductSectionProps> = ({
             </span>
             <IoIosArrowForward
               size={20}
-              className="font-extralight group-active:translate-x-1.5 ease-in-out duration-300"
+              className="font-extralight group-hover:translate-x-0.5 group-active:translate-x-1.5 ease-in-out duration-300"
             />
           </Link>
         </div>

@@ -8,6 +8,7 @@ import React, { useEffect, useState } from "react";
 import ImageMagnify from "@/components/ui/ImageMagnify";
 import { Button } from "@/components/ui/button";
 import PaymentGateway from "@/components/Payment/PaymentGateway";
+import UploadFile from "@/components/ui/UploadsFile";
 
 export default function TestPage() {
   const [image, setImage] = useState<string>("");
@@ -114,15 +115,35 @@ export default function TestPage() {
   };
 
   return (
-    <div className="mt-[60px] w-full h-screen bg-zinc-200 p-10">
+    <div className="mt-[60px] w-full h-screen bg-zinc-100 p-10">
       {/* un-comment this below for creating sample data */}
       {/* <CreateCategories /> */}
       {/* <CreateProducts /> */}
-      <PaymentGateway />
+      {/* <PaymentGateway /> */}
+      {/* <UploadFilesComoponent /> */}
+      <ProductCategorySection />
     </div>
   );
 }
 
+interface CloudinaryResult {
+  secure_url?: string;
+  url?: string;
+}
+
+// export const UploadFilesComoponent = () => {
+//   const [urls, setUrls] = useState<string[]>([]);
+//   console.log(urls);
+
+//   return (
+//     <>
+//       <UploadFile setUrls={setUrls}>
+//         <Button>Upload files</Button>
+//       </UploadFile>
+//       {urls.length}
+//     </>
+//   );
+// };
 const CreateCategories = () => {
   const sendCategories = async () => {
     try {

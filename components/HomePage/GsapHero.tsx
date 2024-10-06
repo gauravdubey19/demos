@@ -184,7 +184,7 @@ const GsapHero: React.FC = () => {
                 id="bg-section"
                 className="absolute inset-0 -z-10 h-full w-full"
               >
-                <ScrollVideo videoUrl="/videos/homePageHeroVideo.mp4" />
+                <ScrollVideo videoUrl="/videos/homePageHeroVideoTrim.mp4" />
               </div>
               <div
                 id="middle-section"
@@ -213,7 +213,7 @@ const MiddleContainer: React.FC = () => {
   return (
     <div className="w-full flex flex-col items-center gap-10 md:gap-16">
       <div className="w-full flex flex-col gap-2">
-        <div className="relative w-full h-[230px] flex items-end justify-center bg-white/40 text-primary p-4">
+        <div className="relative w-full h-[230px] flex items-end justify-center bg-white/50 text-primary p-4">
           <div className="absolute md:-left-[6.8rem] top-7 z-10 gap-1 text-[90px] font-medium drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)]">
             <span className="md:text-white">Ex</span>
             <span>plore</span>
