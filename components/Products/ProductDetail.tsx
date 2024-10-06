@@ -705,7 +705,6 @@ const ProductReviews: React.FC<ProductReviewsProps> = ({
         productId: productId,
         userId: session?.user?.id,
       };
-      console.log("new review: ", newReviewObj);
       try {
         setPostingReview(true);
         const response = await fetch("/api/reviews/post", {

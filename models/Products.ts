@@ -161,6 +161,14 @@ const ProductSchema = new Schema(
       type: [String],
       required: true,
     },
+    ratings: {
+      type: Number,
+      default: 0,
+    },
+    reviewsNumber: {
+      type: Number,
+      default: 0,
+    },
     colorOptions: [
       {
         title: { type: String, required: true },
