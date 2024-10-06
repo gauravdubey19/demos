@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import { signOut, useSession } from "next-auth/react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { gsap } from "gsap";
@@ -55,7 +55,7 @@ const Navbar: React.FC<{ appName?: string }> = ({ appName = "LOGO" }) => {
   const visible = showLeft || showRight;
   const { userData } = useGlobalContext();
   const [categories, setCategories] = useState<CategoryValues[]>([]);
-
+  const router = useRouter();
   const { favProducts } = useCart();
 
   useEffect(() => {
@@ -155,8 +155,8 @@ const Navbar: React.FC<{ appName?: string }> = ({ appName = "LOGO" }) => {
           <NavigationMenu className="hidden md:block">
             <NavigationMenuList className="flex items-center gap-2 lg:gap-4">
               <NavigationMenuItem>
-                <NavigationMenuTrigger className="w-full cursor-pointer bg-transparent border-none outline-none p-1">
-                  Categories
+                <NavigationMenuTrigger className={`w-full cursor-pointer bg-transparent border-none outline-none p-1 ${pathname==="/products/all" &&"text-primary font-semibold"}`} onClick={()=> router.push("/products/all")}>
+                  All Categories
                 </NavigationMenuTrigger>
                 <NavigationMenuContent className="w-fit space-y-2 p-2 animate-slide-down">
                   <CategoriesList categories={categories} />
