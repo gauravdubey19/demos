@@ -121,7 +121,7 @@ const Filter: React.FC<FilterProps> = ({
       <DrawerTrigger asChild>
         <Button
           title="Filter"
-          className="hidden md:flex items-center justify-center fixed top-20 right-5 z-[99999] transition rounded-lg gap-x-2 px-4 py-2 border border-primary bg-primary text-white hover:bg-white hover:text-primary"
+          className="hidden md:flex items-center justify-center fixed top-20 right-5 z-[10] transition rounded-lg gap-x-2 px-4 py-2 border border-primary bg-primary text-white hover:bg-white hover:text-primary"
         >
           <span className=" hidden md:block text-base
           ">Filter</span>

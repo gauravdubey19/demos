@@ -305,7 +305,7 @@ const Navbar: React.FC<{ appName?: string }> = ({ appName = "LOGO" }) => {
                         localStorage.removeItem("jwt");
                         signOut();
                       }}
-                      className="w-full h-fit capitalize rounded-none py-1 border border-primary text-black hover:text-white bg-transparent hover:bg-primary ease-in-out duration-300"
+                      className="w-full h-fit capitalize py-1 border border-primary text-black hover:text-white bg-transparent hover:bg-primary ease-in-out duration-300 rounded"
                     >
                       Logout
                     </Button>

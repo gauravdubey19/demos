@@ -23,7 +23,7 @@ const MyAccount = () => {
         </div>
         <div className="flex justify-end p-2 md:p-4 gap-x-2 shadow-md">
           <Button
-            className="font-bold text-sm md:text-base active:translate-y-0.5 border-red-500 text-red-500 bg-white border-1 border rounded-none hover:bg-red-600 hover:text-white"
+            className="font-bold text-sm md:text-base active:translate-y-0.5 border-red-500 text-red-500 bg-white border-1 border hover:bg-red-600 hover:text-white rounded"
             onClick={() => {
               localStorage.removeItem("jwt");
               signOut();
