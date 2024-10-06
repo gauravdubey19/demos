@@ -69,7 +69,7 @@ const MobileNav: React.FC<CategoriesListProps> = ({ categories }) => {
         </SheetTrigger>
         <SheetContent
           side={"right"}
-          className="top-[3.7rem] h-[calc(100vh-60px)] br backdrop-blur-sm bg-white/20 z-50 border-none outline-none p-4 shadow-[0_0_20px_rgba(0,0,0,0.5)]"
+          className="top-[3.7rem] h-[calc(100vh-60px)] backdrop-blur-sm bg-white/20 z-50 border-none outline-none p-4 shadow-[0_0_20px_rgba(0,0,0,0.5)]"
           closeIcon={false}
         >
           {session?.user && (
@@ -109,14 +109,14 @@ const MobileNav: React.FC<CategoriesListProps> = ({ categories }) => {
                       alt="profile"
                       width={200}
                       height={200}
-                      className="w-full h-full rounded-full overflow-hidden"
+                      className="w-full h-full rounded-full br overflow-hidden"
                     />
                   </SheetClose>
                 </Link>
               </SheetTitle>
             </DialogTitle>
           )}
-          <div className="relative w-full h-[calc(100vh-80px)]">
+          <div className="relative w-full h-[calc(100vh-130px)]">
             <div className="h-fit flex flex-col gap-6 pt-5 overflow-hidden">
               {links.map((link, index) => {
                 const isActive = pathname === link.href;
@@ -171,7 +171,7 @@ const MobileNav: React.FC<CategoriesListProps> = ({ categories }) => {
             </div>
             <div
               className={`absolute ${
-                !session?.user ? "bottom-3" : "bottom-3"
+                !session?.user ? "bottom-3" : "bottom-1"
               }  left-0 right-0`}
             >
               {!session?.user ? (

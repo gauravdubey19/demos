@@ -157,7 +157,7 @@ export default function LoginForm() {
             >
               Phone
             </label>
-            <div className="flex flex-row border border-gray-300 rounded-xl focus:outline-none focus:ring focus:ring-white focus:ring-opacity-50 ">
+            <div className="flex flex-row border border-gray-300 rounded-2xl focus:outline-none focus:ring focus:ring-white focus:ring-opacity-50 ">
               <div className="flex items-center gap-2 w-[11%]">
                 <span className="text-black ml-1.5">+91</span>
                 <span className="bg-gray-500 w-[0.5px] h-[70%]"></span>

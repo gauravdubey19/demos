@@ -115,12 +115,13 @@ export default function TestPage() {
   };
 
   return (
-    <div className="mt-[60px] w-full h-screen bg-zinc-200 p-10">
+    <div className="mt-[60px] w-full h-screen bg-zinc-100 p-10">
       {/* un-comment this below for creating sample data */}
       {/* <CreateCategories /> */}
       {/* <CreateProducts /> */}
       {/* <PaymentGateway /> */}
       {/* <UploadFilesComoponent /> */}
+      <ProductCategorySection />
     </div>
   );
 }
