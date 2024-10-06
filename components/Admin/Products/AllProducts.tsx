@@ -47,7 +47,7 @@ const AllProducts = () => {
         }
 
         const data = await res.json();
-        setProductCollection(data.products as ProductCollectionValues[]);
+        setProductCollection(data as ProductCollectionValues[]);
       } catch (error) {
         console.error("Error fetching product collection:", error);
       }
@@ -56,7 +56,7 @@ const AllProducts = () => {
     fetchProductCollection();
   }, []);
 
-  if (productCollection.length === 0) return <Loader />;
+  if (productCollection?.length === 0) return <Loader />;
 
   const compareIds = (id1: string | number, id2: string | number): number => {
     if (typeof id1 === "string" && typeof id2 === "string") {
