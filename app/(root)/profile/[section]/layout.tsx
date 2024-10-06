@@ -10,7 +10,7 @@ export default async function ProfilePage({
 }: ProfileAdminParams) {
   const session = await getServerSession();
   if (!session) {
-    redirect("/sign-in");
+    redirect("/");
   }
 
   return (

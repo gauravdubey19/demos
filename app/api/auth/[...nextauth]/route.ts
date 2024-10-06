@@ -23,7 +23,6 @@ export interface SessionExtended extends Session {
     phone_number?: string | null;
     favProducts?: string[];
     role?: string;
-    noSession?: boolean;
   };
 }
 
@@ -53,7 +52,6 @@ const handler = NextAuth({
         token: { label: "Token", type: "text" },
       },
       async authorize(credentials) {
-        console.log("Credentials");
         if (!credentials) {
           return null;
         }
@@ -68,8 +66,6 @@ const handler = NextAuth({
               phone_number: user.phone_number,
               role: user.role,
               favProducts: user.favProducts,
-              name: user.firstName + " " + user.lastName,
-              image: user.profile,
             };
           }
           return null;
@@ -86,6 +82,66 @@ const handler = NextAuth({
     maxAge: 7 * 24 * 60 * 60, // 7 days
   },
   callbacks: {
+    async signIn({ account, profile }) {
+      const extendedProfile = profile as ExtendedProfile;
+      console.log("account: ", account);
+      if (account?.provider === "credentials") {
+        try {
+          await connectToDB();
+          const userExists = await User.findById(account.providerAccountId);
+          if (!userExists) {
+            return false;
+          }
+          return true;
+        } catch (error) {
+          console.error("Error checking if user exists:", error);
+          return false;
+        }
+      } else if(account?.provider === "google") {
+        try {
+          await connectToDB();
+
+          if (!extendedProfile) {
+            return false;
+          }
+
+          const userExists = await User.findOne({
+            email: extendedProfile.email,
+          });
+
+          let user = userExists;
+          let [firstName, ...lastNameParts] = extendedProfile.name.split(" ");
+          let lastName = lastNameParts.join(" ");
+          if (!userExists) {
+            user = await User.create({
+              firstName: firstName,
+              lastName: lastName,
+              email: extendedProfile.email,
+              profile: extendedProfile.picture,
+              phone_number: extendedProfile.phone_number,
+            });
+          } else {
+            if (!user.profile) {
+              user.profile = extendedProfile.picture;
+              await user.save();
+            }
+            if (!user.firstName) {
+              user.firstName = firstName;
+              await user.save();
+            }
+            if (!user.lastName) {
+              user.lastName = lastName;
+              await user.save();
+            }
+          }
+          return true;
+        } catch (error) {
+          console.error("Error handling sign-in:", error);
+          return false;
+        }
+      }
+      return false;
+    },
     async jwt({ token, user }) {
       const extendedUser = user as ExtendedUser;
       if (extendedUser) {
@@ -101,36 +157,32 @@ const handler = NextAuth({
     },
     async session({ session, token }) {
       const extendedSession = session as SessionExtended;
-      console.log("Session");
-      if (token.id) {
-        extendedSession.user.id = token.id as string;
-        extendedSession.user.name = token.name as string;
-        extendedSession.user.email = token.email as string;
-        extendedSession.user.image = token.image as string;
-        extendedSession.user.phone_number = token.phone_number as string;
-        extendedSession.user.favProducts = token.favProducts as string[];
-        extendedSession.user.role = token.role as string;
 
-        if (token.email) {
-          try {
-            await connectToDB();
-            const sessionUser = await User.findOne({ email: token.email });
+      extendedSession.user.id = token.id as string;
+      extendedSession.user.name = token.name as string;
+      extendedSession.user.email = token.email as string;
+      extendedSession.user.image = token.image as string;
+      extendedSession.user.phone_number = token.phone_number as string;
+      extendedSession.user.favProducts = token.favProducts as string[];
+      extendedSession.user.role = token.role as string;
 
-            if (sessionUser) {
-              extendedSession.user.id = sessionUser._id.toString();
-              extendedSession.user.favProducts = sessionUser.favProducts;
-              extendedSession.user.role = sessionUser.role;
-            }
-          } catch (error) {
-            console.error("Error fetching user data:", error);
+      if (token.email) {
+        try {
+          await connectToDB();
+          const sessionUser = await User.findOne({ email: token.email });
+
+          if (sessionUser) {
+            extendedSession.user.id = sessionUser._id.toString();
+            extendedSession.user.favProducts = sessionUser.favProducts;
+            extendedSession.user.role = sessionUser.role;
           }
+        } catch (error) {
+          console.error("Error fetching user data:", error);
         }
-      } else {
-        console.log("No token id");
-        extendedSession.user = { id: "", noSession: true };
       }
       return extendedSession;
     },
+    
   },
   pages: {
     error: '/auth/error', // Custom error page

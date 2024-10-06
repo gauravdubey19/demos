@@ -204,6 +204,8 @@ interface GlobalState {
   setFetchingOrders: React.Dispatch<React.SetStateAction<boolean>>;
   setFetchedOrders: React.Dispatch<React.SetStateAction<Order[]>>;
   fetchReviews: (productId: string) => Promise<Review[]>;
+  deletingAddresses: boolean;
+  setDeletingAddresses: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 interface SessionExtended extends Session {
@@ -243,7 +245,7 @@ const GlobalProvider = ({ children }: { children: ReactNode }) => {
   const [suggestions, setSuggestions] = useState<Order[]>([]);
   const [activeTab, setActiveTab] = useState("allOrders");
   const [searchQuery, setSearchQuery] = useState<string>("");
-
+  const [deletingAddresses, setDeletingAddresses] = useState<boolean>(false);
   const [searchLoading, setSearchLoading] = useState<boolean>(false);
   const [fetchingOrders, setFetchingOrders] = useState<boolean>(false);
   const [fetchedOrders, setFetchedOrders] = useState<Order[]>([]);
@@ -572,6 +574,7 @@ const handleDeleteAddresses = async () => {
     }
     console.log("Deleting addresses:", selectedAddresses);
     try {
+      setDeletingAddresses(true);
       const response = await fetch(`/api/addresses/${session?.user?.id}`, {
         method: "DELETE",
         headers: {
@@ -606,6 +609,8 @@ const handleDeleteAddresses = async () => {
         description: "Error deleting addresses",
         variant: "destructive",
       });
+    } finally {
+      setDeletingAddresses(false);
     }
   };
 
@@ -628,7 +633,7 @@ const handleDeleteAddresses = async () => {
         handleDeleteAddresses, editAddressData, setEditAddressData, suggestions, setSuggestions, activeTab, setActiveTab,
         searchLoading, setSearchLoading,
         searchQuery, setSearchQuery, fetchedOrders, fetchingOrders, setFetchingOrders, setFetchedOrders,
-        fetchReviews
+        fetchReviews, deletingAddresses, setDeletingAddresses
       }}
     >
       {children}

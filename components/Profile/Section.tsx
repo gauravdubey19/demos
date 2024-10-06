@@ -27,7 +27,7 @@ const Section: React.FC<SectionProps> = ({ section, sections }) => {
     { id: "cancelled", label: "Cancelled" },
     { id: "search", label: "Search" },
   ];
-  const { handleDeleteAddresses,suggestions,activeTab,setActiveTab} = useGlobalContext();
+  const { handleDeleteAddresses,suggestions,activeTab,setActiveTab, deletingAddresses} = useGlobalContext();
   if(!fetchedOrders) return (  
     <div className="
     flex items-center justify-center w-full h-full text-2xl font-semibold text-primary
@@ -87,8 +87,9 @@ const Section: React.FC<SectionProps> = ({ section, sections }) => {
               <Button
                 className="bg-white border border-red-500 text-red-500 hover:bg-red-500 hover:text-white"
                 onClick={handleDeleteAddresses}
+                disabled={deletingAddresses}
               >
-                Delete
+                {deletingAddresses ? "Deleting..." : "Delete All"}
               </Button>
             </div>
           )}

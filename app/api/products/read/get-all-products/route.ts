@@ -15,7 +15,7 @@ export const GET = async () => {
       );
     }
 
-    return NextResponse.json({ products }, { status: 200 });
+    return NextResponse.json( products , { status: 200 });
   } catch (error) {
     console.error("Error fetching products :", error);
     return NextResponse.json(

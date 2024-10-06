@@ -5,6 +5,7 @@ import { useSession } from 'next-auth/react';
 import { toast } from '@/hooks/use-toast';
 import { useGlobalContext } from '@/context/GlobalProvider';
 import { SessionExtended } from '@/app/api/auth/[...nextauth]/route';
+import { set } from 'mongoose';
 
 interface CancelOrderDialogProps {
   orderId: string;
@@ -23,7 +24,7 @@ const CancelOrderDialog: React.FC<CancelOrderDialogProps> = ({ orderId, onClose,
   const [phone_number, setPhoneNumber] = useState('');
   const { data: session } = useSession();
   const [isPhoneLogin, setIsPhoneLogin] = useState(false);
-
+const [cancelling, setCancelling] = useState(false);
   useEffect(() => {
     if (session) {
       const sessionExt = session as SessionExtended;
@@ -80,6 +81,7 @@ const CancelOrderDialog: React.FC<CancelOrderDialogProps> = ({ orderId, onClose,
 
     const userId = session?.user?.id;
     try {
+      setCancelling(true);
       const response = await fetch(`/api/orders/${userId}`, {
         method: 'PUT',
         headers: {
@@ -100,6 +102,8 @@ const CancelOrderDialog: React.FC<CancelOrderDialogProps> = ({ orderId, onClose,
       }
     } catch (error) {
       console.error('Error cancelling order:', error);
+    } finally {
+      setCancelling(false);
     }
   };
 
@@ -143,11 +147,13 @@ const CancelOrderDialog: React.FC<CancelOrderDialogProps> = ({ orderId, onClose,
             <div className="flex justify-center pt-4">
               <Button type="submit" variant={'default'} className={`w-full bg-[#ffb433] font-semibold hover:bg-[#9c6d1b] ${isAccountVerified ?
                 "bg-red-500 text-white hover:bg-white hover:text-red-500 border  border-red-500" : ""}`}
-                disabled={sendingOtp || verifyingOtp}
+                disabled={sendingOtp || verifyingOtp || cancelling}
               >
                 {
                   isAccountVerified
-                    ? "Confirm Cancellation"
+                    ? cancelling
+                      ? "Cancelling"
+                      :"Confirm Cancellation"
                     : isOtpSend
                       ? "Verify OTP"
                       : sendingOtp
