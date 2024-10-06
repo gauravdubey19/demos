@@ -22,9 +22,9 @@ export const footer: FooterSection[] = [
   {
     title: "More Links",
     links: [
-      { label: "New Arrivals", href: "/#" },
-      { label: "Shipping & Delivery", href: "/#" },
-      { label: "Returns & Exchanges", href: "/#" },
+      // { label: "New Arrivals", href: "/#" },
+      // { label: "Shipping & Delivery", href: "/#" },
+      // { label: "Returns & Exchanges", href: "/#" },
     ],
   },
   {

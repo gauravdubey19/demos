@@ -46,6 +46,7 @@ export interface CarouselProps {
 export interface CardValues {
   _id: string | null;
   image_link: string;
+  images?: string[];
   title: string;
   description: string;
   slug: string;

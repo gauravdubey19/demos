@@ -75,7 +75,7 @@ const CategoryCard: React.FC<CategoryCardProps> = ({
                 href={`/products/${item?.slug}`}
                 className="animate-slide-up"
               >
-                <Button className="mt-2 w-full max-w-xs transition-all duration-300 bg-primary rounded-none">
+                <Button className="mt-2 w-full max-w-xs transition-all duration-300 bg-primary rounded">
                   View More
                 </Button>
               </Link>

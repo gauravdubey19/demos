@@ -6,53 +6,56 @@ import Image from "next/image";
 import { CardDetails } from "@/lib/types";
 import { IoMdStar } from "react-icons/io";
 import { GoHeart, GoHeartFill } from "react-icons/go";
-import { calculateDiscount } from "@/lib/utils";
 import { useCart } from "@/context/CartProvider";
-import { Review, useGlobalContext } from "@/context/GlobalProvider";
 import { Button } from "../ui/button";
+import discount from "@/public/images/discount.png";
 
 const Card: React.FC<CardDetails> = ({ card, category, loading = false }) => {
-  // console.log(card);
   const [reviews, setReviews] = useState<number>(0);
   const [avgRating, setAvgRating] = useState<number>(0);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [hovering, setHovering] = useState(false);
+
   const {
     handleAddProductToWhistlist,
     handleRemoveProductFromWishlist,
     productExistInWishlist,
   } = useCart();
+
+
   useEffect(() => {
     const getReviews = () => {
       if (!card._id) return;
       setReviews(card.reviewsNumber ?? 0);
       setAvgRating(Number(card.ratings?.toFixed(1)) ?? 0);
-      // try {
-      //   const fetchedReviews = await fetchReviews(card._id);
-      //   let avgRating = 0;
-      //   if (fetchedReviews.length > 0) {
-      //     fetchedReviews.forEach((review) => {
-      //       avgRating += review.rating;
-      //     });
-      //     avgRating = avgRating / fetchedReviews.length;
-      //     avgRating = Number(avgRating.toFixed(1));
-      //   } else {
-      //     avgRating = 0; // or any default value you prefer
-      //   }
-      //   setAvgRating(avgRating);
-      //   setReviews(fetchedReviews);
-      // } catch (error) {
-      //   console.error("Error fetching reviews:", error);
-      // }
     };
     if (card._id) getReviews();
   }, [card]);
+
+  useEffect(() => {
+    let interval: any;
+    // Check if card has at least 2 images
+    if (!card.images || card.images.length < 2) return;
+
+    if (hovering) {
+      interval = setInterval(() => {
+        setCurrentImageIndex((prevIndex) => {
+          if (!card.images) return 0;
+          return (prevIndex + 1) % card.images.length;
+        });
+      }, 2000); // Change image every 3 seconds
+    }
+    return () => clearInterval(interval);
+  }, [hovering, card.images]);
+
   return (
-    <>
-      {/* Link href={"#"} */}
-      <div className="h-fit w-full max-w-[198px] md:max-w-[260px] group bg-white border border-[#E9D7D7] scale-90 hover:scale-95 hover:shadow-lg ease-in-out duration-300 overflow-hidden">
+    <div
+      className="h-fit w-full max-w-[198px] md:max-w-[260px] group bg-white border border-[#E9D7D7] scale-90 hover:scale-95 hover:shadow-lg ease-in-out duration-300 overflow-hidden cursor-pointer rounded"
+      onMouseEnter={() => setHovering(true)}
+      onMouseLeave={() => setHovering(false)}
+    >
+      <Link href={`/products/${category}/${card.slug}`}>
         <div className="relative h-[240px] sm:h-[240px] md:h-[220px] lg:h-[340px] w-full flex-center select-none overflow-hidden">
-          {/* {!loading && (
-            <div className="absolute top-1 left-1 z-10 cursor-pointer w-8 h-8 flex-center md:opacity-0 group-hover:opacity-100"></div>
-          )} */}
           {!loading && (
             <div
               onClick={() => {
@@ -79,7 +82,8 @@ const Card: React.FC<CardDetails> = ({ card, category, loading = false }) => {
               )}
             </div>
           )}
-          <div className="hidden md:block absolute -bottom-12 group-hover:bottom-0 group-hover:animate-slide-up left-0 right-0 z-50 w-full p-1 ease-out duration-300">
+          { !loading &&
+          <div className={`hidden md:block absolute -bottom-12 group-hover:bottom-0 group-hover:animate-slide-up left-0 right-0 z-50 w-full p-1 ease-out duration-300`}>
             <Button
               onClick={() => {
                 if (card._id) {
@@ -89,45 +93,73 @@ const Card: React.FC<CardDetails> = ({ card, category, loading = false }) => {
                 }
               }}
               size="sm"
-              className={`w-full text-lg rounded-none hover:shadow-md ${
+              className={`w-full text-lg rounded hover:shadow-md ${
                 card._id && !productExistInWishlist(card._id)
-                  ? "bg-primary backdrop-blur-md border border-[#FF6464] text-[#FF6464]"
+                  ? "bg-white backdrop-blur-md border border-[#FF6464] text-[#FF6464]"
                   : "bg-[#FF6464]"
               }`}
             >
               {card._id && !productExistInWishlist(card._id) ? (
-                <span className="flex-center gap-1">
-                  <GoHeart color="#FF6464" className="group-hover:scale-110" />
-                  Add to Wishlist
+                <span className="flex-center gap-1 py-1">
+                  <GoHeart color="#FF6464" className="group-hover:scale-110 mr-1" />
+                  Wishlist
                 </span>
               ) : (
-                <span className="flex-center gap-1">
+                <span className="flex-center gap-1 py-1">
                   <GoHeartFill
                     color="white"
-                    className="group-hover:scale-110"
+                    className="group-hover:scale-110 mr-1"
                   />
-                  Remove to Wishist
+                  Wishlisted
                 </span>
               )}
             </Button>
           </div>
+          }
           <div
-            // href={`/products/${category}/${card.slug}`}
-            className={`w-full h-full ${
+            className={`w-full h-full relative ${
               loading
                 ? "bg-gray-300 animate-pulse"
-                : "group-hover:scale-105 ease-in-out duration-300"
+                : " ease-in-out duration-300"
             }`}
           >
-            {!loading && (
-              <Image
-                src={card.image_link}
-                alt={card.title}
-                width={600}
-                height={600}
-                loading="lazy"
-                className="w-full h-full object-cover scale-105 group-hover:scale-95 ease-in-out duration-300"
-              />
+            {!loading && card.images && card.images.length > 0 && (
+              <div className="relative w-full h-full">
+              <div className="absolute inset-0 flex transition-transform duration-1000 ease-in-out group-hover:scale-105"
+              style={{ transform: `translateX(-${currentImageIndex * 100}%)`, width: `100%` }}>
+                {card.images.map((image, index) => (
+                  <div key={index} className="w-full h-full flex-shrink-0">
+                    <Image
+                      src={image}
+                      alt={card.title}
+                      width={600}
+                      height={600}
+                      loading="lazy"
+                      className="w-full h-full object-cover object-center"
+                    />
+                  </div>
+                ))}
+                {/* discount svg overlaying the image */}
+               
+              </div>
+               
+               { card.oldPrice &&
+              <div className="absolute -top-20 left-1 z-10 duration-300 ease-in-out group-hover:top-2">
+                <Image
+                  src={discount}
+                  alt="Discount"
+                  width={50}
+                  height={50}
+                  loading="lazy"
+                />
+                <div className="absolute top-0 left-0 bottom-0 right-0 z-10 text-white text-xs text-center w-full flex items-center justify-center">
+                  <span>
+                    - {Math.round(((card.oldPrice-card.price)/card.oldPrice)*100)}% <br /> off
+                  </span>
+                  </div>
+              </div>
+              }
+              </div>
             )}
           </div>
         </div>
@@ -179,7 +211,6 @@ const Card: React.FC<CardDetails> = ({ card, category, loading = false }) => {
                     }`}
                   >
                     {!loading && reviews + " reviews"}
-                    {/* | {card.reviews.length} reviews */}
                   </span>
                 </>
               )}
@@ -210,43 +241,12 @@ const Card: React.FC<CardDetails> = ({ card, category, loading = false }) => {
                 >
                   {!loading && "₹" + card.oldPrice}
                 </span>
-                {/* <span
-                  className={`text-[10px] md:text-xs text-[#2CD396] ${
-                    loading &&
-                    "mt-1 lg:mt-0 w-14 h-3 md:h-5 bg-gray-200 animate-pulse"
-                  }`}
-                >
-                  {!loading &&
-                    "(" +
-                      calculateDiscount(card.price, card.oldPrice) +
-                      "% off)"}
-                </span> */}
               </div>
             )}
           </div>
-          <Link href={`/products/${category}/${card.slug}`}>
-            <Button
-              size="sm"
-              className={`w-full font-light rounded-none hover:shadow-md`}
-            >
-              View More
-            </Button>
-          </Link>
-          {/* <Button
-            onClick={handleAddToCartBtn}
-            disabled={itemExistInCart(card._id)}
-            size="sm"
-            className={`w-full select-none font-light rounded-none hover:shadow-md active:translate-y-0.5 ${
-              loading
-                ? "bg-gray-200 animate-pulse text-gray-200"
-                : "text-white bg-primary duration-300"
-            } ease-in-out`}
-          >
-            {itemExistInCart(card._id) ? "Added to cart" : "Add to cart"}
-          </Button> */}
         </div>
-      </div>
-    </>
+      </Link>
+    </div>
   );
 };
 

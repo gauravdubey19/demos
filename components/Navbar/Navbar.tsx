@@ -319,9 +319,9 @@ const Navbar: React.FC<{ appName?: string }> = ({ appName = "LOGO" }) => {
         ) : (
           <Link
             href="/sign-in"
-            className="capitalize cursor-pointer flex-center px-4 py-2 ring-1 ring-primary shadow-md text-black hover:text-white hover:bg-primary active:translate-y-0.5 ease-in-out duration-300"
+            className=" cursor-pointer flex-center px-4 py-2 ring-1 ring-primary shadow-md text-black hover:text-white hover:bg-primary active:translate-y-0.5 ease-in-out duration-300 rounded"
           >
-            Login / SignUp
+            Login / Sign Up
           </Link>
         )}
       </div>
