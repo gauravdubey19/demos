@@ -13,6 +13,7 @@ import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { CartItem } from "@/lib/types";
 import { useGlobalContext } from "./GlobalProvider";
+import { set } from "mongoose";
 
 interface CartContextType {
   cart: CartItem[];
@@ -55,6 +56,8 @@ interface CartContextType {
   setCart: React.Dispatch<React.SetStateAction<CartItem[]>>;
   cartLoading: string | null;
   setCartLoading: React.Dispatch<React.SetStateAction<string | null>>;
+  wishlisting: boolean;
+  setWishlisting: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -306,6 +309,7 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
   }, [status, router, session]);
 
   const [cartLoading, setCartLoading] = useState<string | null>(null);
+  const [wishlisting, setWishlisting] = useState(false);
   
   const handleIncrement = useCallback(
     async (productId: string, quantityInStock: number, currentCount: number) => {
@@ -535,6 +539,7 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
     }
 
     try {
+      setWishlisting(true);
       const res = await fetch("/api/products/create/create-wishlist", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -565,6 +570,8 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
         description: "Please try again later.",
         variant: "destructive",
       });
+    } finally {
+      setWishlisting(false);
     }
   };
 
@@ -575,6 +582,7 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
     }
 
     try {
+      setWishlisting(true);
       const res = await fetch("/api/products/delete/remove-from-wishlist", {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
@@ -607,6 +615,8 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
         description: "Please try again later.",
         variant: "destructive",
       });
+    } finally {
+      setWishlisting(false);
     }
   };
 
@@ -640,7 +650,8 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
         handleRemoveProductFromWishlist,
         productExistInWishlist,
         cartLoading,
-        setCartLoading,
+        setCartLoading, wishlisting,
+        setWishlisting
       }}
     >
       {children}
