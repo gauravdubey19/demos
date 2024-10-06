@@ -69,7 +69,7 @@ const MobileNav: React.FC<CategoriesListProps> = ({ categories }) => {
         </SheetTrigger>
         <SheetContent
           side={"right"}
-          className="top-[3.7rem] backdrop-blur-sm bg-white/20 z-50 border-none outline-none p-4 shadow-[0_0_20px_rgba(0,0,0,0.5)]"
+          className="top-[3.7rem] h-[calc(100vh-60px)] br backdrop-blur-sm bg-white/20 z-50 border-none outline-none p-4 shadow-[0_0_20px_rgba(0,0,0,0.5)]"
           closeIcon={false}
         >
           {session?.user && (
@@ -171,7 +171,7 @@ const MobileNav: React.FC<CategoriesListProps> = ({ categories }) => {
             </div>
             <div
               className={`absolute ${
-                !session?.user ? "bottom-3" : "bottom-14"
+                !session?.user ? "bottom-3" : "bottom-3"
               }  left-0 right-0`}
             >
               {!session?.user ? (
@@ -179,7 +179,7 @@ const MobileNav: React.FC<CategoriesListProps> = ({ categories }) => {
                   href={"/sign-in"}
                   className="capitalize cursor-pointer flex-center text-xl font-semibold p-2 rounded ring-1 ring-primary shadow-md text-white bg-primary"
                 >
-                  login
+                  Login / SignUp
                 </Link>
               ) : (
                 <Button

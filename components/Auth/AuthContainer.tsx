@@ -31,17 +31,25 @@ const AuthContainer: React.FC<{ children?: React.ReactNode }> = ({
               fill
               objectFit="cover"
             />
-            <div className="absolute inset-0 flex flex-col p-5 items-end gap-5 justify-center">
+            <Image
+              src="/logo.png"
+              alt="LoGo"
+              width={200}
+              height={200}
+              objectFit="cover"
+              className="absolute top-4 left-4 w-28 h-28 drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.5)] overflow-hidden"
+            />
+            {/* <div className="absolute inset-0 flex flex-col p-5 items-end gap-5 justify-center">
               <h1 className="text-5xl italic text-primary font-semibold z-10">
                 CSK Textiles
               </h1>
               <div className="h-[1px] bg-white w-full" />
-            </div>
+            </div> */}
           </div>
-          <div className="md:w-[50%] w-full h-full  flex flex-col items-start justify-center md:p-20 md:py-20 py-10 px-5">
+          <div className="md:w-[50%] w-full h-full flex-center flex-col md:p-20 md:py-20 py-10 px-5">
             {children}
             <SocialsLogin />
-            <div className="flex w-full flex-row justify-center text-black items-center mt-4">
+            {/* <div className="flex w-full flex-row justify-center text-black items-center mt-4">
               {pathname === "/sign-up" ? (
                 <>
                   Already have an account?
@@ -63,7 +71,7 @@ const AuthContainer: React.FC<{ children?: React.ReactNode }> = ({
                   </Link>
                 </>
               )}
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

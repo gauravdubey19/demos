@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev --turbo",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
@@ -32,7 +32,7 @@
     "lucide-react": "^0.428.0",
     "mongoose": "^8.6.1",
     "next": "^14.2.14",
-    "next-auth": "^4.24.7",
+    "next-auth": "^4.24.8",
     "next-themes": "^0.3.0",
     "nodemailer": "^6.9.15",
     "react": "^18",

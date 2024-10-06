@@ -5,6 +5,8 @@ import { useGlobalContext } from "@/context/GlobalProvider";
 import { signIn } from "next-auth/react";
 import { set } from "mongoose";
 import { toast } from "@/hooks/use-toast";
+import Image from "next/image";
+import { Button } from "../ui/button";
 
 export default function LoginForm() {
   const [otpSend, setOtpSend] = useState(false);
@@ -88,7 +90,7 @@ export default function LoginForm() {
           // Add your login logic here
           setToken(data.token);
           setRedirecting(true);
-          signIn("credentials", { token:data.token });
+          signIn("credentials", { token: data.token });
 
           toast({
             title: "Login Successful!",
@@ -129,14 +131,24 @@ export default function LoginForm() {
     }
   };
   return (
-    <div className="w-full h-full animate-slide-down">
-      <h2 className="text-3xl text-black text-center mb-8 font-semibold">
-        Login!
+    <div className="w-full h-fit animate-slide-down">
+      <div className="w-full flex-center mb-4">
+        <Image
+          src="/logo.png"
+          alt="LoGo"
+          width={200}
+          height={200}
+          objectFit="cover"
+          className="md:hidden w-20 h-20 drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.2)] overflow-hidden"
+        />
+      </div>
+      <h2 className="text-3xl text-black text-balanc text-center mb-8 font-semibold drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.5)]">
+        Welcome To CSK Textile!
       </h2>
-      <div className="w-full flex items-center justify-center">
+      <div className="w-full flex-center">
         <form
           onSubmit={handleSubmit}
-          className="w-full max-w-sm flex flex-col items-center "
+          className="w-full max-w-sm flex flex-col items-center"
         >
           <div className="mb-4 w-full">
             <label
@@ -145,9 +157,9 @@ export default function LoginForm() {
             >
               Phone
             </label>
-            <div className="flex flex-row border border-gray-300 rounded-2xl focus:outline-none focus:ring focus:ring-white focus:ring-opacity-50 ">
+            <div className="flex flex-row border border-gray-300 rounded-xl focus:outline-none focus:ring focus:ring-white focus:ring-opacity-50 ">
               <div className="flex items-center gap-2 w-[11%]">
-                <span className="text-black">+91</span>
+                <span className="text-black ml-1.5">+91</span>
                 <span className="bg-gray-500 w-[0.5px] h-[70%]"></span>
               </div>
               <input
@@ -198,19 +210,11 @@ export default function LoginForm() {
               />
             </div>
           )}
-          {/* <div className="w-full flex flex-row justify-end items-center">
-            <button
-              type="button"
-              className="mb-4 text-blue-500 hover:text-blue-700 text-sm text-nowrap"
-            >
-              Forgot Password?
-            </button>
-          </div> */}
           <div className="flex items-center justify-end w-full">
-            <button
+            <Button
               disabled={sendingOTP || verifyingOTP || redirecting}
               type="submit"
-              className="flex items-center gap-3 py-2 px-5 text-white bg-[#f0d464] rounded-md hover:bg-[#c5ae51] transition-colors duration-300 disabled:opacity-60"
+              className="text-black bg-transparent hover:bg-primary hover:text-white br"
             >
               {otpSend
                 ? verifyingOTP
@@ -219,8 +223,8 @@ export default function LoginForm() {
                 : sendingOTP
                 ? "Sending"
                 : "Send OTP"}
-              {verifyingOTP || sendingOTP ? "" : <LogIn />}
-            </button>
+              {verifyingOTP || sendingOTP ? "" : <LogIn className="ml-1" />}
+            </Button>
           </div>
         </form>
       </div>
