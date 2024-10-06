@@ -9,6 +9,7 @@ import { GoHeart, GoHeartFill } from "react-icons/go";
 import { calculateDiscount } from "@/lib/utils";
 import { useCart } from "@/context/CartProvider";
 import { Review, useGlobalContext } from "@/context/GlobalProvider";
+import { Button } from "../ui/button";
 
 const Card: React.FC<CardDetails> = ({ card, category, loading = false }) => {
   // console.log(card);
@@ -49,6 +50,9 @@ const Card: React.FC<CardDetails> = ({ card, category, loading = false }) => {
       {/* Link href={"#"} */}
       <div className="h-fit w-full max-w-[198px] md:max-w-[260px] group bg-white border border-[#E9D7D7] scale-90 hover:scale-95 hover:shadow-lg ease-in-out duration-300 overflow-hidden">
         <div className="relative h-[240px] sm:h-[240px] md:h-[220px] lg:h-[340px] w-full flex-center select-none overflow-hidden">
+          {/* {!loading && (
+            <div className="absolute top-1 left-1 z-10 cursor-pointer w-8 h-8 flex-center md:opacity-0 group-hover:opacity-100"></div>
+          )} */}
           {!loading && (
             <div
               onClick={() => {
@@ -58,7 +62,7 @@ const Card: React.FC<CardDetails> = ({ card, category, loading = false }) => {
                     : handleRemoveProductFromWishlist(card._id);
                 }
               }}
-              className="absolute group top-1 right-1 z-10 cursor-pointer w-8 h-8 flex-center bg-white/50 backdrop-blur-md p-1 rounded-full shadow-[0_0_1.5px_black] ease-in-out duration-300"
+              className="absolute group md:hidden top-1 right-1 z-10 cursor-pointer w-8 h-8 flex-center bg-white/50 backdrop-blur-md p-1 rounded-full shadow-[0_0_1.5px_black] ease-in-out duration-300"
             >
               {card._id && !productExistInWishlist(card._id) ? (
                 <GoHeart
@@ -75,8 +79,40 @@ const Card: React.FC<CardDetails> = ({ card, category, loading = false }) => {
               )}
             </div>
           )}
-          <Link
-            href={`/products/${category}/${card.slug}`}
+          <div className="hidden md:block absolute -bottom-12 group-hover:bottom-0 group-hover:animate-slide-up left-0 right-0 z-50 w-full p-1 ease-out duration-300">
+            <Button
+              onClick={() => {
+                if (card._id) {
+                  return !productExistInWishlist(card._id)
+                    ? handleAddProductToWhistlist(card._id)
+                    : handleRemoveProductFromWishlist(card._id);
+                }
+              }}
+              size="sm"
+              className={`w-full text-lg rounded-none hover:shadow-md ${
+                card._id && !productExistInWishlist(card._id)
+                  ? "bg-primary backdrop-blur-md border border-[#FF6464] text-[#FF6464]"
+                  : "bg-[#FF6464]"
+              }`}
+            >
+              {card._id && !productExistInWishlist(card._id) ? (
+                <span className="flex-center gap-1">
+                  <GoHeart color="#FF6464" className="group-hover:scale-110" />
+                  Add to Wishlist
+                </span>
+              ) : (
+                <span className="flex-center gap-1">
+                  <GoHeartFill
+                    color="white"
+                    className="group-hover:scale-110"
+                  />
+                  Remove to Wishist
+                </span>
+              )}
+            </Button>
+          </div>
+          <div
+            // href={`/products/${category}/${card.slug}`}
             className={`w-full h-full ${
               loading
                 ? "bg-gray-300 animate-pulse"
@@ -93,7 +129,7 @@ const Card: React.FC<CardDetails> = ({ card, category, loading = false }) => {
                 className="w-full h-full object-cover scale-105 group-hover:scale-95 ease-in-out duration-300"
               />
             )}
-          </Link>
+          </div>
         </div>
         <div className="h-auto w-full flex justify-between flex-col gap-1 p-1.5 md:px-2.5 mb-0.5 md:mb-1 overflow-hidden">
           <div className="">
@@ -174,7 +210,7 @@ const Card: React.FC<CardDetails> = ({ card, category, loading = false }) => {
                 >
                   {!loading && "₹" + card.oldPrice}
                 </span>
-                <span
+                {/* <span
                   className={`text-[10px] md:text-xs text-[#2CD396] ${
                     loading &&
                     "mt-1 lg:mt-0 w-14 h-3 md:h-5 bg-gray-200 animate-pulse"
@@ -184,10 +220,18 @@ const Card: React.FC<CardDetails> = ({ card, category, loading = false }) => {
                     "(" +
                       calculateDiscount(card.price, card.oldPrice) +
                       "% off)"}
-                </span>
+                </span> */}
               </div>
             )}
           </div>
+          <Link href={`/products/${category}/${card.slug}`}>
+            <Button
+              size="sm"
+              className={`w-full font-light rounded-none hover:shadow-md`}
+            >
+              View More
+            </Button>
+          </Link>
           {/* <Button
             onClick={handleAddToCartBtn}
             disabled={itemExistInCart(card._id)}
