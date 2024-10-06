@@ -12,8 +12,7 @@ import { Review, useGlobalContext } from "@/context/GlobalProvider";
 
 const Card: React.FC<CardDetails> = ({ card, category, loading = false }) => {
   // console.log(card);
-  const { fetchReviews } = useGlobalContext();
-  const [reviews, setReviews] = useState<Review[]>([]);
+  const [reviews, setReviews] = useState<number>(0);
   const [avgRating, setAvgRating] = useState<number>(0);
   const {
     handleAddProductToWhistlist,
@@ -21,28 +20,30 @@ const Card: React.FC<CardDetails> = ({ card, category, loading = false }) => {
     productExistInWishlist,
   } = useCart();
   useEffect(() => {
-    const getReviews = async () => {
+    const getReviews = () => {
       if (!card._id) return;
-      try {
-        const fetchedReviews = await fetchReviews(card._id);
-        let avgRating = 0;
-        if (fetchedReviews.length > 0) {
-          fetchedReviews.forEach((review) => {
-            avgRating += review.rating;
-          });
-          avgRating = avgRating / fetchedReviews.length;
-          avgRating = Number(avgRating.toFixed(1));
-        } else {
-          avgRating = 0; // or any default value you prefer
-        }
-        setAvgRating(avgRating);
-        setReviews(fetchedReviews);
-      } catch (error) {
-        console.error("Error fetching reviews:", error);
-      }
+      setReviews(card.reviewsNumber ?? 0);
+      setAvgRating(Number(card.ratings?.toFixed(1)) ?? 0);
+      // try {
+      //   const fetchedReviews = await fetchReviews(card._id);
+      //   let avgRating = 0;
+      //   if (fetchedReviews.length > 0) {
+      //     fetchedReviews.forEach((review) => {
+      //       avgRating += review.rating;
+      //     });
+      //     avgRating = avgRating / fetchedReviews.length;
+      //     avgRating = Number(avgRating.toFixed(1));
+      //   } else {
+      //     avgRating = 0; // or any default value you prefer
+      //   }
+      //   setAvgRating(avgRating);
+      //   setReviews(fetchedReviews);
+      // } catch (error) {
+      //   console.error("Error fetching reviews:", error);
+      // }
     };
     if (card._id) getReviews();
-  }, [card._id, fetchReviews]);
+  }, [card]);
   return (
     <>
       {/* Link href={"#"} */}
@@ -108,7 +109,7 @@ const Card: React.FC<CardDetails> = ({ card, category, loading = false }) => {
                 <span className="mt-1 w-24 h-2 md:h-3 bg-gray-200 animate-pulse"></span>
               ) : (
                 <div className="flex flex-row gap-2">
-                  {reviews.length ? (
+                  {reviews ? (
                     <>
                       <div className="flex gap-0.5">
                         {Array.from({ length: 5 }, (_, index) => (
@@ -132,7 +133,7 @@ const Card: React.FC<CardDetails> = ({ card, category, loading = false }) => {
                   )}
                 </div>
               )}
-              {reviews.length > 0 && (
+              {reviews > 0 && (
                 <>
                   |{" "}
                   <span
@@ -141,7 +142,7 @@ const Card: React.FC<CardDetails> = ({ card, category, loading = false }) => {
                       "mt-1 w-20 h-2 md:h-3 bg-gray-200 animate-pulse"
                     }`}
                   >
-                    {!loading && reviews.length + " reviews"}
+                    {!loading && reviews + " reviews"}
                     {/* | {card.reviews.length} reviews */}
                   </span>
                 </>

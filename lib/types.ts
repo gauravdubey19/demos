@@ -53,7 +53,8 @@ export interface CardValues {
   oldPrice: number;
   discount: number;
   type: string[];
-  ratings: number;
+  reviewsNumber?: number;
+  ratings?: number;
   reviews: [];
   availableSizes: [string];
   colorOptions: {

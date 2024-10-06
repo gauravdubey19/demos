@@ -131,7 +131,7 @@ const Filter: React.FC<FilterProps> = ({
 
       {/* Drawer Content */}
 
-      <DrawerContent className="bottom-0 z-50 w-full h-fit max-h-[80vh] md:max-h-[50vh] rounded-t-3xl text-black bg-white border-none outline-none shadow-lg p-4 overflow-hidden">
+      <DrawerContent className="bottom-0 z-50 w-full h-fit max-h-[70vh] md:max-h-[70vh] rounded-t-3xl text-black bg-white border-none outline-none shadow-lg p-4">
         <DrawerHeader>
           <DrawerTitle className="text-2xl md:text-3xl font-semibold">
             Filter
@@ -139,7 +139,7 @@ const Filter: React.FC<FilterProps> = ({
         </DrawerHeader>
         {categoryList && (
           <>
-            <div className="md:hidden space-y-4">
+            <div className="md:hidden space-y-4 overflow-y-auto">
               <FilterContent
                 categorySlug={categorySlug}
                 categoryList={categoryList}
@@ -349,7 +349,7 @@ const SizeFilter: React.FC<SizeFilterProps> = ({
                 window.scrollTo({ top: 0, behavior: "smooth" });
                 setSelectedSize(size);
               }}
-              className={`w-8 h-8 rounded-full flex-center ${
+              className={`w-10 h-10 rounded-full flex-center border border-gray-200 text-sm ${
                 selectedSize === size
                   ? "border border-primary shadow-lg scale-110 opacity-100"
                   : selectedSize.trim() !== "" && "opacity-40 bg-black/30"
@@ -395,7 +395,7 @@ const PriceFilter: React.FC<PriceFilterProps> = ({
     <div className="space-y-4 animate-slide-up">
       <h3 className="text-xl font-medium">Price Range</h3>
   
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-2 max-w-[300px]">
         <Slider
           range
           min={0}

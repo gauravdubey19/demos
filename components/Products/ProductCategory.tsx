@@ -153,7 +153,7 @@ useEffect(()=>{
         />
         <div className="mt-10 md:mt-0 w-full px-2 md:px-10 lg:px-14">
           <h2 className="md:ml-2 text-xl lg:text-2xl font-bold px-2 md:px-0 animate-slide-down">
-            {reverseSlug(category)}{category === "all" ? " Products" : " Category"}
+            {reverseSlug(category)}{category === "all" ? " Categories" : " Category"}
           </h2>
           {products.length > 0 ? (
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-1 md:gap-6 animate-slide-up">
