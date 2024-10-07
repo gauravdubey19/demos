@@ -213,7 +213,8 @@ const AddCategory: React.FC = () => {
                 Category Image
               </h4>
               <CldUploadWidget
-                uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_Preset}
+                // uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_Preset}
+                signatureEndpoint="/api/sign-cloudinary-file-upload"
                 options={{ multiple: true, maxFiles: 5 }}
                 onSuccess={async (result, { widget }) => {
                   // const info = result?.info;

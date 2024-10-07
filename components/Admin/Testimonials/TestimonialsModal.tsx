@@ -186,7 +186,8 @@ const TestimonialsModal = ({ onRefresh }: ModalI) => {
   return (
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <CldUploadWidget
-        uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_Preset}
+        // uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_Preset}
+        signatureEndpoint="/api/sign-cloudinary-file-upload"
         options={{ multiple: false, maxFiles: 1, resourceType: "video" }}
         onSuccess={(result, { widget }) => {
           console.log(result?.info);
