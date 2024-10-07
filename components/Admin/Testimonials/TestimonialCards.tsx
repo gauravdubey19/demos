@@ -1,12 +1,13 @@
 "use client";
 
 import React, { useRef, useState } from "react";
-import { extractFileKey } from "@/lib/utils";
+import { convertSecureUrlToPublicId, extractFileKey } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Testimonial } from "./TestimonialsAdmin";
 import { FaPlay } from "react-icons/fa";
 import { toast } from "@/hooks/use-toast";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { revalidatePath } from "next/cache";
 
 interface TestimonialCardsI {
   testimonial: Testimonial;
@@ -14,6 +15,7 @@ interface TestimonialCardsI {
 }
 
 const TestimonialCards = ({ testimonial }: TestimonialCardsI) => {
+  const pathname = usePathname();
   const router = useRouter();
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const [isPlaying, setIsPlaying] = useState<boolean>(true);
@@ -55,7 +57,7 @@ const TestimonialCards = ({ testimonial }: TestimonialCardsI) => {
         method: "DELETE",
         body: JSON.stringify({
           _id: testimonial._id,
-          key: extractFileKey(testimonial?.videoLink),
+          key: convertSecureUrlToPublicId(testimonial?.videoLink),
         }),
       });
       if (!response.ok) {
@@ -70,6 +72,7 @@ const TestimonialCards = ({ testimonial }: TestimonialCardsI) => {
           : "Please try again later...",
         variant: result.error ? "destructive" : "default",
       });
+      revalidatePath(pathname);
     } catch (error) {
       console.error("Error fetching testimonials:", error);
     } finally {

@@ -1,6 +1,8 @@
 "use server";
 
+import { convertSecureUrlToPublicId } from "@/lib/utils";
 import { utapi } from "@/server/uploadthing";
+import { v2 as cloudinary } from 'cloudinary';
 
 export const uploadNewFile = async (formData: FormData) => {
   try {
@@ -48,6 +50,42 @@ export const removeMultipleFiles = async (files: string[]) => {
   try {
     const res = await utapi.deleteFiles(files);
     return res.success;
+  } catch (error) {
+    console.error("Error deleting file:", error);
+    throw new Error("Deleting file failed");
+  }
+};
+
+cloudinary.config({
+  cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
+export const deleteFileFromCD = async (secureUrl: string): Promise<boolean> => {
+  if (!secureUrl) {
+    console.warn("Secure URL is required");
+    return false;
+  }
+
+  console.log(secureUrl);
+  try {
+    const publicId = convertSecureUrlToPublicId(secureUrl);
+    console.log(publicId);
+    if (!publicId) {
+      console.warn("Public ID could not be extracted");
+      return false;
+    }
+
+    const result = await cloudinary.uploader.destroy(publicId);
+
+    console.log(result);
+    if (result.result === "ok") {
+      return true;
+    } else {
+      console.warn("Deletion failed:", result);
+      return false;
+    }
   } catch (error) {
     console.error("Error deleting file:", error);
     throw new Error("Deleting file failed");
