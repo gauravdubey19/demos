@@ -118,20 +118,17 @@
 
 
 
-
-
 import React, { useState, useMemo, useEffect } from 'react';
 import { ChevronDown } from 'lucide-react';
 import Analysis from './Analysis';
 import QueryCard from './QueryCard';
-import AnswerChat from './AnswerChat';
 import { Skeleton } from '@/components/ui/skeleton';
-
 
 interface Query {
     _id: string;
     name: string;
     email: string;
+    answers: any;
     question: string;
     createdAt: any;
     status: 'answered' | 'unanswered';
@@ -209,34 +206,33 @@ const Querry = () => {
             </div>
 
             <div className="flex flex-col lg:flex-row">
-                <div className="w-full lg:w-[40%] lg:pr-4 mb-6 lg:mb-0">
+                <div className="w-full lg:pr-4 mb-6 lg:mb-0">
                     {queries.length === 0 ? (
-                        // Render skeleton while loading
                         <div className="space-y-4">
                             {[1, 2, 3, 4, 5].map((_, index) => (
                                 <Skeleton key={index} className="bg-gray-200 rounded-lg p-4 h-40 w-full animate-pulse" />
                             ))}
                         </div>
                     ) : (
-                        // Render actual data when loaded
                         <div className="space-y-4">
                             {queries.map((query) => (
                                 <QueryCard
+                                    onRefreshQueries={handleRefreshQueries}
+                                    selectedQuery={selectedQuery}
                                     key={query._id}
                                     query={query}
                                     onClick={() => handleQueryClick(query)}
-                                // isSelected={selectedQuery && selectedQuery._id === query._id}
                                 />
                             ))}
                         </div>
                     )}
                 </div>
-                <div className="w-full lg:w-[60%] lg:pl-4">
+                {/* <div className="w-full lg:w-[60%] lg:pl-4">
                     <AnswerChat
                         selectedQuery={selectedQuery}
-                        onRefreshQueries={handleRefreshQueries} // Added missing prop
+                        onRefreshQueries={handleRefreshQueries}
                     />
-                </div>
+                </div> */}
             </div>
         </div>
     );
