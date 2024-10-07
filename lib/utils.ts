@@ -64,3 +64,30 @@ export const extractFileKey = (url: string): string => {
   const match = url.match(regex);
   return match ? match[1] : "";
 };
+
+export const convertSecureUrlToPublicId = (secureUrl: string): string => {
+  if (!secureUrl) {
+    console.warn("Secure URL is required");
+    return "";
+  }
+
+  try {
+    const segments = secureUrl.split("/");
+
+    const fileNameWithExtension = segments.pop();
+
+    const publicId = fileNameWithExtension?.split(".")[0];
+
+    console.log("publicId: ", publicId);
+
+    if (!publicId) {
+      console.warn("Public ID could not be extracted");
+      return "";
+    }
+
+    return publicId;
+  } catch (error) {
+    console.error("Error converting secure URL to public ID:", error);
+    return "";
+  }
+};

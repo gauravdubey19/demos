@@ -64,6 +64,7 @@ export async function POST(req: NextRequest) {
             name,
             email,
             question: message,
+            answers:[],
             status: 'unanswered'
         });
 

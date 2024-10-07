@@ -4,6 +4,7 @@ import TestimonialCards from "./TestimonialCards";
 import TestimonialsModal from "./TestimonialsModal";
 import { Skeleton } from "@/components/ui/skeleton";
 import ReactCountUp from "@/components/ui/ReactCountUp";
+import { convertSecureUrlToPublicId } from "@/lib/utils";
 
 export interface Testimonial {
   _id: string;
@@ -48,6 +49,8 @@ const TestimonialsAdmin = () => {
     setRefresh(!refresh);
   };
 
+  // console.log(convertSecureUrlToPublicId("https://res.cloudinary.com/dlpj5pmvp/video/upload/v1728304108/zkwxwpatesr0lldupmgy.mp4"), "\n zkwxwpatesr0lldupmgy");
+  
   return (
     <>
       <section className="w-full h-full overflow-hidden select-none">
