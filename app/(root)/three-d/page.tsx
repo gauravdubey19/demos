@@ -4,7 +4,6 @@ import React, { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { Draggable } from "gsap/dist/Draggable";
 import { useRouter } from "next/navigation";
-import { useCursor } from "@/context/CursorProvider";
 import { IoArrowForwardSharp } from "react-icons/io5";
 
 gsap.registerPlugin(Draggable);
@@ -12,7 +11,7 @@ gsap.registerPlugin(Draggable);
 const ThreeDPage: React.FC = () => {
   const router = useRouter();
   const draggableRef = useRef<HTMLDivElement>(null);
-  const { backRef } = useCursor();
+  //   const { backRef } = useCursor();
 
   useEffect(() => {
     const draggableElement = draggableRef.current;
@@ -39,7 +38,7 @@ const ThreeDPage: React.FC = () => {
         className="absolute z-50 right-2 w-60 h-full group"
       >
         <div
-          ref={backRef}
+          //   ref={backRef}
           className="w-full h-full z-50 flex items-center justify-end"
         >
           <div className="w-fit h-fit flex-center bg-white rounded-full p-1 group-hover:animate-motion-right">

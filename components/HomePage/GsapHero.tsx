@@ -275,14 +275,13 @@ import { gsap } from "gsap";
 import { Draggable } from "gsap/dist/Draggable";
 import ScrollVideo from "../ui/ScrollVideo";
 import { IoArrowBackSharp, IoArrowForwardSharp } from "react-icons/io5";
-import { useCursor } from "@/context/CursorProvider";
 import { useRouter } from "next/navigation";
 
 gsap.registerPlugin(Draggable);
 
 const GsapHero: React.FC = () => {
   const router = useRouter();
-  const { rightRef, leftRef, setShowLeft } = useCursor();
+  // const { rightRef, leftRef, setShowLeft } = useCursor();
   const [containerDraggable, setContainerDraggable] = useState<boolean>(false);
   const leftSectionRef = useRef<HTMLDivElement>(null);
   const leftContainerRef = useRef<HTMLDivElement>(null);
@@ -305,7 +304,7 @@ const GsapHero: React.FC = () => {
                 duration: 1,
                 ease: "power2.inOut",
               });
-              setShowLeft(true);
+              // setShowLeft(true);
               router.push("/three-d");
             }
           },
@@ -342,7 +341,7 @@ const GsapHero: React.FC = () => {
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
-  }, [router, setShowLeft]);
+  }, [router]);
 
   return (
     <section className="h-[400vh] bg-transparent">
@@ -359,7 +358,7 @@ const GsapHero: React.FC = () => {
             className="absolute right-0 top-0 z-50 w-60 h-full group"
           >
             <div
-              ref={leftRef} // Ensure this ref is properly linked to the cursor context
+              // ref={leftRef} // Ensure this ref is properly linked to the cursor context
               className="w-full h-full z-0 flex items-center justify-start"
             >
               <div className="w-fit h-fit flex-center bg-white rounded-full p-1 group-hover:animate-motion-left">
@@ -381,7 +380,7 @@ const GsapHero: React.FC = () => {
             className="absolute left-0 z-50 w-60 h-full group"
           >
             <div
-              ref={rightRef} // Ensure this ref is properly linked to the cursor context
+              // ref={rightRef} // Ensure this ref is properly linked to the cursor context
               className="w-full h-full flex items-center justify-end"
             >
               <div className="w-fit h-fit flex-center bg-white rounded-full p-1 group-hover:animate-motion-right">
