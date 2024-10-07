@@ -274,9 +274,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { Draggable } from "gsap/dist/Draggable";
 import ScrollVideo from "../ui/ScrollVideo";
-// import { Button } from "../ui/button";
 import { IoArrowBackSharp, IoArrowForwardSharp } from "react-icons/io5";
-// import ImagePracticles from "../ui/ImagePracticles";
 import { useCursor } from "@/context/CursorProvider";
 import { useRouter } from "next/navigation";
 
@@ -347,7 +345,7 @@ const GsapHero: React.FC = () => {
   }, [router, setShowLeft]);
 
   return (
-    <section className="h-[400vh] bg-white">
+    <section className="h-[400vh] bg-transparent">
       <div className="w-full h-screen sticky top-0 overflow-hidden">
         {/* left hero section */}
         <div
@@ -361,8 +359,8 @@ const GsapHero: React.FC = () => {
             className="absolute right-0 top-0 z-50 w-60 h-full group"
           >
             <div
-              ref={leftRef}
-              className="w-full h-full flex items-center justify-start"
+              ref={leftRef} // Ensure this ref is properly linked to the cursor context
+              className="w-full h-full z-0 flex items-center justify-start"
             >
               <div className="w-fit h-fit flex-center bg-white rounded-full p-1 group-hover:animate-motion-left">
                 <IoArrowBackSharp size={40} className="text-primary" />
@@ -383,7 +381,7 @@ const GsapHero: React.FC = () => {
             className="absolute left-0 z-50 w-60 h-full group"
           >
             <div
-              ref={rightRef}
+              ref={rightRef} // Ensure this ref is properly linked to the cursor context
               className="w-full h-full flex items-center justify-end"
             >
               <div className="w-fit h-fit flex-center bg-white rounded-full p-1 group-hover:animate-motion-right">
