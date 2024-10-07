@@ -57,7 +57,31 @@ const Navbar: React.FC<{ appName?: string }> = ({ appName = "LOGO" }) => {
   const [categories, setCategories] = useState<CategoryValues[]>([]);
   const router = useRouter();
   const { favProducts } = useCart();
+  const [superCategories, setSuperCategories] = useState<any[]>([]);
+  const [currentHover, setCurrentHover] = useState<string | null>(null);
+  useEffect(() => {
+    const fetchSuperCategories = async () => {
+      try {
+        const res = await fetch("/api/superCategories", {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+        });
 
+        if (!res.ok) {
+          throw new Error("Failed to fetch super categories");
+        }
+
+        const data = await res.json();
+        if (data) {
+          setSuperCategories(data.superCategories);
+        }
+      } catch (error) {
+        console.error("Error fetching super categories:", error);
+      }
+    };
+
+    if (superCategories.length === 0) fetchSuperCategories();
+  }, [superCategories]);
   useEffect(() => {
     const fetchCategories = async () => {
       try {
@@ -167,7 +191,7 @@ const Navbar: React.FC<{ appName?: string }> = ({ appName = "LOGO" }) => {
                   <CategoriesList categories={categories} />
                 </NavigationMenuContent>
               </NavigationMenuItem>
-              {categories.slice(0, 3).map((link, index) => {
+              {/* {categories.slice(0, 3).map((link, index) => {
                 const isActive = pathname === `/products/${link.slug}`;
                 return (
                   <NavigationMenuItem key={index}>
@@ -181,6 +205,58 @@ const Navbar: React.FC<{ appName?: string }> = ({ appName = "LOGO" }) => {
                     >
                       {link.title.split(" ")[0]}
                     </Link>
+                  </NavigationMenuItem>
+                );
+              })} */}
+
+              {/* Map 3 supercategories below with their drop down containing categories */}
+              {superCategories.slice(0, 3).map((superCategory, index) => {
+                return (
+                  <NavigationMenuItem key={index} className=" relative">
+                    <NavigationMenuTrigger
+                      className={`w-full cursor-pointer bg-transparent border-none outline-none p-1 ${
+                        pathname === `/products/${superCategory.slug}` &&
+                        "text-primary font-semibold"
+                      }`}
+                      onMouseEnter={() => setCurrentHover(superCategory.slug)}
+                      onMouseLeave={() => setCurrentHover(null)}
+                      onClick={() =>
+                        router.push(`/products/${superCategory.slug}`)
+                      }
+                    >
+                      {superCategory.title}
+                    </NavigationMenuTrigger>
+                    <div className={`w-max space-y-2 p-4 animate-slide-down flex flex-col gap-2 absolute top-full left-0 shadow-lg bg-white rounded-md ${currentHover===superCategory.slug? "":"hidden"}`} 
+                    onMouseEnter={() => setCurrentHover(superCategory.slug)}
+                    onMouseLeave={() => setCurrentHover(null)}
+                    >
+                      {superCategory.categories.map((category: any) => (
+                        <div key={category._id}>
+                          <Link
+                            href={`/products/${category.slug}`}
+                            className="text-primary hover:underline"
+                          >
+                            {category.title}
+                          </Link>
+                          <div className="text-xs grid grid-cols-1 gap-1 pl-3">
+                            {
+                              categories.find((cat) => cat.slug === category.slug)?.types.map((type) => (
+                                <Link
+                                  href={{
+                                    pathname: `/products/${category.slug}`,
+                                    query: { type: type.slug },
+                                  }}
+                                  key={type._id}
+                                  className="hover:text-primary ease-in-out duration-300"
+                                >
+                                  {type.title}
+                                </Link>
+                              ))
+                            }
+                            </div>
+                        </div>
+                      ))}
+                    </div>
                   </NavigationMenuItem>
                 );
               })}
