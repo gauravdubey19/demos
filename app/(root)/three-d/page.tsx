@@ -33,7 +33,7 @@ const ThreeDPage: React.FC = () => {
   }, [router]);
 
   return (
-    <div className="mt-20 relative w-full h-[calc(100vh-60px)] flex-center text-3xl select-none overflow-hidden">
+    <div className="mt-20 relative w-full h-auto flex-center text-3xl select-none overflow-hidden">
       <div
         ref={draggableRef}
         className="absolute z-50 right-2 w-12h-full group"
