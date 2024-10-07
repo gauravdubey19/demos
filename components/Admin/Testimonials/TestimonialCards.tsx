@@ -73,6 +73,7 @@ const TestimonialCards = ({ testimonial }: TestimonialCardsI) => {
         variant: result.error ? "destructive" : "default",
       });
       revalidatePath(pathname);
+      router.refresh();
     } catch (error) {
       console.error("Error fetching testimonials:", error);
     } finally {
