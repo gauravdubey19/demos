@@ -15,52 +15,93 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { BsShieldLock } from "react-icons/bs";
 import { ImSpinner3 } from "react-icons/im";
-// import { Label } from "@/components/ui/label";
-// import { Icons } from "@/components/ui/icons";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import ReactCountUp from "@/components/ui/ReactCountUp";
+import { toast } from "@/hooks/use-toast";
 
-export default function PaymentGateway({ amount = 1000 }) {
+export const PaymentGateway = ({
+  amount = 1000,
+  handlePlaceOrder,
+  isOpen,
+  handleClose,
+}: {
+  amount?: number;
+  isOpen: boolean;
+  handleClose: () => void;
+  handlePlaceOrder: () => void;
+}) => {
   const [isProcessing, setIsProcessing] = useState(false);
+  const [upiId, setUpiId] = useState("");
+  const [error, setError] = useState("");
 
+  const upiPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+/;
+
+  const handleUpi = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const input = e.target.value;
+    setUpiId(input);
+    if (input == "") {
+      setError("");
+    } else if (!upiPattern.test(input)) {
+      setError("Invaild UPI ID, reference: csk@icici");
+    } else {
+      setError("");
+    }
+  };
   const handlePayment = (e: React.FormEvent) => {
     e.preventDefault();
     setIsProcessing(true);
     // Simulate payment processing
     setTimeout(() => {
       setIsProcessing(false);
-      alert("Payment processed successfully!");
+      handleClose();
+      handlePlaceOrder();
+      toast({
+        title: "Payment processed and done successfully!",
+        description: "Now you can view the orders in your profile...",
+      });
+      // alert("Payment processed successfully!");
     }, 2000);
   };
-
   return (
-    <Card className="w-full max-w-md mx-auto bg-white shadow-lg">
-      <CardHeader className="bg-blue-50">
-        <div className="flex items-center justify-between mb-4">
-          <CardTitle className="text-blue-700">Complete Your Payment</CardTitle>
-          <Image src="/logo.png" alt="CSKTextile" width={40} height={40} />
-        </div>
-        <CardDescription className="text-blue-600">
-          You are paying CSK Textile
-        </CardDescription>
-        <p className="text-sm text-blue-500 mt-2">Thanks for your purchase</p>
-      </CardHeader>
-      <CardContent className="pt-6">
-        <Tabs defaultValue="card">
-          <TabsList className="grid w-full grid-cols-3 bg-blue-100">
+    <Dialog open={isOpen} onOpenChange={handleClose}>
+      <DialogContent className="w-full max-w-md mx-auto bg-white shadow-lg p-0 overflow-hidden">
+        <DialogHeader className="bg-yellow-50 p-2">
+          <DialogTitle className="text-primary mb-4">
+            Complete Your Payment
+          </DialogTitle>
+          <DialogDescription className="text-yellow-600 flex-between">
+            <div>
+              You are paying CSK Textile
+              <p className="text-sm text-yellow-500 mt-2">
+                Thanks for your purchase
+              </p>
+            </div>
+            <Image src="/logo.png" alt="CSKTextile" width={40} height={40} />
+          </DialogDescription>
+        </DialogHeader>
+        <Tabs defaultValue="card" className="px-4">
+          <TabsList className="grid w-full grid-cols-3 bg-yellow-100">
             <TabsTrigger
               value="card"
-              className="data-[state=active]:bg-white data-[state=active]:text-blue-700"
+              className="data-[state=active]:bg-white data-[state=active]:text-primary"
             >
               Card
             </TabsTrigger>
             <TabsTrigger
               value="upi"
-              className="data-[state=active]:bg-white data-[state=active]:text-blue-700"
+              className="data-[state=active]:bg-white data-[state=active]:text-primary"
             >
               UPI
             </TabsTrigger>
             <TabsTrigger
               value="wallet"
-              className="data-[state=active]:bg-white data-[state=active]:text-blue-700"
+              className="data-[state=active]:bg-white data-[state=active]:text-primary"
             >
               Wallet
             </TabsTrigger>
@@ -69,7 +110,7 @@ export default function PaymentGateway({ amount = 1000 }) {
             <form onSubmit={handlePayment}>
               <div className="space-y-4">
                 <div className="space-y-2">
-                  <label htmlFor="card-number" className="text-blue-700">
+                  <label htmlFor="card-number" className="text-primary">
                     Card Number
                   </label>
                   <Input
@@ -77,36 +118,38 @@ export default function PaymentGateway({ amount = 1000 }) {
                     id="card-number"
                     placeholder="1234 5678 9012 3456"
                     required
-                    className="custom-number-input border-blue-200 focus:border-blue-400 focus:ring-blue-400"
+                    className="custom-number-input border-yellow-200 focus:border-yellow-400 focus:ring-yellow-400"
                   />
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <label htmlFor="expiry" className="text-blue-700">
+                    <label htmlFor="expiry" className="text-primary">
                       Expiry Date
                     </label>
                     <Input
                       id="expiry"
+                      type="number"
                       placeholder="MM/YY"
                       required
-                      className="border-blue-200 focus:border-blue-400 focus:ring-blue-400"
+                      className="custom-number-input border-yellow-200 focus:border-yellow-400 focus:ring-yellow-400"
                     />
                   </div>
                   <div className="space-y-2">
-                    <label htmlFor="cvv" className="text-blue-700">
+                    <label htmlFor="cvv" className="text-primary">
                       CVV
                     </label>
                     <Input
                       id="cvv"
+                      type="number"
                       placeholder="123"
                       required
-                      className="border-blue-200 focus:border-blue-400 focus:ring-blue-400"
+                      className="custom-number-input border-yellow-200 focus:border-yellow-400 focus:ring-yellow-400"
                     />
                   </div>
                 </div>
               </div>
               <Button
-                className="w-full mt-4 bg-blue-600 hover:bg-blue-700 text-white"
+                className="w-full mt-4"
                 type="submit"
                 disabled={isProcessing}
               >
@@ -116,7 +159,9 @@ export default function PaymentGateway({ amount = 1000 }) {
                     Processing
                   </>
                 ) : (
-                  `Pay ₹${amount}`
+                  <>
+                    Pay <ReactCountUp prefix="₹" amt={amount} decimals={true} />
+                  </>
                 )}
               </Button>
             </form>
@@ -125,19 +170,29 @@ export default function PaymentGateway({ amount = 1000 }) {
             <form onSubmit={handlePayment}>
               <div className="space-y-4">
                 <div className="space-y-2">
-                  <label htmlFor="upi-id" className="text-blue-700">
+                  <label htmlFor="upi-id" className="text-primary">
                     UPI ID
                   </label>
                   <Input
                     id="upi-id"
+                    value={upiId}
+                    onChange={handleUpi}
                     placeholder="yourname@upi"
+                    pattern="/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+/"
                     required
-                    className="border-blue-200 focus:border-blue-400 focus:ring-blue-400"
+                    className="border-yellow-200 focus:border-yellow-400 focus:ring-yellow-400"
                   />
+                  <div className="w-fit h-fit py-1 overflow-hidden">
+                    {error && (
+                      <span className="animate-slide-up text-[red]">
+                        {error}
+                      </span>
+                    )}
+                  </div>
                 </div>
               </div>
               <Button
-                className="w-full mt-4 bg-blue-600 hover:bg-blue-700 text-white"
+                className="w-full mt-4"
                 type="submit"
                 disabled={isProcessing}
               >
@@ -147,7 +202,9 @@ export default function PaymentGateway({ amount = 1000 }) {
                     Processing
                   </>
                 ) : (
-                  `Pay ₹${amount}`
+                  <>
+                    Pay <ReactCountUp prefix="₹" amt={amount} decimals={true} />
+                  </>
                 )}
               </Button>
             </form>
@@ -155,7 +212,7 @@ export default function PaymentGateway({ amount = 1000 }) {
           <TabsContent value="wallet" className="animate-slide-down">
             <div className="space-y-4">
               <Button
-                className="w-full bg-white text-blue-700 border-blue-200 hover:bg-blue-50 flex items-center justify-start"
+                className="w-full bg-white text-primary border-yellow-200 hover:bg-yellow-50 flex items-center justify-start"
                 variant="outline"
                 onClick={handlePayment}
               >
@@ -169,7 +226,7 @@ export default function PaymentGateway({ amount = 1000 }) {
                 Pay with PayTM
               </Button>
               <Button
-                className="w-full bg-white text-blue-700 border-blue-200 hover:bg-blue-50 flex items-center justify-start"
+                className="w-full bg-white text-primary border-yellow-200 hover:bg-yellow-50 flex items-center justify-start"
                 variant="outline"
                 onClick={handlePayment}
               >
@@ -183,7 +240,7 @@ export default function PaymentGateway({ amount = 1000 }) {
                 Pay with PhonePe
               </Button>
               <Button
-                className="w-full bg-white text-blue-700 border-blue-200 hover:bg-blue-50 flex items-center justify-start"
+                className="w-full bg-white text-primary border-yellow-200 hover:bg-yellow-50 flex items-center justify-start"
                 variant="outline"
                 onClick={handlePayment}
               >
@@ -199,16 +256,18 @@ export default function PaymentGateway({ amount = 1000 }) {
             </div>
           </TabsContent>
         </Tabs>
-      </CardContent>
-      <CardFooter className="flex-between bg-blue-50">
-        <div className="text-sm text-blue-600 mt-3 -mb-3">
-          Secured by <span className="font-semibold">CSK Textile</span>
-        </div>
-        <div className="flex-center space-x-2 mt-3 -mb-3">
-          <BsShieldLock className="h-3 w-3 -mr-1 text-blue-600" />
-          <span className="text-sm text-blue-600">SSL Encrypted</span>
-        </div>
-      </CardFooter>
-    </Card>
+        <CardFooter className="flex-between bg-yellow-50">
+          <div className="text-sm text-primary mt-3 -mb-3">
+            Secured by <span className="font-semibold">CSK Textile</span>
+          </div>
+          <div className="flex-center space-x-2 mt-3 -mb-3">
+            <BsShieldLock className="h-3 w-3 -mr-1 text-primary" />
+            <span className="text-sm text-primary">SSL Encrypted</span>
+          </div>
+        </CardFooter>
+      </DialogContent>
+    </Dialog>
   );
-}
+};
+
+export default PaymentGateway;

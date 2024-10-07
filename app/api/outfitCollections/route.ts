@@ -19,7 +19,6 @@ export async function GET(req: NextRequest) {
   }
 }
 
-
 export async function POST(req: NextRequest) {
   await connectToDB();
 
@@ -32,19 +31,30 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  // Generate initial slug
   let outfitSlug = generateSlug(outfitTitle);
 
-  // Check for uniqueness and append numericals if necessary
-  let uniqueSlug = outfitSlug;
-  let counter = 1;
-  while (await OutfitCollection.findOne({ outfitSlug: uniqueSlug })) {
-    uniqueSlug = `${outfitSlug}-${counter}`;
-    counter++;
-  }
-  outfitSlug = uniqueSlug;
-  console.log("Generated slug:", outfitSlug);
   try {
+    let uniqueSlug = outfitSlug;
+    let counter = 1;
+    const MAX_RETRIES = 10;
+    let found = await OutfitCollection.findOne({ outfitSlug: uniqueSlug });
+
+    while (found && counter <= MAX_RETRIES) {
+      uniqueSlug = `${outfitSlug}-${counter}`;
+      found = await OutfitCollection.findOne({ outfitSlug: uniqueSlug });
+      counter++;
+    }
+
+    if (counter > MAX_RETRIES) {
+      return NextResponse.json(
+        { error: "Could not generate a unique slug" },
+        { status: 500 }
+      );
+    }
+
+    outfitSlug = uniqueSlug;
+    console.log("Generated slug:", outfitSlug);
+
     const newOutfit = new OutfitCollection({
       outfitTitle,
       outfitSlug,
@@ -62,6 +72,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Error adding outfit" }, { status: 500 });
   }
 }
+
 // Update Outfit
 export async function PUT(
   req: NextRequest,

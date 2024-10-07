@@ -54,7 +54,7 @@ const ProductSection: React.FC<ProductSectionProps> = ({
           </div>
           <Link
             href={`/products/${categorySlug}`}
-            className="group w-fit flex-center md:gap-1 lg:gap-2 py-2 px-3 md:p-1.5 md:px-4 md:py-2 rounded-2xl cursor-pointer bg-primary active:scale-95 ease-in-out duration-300 text-white"
+            className="group w-fit flex-center md:gap-1 lg:gap-2 py-1 px-3 md:p-1.5 md:px-4 md:py-2 rounded-2xl cursor-pointer bg-primary active:scale-95 ease-in-out duration-300 text-white"
           >
             {/* bg-primary md:bg-transparent active:bg-primary*/}
             <span className="text-sm md:text-base font-medium translate-x-0.5">
