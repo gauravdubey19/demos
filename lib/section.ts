@@ -36,6 +36,9 @@ import { GrMapLocation } from "react-icons/gr";
 import Collection from "@/components/Admin/Products/OutfitCollection/Collection";
 import NewOutFit from "@/components/Admin/Products/AddOutfit/NewOutFit";
 import TestimonialsAdmin from "@/components/Admin/Testimonials/TestimonialsAdmin";
+import HelpDesk from '@/components/Admin/Helpdesk/helpdesk';
+import { AiOutlineCustomerService } from 'react-icons/ai'
+
 
 export const profileSections: SectionValues[] = [
   {
@@ -68,12 +71,12 @@ export const profileSections: SectionValues[] = [
     sidebarHidden: true,
   },
   {
-    id: "add-a-new-address",
-    head: "Add a New Address",
-    href: "/profile/add-a-new-address",
-    icon: GrMapLocation,
-    sectionNode: AddAddresses,
-    sidebarHidden: true,
+    id: "helpdesk",
+    head: "Helpdesk",
+    href: "/profile/helpdesk",
+    icon: AiOutlineCustomerService,
+    sectionNode: HelpDesk,
+   
   },
   // {
   //   id: "payment-methods",
@@ -187,4 +190,12 @@ export const adminSections: SectionValues[] = [
     icon: AiOutlineSetting,
     sectionNode: MyAccount,
   },
+  {
+    id: "helpdesk",
+    head: "Helpdesk",
+    href: "/admin/helpdesk",
+    icon: AiOutlineCustomerService,
+    sectionNode: HelpDesk,
+  },
+  
 ];

@@ -4,15 +4,15 @@ import React, { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { Draggable } from "gsap/dist/Draggable";
 import { useRouter } from "next/navigation";
-import { useCursor } from "@/context/CursorProvider";
 import { IoArrowForwardSharp } from "react-icons/io5";
+import RenderTextile from "@/components/Textile/page";
 
 gsap.registerPlugin(Draggable);
 
 const ThreeDPage: React.FC = () => {
   const router = useRouter();
   const draggableRef = useRef<HTMLDivElement>(null);
-  const { backRef } = useCursor();
+  //   const { backRef } = useCursor();
 
   useEffect(() => {
     const draggableElement = draggableRef.current;
@@ -33,23 +33,20 @@ const ThreeDPage: React.FC = () => {
   }, [router]);
 
   return (
-    <div className="mt-[60px] relative w-full h-[calc(100vh-60px)] flex-center text-3xl select-none bg-zinc-400 overflow-hidden">
+    <div className="mt-20 relative w-full h-auto flex-center text-3xl select-none overflow-hidden">
       <div
         ref={draggableRef}
-        className="absolute z-50 right-2 w-60 h-full group"
+        className="absolute z-50 right-2 w-12h-full group"
       >
         <div
-          ref={backRef}
-          className="w-full h-full z-50 flex items-center justify-end"
-        >
+          //   ref={backRef}
+          className="w-full h-full z-50 flex items-center justify-end">
           <div className="w-fit h-fit flex-center bg-white rounded-full p-1 group-hover:animate-motion-right">
             <IoArrowForwardSharp size={40} className="text-primary" />
           </div>
         </div>
       </div>
-      <div className="flex flex-col items-center">
-        <div className="text-4xl mb-4">3D Page</div>
-      </div>
+      <RenderTextile />
     </div>
   );
 };

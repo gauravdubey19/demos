@@ -55,8 +55,7 @@ export const CursorProvider: React.FC<{ children: ReactNode }> = ({
       }
     };
 
-    const handleMouseEnter = (event: MouseEvent) => {
-      const target = event.currentTarget as HTMLDivElement;
+    const handleMouseEnter = (target: HTMLDivElement) => {
       if (cursor) {
         switch (target) {
           case left:
@@ -69,9 +68,7 @@ export const CursorProvider: React.FC<{ children: ReactNode }> = ({
             setActiveElement("back");
             break;
         }
-        if (!showLeft || !showRight || target === back) {
-          gsap.to(cursor, { scale: 5 });
-        }
+        gsap.to(cursor, { scale: 5 });
       }
     };
 
@@ -84,9 +81,9 @@ export const CursorProvider: React.FC<{ children: ReactNode }> = ({
 
     document.addEventListener("mousemove", handleMouseMove);
 
-    left?.addEventListener("mouseenter", handleMouseEnter);
-    right?.addEventListener("mouseenter", handleMouseEnter);
-    back?.addEventListener("mouseenter", handleMouseEnter);
+    left?.addEventListener("mouseenter", () => handleMouseEnter(left));
+    right?.addEventListener("mouseenter", () => handleMouseEnter(right));
+    back?.addEventListener("mouseenter", () => handleMouseEnter(back));
 
     left?.addEventListener("mouseleave", handleMouseLeave);
     right?.addEventListener("mouseleave", handleMouseLeave);
@@ -94,9 +91,9 @@ export const CursorProvider: React.FC<{ children: ReactNode }> = ({
 
     return () => {
       document.removeEventListener("mousemove", handleMouseMove);
-      left?.removeEventListener("mouseenter", handleMouseEnter);
-      right?.removeEventListener("mouseenter", handleMouseEnter);
-      back?.removeEventListener("mouseenter", handleMouseEnter);
+      left?.removeEventListener("mouseenter", () => handleMouseEnter(left));
+      right?.removeEventListener("mouseenter", () => handleMouseEnter(right));
+      back?.removeEventListener("mouseenter", () => handleMouseEnter(back));
 
       left?.removeEventListener("mouseleave", handleMouseLeave);
       right?.removeEventListener("mouseleave", handleMouseLeave);
