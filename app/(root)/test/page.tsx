@@ -7,7 +7,8 @@ import { generateSlug } from "@/lib/utils";
 import React, { useEffect, useState } from "react";
 import ImageMagnify from "@/components/ui/ImageMagnify";
 import { Button } from "@/components/ui/button";
-import PaymentGateway from "@/components/Payment/PaymentGateway";
+import PaymentGateway from "@/components/Checkout/Payment/PaymentGateway";
+import UploadFile from "@/components/ui/UploadsFile";
 
 export default function TestPage() {
   const [image, setImage] = useState<string>("");
@@ -112,17 +113,40 @@ export default function TestPage() {
       console.error("Error creating category:", error);
     }
   };
-
+  const [open, setOpen] = useState(false);
   return (
-    <div className="mt-[60px] w-full h-screen bg-zinc-200 p-10">
-      {/* un-comment this below for creating sample data */}
-      {/* <CreateCategories /> */}
-      {/* <CreateProducts /> */}
-      <PaymentGateway />
-    </div>
+    <>
+      <div className="mt-[60px] w-full h-screen bg-zinc-100 p-10">
+        {/* un-comment this below for creating sample data */}
+        {/* <CreateCategories /> */}
+        {/* <CreateProducts /> */}
+        <Button onClick={() => setOpen(!open)}>Payment</Button>
+        {/* <UploadFilesComoponent /> */}
+        {/* <ProductCategorySection /> */}
+      </div>
+      {/* <PaymentGateway isOpen={open} handleClose={() => setOpen(!open)} /> */}
+    </>
   );
 }
 
+interface CloudinaryResult {
+  secure_url?: string;
+  url?: string;
+}
+
+// export const UploadFilesComoponent = () => {
+//   const [urls, setUrls] = useState<string[]>([]);
+//   console.log(urls);
+
+//   return (
+//     <>
+//       <UploadFile setUrls={setUrls}>
+//         <Button>Upload files</Button>
+//       </UploadFile>
+//       {urls.length}
+//     </>
+//   );
+// };
 const CreateCategories = () => {
   const sendCategories = async () => {
     try {

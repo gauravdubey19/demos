@@ -7,6 +7,7 @@ import Card from "./Card";
 import Filter from "./Filter";
 import Goback from "../ui/Goback";
 import Loader from "../ui/Loader";
+import Breadcrumbs from "../ui/Breadcrumbs";
 
 const ProductCategory: React.FC<ProductCategoryProps> = ({
   category,
@@ -30,32 +31,49 @@ const ProductCategory: React.FC<ProductCategoryProps> = ({
   });
 
   const [isAscending, setIsAscending] = useState<boolean>(true);
-
+  useEffect(() => {
+    console.log("scrolling to top");
+    window.scrollTo(0, 0);
+  }, []);
   useEffect(() => {
     const fetchProducts = async () => {
       setLoading(true);
       try {
-        const res = await fetch(
-          `/api/products/read/get-products-by-category/${category}`,
-          {
+        let res;
+        if (category === "all") {
+          res = await fetch(`/api/products/read/get-all-products`, {
             method: "GET",
             headers: { "Content-Type": "application/json" },
-          }
-        );
-
+          });
+        } else {
+          res = await fetch(
+            `/api/products/read/get-products-by-category/${category}`,
+            {
+              method: "GET",
+              headers: { "Content-Type": "application/json" },
+            }
+          );
+        }
         if (!res.ok) {
           throw new Error("Failed to fetch products");
         }
 
         const data: CardValues[] = await res.json();
+
         setAllProducts(data);
         setProducts(data);
 
         // extracting color options & sizes from the fetched products
         const allColorOptions = data.flatMap((product) => product.colorOptions);
+
         const uniqueColorOptions = Array.from(
-          new Set(allColorOptions.map((option) => JSON.stringify(option)))
-        ).map((option) => JSON.parse(option));
+          new Map(
+            allColorOptions.map((option) => [
+              option.color.toLowerCase(),
+              option,
+            ])
+          ).values()
+        );
 
         setColorOptions(uniqueColorOptions);
 
@@ -75,7 +93,9 @@ const ProductCategory: React.FC<ProductCategoryProps> = ({
 
   // function to filter products based on selectedType, selectedColor, selectedSize, and price range
   useEffect(() => {
-    const filteredProducts = allProducts.filter((product) => {
+    if (!allProducts) return;
+    if (!Array.isArray(allProducts)) return;
+    const filteredProducts = allProducts?.filter((product) => {
       // Filtering based on type
       const matchesType = selectedType
         ? product.type.includes(selectedType)
@@ -138,8 +158,12 @@ const ProductCategory: React.FC<ProductCategoryProps> = ({
           setIsAscending={setIsAscending}
         />
         <div className="mt-10 md:mt-0 w-full px-2 md:px-10 lg:px-14">
-          <h2 className="md:ml-2 text-xl lg:text-2xl font-bold px-2 md:px-0 animate-slide-down">
-            {reverseSlug(category)}
+          <h2 className="md:ml-2 px-2 md:px-0 space-y-2 animate-slide-down">
+            <Breadcrumbs />
+            <span className="text-xl lg:text-2xl font-bold">
+              {reverseSlug(category)}
+              {category === "all" ? " Categories" : " Category"}
+            </span>
           </h2>
           {products.length > 0 ? (
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-1 md:gap-6 animate-slide-up">

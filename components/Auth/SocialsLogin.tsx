@@ -8,7 +8,8 @@ import {
   signIn,
 } from "next-auth/react";
 import { BuiltInProviderType } from "next-auth/providers/index";
-import Image from "next/image";
+import { Button } from "../ui/button";
+import { FcGoogle } from "react-icons/fc";
 
 type Providers = Record<
   LiteralUnion<BuiltInProviderType, string>,
@@ -21,10 +22,9 @@ const SocialsLogin = () => {
   useEffect(() => {
     (async () => {
       try {
-      const res = await getProviders();
-      setProviders(res);
-      }
-      catch (error) {
+        const res = await getProviders();
+        setProviders(res);
+      } catch (error) {
         console.error("Error fetching providers:", error);
         setError("Error fetching providers");
       }
@@ -42,45 +42,23 @@ const SocialsLogin = () => {
       </div>
 
       <div className="flex flex-row items-center justify-center gap-10 mt-7">
-        {providers &&
+        {/* {providers &&
           Object.values(providers).map((provider) => {
-            if (provider.id === "google") {
-              return (
-            <button
-              className="h-10 p-2 text-black w-10 border-black rounded-xl border  cursor-pointer"
-              type="button"
-              key={provider.id}
-              onClick={(e) =>{
-                e.preventDefault();
-                signIn(provider.id)
-              } }
-            >
-              <Image
-                src="/google.png"
-                alt="social_icons"
-                width={200}
-                height={200}
-              />
-            </button>
-              )
-            }
-})}
-        {/* <div className="h-10 p-2 text-black w-10 border-black rounded-xl border cursor-pointer">
-            <Image
-              src="/github.png"
-              alt="social_icons"
-              width={200}
-              height={200}
-            />
-          </div>
-          <div className="h-10 p-2 text-black w-10 border-black rounded-xl border  cursor-pointer">
-            <Image
-              src="/facebook.png"
-              alt="social_icons"
-              width={200}
-              height={200}
-            />
-          </div> */}
+            // if (provider.id === "google") {
+            return ( */}
+        <Button
+          className="w-fit bg-transparent text-black text-xl br hover:bg-primary hover:text-white"
+          type="button"
+          // key={provider.id}
+          onClick={(e) => signIn("google")}
+          // signIn(provider.id);}
+        >
+          <FcGoogle className="mr-" />
+          oogle
+        </Button>
+        {/* );
+            // }
+          })} */}
       </div>
     </div>
   );

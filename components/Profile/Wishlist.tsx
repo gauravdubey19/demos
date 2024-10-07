@@ -37,18 +37,20 @@ const Wishlist = () => {
 
         if (!res.ok) {
           toast({
-            title: "Error",
-            description: "Failed to fetch products. Please try again later.",
+            title: "Your wishlist product is not found or..",
+            description:
+              "Your wishlist is empty. Start adding products to see them here.",
             variant: "destructive",
           });
+        } else {
+          // ensuring that data is an array before setting it
+          setProducts(Array.isArray(data) ? data : []);
         }
-
-        setProducts(data as CardValues[]);
       } catch (error) {
         console.error("Error fetching wishlist products:", error);
         toast({
-          title: "Error",
-          description: "Something went wrong while fetching the wishlist.",
+          title: "Something went wrong while fetching the wishlist.",
+          description: "Please refresh the page..",
           variant: "destructive",
         });
       } finally {
@@ -58,8 +60,6 @@ const Wishlist = () => {
 
     fetchWishlistProducts();
   }, [favProducts]);
-
-  //   if (loading) return <Loader />;
 
   return (
     <section className="w-full h-full overflow-hidden">
@@ -76,7 +76,7 @@ const Wishlist = () => {
               Your wishlist is empty. Start adding products to see them here.
             </p>
           </div>
-        ) : (
+        ) : Array.isArray(products) && products.length > 0 ? (
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-1 md:gap-6 animate-slide-up">
             {products.map((card) => (
               <Card
@@ -85,6 +85,12 @@ const Wishlist = () => {
                 category={card.categories[0].slug}
               />
             ))}
+          </div>
+        ) : (
+          <div className="flex justify-center items-center min-h-[200px]">
+            <p className="text-lg text-center">
+              Your wishlist is empty. Start adding products to see them here.
+            </p>
           </div>
         )}
       </div>

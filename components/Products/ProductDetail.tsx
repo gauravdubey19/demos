@@ -22,13 +22,14 @@ import {
   ProductDetailValues,
   ProductReviewsProps,
 } from "@/lib/types";
-import { ThumbsUp, ThumbsDown, Send, Star } from "lucide-react";
+import { Send } from "lucide-react";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { BiEditAlt } from "react-icons/bi";
 import { useCart } from "@/context/CartProvider";
 import ReactCountUp from "../ui/ReactCountUp";
 import { GoHeart, GoHeartFill } from "react-icons/go";
 import { Review, useGlobalContext } from "@/context/GlobalProvider";
+import Breadcrumbs from "../ui/Breadcrumbs";
 
 const ProductDetail: React.FC<{ slug: string; categorySlug: string }> = ({
   slug,
@@ -115,7 +116,8 @@ const ProductDetail: React.FC<{ slug: string; categorySlug: string }> = ({
       <section className="w-full h-full max-w-6xl px-4 py-10 mx-auto ">
         <div className="w-full h-full lg:mt-[80px] xl:mt-10">
           <Goback />
-          <div className="w-full h-full grid grid-cols-1 lg:grid-cols-[1fr_1fr] gap-6 lg:gap-12 items-start">
+          <Breadcrumbs />
+          <div className="w-full h-full grid grid-cols-1 lg:grid-cols-[1fr_1fr] gap-6 lg:gap-12 items-start mt-2">
             <ImageGallery
               images={product.images}
               initialImageLink={product.image_link}
@@ -256,7 +258,7 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({
               aria-label={`View Image ${index + 1}`}
               width={200}
               height={200}
-              className={`cursor-pointer w-full h-full ${
+              className={`cursor-pointer w-full h-fit ${
                 currentImage === image &&
                 "border border-primary shadow-md shadow-primary"
               }`}
@@ -634,10 +636,10 @@ const AdditionalInfo: React.FC<AdditionalInfoProps> = ({ product }) => {
                 <strong>Available Sizes:</strong>{" "}
                 {product.availableSizes.join(", ")}
               </li>
-              <li>
+              {/* <li>
                 <strong>Color Options:</strong>{" "}
                 {product.colorOptions.join(", ")}
-              </li>
+              </li> */}
               <li>
                 <strong>Country of Manufacture:</strong>{" "}
                 {product.countryOfManufacture}
@@ -705,7 +707,6 @@ const ProductReviews: React.FC<ProductReviewsProps> = ({
         productId: productId,
         userId: session?.user?.id,
       };
-      console.log("new review: ", newReviewObj);
       try {
         setPostingReview(true);
         const response = await fetch("/api/reviews/post", {

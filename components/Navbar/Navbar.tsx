@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import { signOut, useSession } from "next-auth/react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { gsap } from "gsap";
@@ -49,13 +49,13 @@ const profileOption = [
 const Navbar: React.FC<{ appName?: string }> = ({ appName = "LOGO" }) => {
   const pathname = usePathname(); // console.log("pathname :", pathname);
   const [isVisible, setIsVisible] = useState<boolean>(false);
-  const { data: session,status } = useSession();
+  const { data: session, status } = useSession();
   const navbarRef = useRef<HTMLDivElement>(null);
   const { showLeft, showRight } = useCursor();
   const visible = showLeft || showRight;
   const { userData } = useGlobalContext();
   const [categories, setCategories] = useState<CategoryValues[]>([]);
-
+  const router = useRouter();
   const { favProducts } = useCart();
 
   useEffect(() => {
@@ -129,9 +129,9 @@ const Navbar: React.FC<{ appName?: string }> = ({ appName = "LOGO" }) => {
       }
     }
   }, [isVisible, pathname]);
-// useEffect(() => {
-//   console.log("Status: ",status);
-// }, [status]);
+  // useEffect(() => {
+  //   console.log("Status: ",status);
+  // }, [status]);
   return (
     <div
       ref={navbarRef}
@@ -155,8 +155,13 @@ const Navbar: React.FC<{ appName?: string }> = ({ appName = "LOGO" }) => {
           <NavigationMenu className="hidden md:block">
             <NavigationMenuList className="flex items-center gap-2 lg:gap-4">
               <NavigationMenuItem>
-                <NavigationMenuTrigger className="w-full cursor-pointer bg-transparent border-none outline-none p-1">
-                  Categories
+                <NavigationMenuTrigger
+                  className={`w-full cursor-pointer bg-transparent border-none outline-none p-1 ${
+                    pathname === "/products/all" && "text-primary font-semibold"
+                  }`}
+                  onClick={() => router.push("/products/all")}
+                >
+                  All Categories
                 </NavigationMenuTrigger>
                 <NavigationMenuContent className="w-fit space-y-2 p-2 animate-slide-down">
                   <CategoriesList categories={categories} />
@@ -188,7 +193,7 @@ const Navbar: React.FC<{ appName?: string }> = ({ appName = "LOGO" }) => {
       <div className="hidden md:flex-center md:gap-4 lg:gap-6 relative">
         {/* search */}
         <Search />
-        {session?.user?.id? (
+        {session?.user?.id ? (
           <>
             <Link href="/profile/wishlist" className="relative mr-1">
               {pathname.includes("/profile/wishlist") ? (
@@ -249,7 +254,7 @@ const Navbar: React.FC<{ appName?: string }> = ({ appName = "LOGO" }) => {
                             "text-primary"
                           } group-hover:text-primary ease-in-out duration-300`}
                         >
-                          {session?.user?.name?.split(' ')[0] || "Profile"}
+                          {session?.user?.name?.split(" ")[0] || "Profile"}
                         </span>
                         {session?.user?.role === "admin" && (
                           <span className="text-xs">{session?.user?.role}</span>
@@ -300,7 +305,7 @@ const Navbar: React.FC<{ appName?: string }> = ({ appName = "LOGO" }) => {
                         localStorage.removeItem("jwt");
                         signOut();
                       }}
-                      className="w-full h-fit capitalize rounded-none py-1 border border-primary text-black hover:text-white bg-transparent hover:bg-primary ease-in-out duration-300"
+                      className="w-full h-fit capitalize py-1 border border-primary text-black hover:text-white bg-transparent hover:bg-primary ease-in-out duration-300 rounded"
                     >
                       Logout
                     </Button>
@@ -311,13 +316,12 @@ const Navbar: React.FC<{ appName?: string }> = ({ appName = "LOGO" }) => {
           </>
         ) : status === "loading" ? (
           <div className="w-8 h-8 bg-gray-200 rounded-full animate-pulse"></div>
-        ) :
-         (
+        ) : (
           <Link
-            href={"/sign-in"}
-            className="capitalize cursor-pointer flex-center px-4 py-2 rounded ring-1 ring-primary shadow-md text-black hover:text-white hover:bg-primary ease-in-out duration-300"
+            href="/sign-in"
+            className=" cursor-pointer flex-center px-4 py-2 ring-1 ring-primary shadow-md text-black hover:text-white hover:bg-primary active:translate-y-0.5 ease-in-out duration-300 rounded"
           >
-            login
+            Login / Sign Up
           </Link>
         )}
       </div>

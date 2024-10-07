@@ -46,6 +46,7 @@ export interface CarouselProps {
 export interface CardValues {
   _id: string | null;
   image_link: string;
+  images?: string[];
   title: string;
   description: string;
   slug: string;
@@ -53,7 +54,8 @@ export interface CardValues {
   oldPrice: number;
   discount: number;
   type: string[];
-  ratings: number;
+  reviewsNumber?: number;
+  ratings?: number;
   reviews: [];
   availableSizes: [string];
   colorOptions: {

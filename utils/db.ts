@@ -28,38 +28,35 @@ export const connectToDB = async () => {
 
     // Call addNewFields after the connection is established
     // await addNewFields();
-    // await updateProducts();
   } catch (error) {
     console.error("Failed to connect to MongoDB:", error);
   }
 };
 
-// Function to add new fields to the productCollection array
-async function addNewFields() {
-  try {
-    if (!mongoose.connection.db) {
-      console.log("No database connection");
-      return;
-    }
+// async function addNewFields() {
+//   try {
+//     if (!mongoose.connection.db) {
+//       console.log("No database connection");
+//       return;
+//     }
 
-    const result = await mongoose.connection.db
-      .collection("Outfits")
-      .updateMany(
-        {},
-        {
-          $set: {
-            "productCollection.$[].productId": "", // Add default value for productId
-            "productCollection.$[].price": 0, // Add default value for price
-          },
-        }
-      );
+//     const result = await Products.updateMany(
+//       {},
+//       {
+//         $set: {
+//           ratings: 0,
+//           reviewsNumber: 0,
+//         },
+//       }
+//     );
 
-    console.log("Update result:", result);
-    console.log(`Updated documents: ${result.modifiedCount}`);
-  } catch (error) {
-    console.error("Error updating products:", error);
-  }
-}
+//     console.log("Update result:", result);
+//     console.log(`Updated documents: ${result.modifiedCount}`);
+//   } catch (error) {
+//     console.error("Error updating products:", error);
+//   }
+// }
+
 async function updateProducts() {
   try {
     if(!mongoose.connection.db) {

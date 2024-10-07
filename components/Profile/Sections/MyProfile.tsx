@@ -47,6 +47,7 @@ interface User {
 }
 
 const MyProfile = () => {
+  const [loggingOut, setLoggingOut] = useState(false);
   return (
     <>
       <section className="flex-1 p-2 md:p-4 bg-gray-50 space-y-6">
@@ -55,13 +56,16 @@ const MyProfile = () => {
       </section>
       <div className="flex flex-row justify-end p-2 md:p-4 gap-x-2">
         <Button
-          className="font-bold text-sm md:text-base active:translate-y-0.5 border-red-500 text-red-500 bg-white border-1 border rounded-none hover:bg-red-600 hover:text-white"
-          onClick={() => {
+          className="font-bold text-sm md:text-base active:translate-y-0.5 border-red-500 text-red-500 bg-white border-1 border rounded-none hover:bg-red-600 hover:text-white disabled:opacity-70"
+          onClick={async () => {
+            setLoggingOut(true);
             localStorage.removeItem("jwt");
-            signOut();
+            await signOut();
+            setLoggingOut(false);
           }}
+          disabled={loggingOut}
         >
-          Logout
+          {loggingOut ? "Logging out..." : "Log out"}
         </Button>
       </div>
     </>

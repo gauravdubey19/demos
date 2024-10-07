@@ -13,9 +13,9 @@ import { Toaster } from "@/components/ui/toaster";
 const inter = Montserrat({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "CSK Textile",
+  title: "CSK Textile - High-Quality Sustainable Fabrics",
   description:
-    "CSK Textile is a leading provider of high-quality textile products, known for our commitment to excellence and innovation in the industry. We specialize in producing a wide range of fabrics and materials that meet the diverse needs of our customers. With a focus on sustainability and advanced technology, CSK Textile delivers premium solutions that combine durability, comfort, and style. Whether you’re looking for custom designs or bulk orders, our experienced team is dedicated to delivering exceptional products that set the standard in the textile market.",
+    "CSK Textile offers high-quality, sustainable fabrics and materials. Our innovative solutions combine durability, comfort, and style. Custom designs and bulk orders available.",
   icons: { icon: "/logo.png" },
 };
 
@@ -26,6 +26,17 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <meta property="og:title" content="CSK Textile - High-Quality Sustainable Fabrics" />
+        <meta property="og:description" content="CSK Textile offers high-quality, sustainable fabrics and materials. Our innovative solutions combine durability, comfort, and style. Custom designs and bulk orders available." />
+        <meta property="og:image" content="/homePageImg.png" />
+        <meta property="og:url" content="https://csk-demo.vercel.app" />
+        
+        <meta name="twitter:title" content="CSK Textile - High-Quality Sustainable Fabrics" />
+        <meta name="twitter:description" content="CSK Textile offers high-quality, sustainable fabrics and materials. Our innovative solutions combine durability, comfort, and style. Custom designs and bulk orders available." />
+        <meta name="twitter:image" content="/homePageImg.png" />
+        <meta name="twitter:card" content="summary" />
+      </head>
       <body className={inter.className}>
         <SessionProviderC>
           <NextSSRPlugin routerConfig={extractRouterConfig(ourFileRouter)} />

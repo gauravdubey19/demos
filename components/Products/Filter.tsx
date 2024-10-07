@@ -13,6 +13,8 @@ import { CategoryValues } from "@/lib/types";
 import { LiaFilterSolid } from "react-icons/lia";
 import { FaArrowDownShortWide, FaArrowUpShortWide } from "react-icons/fa6";
 import { GrClear } from "react-icons/gr";
+import Slider from 'rc-slider';
+import 'rc-slider/assets/index.css';
 
 interface FilterProps {
   categorySlug: string;
@@ -47,7 +49,7 @@ const Filter: React.FC<FilterProps> = ({
 }) => {
   const toggleShort = () => setIsAscending(!isAscending);
 
-  const [categoryList, setCategoryList] = useState<CategoryValues | null>(null);
+  const [categoryList, setCategoryList] = useState<CategoryValues | null >(null);
 
   useEffect(() => {
     const fetchCategoryList = async () => {
@@ -64,12 +66,24 @@ const Filter: React.FC<FilterProps> = ({
         const data = await res.json();
         if (data as CategoryValues[]) {
           const categories: CategoryValues[] = data.categories;
+          
+          if(categorySlug === "all") {
+            //seet all categories without filters
+            const AllTypes = categories.map((cat) => cat.types).flat();
+            setCategoryList({
+              _id: "all",
+              title: "All",
+              slug: "all",
+              description: "All categories",
+              types: AllTypes,
+              image: "",
+            });
+          }else {
           const filteredCategory: CategoryValues[] = categories.filter(
             (cat) => cat.slug === categorySlug
           );
-          // console.log(filteredCategory);
-
           setCategoryList(filteredCategory[0]);
+        }
         }
       } catch (error) {
         console.error("Error fetching categories:", error);
@@ -106,17 +120,18 @@ const Filter: React.FC<FilterProps> = ({
 
       <DrawerTrigger asChild>
         <Button
-          variant="outline"
           title="Filter"
-          className="hidden md:flex items-center justify-center fixed top-20 right-5 rounded-full p-2 hover:scale-105 hover:shadow-lg transition-transform duration-300"
+          className="hidden md:flex items-center justify-center fixed top-20 right-5 z-[10] transition rounded-lg gap-x-2 px-4 py-2 border border-primary bg-primary text-white hover:bg-white hover:text-primary"
         >
+          <span className=" hidden md:block text-base
+          ">Filter</span>
           <LiaFilterSolid size={20} />
         </Button>
       </DrawerTrigger>
 
       {/* Drawer Content */}
 
-      <DrawerContent className="bottom-0 z-50 w-full h-fit max-h-[80vh] md:max-h-[50vh] rounded-t-3xl text-white backdrop-blur-sm bg-white/20 border-none outline-none shadow-lg p-4 overflow-hidden">
+      <DrawerContent className="bottom-0 z-50 w-full h-fit max-h-[70vh] md:max-h-[70vh] rounded-t-3xl text-black bg-white border-none outline-none shadow-lg p-4">
         <DrawerHeader>
           <DrawerTitle className="text-2xl md:text-3xl font-semibold">
             Filter
@@ -124,7 +139,7 @@ const Filter: React.FC<FilterProps> = ({
         </DrawerHeader>
         {categoryList && (
           <>
-            <div className="md:hidden space-y-4">
+            <div className="md:hidden space-y-4 overflow-y-auto">
               <FilterContent
                 categorySlug={categorySlug}
                 categoryList={categoryList}
@@ -234,7 +249,10 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({
               type="checkbox"
               className="form-checkbox"
               checked={selectedType.trim() === ""}
-              onChange={() => setSelectedType("")}
+              onChange={() => {
+                window.scrollTo({ top: 0, behavior: "smooth" });
+                setSelectedType("")
+              }}
             />
             <span>All</span>
           </label>
@@ -246,7 +264,9 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({
                 type="checkbox"
                 className="form-checkbox"
                 checked={selectedType === type.slug}
-                onChange={() => setSelectedType(type.slug)}
+                onChange={() => {
+                  window.scrollTo({ top: 0, behavior: "smooth" });
+                  setSelectedType(type.slug)}}
               />
               <span>{type.title}</span>
             </label>
@@ -278,11 +298,14 @@ const ColorFilter: React.FC<ColorFilterProps> = ({
           <button
             key={_id}
             title={title}
-            onClick={() => setSelectedColor(title)}
-            className={`w-8 h-8 rounded-full ${
+            onClick={() => {
+              window.scrollTo({ top: 0, behavior: "smooth" });
+              setSelectedColor(title);
+            }}
+            className={`w-8 h-8 rounded-full border border-gray-200 ${
               selectedColor === title
                 ? "border border-primary shadow-lg scale-110 opacity-100"
-                : selectedColor.trim() !== "" && "opacity-40"
+                : selectedColor.trim() !== "" && "opacity-40 "
             }`}
             style={{ backgroundColor: color }}
           />
@@ -290,7 +313,10 @@ const ColorFilter: React.FC<ColorFilterProps> = ({
         {selectedColor.trim() !== "" && (
           <GrClear
             title="Select none"
-            onClick={() => setSelectedColor("")}
+            onClick={() => {
+              window.scrollTo({ top: 0, behavior: "smooth" });
+              setSelectedColor("");
+            }}
             size={30}
             className="w-8 h-8 cursor-pointer"
           />
@@ -319,8 +345,11 @@ const SizeFilter: React.FC<SizeFilterProps> = ({
           <div key={index} className="">
             <button
               title={size}
-              onClick={() => setSelectedSize(size)}
-              className={`w-8 h-8 rounded-full flex-center ${
+              onClick={() => {
+                window.scrollTo({ top: 0, behavior: "smooth" });
+                setSelectedSize(size);
+              }}
+              className={`w-10 h-10 rounded-full flex-center border border-gray-200 text-sm ${
                 selectedSize === size
                   ? "border border-primary shadow-lg scale-110 opacity-100"
                   : selectedSize.trim() !== "" && "opacity-40 bg-black/30"
@@ -333,7 +362,10 @@ const SizeFilter: React.FC<SizeFilterProps> = ({
         {selectedSize.trim() !== "" && (
           <GrClear
             title="Select none"
-            onClick={() => setSelectedSize("")}
+            onClick={() => {
+              window.scrollTo({ top: 0, behavior: "smooth" });
+              setSelectedSize("");
+            }}
             size={30}
             className="w-8 h-8 cursor-pointer"
           />
@@ -345,53 +377,42 @@ const SizeFilter: React.FC<SizeFilterProps> = ({
 
 interface PriceFilterProps {
   priceRange: { min: number; max: number };
-  setPriceRange: (priceRange: { min: number; max: number }) => void;
+  setPriceRange: (range: { min: number; max: number }) => void;
 }
 
 const PriceFilter: React.FC<PriceFilterProps> = ({
   priceRange,
   setPriceRange,
 }) => {
-  const handleMinChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newMin = Number(e.target.value);
-    setPriceRange({ ...priceRange, min: newMin });
+  const handleSliderChange = (value: number | number[]) => {
+    if (Array.isArray(value)) {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      setPriceRange({ min: value[0], max: value[1] });
+    }
   };
 
-  const handleMaxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newMax = Number(e.target.value);
-    setPriceRange({ ...priceRange, max: newMax });
-  };
-
-  return (
+   return (
     <div className="space-y-4 animate-slide-up">
       <h3 className="text-xl font-medium">Price Range</h3>
-
-      <div className="flex flex-col gap-2">
-        <label className="flex items-center space-x-2">
-          <span>Min:</span>
-          <input
-            type="range"
-            min={0}
-            max={priceRange.max}
-            value={priceRange.min}
-            onChange={handleMinChange}
-            className="range-input-style accent-primary"
-          />
-          <span>{priceRange.min}</span>
-        </label>
-
-        <label className="flex items-center space-x-2">
-          <span>Max:</span>
-          <input
-            type="range"
-            min={priceRange.min}
-            max={1000}
-            value={priceRange.max}
-            onChange={handleMaxChange}
-            className="range-input-style"
-          />
-          <span>{priceRange.max}</span>
-        </label>
+  
+      <div className="flex flex-col gap-2 max-w-[300px]">
+        <Slider
+          range
+          min={0}
+          max={1000}
+          value={[priceRange.min, priceRange.max]}
+          onChange={handleSliderChange}
+          className="range-input-style"
+          styles={{
+            track: { backgroundColor: '#FFB433' },
+            handle: { borderColor: '#FFB433' },
+            rail: { backgroundColor: '#ddd' },
+          }}
+        />
+        <div className="flex justify-between">
+          <span>Min: {priceRange.min}</span>
+          <span>Max: {priceRange.max}</span>
+        </div>
       </div>
     </div>
   );

@@ -55,8 +55,7 @@ export const CursorProvider: React.FC<{ children: ReactNode }> = ({
       }
     };
 
-    const handleMouseEnter = (event: MouseEvent) => {
-      const target = event.currentTarget as HTMLDivElement;
+    const handleMouseEnter = (target: HTMLDivElement) => {
       if (cursor) {
         switch (target) {
           case left:
@@ -69,9 +68,7 @@ export const CursorProvider: React.FC<{ children: ReactNode }> = ({
             setActiveElement("back");
             break;
         }
-        if (!showLeft || !showRight || target === back) {
-          gsap.to(cursor, { scale: 5 });
-        }
+        gsap.to(cursor, { scale: 5 });
       }
     };
 
@@ -84,9 +81,9 @@ export const CursorProvider: React.FC<{ children: ReactNode }> = ({
 
     document.addEventListener("mousemove", handleMouseMove);
 
-    left?.addEventListener("mouseenter", handleMouseEnter);
-    right?.addEventListener("mouseenter", handleMouseEnter);
-    back?.addEventListener("mouseenter", handleMouseEnter);
+    left?.addEventListener("mouseenter", () => handleMouseEnter(left));
+    right?.addEventListener("mouseenter", () => handleMouseEnter(right));
+    back?.addEventListener("mouseenter", () => handleMouseEnter(back));
 
     left?.addEventListener("mouseleave", handleMouseLeave);
     right?.addEventListener("mouseleave", handleMouseLeave);
@@ -94,9 +91,9 @@ export const CursorProvider: React.FC<{ children: ReactNode }> = ({
 
     return () => {
       document.removeEventListener("mousemove", handleMouseMove);
-      left?.removeEventListener("mouseenter", handleMouseEnter);
-      right?.removeEventListener("mouseenter", handleMouseEnter);
-      back?.removeEventListener("mouseenter", handleMouseEnter);
+      left?.removeEventListener("mouseenter", () => handleMouseEnter(left));
+      right?.removeEventListener("mouseenter", () => handleMouseEnter(right));
+      back?.removeEventListener("mouseenter", () => handleMouseEnter(back));
 
       left?.removeEventListener("mouseleave", handleMouseLeave);
       right?.removeEventListener("mouseleave", handleMouseLeave);
@@ -122,7 +119,7 @@ export const CursorProvider: React.FC<{ children: ReactNode }> = ({
       {children}
       <div
         ref={cursorRef}
-        className={`hidden lg:flex-center fixed left-0 top-0 w-0 h-0 rounded-full bg-gray-950/90 backdrop-blur-md select-none text-[3px] text-white text-balance font-medium ${
+        className={`hidden lg:flex-center fixed left-0 top-0 w-0 h-0 rounded-full flex-center bg-gray-950/90 backdrop-blur-md select-none text-[3px] text-white text-balance font-medium pointer-events-none ${
           activeElement ? "p-2" : ""
         }`}
       >
@@ -137,7 +134,7 @@ export const CursorProvider: React.FC<{ children: ReactNode }> = ({
         )}
         {activeElement === "right" && !showRight && (
           <>
-            <span>Scroll Video</span>
+            <span>Ready Made</span>
             <IoArrowForwardSharp
               size={8}
               className="absolute -right-[7.2px] top-[3.5px]"
@@ -147,7 +144,7 @@ export const CursorProvider: React.FC<{ children: ReactNode }> = ({
         {activeElement === "back" && (
           <>
             <span>Swipe Back</span>
-            {showLeft ? (
+            {!showLeft ? (
               <IoArrowForwardSharp
                 size={8}
                 className="absolute -right-[7.2px] top-[3.5px]"
