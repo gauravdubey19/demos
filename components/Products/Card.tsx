@@ -486,7 +486,7 @@ const AddToBagPopUp: React.FC<AddToBagPopUpProps> = ({
                   size="icon"
                   className="bg-transparent"
                 >
-                  <AiOutlineMinus />
+                  <AiOutlineMinus color="#000" />
                 </Button>
                 <span className="text-sm text-primary select-none">
                   {quantity}
