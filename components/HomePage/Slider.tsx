@@ -59,7 +59,7 @@ const Slider =() =>{
                         <Image
                             src={slide.src}
                             alt={`Slide ${idx + 1}`}
-                            className="object-fit object-top w-full h-full"
+                            className="object-cover object-top w-full h-full"
                         />
                     </div>
                 ))}
