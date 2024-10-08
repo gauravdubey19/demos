@@ -10,23 +10,24 @@ const Slider =() =>{
     const slides = [
         {
             src: slide1,
-            heading: "Explore New Arrivals",
-            subheading: "Discover the latest trends in our exclusive collection.",
-            buttonText: "Shop New Arrivals"
+            heading: "Elevate Your Formal Wardrobe",
+            subheading: "Discover timeless styles for the modern gentleman.",
+            buttonText: "Shop Formal Collection"
         },
         {
             src: slide2,
-            heading: "Summer Collection",
-            subheading: "Bright and breezy styles to enjoy the sun.",
-            buttonText: "Explore Summer"
+            heading: "Party in Style",
+            subheading: "Bold and vibrant looks to make every celebration unforgettable.",
+            buttonText: "Explore Partywear"
         },
         {
             src: slide3,
-            heading: "Limited Edition",
-            subheading: "Exclusive pieces crafted with precision and care.",
-            buttonText: "Shop Limited Edition"
+            heading: "Embrace Tradition with Elegance",
+            subheading: "Celebrate cultural heritage with our exclusive traditional wear.",
+            buttonText: "Shop Traditional Attire"
         }
     ];
+    
 
     const [currentSlide, setCurrentSlide] = useState(0);
 
@@ -58,7 +59,7 @@ const Slider =() =>{
                         <Image
                             src={slide.src}
                             alt={`Slide ${idx + 1}`}
-                            className="object-cover w-full h-full"
+                            className="object-cover object-top w-full h-full"
                         />
                     </div>
                 ))}
