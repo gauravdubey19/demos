@@ -10,7 +10,7 @@ const Home = () => {
       <main className="w-full h-full">
         <GsapHero />
         <CategorySection />
-        <GridCards />
+        {/* <GridCards /> */}
         <ProductCategorySection />
         <TestimonialContainer />
       </main>

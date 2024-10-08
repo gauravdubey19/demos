@@ -8,6 +8,9 @@ import Filter from "./Filter";
 import Goback from "../ui/Goback";
 import Loader from "../ui/Loader";
 import Breadcrumbs from "../ui/Breadcrumbs";
+import Slider from "../HomePage/Slider";
+import CategorySection from "../HomePage/CategorySection/CategorySection";
+import GridCards from "../HomePage/Grids/GridCards";
 
 const ProductCategory: React.FC<ProductCategoryProps> = ({
   category,
@@ -139,10 +142,10 @@ const ProductCategory: React.FC<ProductCategoryProps> = ({
       <div
         className={`relative w-full ${
           products.length > 2 ? "h-full" : "h-screen"
-        } mt-[60px] py-4 overflow-hidden`}
+        } mt-[40px] py-4 overflow-hidden`}
       >
-        <Goback />
-        <Filter
+        {/* <Goback /> */}
+        {/* <Filter
           categorySlug={category}
           selectedType={selectedType}
           setSelectedType={setSelectedType}
@@ -157,6 +160,9 @@ const ProductCategory: React.FC<ProductCategoryProps> = ({
           isAscending={isAscending}
           setIsAscending={setIsAscending}
         />
+        */}
+        <Slider />
+        <GridCards/>
         <div className="mt-10 md:mt-0 w-full px-2 md:px-10 lg:px-14">
           <h2 className="md:ml-2 px-2 md:px-0 space-y-2 animate-slide-down">
             <Breadcrumbs />
