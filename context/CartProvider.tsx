@@ -19,7 +19,11 @@ interface CartContextType {
   cart: CartItem[];
   isOpen: boolean;
   setOpen: (isOpen: boolean) => void;
-  handleIncrement: (productId: string, quantityInStock:number, currentCount:number) => void;
+  handleIncrement: (
+    productId: string,
+    quantityInStock: number,
+    currentCount: number
+  ) => void;
   handleDecrement: (productId: string) => void;
   handleRemoveFromCart: (productId: string) => void;
   handleClearCart: () => void;
@@ -42,6 +46,7 @@ interface CartContextType {
     color: string,
     categorySlug: string,
     quantityInStock: number,
+    quantity: number
   ) => void;
   handleColorSize: (
     action: string,
@@ -132,6 +137,7 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
       color: string,
       categorySlug: string,
       quantityInStock: number,
+      quantity: number
     ) => {
       if (status !== "authenticated") {
         router.replace("/sign-in");
@@ -152,7 +158,7 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
         description,
         price,
         image,
-        quantity: 1,
+        quantity: quantity || 1,
         quantityInStock,
         availableSizes,
         selectedSize,
@@ -310,31 +316,38 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
 
   const [cartLoading, setCartLoading] = useState<string | null>(null);
   const [wishlisting, setWishlisting] = useState(false);
-  
+
   const handleIncrement = useCallback(
-    async (productId: string, quantityInStock: number, currentCount: number) => {
+    async (
+      productId: string,
+      quantityInStock: number,
+      currentCount: number
+    ) => {
       if (status !== "authenticated") {
         router.replace("/sign-in");
         return;
       }
-  
-      console.log("Quantity In stock and currentCount", quantityInStock, currentCount);
+
+      console.log(
+        "Quantity In stock and currentCount",
+        quantityInStock,
+        currentCount
+      );
       if (quantityInStock <= currentCount) {
-  
         return toast({
           title: "Product out of stock!",
           description: "Uh oh! Can't add more than available stock.",
           variant: "destructive",
         });
       }
-  
+
       const item = cart.find((item) => item.productId === productId);
-  
+
       if (!item) return;
-  
+
       // Set loading state to disable the button
       setCartLoading(productId);
-  
+
       try {
         const res = await fetch(
           "/api/products/update/update-cart-items/increment",
@@ -347,9 +360,9 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
             }),
           }
         );
-  
+
         const data = await res.json();
-  
+
         if (res.ok) {
           setCart((prevCart) =>
             prevCart.map((item) =>
@@ -650,8 +663,9 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
         handleRemoveProductFromWishlist,
         productExistInWishlist,
         cartLoading,
-        setCartLoading, wishlisting,
-        setWishlisting
+        setCartLoading,
+        wishlisting,
+        setWishlisting,
       }}
     >
       {children}

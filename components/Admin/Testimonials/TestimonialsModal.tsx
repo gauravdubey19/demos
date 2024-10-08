@@ -1,4 +1,7 @@
 "use client";
+
+import React, { useState, useRef } from "react";
+import { CldUploadWidget } from "next-cloudinary";
 import {
   Dialog,
   DialogContent,
@@ -6,7 +9,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import React, { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -21,7 +23,7 @@ interface ModalI {
 
 const TestimonialsModal = ({ onRefresh }: ModalI) => {
   const router = useRouter();
-  const [video, setVideo] = useState<string>("");
+  const [video, setVideo] = useState<any | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [fullName, setFullName] = useState("");
   const [personTitle, setPersonTitle] = useState("");
@@ -32,76 +34,78 @@ const TestimonialsModal = ({ onRefresh }: ModalI) => {
   const [loadingVideoUpload, setLoadingVideoUpload] = useState<boolean>(false);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const [isPlaying, setIsPlaying] = useState<boolean>(true);
-  const [isHovering, setIsHovering] = useState<boolean>(false);
+  // const [isHovering, setIsHovering] = useState<boolean>(false);
 
+  // console.log(video);
+  
   const handleMouseEnter = () => {
-    setIsHovering(true);
+    // setIsHovering(true);
     if (videoRef.current && isPlaying) {
       videoRef.current.play();
     }
   };
 
   const handleMouseLeave = () => {
-    setIsHovering(false);
+    // setIsHovering(false);
     if (videoRef.current) {
       videoRef.current.pause();
       setIsPlaying(true);
     }
   };
 
-  const handleVideoFileChange = async (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const videoFile = e.target.files?.[0];
-    if (!videoFile) {
-      toast({
-        title: "Video file wasn't provided.",
-        description: "Please try again later...",
-        variant: "destructive",
-      });
-      return;
-    }
+  // const handleVideoFileChange = async (
+  //   e: React.ChangeEvent<HTMLInputElement>
+  // ) => {
+  //   const videoFile = e.target.files?.[0];
+  //   if (!videoFile) {
+  //     toast({
+  //       title: "Video file wasn't provided.",
+  //       description: "Please try again later...",
+  //       variant: "destructive",
+  //     });
+  //     return;
+  //   }
 
-    setLoadingVideoUpload(true);
+  //   setLoadingVideoUpload(true);
 
-    if (video) {
-      const rmVideo = await removeFile(video);
-      if (!rmVideo) {
-        // toast.error("Failed to remove previous video. Please try again later...");
-        toast({
-          title: "Failed to remove previous video.",
-          description: "Please try again later...",
-          variant: "destructive",
-        });
-        setLoadingVideoUpload(false);
-        return;
-      }
-    }
+  //   if (video) {
+  //     const rmVideo = await removeFile(video);
+  //     if (!rmVideo) {
+  //       // toast.error("Failed to remove previous video. Please try again later...");
+  //       toast({
+  //         title: "Failed to remove previous video.",
+  //         description: "Please try again later...",
+  //         variant: "destructive",
+  //       });
+  //       setLoadingVideoUpload(false);
+  //       return;
+  //     }
+  //   }
 
-    const videoFileFormData = new FormData();
-    videoFileFormData.append("file", videoFile);
+  //   const videoFileFormData = new FormData();
+  //   videoFileFormData.append("file", videoFile);
 
-    try {
-      const videoUrl = (await uploadNewFile(videoFileFormData)) as string;
-      if (!videoUrl) {
-        return toast({
-          title: "Testimonial video upload failed.",
-          description: "Please try again later...",
-          variant: "destructive",
-        });
-      }
+  //   try {
+  //     const videoUrl = (await uploadNewFile(videoFileFormData)) as string;
+  //     if (!videoUrl) {
+  //       return toast({
+  //         title: "Testimonial video upload failed.",
+  //         description: "Please try again later...",
+  //         variant: "destructive",
+  //       });
+  //     }
 
-      setVideo(videoUrl);
-    } catch (error) {
-      toast({
-        title: "Testimonial video upload failed.",
-        description: "Please try again later...",
-        variant: "destructive",
-      });
-    } finally {
-      setLoadingVideoUpload(false);
-    }
-  };
+  //     setVideo(videoUrl);
+  //   } catch (error) {
+  //     toast({
+  //       title: "Testimonial video upload failed.",
+  //       description: "Please try again later...",
+  //       variant: "destructive",
+  //     });
+  //   } finally {
+  //     setLoadingVideoUpload(false);
+  //   }
+  // };
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -125,7 +129,7 @@ const TestimonialsModal = ({ onRefresh }: ModalI) => {
           personTitle,
           testimony,
           rating: rating.toString(),
-          videoLink: video,
+          videoLink: video?.secure_url,
         }),
       });
 
@@ -181,7 +185,38 @@ const TestimonialsModal = ({ onRefresh }: ModalI) => {
 
   return (
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-      <DialogTrigger asChild>
+      <CldUploadWidget
+        // uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_Preset}
+        signatureEndpoint="/api/sign-cloudinary-file-upload"
+        options={{ multiple: false, maxFiles: 1, resourceType: "video" }}
+        onSuccess={(result, { widget }) => {
+          console.log(result?.info);
+          setVideo(result?.info);
+          setIsDialogOpen(true);
+        }}
+        onQueuesEnd={(result, { widget }) => {
+          widget.close();
+        }}
+      >
+        {({ open }) => {
+          function handleOnClick() {
+            setVideo(null);
+            setIsDialogOpen(false);
+            open();
+          }
+          return (
+            <Button
+              variant="default"
+              className="bg-[#ffb433] font-semibold hover:bg-[#9c6d1b]"
+              onClick={handleOnClick}
+            >
+              <Plus /> Add Testimonials
+            </Button>
+          );
+        }}
+      </CldUploadWidget>
+
+      {/* <DialogTrigger asChild>
         <Button
           variant="default"
           className="bg-[#ffb433] font-semibold hover:bg-[#9c6d1b]"
@@ -189,7 +224,7 @@ const TestimonialsModal = ({ onRefresh }: ModalI) => {
         >
           <Plus /> Add Testimonials
         </Button>
-      </DialogTrigger>
+      </DialogTrigger> */}
       <DialogContent className="bg-white text-black p-4 w-[30rem] max-w-full h-fit max-h-[85%] rounded-md overflow-hidden">
         <DialogHeader className="w-full">
           <DialogTitle className="text-2xl font-normal text-center w-full mb-4">
@@ -199,6 +234,27 @@ const TestimonialsModal = ({ onRefresh }: ModalI) => {
             <div className="w-full h-[65%] p-1 space-y-2 overflow-x-hidden overflow-y-auto">
               <div className="w-full h-fit flex-center">
                 <div
+                  // onClick={handleOnClick}
+                  onMouseEnter={handleMouseEnter}
+                  onMouseLeave={handleMouseLeave}
+                  className="relative group w-40 h-60 rounded-lg cursor-pointer overflow-hidden"
+                >
+                  {video?.secure_url && (
+                    <div>
+                      {/* <div className="absolute inset-0 z-10 text-sm text-primary cursor-pointer flex items-end justify-center py-4 bg-black/40 opacity-0 group-hover:opacity-100 ease-in-out duration-300">
+                        Change Video
+                      </div> */}
+                      <video
+                        ref={videoRef}
+                        src={video?.secure_url}
+                        playsInline
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                  )}
+                </div>
+
+                {/* <div
                   onMouseEnter={handleMouseEnter}
                   onMouseLeave={handleMouseLeave}
                   className="relative group w-40 h-60 rounded-lg overflow-hidden"
@@ -237,7 +293,7 @@ const TestimonialsModal = ({ onRefresh }: ModalI) => {
                       )}
                     </>
                   )}
-                </div>
+                </div> */}
               </div>
               <InputField
                 label="Full Name"

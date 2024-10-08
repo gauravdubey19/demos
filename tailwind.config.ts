@@ -93,6 +93,26 @@ const baseConfig: Config = {
             transform: "translateY(0)",
           },
         },
+        "slide-right": {
+          "0%": {
+            opacity: "0",
+            transform: "translateX(-100px)",
+          },
+          "100%": {
+            opacity: "1",
+            transform: "translateX(0)",
+          },
+        },
+        "slide-left": {
+          "0%": {
+            opacity: "0",
+            transform: "translateX(100px)",
+          },
+          "100%": {
+            opacity: "1",
+            transform: "translateX(0)",
+          },
+        },
         "motion-right": {
           "0%": { transform: "translateX(0)" },
           "25%": { transform: "translateX(-35px)" },
@@ -120,6 +140,8 @@ const baseConfig: Config = {
         "accordion-up": "accordion-up 0.2s ease-out",
         "slide-up": "slide-up 0.5s ease-in-out",
         "slide-down": "slide-down 0.5s ease-in-out",
+        "slide-right": "slide-right 0.8s ease-in-out",
+        "slide-left": "slide-left 0.8s ease-in-out",
         "motion-right": "motion-right 1.5s ease-in-out",
         "motion-left": "motion-left 1.5s ease-in-out",
         shake: "shake 0.3s ease-in-out",
@@ -135,6 +157,9 @@ const baseConfig: Config = {
       spacing: {
         word: "0.25em",
       },
+      transitionDuration: {
+        '5000': '5000ms',
+      }
     },
   },
   plugins: [require("tailwindcss-animate")],

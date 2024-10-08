@@ -113,16 +113,81 @@ export default function TestPage() {
       console.error("Error creating category:", error);
     }
   };
+  const [creatingCategory, setCreatingCategory] = useState(false);
+  const handleSuperCategory = async () => {
+    try {
+      setCreatingCategory(true);
+      const superCategories = [
+        {
+          title: "Formal",
+          slug: "formal",
+          categories: [
+            { title: "Trousers", slug: "trousers" },
+            { title: "Blazer", slug: "blazer" },
+            { title: "Shirt", slug: "shirt" },
+            { title: "Sweater", slug: "sweater" }
+          ]
+        },
+        {
+          title: "Partywears",
+          slug: "partywears",
+          categories: [
+            { title: "Sherwani", slug: "sherwani" },
+            { title: "Nehru Jacket", slug: "nehru-jacket" },
+            { title: "Pathani Suit", slug: "pathani-suit" }
+          ]
+        },
+        {
+          title: "Traditional",
+          slug: "traditional",
+          categories: [
+            { title: "Dhoti", slug: "dhoti" },
+            { title: "Pajama", slug: "pajama" },
+            { title: "Kurta", slug: "kurta" },
+            { title: "Jacket", slug: "jacket" }
+          ]
+        }
+      ];
+  
+      console.log("Sending superCategories to /api/superCategories...🚀");
+  
+      const response = await fetch("/api/superCategories", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(superCategories),
+      });
+  
+      if (!response.ok) {
+        throw new Error(`Failed to create superCategories. Status: ${response.status}`);
+      }
+  
+      const result = await response.json();
+      console.log(`Success! 🎉 ${result.message}`);
+    } catch (error) {
+      console.error("Error creating superCategories: 💥", error);
+    } finally {
+      setCreatingCategory(false);
+    }
+  };
+  
   const [open, setOpen] = useState(false);
   return (
     <>
-      <div className="mt-[60px] w-full h-screen bg-zinc-100 p-10">
+      <div className="mt-[60px] w-full h-screen p-10 flex flex-col gap-2">
         {/* un-comment this below for creating sample data */}
         {/* <CreateCategories /> */}
         {/* <CreateProducts /> */}
-        <Button onClick={() => setOpen(!open)}>Payment</Button>
+        {/* <Button onClick={() => setOpen(!open)}>Payment</Button>
+        <Button onClick={handleSuperCategory}
+        disabled={creatingCategory}
+
+        >{
+          creatingCategory ? "Creating Categories..." : "Create Super Categories"
+        }</Button> */}
         {/* <UploadFilesComoponent /> */}
-        {/* <ProductCategorySection /> */}
+        <ProductCategorySection />
       </div>
       {/* <PaymentGateway isOpen={open} handleClose={() => setOpen(!open)} /> */}
     </>

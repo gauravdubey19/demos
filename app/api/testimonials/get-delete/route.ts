@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { connectToDB } from "@/utils/db";
 import Testimonial from "@/models/Testimonial";
-import { utapi } from "@/server/uploadthing";
+// import { utapi } from "@/server/uploadthing";
+import { v2 as cloudinary } from "cloudinary";
+import { convertSecureUrlToPublicId } from "@/lib/utils";
 
 export const GET = async (request: NextRequest) => {
   try {
@@ -32,10 +34,16 @@ export const GET = async (request: NextRequest) => {
   }
 };
 
+cloudinary.config({
+  cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
 export const DELETE = async (request: NextRequest) => {
   try {
     const { _id, key }: { _id: string; key: string } = await request.json();
-    if (!_id || !key) {
+    if (!_id) {
       return NextResponse.json(
         { error: "Missing testimonials ID and key" },
         { status: 400 }
@@ -51,10 +59,16 @@ export const DELETE = async (request: NextRequest) => {
         { status: 404 }
       );
     }
-    const res = await utapi.deleteFiles(key);
+    // const public_id = convertSecureUrlToPublicId(testimonials.videoLink);
+    // console.log(public_id);
+    
+    // const res = await cloudinary.uploader.destroy(public_id);
 
     // console.log(res);
-    if (res.success) {
+    // const res = await utapi.deleteFiles(key);
+
+    // console.log(res);
+    // if (res.result === "ok") {
       await Testimonial.deleteOne({ _id });
       return NextResponse.json(
         {
@@ -62,13 +76,8 @@ export const DELETE = async (request: NextRequest) => {
         },
         { status: 200 }
       );
-    }
-    return NextResponse.json(
-      {
-        error: "Someting went wrong while deleting",
-      },
-      { status: 200 }
-    );
+    // }
+    
   } catch (error) {
     console.error("Error fetching testimonials:", error);
     return NextResponse.json(

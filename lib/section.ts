@@ -36,9 +36,8 @@ import { GrMapLocation } from "react-icons/gr";
 import Collection from "@/components/Admin/Products/OutfitCollection/Collection";
 import NewOutFit from "@/components/Admin/Products/AddOutfit/NewOutFit";
 import TestimonialsAdmin from "@/components/Admin/Testimonials/TestimonialsAdmin";
-import HelpDesk from '@/components/Admin/Helpdesk/helpdesk';
-import { AiOutlineCustomerService } from 'react-icons/ai'
-
+import HelpDesk from "@/components/Admin/Helpdesk/helpdesk";
+import { AiOutlineCustomerService } from "react-icons/ai";
 
 export const profileSections: SectionValues[] = [
   {
@@ -76,7 +75,6 @@ export const profileSections: SectionValues[] = [
     href: "/profile/helpdesk",
     icon: AiOutlineCustomerService,
     sectionNode: HelpDesk,
-   
   },
   // {
   //   id: "payment-methods",
@@ -121,12 +119,12 @@ export const adminSections: SectionValues[] = [
         href: "/admin/add-products",
         sectionNode: AddProduct,
       },
-      {
-        id: "all-outfit-collections",
-        head: "All Outfit Collections",
-        href: "/admin/all-outfit-collections",
-        sectionNode: Collection,
-      },
+      // {
+      //   id: "all-outfit-collections",
+      //   head: "All Outfit Collections",
+      //   href: "/admin/all-outfit-collections",
+      //   sectionNode: Collection,
+      // },
       {
         id: "add-outfit-collections",
         head: "Add Outfit Collections",
@@ -197,5 +195,4 @@ export const adminSections: SectionValues[] = [
     icon: AiOutlineCustomerService,
     sectionNode: HelpDesk,
   },
-  
 ];

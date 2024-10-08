@@ -1458,3 +1458,531 @@ export const a = "b";
 // } satisfies Config;
 
 // export default config;
+
+// hero section
+// "use client";
+
+// import React, { useEffect, useRef, useState } from "react";
+// import { gsap } from "gsap";
+// import { Draggable } from "gsap/dist/Draggable";
+// import ScrollVideo from "../ui/ScrollVideo";
+// import { Button } from "../ui/button";
+// import { IoArrowBackSharp, IoArrowForwardSharp } from "react-icons/io5";
+// import ImagePracticles from "../ui/ImagePracticles";
+// import { useCursor } from "@/context/CursorProvider";
+// import { useRouter } from "next/navigation";
+
+// gsap.registerPlugin(Draggable);
+
+// const GsapHero: React.FC = () => {
+//   const router = useRouter();
+//   const { showLeft, setShowLeft, showRight, setShowRight } = useCursor();
+//   const [containerDraggable, setContainerDraggable] = useState<boolean>(false);
+//   const leftSectionRef = useRef<HTMLDivElement>(null);
+//   const leftContainerRef = useRef<HTMLDivElement>(null);
+//   const leftSlideBackRef = useRef<HTMLDivElement>(null);
+//   const rightSectionRef = useRef<HTMLDivElement>(null);
+//   const rightContainerRef = useRef<HTMLDivElement>(null);
+//   const rightSlideBackRef = useRef<HTMLDivElement>(null);
+
+//   useEffect(() => {
+//     const updateBounds = () => {
+//       const leftContainerWidth = leftContainerRef.current?.offsetWidth ?? 0;
+//       const rightContainerWidth = rightContainerRef.current?.offsetWidth ?? 0;
+
+//       if (leftSectionRef.current) {
+//         Draggable.create(leftSectionRef.current, {
+//           type: "x",
+//           bounds: { minX: 0, maxX: leftContainerWidth },
+//           onDragEnd() {
+//             if (this.x >= leftContainerWidth * 0.1) {
+//               gsap.to(leftContainerRef.current, {
+//                 x: 0,
+//                 duration: 1,
+//                 ease: "power2.inOut",
+//               });
+//               gsap.to(this.target, {
+//                 x: 100,
+//                 duration: 0.5,
+//                 ease: "power2.inOut",
+//               });
+//               setShowLeft(true);
+//             }
+//           },
+//         });
+//       }
+
+//       if (rightSectionRef.current) {
+//         Draggable.create(rightSectionRef.current, {
+//           type: "x",
+//           bounds: { minX: -rightContainerWidth, maxX: 0 },
+//           onDragEnd() {
+//             if (this.x <= -rightContainerWidth * 0.1) {
+//               gsap.to(rightContainerRef.current, {
+//                 x: 0,
+//                 duration: 1,
+//                 ease: "power2.inOut",
+//               });
+//               gsap.to(this.target, {
+//                 x: -100,
+//                 duration: 0.5,
+//                 ease: "power2.inOut",
+//               });
+//               setInterval(() => setShowRight(true), 800);
+//               router.push("/products/all")
+//             }
+//           },
+//         });
+//       }
+
+//       if (leftSlideBackRef.current) {
+//         Draggable.create(leftSlideBackRef.current, {
+//           type: "x",
+//           bounds: { minX: -leftContainerWidth, maxX: 0 },
+//           onDragEnd() {
+//             if (this.x <= -leftContainerWidth * 0.1) {
+//               gsap.to(leftContainerRef.current, {
+//                 x: "-100%",
+//                 duration: 1,
+//                 ease: "power2.inOut",
+//               });
+//               gsap.to(this.target, {
+//                 x: 0,
+//                 duration: 0.5,
+//                 ease: "power2.inOut",
+//               });
+//               setShowLeft(false);
+//             }
+//           },
+//         });
+//       }
+
+//       if (rightSlideBackRef.current) {
+//         Draggable.create(rightSlideBackRef.current, {
+//           type: "x",
+//           bounds: { minX: 0, maxX: rightContainerWidth },
+//           onDragEnd() {
+//             if (this.x >= rightContainerWidth * 0.1) {
+//               gsap.to(rightContainerRef.current, {
+//                 x: "100%",
+//                 duration: 1,
+//                 ease: "power2.inOut",
+//               });
+//               gsap.to(this.target, {
+//                 x: 0,
+//                 duration: 0.5,
+//                 ease: "power2.inOut",
+//               });
+//               setShowRight(false);
+//             }
+//           },
+//         });
+//       }
+//     };
+
+//     updateBounds();
+
+//     const handleScroll = () => {
+//       setContainerDraggable(window.scrollY > window.innerHeight * 2);
+//     };
+
+//     window.addEventListener("scroll", handleScroll);
+//     handleScroll();
+
+//     return () => {
+//       window.removeEventListener("scroll", handleScroll);
+//     };
+//   }, [setShowLeft, setShowRight]);
+
+//   return (
+//     <>
+//       <section className="h-[400vh] bg-white">
+//         <div className="w-full h-screen sticky top-0 overflow-hidden">
+//           <>
+//             {/* left hero section */}
+//             <div
+//               ref={leftContainerRef}
+//               className={`absolute inset-0 z-50 transition-transform duration-300 ${
+//                 containerDraggable
+//                   ? "-translate-x-full"
+//                   : "-translate-x-[115%] md:-translate-x-[110%]"
+//               }`}
+//             >
+//               <div
+//                 ref={leftSlideBackRef}
+//                 className="absolute right-0 z-50 w-[30vw] h-full bg-transparent cursor-grab active:cursor-grabbing"
+//               ></div>
+//               <LeftContainer />
+//               <div
+//                 ref={leftSectionRef}
+//                 className="absolute right-0 top-0 w-20 h-full flex items-center justify-center translate-x-20"
+//               >
+//                 <IoArrowBackSharp size={40} className="text-primary" />
+//               </div>
+//             </div>
+
+//             {/* right hero section */}
+//             <div
+//               ref={rightContainerRef}
+//               className={`absolute inset-0 z-50 transition-transform duration-300 ${
+//                 containerDraggable
+//                   ? "translate-x-full"
+//                   : "translate-x-[115%] md:translate-x-[110%]"
+//               }`}
+//             >
+//               <div
+//                 ref={rightSlideBackRef}
+//                 className="absolute left-0 z-50 w-[30vw] h-full bg-transparent cursor-grab active:cursor-grabbing"
+//               ></div>
+//               <div
+//                 ref={rightSectionRef}
+//                 className="absolute left-0 w-20 h-full flex items-center justify-center -translate-x-20"
+//               >
+//                 <IoArrowForwardSharp size={40} className="text-primary" />
+//               </div>
+//               <RightContainer showRight={showRight} />
+//             </div>
+//           </>
+//           <>
+//             <div className="relative w-full h-screen flex-center overflow-hidden">
+//               <div
+//                 id="bg-section"
+//                 className="absolute inset-0 -z-10 h-full w-full"
+//               >
+//                 <ScrollVideo videoUrl="/videos/homePageHeroVideoTrim.mp4" />
+//               </div>
+//               <div
+//                 id="middle-section"
+//                 className="relative lg:h-full bg-[#ffb43320] backdrop-blur-sm flex items-center justify-center w-full md:w-[40vw] lg:w-[30vw] p-6 transition-transform duration-300"
+//               >
+//                 <MiddleContainer />
+//               </div>
+//             </div>
+//           </>
+//         </div>
+//       </section>
+//     </>
+//   );
+// };
+
+// export default GsapHero;
+
+// const MiddleContainer: React.FC = () => {
+//   // const handleScrollDown = () => {
+//   //   window.scrollTo({
+//   //     top: window.innerHeight * 3.91,
+//   //     behavior: "smooth",
+//   //   });
+//   // };
+
+//   return (
+//     <div className="w-full flex flex-col items-center gap-10 md:gap-16">
+//       <div className="w-full flex flex-col gap-2">
+//         <div className="relative w-full h-[230px] flex items-end justify-center bg-white/50 text-primary p-4">
+//           <div className="absolute md:-left-[6.8rem] top-7 z-10 gap-1 text-[90px] font-medium drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)]">
+//             <span className="md:text-white">Ex</span>
+//             <span>plore</span>
+//           </div>
+//           <span className="text-6xl lg:text-7xl font-light drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.5)]">
+//             Textiles
+//           </span>
+//         </div>
+//         <span className="w-full text-center text-balance text-[2rem] md:text-2xl lg:text-[2rem] font-light drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.5)] overflow-hidden">
+//           Textiles <span className="text-[#AA6C0 font-medium">&</span> Ready
+//           made
+//         </span>
+//       </div>
+//       {/* <Button
+//         onClick={handleScrollDown}
+//         className="w-fit h-fit select-none bg-white text-primary text-xl font-semibold tracking-[6px] p-2 px-3 rounded-none hover:shadow-xl ease-in-out duration-300"
+//       >
+//         SHOP NOW
+//       </Button> */}
+//     </div>
+//   );
+// };
+
+// const LeftContainer = () => {
+//   return (
+//     <div className="w-full h-full flex-between select-none bg-zinc-400 overflow-hidden"></div>
+//   );
+// };
+
+// const RightContainer: React.FC<{ showRight: boolean }> = ({ showRight }) => {
+//   return (
+//     <div className="w-full h-full flex-between flex-col-reverse md:flex-row select-none bg-white overflow-hidden">
+//       <div className="h-[calc(100vh-60px)] md:flex-center w-full mt-[60px] p-4 md:p-8 lg:p-10 overflow-hidden">
+//         <div className="h-fit w-fit space-y-4">
+//           <h2 className="text-5xl md:text-7xl lg:text-8xl font-semibold">
+//             Welcome
+//           </h2>
+//           <p className="text-2xl">
+//             Lorem ipsum dolor sit amet, consectetur adipisicing elit. Enim,
+//             odit.
+//           </p>
+//           <Button>Check Out Now</Button>
+//         </div>
+//       </div>
+//       <div className="h-[calc(100vh-60px)] w-full mt-[60px] overflow-hidden">
+//         {showRight && <ImagePracticles img="/assets/rightImage.png" />}
+//       </div>
+//     </div>
+//   );
+// };
+
+// product card 
+// "use client";
+
+// import React, { useEffect, useState } from "react";
+// import Link from "next/link";
+// import Image from "next/image";
+// import { CardDetails } from "@/lib/types";
+// import { IoMdStar } from "react-icons/io";
+// import { GoHeart, GoHeartFill } from "react-icons/go";
+// import { useCart } from "@/context/CartProvider";
+// import { Button } from "../ui/button";
+// import discount from "@/public/images/discount.png";
+
+// const Card: React.FC<CardDetails> = ({ card, category, loading = false }) => {
+//   const [reviews, setReviews] = useState<number>(0);
+//   const [avgRating, setAvgRating] = useState<number>(0);
+//   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+//   const [hovering, setHovering] = useState(false);
+
+//   const {
+//     handleAddProductToWhistlist,
+//     handleRemoveProductFromWishlist,
+//     productExistInWishlist,
+//   } = useCart();
+
+
+//   useEffect(() => {
+//     const getReviews = () => {
+//       if (!card._id) return;
+//       setReviews(card.reviewsNumber ?? 0);
+//       setAvgRating(Number(card.ratings?.toFixed(1)) ?? 0);
+//     };
+//     if (card._id) getReviews();
+//   }, [card]);
+
+//   useEffect(() => {
+//     let interval: any;
+//     // Check if card has at least 2 images
+//     if (!card.images || card.images.length < 2) return;
+
+//     if (hovering) {
+//       interval = setInterval(() => {
+//         setCurrentImageIndex((prevIndex) => {
+//           if (!card.images) return 0;
+//           return (prevIndex + 1) % card.images.length;
+//         });
+//       }, 2000); // Change image every 3 seconds
+//     }
+//     return () => clearInterval(interval);
+//   }, [hovering, card.images]);
+
+//   return (
+//     <div
+//       className="h-fit w-full max-w-[198px] md:max-w-[260px] group bg-white border border-[#E9D7D7] scale-90 hover:scale-95 hover:shadow-lg ease-in-out duration-300 overflow-hidden cursor-pointer rounded"
+//       onMouseEnter={() => setHovering(true)}
+//       onMouseLeave={() => setHovering(false)}
+//     >
+//       <Link href={`/products/${category}/${card.slug}`}>
+//         <div className="relative h-[240px] sm:h-[240px] md:h-[220px] lg:h-[340px] w-full flex-center select-none overflow-hidden">
+//           {!loading && (
+//             <div
+//               onClick={(e) => {
+//                 e.stopPropagation();
+//                 if (card._id) {
+//                   return !productExistInWishlist(card._id)
+//                     ? handleAddProductToWhistlist(card._id)
+//                     : handleRemoveProductFromWishlist(card._id);
+//                 }
+//               }}
+//               className="absolute group md:hidden top-1 right-1 z-10 cursor-pointer w-8 h-8 flex-center bg-white/50 backdrop-blur-md p-1 rounded-full shadow-[0_0_1.5px_black] ease-in-out duration-300"
+//             >
+//               {card._id && !productExistInWishlist(card._id) ? (
+//                 <GoHeart
+//                   size={20}
+//                   color="#FF6464"
+//                   className="group-hover:scale-110"
+//                 />
+//               ) : (
+//                 <GoHeartFill
+//                   size={20}
+//                   color="#FF6464"
+//                   className="group-hover:scale-110"
+//                 />
+//               )}
+//             </div>
+//           )}
+//           { !loading &&
+//           <div className={`hidden md:block absolute -bottom-12 group-hover:bottom-0 group-hover:animate-slide-up left-0 right-0 z-50 w-full p-1 ease-out duration-300`}>
+//             <Button
+//               onClick={(e) => {
+//                 e.stopPropagation();
+//                 if (card._id) {
+//                   return !productExistInWishlist(card._id)
+//                     ? handleAddProductToWhistlist(card._id)
+//                     : handleRemoveProductFromWishlist(card._id);
+//                 }
+//               }}
+//               size="sm"
+//               className={`w-full text-lg rounded hover:shadow-md ${
+//                 card._id && !productExistInWishlist(card._id)
+//                   ? "bg-white backdrop-blur-md border border-[#FF6464] text-[#FF6464]"
+//                   : "bg-[#FF6464]"
+//               }`}
+//             >
+//               {card._id && !productExistInWishlist(card._id) ? (
+//                 <span className="flex-center gap-1 py-1">
+//                   <GoHeart color="#FF6464" className="group-hover:scale-110 mr-1" />
+//                   Wishlist
+//                 </span>
+//               ) : (
+//                 <span className="flex-center gap-1 py-1">
+//                   <GoHeartFill
+//                     color="white"
+//                     className="group-hover:scale-110 mr-1"
+//                   />
+//                   Wishlisted
+//                 </span>
+//               )}
+//             </Button>
+//           </div>
+//           }
+//           <div
+//             className={`w-full h-full relative ${
+//               loading
+//                 ? "bg-gray-300 animate-pulse"
+//                 : " ease-in-out duration-300"
+//             }`}
+//           >
+//             {!loading && card.images && card.images.length > 0 && (
+//               <div className="relative w-full h-full">
+//               <div className="absolute inset-0 flex transition-transform duration-1000 ease-in-out group-hover:scale-105"
+//               style={{ transform: `translateX(-${currentImageIndex * 100}%)`, width: `100%` }}>
+//                 {card.images.map((image, index) => (
+//                   <div key={index} className="w-full h-full flex-shrink-0">
+//                     <Image
+//                       src={image}
+//                       alt={card.title}
+//                       width={600}
+//                       height={600}
+//                       loading="lazy"
+//                       className="w-full h-full object-cover object-center"
+//                     />
+//                   </div>
+//                 ))}
+//                 {/* discount svg overlaying the image */}
+               
+//               </div>
+               
+//                { card.oldPrice &&
+//               <div className="absolute -top-20 left-1 z-10 duration-300 ease-in-out group-hover:top-2">
+//                 <Image
+//                   src={discount}
+//                   alt="Discount"
+//                   width={50}
+//                   height={50}
+//                   loading="lazy"
+//                 />
+//                 <div className="absolute top-0 left-0 bottom-0 right-0 z-10 text-white text-xs text-center w-full flex items-center justify-center">
+//                   <span>
+//                     - {Math.round(((card.oldPrice-card.price)/card.oldPrice)*100)}% <br /> off
+//                   </span>
+//                   </div>
+//               </div>
+//               }
+//               </div>
+//             )}
+//           </div>
+//         </div>
+//         <div className="h-auto w-full flex justify-between flex-col gap-1 p-1.5 md:px-2.5 mb-0.5 md:mb-1 overflow-hidden">
+//           <div className="">
+//             <div
+//               className={`${
+//                 loading ? "h-4 md:h-7 bg-slate-200 animate-pulse" : "h-fit"
+//               } w-full text-lg md:text-xl font-semibold line-clamp-1`}
+//             >
+//               {!loading && card.title}
+//             </div>
+//             <div className="h-fit w-full text-[11px] text-xs font-light text-[#818181] flex gap-1">
+//               {loading ? (
+//                 <span className="mt-1 w-24 h-2 md:h-3 bg-gray-200 animate-pulse"></span>
+//               ) : (
+//                 <div className="flex flex-row gap-2">
+//                   {reviews ? (
+//                     <>
+//                       <div className="flex gap-0.5">
+//                         {Array.from({ length: 5 }, (_, index) => (
+//                           <IoMdStar
+//                             key={index}
+//                             size={15}
+//                             className={
+//                               index < Math.floor(avgRating)
+//                                 ? "fill-primary"
+//                                 : "fill-gray-500"
+//                             }
+//                           />
+//                         ))}
+//                       </div>
+//                       <span className="text-xs font-semibold">
+//                         {avgRating}{" "}
+//                       </span>
+//                     </>
+//                   ) : (
+//                     <span className="text-xs font-semibold">No reviews</span>
+//                   )}
+//                 </div>
+//               )}
+//               {reviews > 0 && (
+//                 <>
+//                   |{" "}
+//                   <span
+//                     className={`line-clamp-1 ${
+//                       loading &&
+//                       "mt-1 w-20 h-2 md:h-3 bg-gray-200 animate-pulse"
+//                     }`}
+//                   >
+//                     {!loading && reviews + " reviews"}
+//                   </span>
+//                 </>
+//               )}
+//             </div>
+//             <div
+//               className={`w-full text-[11px] md:text-xs text-[#818181] line-clamp-1 ${
+//                 loading ? "mt-2 h-7 bg-gray-200 animate-pulse" : "h-fit"
+//               }`}
+//             >
+//               {!loading && card.description}
+//             </div>
+//           </div>
+//           <div className="flex flex-col lg:flex-row lg:gap-2 lg:items-end">
+//             <span
+//               className={`${
+//                 loading && "w-20 h-5 md:h-7 bg-gray-200 animate-pulse"
+//               } text-lg md:text-xl font-bold`}
+//             >
+//               {!loading && "₹" + card.price}
+//             </span>
+//             {card.oldPrice && (
+//               <div className="flex flex-wrap gap-2">
+//                 <span
+//                   className={`text-xs md:text-md line-through text-gray-400 ${
+//                     loading &&
+//                     "mt-1 lg:mt-0 w-14 h-3 md:h-5 bg-gray-200 animate-pulse"
+//                   }`}
+//                 >
+//                   {!loading && "₹" + card.oldPrice}
+//                 </span>
+//               </div>
+//             )}
+//           </div>
+//         </div>
+//       </Link>
+//     </div>
+//   );
+// };
+
+// export default Card;

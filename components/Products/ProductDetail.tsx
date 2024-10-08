@@ -115,7 +115,7 @@ const ProductDetail: React.FC<{ slug: string; categorySlug: string }> = ({
     <>
       <section className="w-full h-full max-w-6xl px-4 py-10 mx-auto ">
         <div className="w-full h-full lg:mt-[80px] xl:mt-10">
-          <Goback />
+          {/* <Goback /> */}
           <Breadcrumbs />
           <div className="w-full h-full grid grid-cols-1 lg:grid-cols-[1fr_1fr] gap-6 lg:gap-12 items-start mt-2">
             <ImageGallery
@@ -316,6 +316,16 @@ const Details: React.FC<DetailsProps> = ({
   avgRating,
   reviewsLength,
 }) => {
+  const {
+    handleAddToCart,
+    itemExistInCart,
+    isOpen,
+    setOpen,
+    handleAddProductToWhistlist,
+    handleRemoveProductFromWishlist,
+    productExistInWishlist,
+  } = useCart();
+
   const [size, setSize] = useState<string>("");
   const [color, setColor] = useState<string>("");
   const [colorTitle, setColorTitle] = useState<string>("");
@@ -329,16 +339,6 @@ const Details: React.FC<DetailsProps> = ({
     colorTitle: false,
   });
 
-  const {
-    handleAddToCart,
-    itemExistInCart,
-    isOpen,
-    setOpen,
-    handleAddProductToWhistlist,
-    handleRemoveProductFromWishlist,
-    productExistInWishlist,
-  } = useCart();
-
   const handleAddToCartBtn = () => {
     setIsValuesSelected({
       size: size.trim() === "",
@@ -347,6 +347,7 @@ const Details: React.FC<DetailsProps> = ({
     });
 
     if (size.trim() !== "" && color.trim() !== "") {
+      const quantity = 1;
       handleAddToCart(
         product._id,
         product.title,
@@ -360,7 +361,8 @@ const Details: React.FC<DetailsProps> = ({
         colorTitle,
         color,
         categorySlug,
-        product.quantityInStock
+        product.quantityInStock,
+        quantity
       );
     }
   };
