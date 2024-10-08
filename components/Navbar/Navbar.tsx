@@ -112,7 +112,8 @@ const Navbar: React.FC<{ appName?: string }> = ({ appName = "LOGO" }) => {
     if (pathname.includes("/admin")) return;
 
     const handleScroll = () => {
-      if (window.scrollY > window.innerHeight * 2.9 && pathname === "/") {
+      // window.scrollY > window.innerHeight * 2.9 &&
+      if (pathname === "/") {
         setIsVisible(true);
       } else if (pathname !== "/") {
         setIsVisible(true);
@@ -226,9 +227,12 @@ const Navbar: React.FC<{ appName?: string }> = ({ appName = "LOGO" }) => {
                     >
                       {superCategory.title}
                     </NavigationMenuTrigger>
-                    <div className={`w-max space-y-2 p-4 animate-slide-down flex flex-col gap-2 absolute top-full left-0 shadow-lg bg-white rounded-md ${currentHover===superCategory.slug? "":"hidden"}`} 
-                    onMouseEnter={() => setCurrentHover(superCategory.slug)}
-                    onMouseLeave={() => setCurrentHover(null)}
+                    <div
+                      className={`w-max space-y-2 p-4 animate-slide-down flex flex-col gap-2 absolute top-full left-0 shadow-lg bg-white rounded-md ${
+                        currentHover === superCategory.slug ? "" : "hidden"
+                      }`}
+                      onMouseEnter={() => setCurrentHover(superCategory.slug)}
+                      onMouseLeave={() => setCurrentHover(null)}
                     >
                       {superCategory.categories.map((category: any) => (
                         <div key={category._id}>
@@ -239,8 +243,9 @@ const Navbar: React.FC<{ appName?: string }> = ({ appName = "LOGO" }) => {
                             {category.title}
                           </Link>
                           <div className="text-xs grid grid-cols-1 gap-1 pl-3">
-                            {
-                              categories.find((cat) => cat.slug === category.slug)?.types.map((type) => (
+                            {categories
+                              .find((cat) => cat.slug === category.slug)
+                              ?.types.map((type) => (
                                 <Link
                                   href={{
                                     pathname: `/products/${category.slug}`,
@@ -251,9 +256,8 @@ const Navbar: React.FC<{ appName?: string }> = ({ appName = "LOGO" }) => {
                                 >
                                   {type.title}
                                 </Link>
-                              ))
-                            }
-                            </div>
+                              ))}
+                          </div>
                         </div>
                       ))}
                     </div>
