@@ -115,7 +115,7 @@ const ProductDetail: React.FC<{ slug: string; categorySlug: string }> = ({
     <>
       <section className="w-full h-full max-w-6xl px-4 py-10 mx-auto ">
         <div className="w-full h-full lg:mt-[80px] xl:mt-10">
-          <Goback />
+          {/* <Goback /> */}
           <Breadcrumbs />
           <div className="w-full h-full grid grid-cols-1 lg:grid-cols-[1fr_1fr] gap-6 lg:gap-12 items-start mt-2">
             <ImageGallery

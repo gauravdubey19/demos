@@ -9,13 +9,15 @@ export default function ScrollToTop() {
   const [isVisible, setIsVisible] = useState(false);
 
   const goToBtn = () => {
-    const targetPosition = pathname === "/" ? 1890 : 0;
+    // 1890
+    const targetPosition = pathname === "/" ? 0 : 0;
     globalThis.scrollTo({ top: targetPosition, left: 0, behavior: "smooth" });
   };
 
   useEffect(() => {
     const listenToScroll = () => {
-      const hidden = pathname === "/" ? 2500 : 500;
+      // 2500
+      const hidden = pathname === "/" ? 500 : 500;
       const winScroll =
         document.body.scrollTop || document.documentElement.scrollTop;
       if (winScroll > hidden) {
