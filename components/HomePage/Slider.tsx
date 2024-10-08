@@ -46,7 +46,7 @@ const Slider =() =>{
     };
 
     return (
-        <div className="relative w-full h-[90vh] overflow-hidden mb-20">
+        <div className="relative w-full h-[calc(100vh-60px)] overflow-hidden mb-20">
             {/* Carousel images */}
             <div className="absolute inset-0 flex">
                 {slides.map((slide, idx) => (
