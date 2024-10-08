@@ -27,7 +27,7 @@ const ProductCategory: React.FC<ProductCategoryProps> = ({
 
   const [priceRange, setPriceRange] = useState<{ min: number; max: number }>({
     min: 0,
-    max: 1000,
+    max: 20000,
   });
 
   const [isAscending, setIsAscending] = useState<boolean>(true);
@@ -139,7 +139,7 @@ const ProductCategory: React.FC<ProductCategoryProps> = ({
       <div
         className={`relative w-full ${
           products.length > 2 ? "h-full" : "h-screen"
-        } mt-[60px] py-4 overflow-hidden`}
+        } mt-[60px] py-4 overflow-hidden flex flex-row`}
       >
         {/* <Goback /> */}
         <Filter
@@ -157,7 +157,7 @@ const ProductCategory: React.FC<ProductCategoryProps> = ({
           isAscending={isAscending}
           setIsAscending={setIsAscending}
         />
-        <div className="mt-10 md:mt-0 w-full px-2 md:px-10 lg:px-14">
+        <div className="mt-10 md:mt-0 w-full px-2 md:px-10 lg:px-14 h-screen overflow-y-auto">
           <h2 className="md:ml-2 px-2 md:px-0 space-y-2 animate-slide-down">
             <Breadcrumbs />
             <span className="text-xl lg:text-2xl font-bold">
@@ -166,7 +166,7 @@ const ProductCategory: React.FC<ProductCategoryProps> = ({
             </span>
           </h2>
           {products.length > 0 ? (
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-1 md:gap-6 animate-slide-up">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 gap-1 md:gap-6 animate-slide-up">
               {products.map((card) => (
                 <Card key={card._id} card={card} category={category} />
               ))}
