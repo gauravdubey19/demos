@@ -141,7 +141,7 @@ const ProductCategory: React.FC<ProductCategoryProps> = ({
           products.length > 2 ? "h-full" : "h-screen"
         } mt-[60px] py-4 overflow-hidden`}
       >
-        <Goback />
+        {/* <Goback /> */}
         <Filter
           categorySlug={category}
           selectedType={selectedType}

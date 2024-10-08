@@ -61,6 +61,25 @@ const NewOutfit = () => {
     mainImageFormData.append("file", outfitFile);
     const mainImageUrl = (await uploadNewFile(mainImageFormData)) as string;
 
+    const productCollection = selectedProducts.map((product) => {
+      if (product) {
+        return {
+          productId: product._id,
+          title: product.title,
+          image: product.image_link,
+          price: product.price,
+          slug: product.slug,
+        };
+      }
+      return {
+        productId: 0,
+        title: "",
+        image: "",
+        price: 0,
+        slug: "",
+      };
+    });
+
     let finalOutfitCollection = {
       outfitTitle: outfitTitle,
       outfitImage: mainImageUrl,
@@ -84,7 +103,11 @@ const NewOutfit = () => {
       }),
     };
 
-    console.log("Final Outfit Collection: ", finalOutfitCollection);
+    console.log("Final Outfit Collection: ", {
+      outfitTitle,
+      outfitImage: mainImageUrl,
+      productCollection,
+    });
 
     try {
       const response = await fetch("/api/outfitCollections", {
@@ -92,7 +115,11 @@ const NewOutfit = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(finalOutfitCollection),
+        body: JSON.stringify({
+          outfitTitle,
+          outfitImage: mainImageUrl,
+          productCollection,
+        }),
       });
 
       if (!response.ok) {
