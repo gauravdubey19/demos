@@ -1,5 +1,11 @@
-import { redirect } from "next/navigation";
+import Slider from "@/components/HomePage/Slider";
+import GridCards from "@/components/HomePage/Grids/GridCards";
 
 export default function ProductsPage() {
-  redirect("/products/all");
+  return (  
+    <div className={`relative w-full mt-[60px] py-4 `}> 
+     <Slider />
+        <GridCards/>
+    </div>
+  )
 }

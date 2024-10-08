@@ -95,7 +95,7 @@ const Filter: React.FC<FilterProps> = ({
   }, [categoryList, categorySlug]);
 
   return (
-    <div className="sticky top-0 z-50 w-80 text-black bg-white p-4 ml-6 pr-8 border-r border-r-gray-300 h-screen overflow-y-auto">
+    <div className="z-50 w-80 text-black bg-white p-4 ml-6 pr-8 border-r border-r-gray-300 h-screen overflow-y-auto">
       <div className="md:hidden z-10 fixed bottom-0 left-0 right-0 w-full bg-zinc-700 flex justify-between items-center text-white py-2 divide-x-1">
         <div
           onClick={toggleShort}
@@ -255,7 +255,7 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({
                 className="form-checkbox"
                 checked={selectedType.trim() === ""}
                 onChange={() => {
-                  window.scrollTo({ top: 0, behavior: "smooth" });
+                  // window.scrollTo({ top: 0, behavior: "smooth" });
                   setSelectedType("");
                 }}
               />
@@ -270,7 +270,7 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({
                   className="form-checkbox"
                   checked={selectedType === type.slug}
                   onChange={() => {
-                    window.scrollTo({ top: 0, behavior: "smooth" });
+                    // window.scrollTo({ top: 0, behavior: "smooth" });
                     setSelectedType(type.slug);
                   }}
                 />
@@ -316,7 +316,7 @@ const ColorFilter: React.FC<ColorFilterProps> = ({
               key={_id}
               title={title}
               onClick={() => {
-                window.scrollTo({ top: 0, behavior: "smooth" });
+                // window.scrollTo({ top: 0, behavior: "smooth" });
                 setSelectedColor(title);
               }}
               className={`w-8 h-8 rounded-full border border-gray-200 ${
@@ -331,7 +331,7 @@ const ColorFilter: React.FC<ColorFilterProps> = ({
             <GrClear
               title="Select none"
               onClick={() => {
-                window.scrollTo({ top: 0, behavior: "smooth" });
+                // window.scrollTo({ top: 0, behavior: "smooth" });
                 setSelectedColor("");
               }}
               size={30}
@@ -377,7 +377,7 @@ const SizeFilter: React.FC<SizeFilterProps> = ({
               <button
                 title={size}
                 onClick={() => {
-                  window.scrollTo({ top: 0, behavior: "smooth" });
+                  // window.scrollTo({ top: 0, behavior: "smooth" });
                   setSelectedSize(size);
                 }}
                 className={`w-10 h-10 rounded-full flex-center border border-gray-200 text-sm ${
@@ -394,7 +394,7 @@ const SizeFilter: React.FC<SizeFilterProps> = ({
             <GrClear
               title="Select none"
               onClick={() => {
-                window.scrollTo({ top: 0, behavior: "smooth" });
+                // window.scrollTo({ top: 0, behavior: "smooth" });
                 setSelectedSize("");
               }}
               size={30}
