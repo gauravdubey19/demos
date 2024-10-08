@@ -9,22 +9,22 @@ const Slider =() =>{
     // Updated array to include heading, subheading, and button text for each slide
     const slides = [
         {
-            src: slide1,
-            heading: "Elevate Your Formal Wardrobe",
-            subheading: "Discover timeless styles for the modern gentleman.",
-            buttonText: "Shop Formal Collection"
+            src: 'https://sherwanirental.com/wp-content/uploads/2024/05/Website-Banner-3_compressed.jpg',
+            heading: "Dazzle in Designer Sherwanis",
+            subheading: "Make a statement at any celebration with our exclusive range of sherwanis, designed for unforgettable moments.",
+            buttonText: "Discover Partywear"
         },
         {
-            src: slide2,
-            heading: "Party in Style",
-            subheading: "Bold and vibrant looks to make every celebration unforgettable.",
-            buttonText: "Explore Partywear"
+            src: 'https://img.freepik.com/premium-photo/entrepreneur-manager-male-formal-fashion-professional-unshaven-ceo-confident-grizzled-boss-copy-space-mature-businessman-formalwear-business-success-successful-man-businesslike-suit_545934-6792.jpg',
+            heading: "Sharp and Sophisticated Suits",
+            subheading: "Step into style with our expertly tailored suits, perfect for any formal occasion.",
+            buttonText: "Explore Formal Wear"
         },
         {
-            src: slide3,
-            heading: "Embrace Tradition with Elegance",
-            subheading: "Celebrate cultural heritage with our exclusive traditional wear.",
-            buttonText: "Shop Traditional Attire"
+            src: 'https://cdn.shopify.com/s/files/1/1857/6931/files/nehru-jackets_600x600.jpg?v=1658230751',
+            heading: "Elegance in Kurta & Nehru Jacket",
+            subheading: "Embrace tradition with our refined collection of kurtas and Nehru jackets, crafted for timeless appeal.",
+            buttonText: "Shop Traditional Styles"
         }
     ];
     
@@ -47,7 +47,7 @@ const Slider =() =>{
     };
 
     return (
-        <div className="relative w-full h-[90vh] overflow-hidden mb-20">
+        <div className="relative w-full h-[calc(100vh-60px)] overflow-hidden mb-20">
             {/* Carousel images */}
             <div className="absolute inset-0 flex">
                 {slides.map((slide, idx) => (
@@ -56,7 +56,7 @@ const Slider =() =>{
                         className={`absolute w-full h-full transition-all  ease-linear
               ${currentSlide === idx ? "opacity-100 scale-110" : "opacity-0 scale-100"}`}
                     >
-                        <Image
+                        <img
                             src={slide.src}
                             alt={`Slide ${idx + 1}`}
                             className="object-cover object-top w-full h-full"
