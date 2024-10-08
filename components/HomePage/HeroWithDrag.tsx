@@ -114,7 +114,7 @@ const HeroWithDrag: React.FC = () => {
             id="bg-section"
             className="absolute inset-0 -z-10 h-full w-full animate-slide-down"
           >
-            <div className="absolute inset-0 bg-black/20 z-20"></div>
+            <div className="absolute inset-0 bg-black/10 z-20"></div>
             <video
               ref={videoRef}
               src="/videos/heroMergedTrim.mp4"
