@@ -341,6 +341,7 @@ const AddToBagPopUp: React.FC<AddToBagPopUpProps> = ({
         product?.quantityInStock,
         quantity
       );
+      handleClose();
     }
   };
   return (
@@ -472,7 +473,7 @@ const AddToBagPopUp: React.FC<AddToBagPopUpProps> = ({
               <span className="text-md select-none">{quantity}</span>
             </div>
             <ReactCountUp
-              className="text-primary text-xl"
+              className="text-primary text-xl font-semibold"
               prefix="₹"
               amt={product.price * quantity}
               decimals={true}
