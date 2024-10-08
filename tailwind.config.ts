@@ -157,6 +157,9 @@ const baseConfig: Config = {
       spacing: {
         word: "0.25em",
       },
+      transitionDuration: {
+        '5000': '5000ms',
+      }
     },
   },
   plugins: [require("tailwindcss-animate")],

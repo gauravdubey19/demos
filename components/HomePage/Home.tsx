@@ -12,7 +12,7 @@ const Home = () => {
         {/* <GsapHero /> */}
         <HeroWithDrag />
         <CategorySection />
-        <GridCards />
+        {/* <GridCards /> */}
         <ProductCategorySection />
         <TestimonialContainer />
       </main>
