@@ -8,9 +8,7 @@ import Filter from "./Filter";
 import Goback from "../ui/Goback";
 import Loader from "../ui/Loader";
 import Breadcrumbs from "../ui/Breadcrumbs";
-import Slider from "../HomePage/Slider";
-import CategorySection from "../HomePage/CategorySection/CategorySection";
-import GridCards from "../HomePage/Grids/GridCards";
+
 
 const ProductCategory: React.FC<ProductCategoryProps> = ({
   category,
@@ -30,7 +28,7 @@ const ProductCategory: React.FC<ProductCategoryProps> = ({
 
   const [priceRange, setPriceRange] = useState<{ min: number; max: number }>({
     min: 0,
-    max: 1000,
+    max: 20000,
   });
 
   const [isAscending, setIsAscending] = useState<boolean>(true);
@@ -140,12 +138,13 @@ const ProductCategory: React.FC<ProductCategoryProps> = ({
   return (
     <section className="w-full h-full overflow-hidden">
       <div
-        className={`relative w-full ${
-          products.length > 2 ? "h-full" : "h-screen"
-        } mt-[40px] py-4 overflow-hidden`}
+        className={`relative w-full mt-[60px] py-4 `}
       >
         {/* <Goback /> */} 
-        {/* <Filter
+      
+       
+        <div className="flex flex-row ">
+         <Filter
           categorySlug={category}
           selectedType={selectedType}
           setSelectedType={setSelectedType}
@@ -159,20 +158,17 @@ const ProductCategory: React.FC<ProductCategoryProps> = ({
           setPriceRange={setPriceRange}
           isAscending={isAscending}
           setIsAscending={setIsAscending}
-        /> */}
-
-        <Slider />
-        <GridCards/>
-        <div className="mt-10 md:mt-0 w-full px-2 md:px-10 lg:px-14">
+        />
+        <div className="mt-10 md:mt-0 w-full px-2 md:px-10 lg:px-14 h-screen overflow-auto ">
           <h2 className="md:ml-2 px-2 md:px-0 space-y-2 animate-slide-down">
-            <Breadcrumbs />
+            {/* <Breadcrumbs /> */}
             <span className="text-xl lg:text-2xl font-bold">
               {reverseSlug(category)}
               {category === "all" ? " Categories" : " Category"}
             </span>
           </h2>
           {products.length > 0 ? (
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-1 md:gap-6 animate-slide-up">
+           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 gap-1 md:gap-6 animate-slide-up">
               {products.map((card) => (
                 <Card key={card._id} card={card} category={category} />
               ))}
@@ -183,9 +179,11 @@ const ProductCategory: React.FC<ProductCategoryProps> = ({
             </div>
           )}
         </div>
+        </div>
       </div>
     </section>
   );
 };
 
 export default ProductCategory;
+ 

@@ -15,7 +15,13 @@ const HeroWithDrag: React.FC = () => {
   const leftContainerRef = useRef<HTMLDivElement>(null);
   const rightSectionRef = useRef<HTMLDivElement>(null);
   const rightContainerRef = useRef<HTMLDivElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
 
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.playbackRate = 0.8; // Set the desired playback speed here
+    }
+  }, []);
   useEffect(() => {
     const updateBounds = () => {
       const leftContainerWidth = leftContainerRef.current?.offsetWidth ?? 0;
@@ -50,7 +56,7 @@ const HeroWithDrag: React.FC = () => {
                 duration: 1,
                 ease: "power2.inOut",
               });
-              router.push("/products/all");
+              router.push("/products");
             }
           },
         });
@@ -110,6 +116,7 @@ const HeroWithDrag: React.FC = () => {
           >
             <div className="absolute inset-0 bg-black/20 z-20"></div>
             <video
+            ref={videoRef}
               src="/videos/heroMergedTrim.mp4"
               playsInline
               muted
