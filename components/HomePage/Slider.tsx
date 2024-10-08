@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import slide1 from '@/public/slide1.jpg';
 import slide2 from '@/public/slide2.jpg';
 import slide3 from '@/public/slide3.jpg';
+import slide4 from '@/public/slide4.jpeg';
 import Image from "next/image";
 
 const Slider =() =>{
@@ -15,7 +16,7 @@ const Slider =() =>{
             buttonText: "Shop New Arrivals"
         },
         {
-            src: slide2,
+            src: slide4,
             heading: "Summer Collection",
             subheading: "Bright and breezy styles to enjoy the sun.",
             buttonText: "Explore Summer"
@@ -46,7 +47,7 @@ const Slider =() =>{
     };
 
     return (
-        <div className="relative w-full h-[calc(100vh-60px)] overflow-hidden mb-20">
+        <div className="relative w-full h-[calc(100vh-60px)] overflow-hidden mt-2  mb-20">
             {/* Carousel images */}
             <div className="absolute inset-0 flex">
                 {slides.map((slide, idx) => (
@@ -58,7 +59,7 @@ const Slider =() =>{
                         <Image
                             src={slide.src}
                             alt={`Slide ${idx + 1}`}
-                            className="object-cover w-full h-full"
+                            className="object-fit object-top w-full h-full"
                         />
                     </div>
                 ))}
