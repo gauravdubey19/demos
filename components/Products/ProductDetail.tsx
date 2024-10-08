@@ -316,6 +316,16 @@ const Details: React.FC<DetailsProps> = ({
   avgRating,
   reviewsLength,
 }) => {
+  const {
+    handleAddToCart,
+    itemExistInCart,
+    isOpen,
+    setOpen,
+    handleAddProductToWhistlist,
+    handleRemoveProductFromWishlist,
+    productExistInWishlist,
+  } = useCart();
+
   const [size, setSize] = useState<string>("");
   const [color, setColor] = useState<string>("");
   const [colorTitle, setColorTitle] = useState<string>("");
@@ -329,16 +339,6 @@ const Details: React.FC<DetailsProps> = ({
     colorTitle: false,
   });
 
-  const {
-    handleAddToCart,
-    itemExistInCart,
-    isOpen,
-    setOpen,
-    handleAddProductToWhistlist,
-    handleRemoveProductFromWishlist,
-    productExistInWishlist,
-  } = useCart();
-
   const handleAddToCartBtn = () => {
     setIsValuesSelected({
       size: size.trim() === "",
@@ -347,6 +347,7 @@ const Details: React.FC<DetailsProps> = ({
     });
 
     if (size.trim() !== "" && color.trim() !== "") {
+      const quantity = 1;
       handleAddToCart(
         product._id,
         product.title,
@@ -360,7 +361,8 @@ const Details: React.FC<DetailsProps> = ({
         colorTitle,
         color,
         categorySlug,
-        product.quantityInStock
+        product.quantityInStock,
+        quantity
       );
     }
   };

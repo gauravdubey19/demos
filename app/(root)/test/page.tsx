@@ -175,19 +175,19 @@ export default function TestPage() {
   const [open, setOpen] = useState(false);
   return (
     <>
-      <div className="mt-[60px] h-screen p-10 flex flex-col gap-2 w-1/3">
+      <div className="mt-[60px] w-full h-screen p-10 flex flex-col gap-2">
         {/* un-comment this below for creating sample data */}
         {/* <CreateCategories /> */}
         {/* <CreateProducts /> */}
-        <Button onClick={() => setOpen(!open)}>Payment</Button>
+        {/* <Button onClick={() => setOpen(!open)}>Payment</Button>
         <Button onClick={handleSuperCategory}
         disabled={creatingCategory}
 
         >{
           creatingCategory ? "Creating Categories..." : "Create Super Categories"
-        }</Button>
+        }</Button> */}
         {/* <UploadFilesComoponent /> */}
-        {/* <ProductCategorySection /> */}
+        <ProductCategorySection />
       </div>
       {/* <PaymentGateway isOpen={open} handleClose={() => setOpen(!open)} /> */}
     </>

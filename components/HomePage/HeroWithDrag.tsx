@@ -15,7 +15,13 @@ const HeroWithDrag: React.FC = () => {
   const leftContainerRef = useRef<HTMLDivElement>(null);
   const rightSectionRef = useRef<HTMLDivElement>(null);
   const rightContainerRef = useRef<HTMLDivElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
 
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.playbackRate = 0.8; // Set the desired playback speed here
+    }
+  }, []);
   useEffect(() => {
     const updateBounds = () => {
       const leftContainerWidth = leftContainerRef.current?.offsetWidth ?? 0;
@@ -76,7 +82,7 @@ const HeroWithDrag: React.FC = () => {
               // ref={leftRef} // Ensure this ref is properly linked to the cursor context
               className="w-full h-full z-0 flex items-center justify-start"
             >
-              <div className="w-fit h-fit ml-4 flex-center bg-white rounded-full p-1 group-hover:animate-motion-left">
+              <div className="w-fit h-fit ml-4 flex-center bg-white/70 backdrop-blur-sm rounded-full p-1 group-hover:animate-motion-left">
                 <IoArrowForwardSharp size={40} className="text-primary" />
               </div>
             </div>
@@ -108,8 +114,9 @@ const HeroWithDrag: React.FC = () => {
             id="bg-section"
             className="absolute inset-0 -z-10 h-full w-full animate-slide-down"
           >
-            <div className="absolute inset-0 bg-black/20 z-20"></div>
+            <div className="absolute inset-0 bg-black/10 z-20"></div>
             <video
+              ref={videoRef}
               src="/videos/heroMergedTrim.mp4"
               playsInline
               muted

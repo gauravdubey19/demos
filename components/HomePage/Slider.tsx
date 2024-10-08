@@ -27,6 +27,7 @@ const Slider =() =>{
             buttonText: "Shop Traditional Styles"
         }
     ];
+    
 
     const [currentSlide, setCurrentSlide] = useState(0);
 
@@ -58,7 +59,7 @@ const Slider =() =>{
                         <img
                             src={slide.src}
                             alt={`Slide ${idx + 1}`}
-                            className="object-cover w-full h-full "
+                            className="object-cover object-top w-full h-full"
                         />
                     </div>
                 ))}

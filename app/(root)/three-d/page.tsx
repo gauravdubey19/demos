@@ -24,7 +24,7 @@ const ThreeDPage: React.FC = () => {
         type: "x",
         bounds: { minX: -draggableRefWidth, maxX: 0 },
         onDragEnd() {
-          if (this.x >= 50) {
+          if (this.x <= -draggableRefWidth * 0.1) {
             router.push("/");
           }
         },
@@ -40,7 +40,8 @@ const ThreeDPage: React.FC = () => {
       >
         <div
           //   ref={backRef}
-          className="w-full h-full z-50 flex items-center justify-end">
+          className="w-full h-full z-50 flex items-center justify-end"
+        >
           <div className="w-fit h-fit flex-center bg-white rounded-full p-1 group-hover:animate-motion-right">
             <IoArrowForwardSharp size={40} className="text-primary" />
           </div>
