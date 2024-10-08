@@ -144,7 +144,7 @@ const ProductCategory: React.FC<ProductCategoryProps> = ({
           products.length > 2 ? "h-full" : "h-screen"
         } mt-[40px] py-4 overflow-hidden`}
       >
-        {/* <Goback /> */}
+        {/* <Goback /> */} 
         {/* <Filter
           categorySlug={category}
           selectedType={selectedType}
@@ -159,8 +159,8 @@ const ProductCategory: React.FC<ProductCategoryProps> = ({
           setPriceRange={setPriceRange}
           isAscending={isAscending}
           setIsAscending={setIsAscending}
-        />
-        */}
+        /> */}
+
         <Slider />
         <GridCards/>
         <div className="mt-10 md:mt-0 w-full px-2 md:px-10 lg:px-14">
