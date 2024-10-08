@@ -13,23 +13,24 @@ const Slider = () => {
   // Updated array to include heading, subheading, and button text for each slide
   const slides = [
     {
-      src: slide4,
-      heading: "Summer Collection",
-      subheading: "Bright and breezy styles to enjoy the sun.",
-      buttonText: "Explore Summer",
+        src: slide1,
+        heading: "Elevate Your Formal Wardrobe",
+        subheading: "Discover timeless styles for the modern gentleman.",
+        buttonText: "Shop Formal Collection"
     },
     {
-      src: slide6,
-      heading: "Limited Edition",
-      subheading: "Exclusive pieces crafted with precision and care.",
-      buttonText: "Shop Limited Edition",
+        src: slide2,
+        heading: "Party in Style",
+        subheading: "Bold and vibrant looks to make every celebration unforgettable.",
+        buttonText: "Explore Partywear"
     },
     {
-      src: slide7,
-      heading: "Explore New Arrivals",
-      subheading: "Discover the latest trends in our exclusive collection.",
-      buttonText: "Shop New Arrivals",
-    },
+        src: slide3,
+        heading: "Embrace Tradition with Elegance",
+        subheading: "Celebrate cultural heritage with our exclusive traditional wear.",
+        buttonText: "Shop Traditional Attire"
+    }
+
   ];
 
   const [currentSlide, setCurrentSlide] = useState(0);
