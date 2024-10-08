@@ -4,6 +4,8 @@ import slide1 from '@/public/slide1.jpg';
 import slide2 from '@/public/slide2.jpg';
 import slide3 from '@/public/slide3.jpg';
 import slide4 from '@/public/slide4.jpeg';
+import slide5 from '@/public/slide5.jpeg';
+import slide6 from '@/public/slide6.jpeg';
 import Image from "next/image";
 
 const Slider =() =>{
@@ -22,7 +24,7 @@ const Slider =() =>{
             buttonText: "Explore Summer"
         },
         {
-            src: slide3,
+            src: slide6,
             heading: "Limited Edition",
             subheading: "Exclusive pieces crafted with precision and care.",
             buttonText: "Shop Limited Edition"
