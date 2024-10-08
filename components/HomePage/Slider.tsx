@@ -6,6 +6,7 @@ import slide3 from '@/public/slide3.jpg';
 import slide4 from '@/public/slide4.jpeg';
 import slide5 from '@/public/slide5.jpeg';
 import slide6 from '@/public/slide6.jpeg';
+import slide7 from '@/public/slide7.jpeg';
 import Image from "next/image";
 
 const Slider =() =>{
@@ -24,7 +25,7 @@ const Slider =() =>{
             buttonText: "Shop Limited Edition"
         },
         {
-            src: slide1,
+            src: slide7,
             heading: "Explore New Arrivals",
             subheading: "Discover the latest trends in our exclusive collection.",
             buttonText: "Shop New Arrivals"
