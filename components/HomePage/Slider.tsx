@@ -9,25 +9,24 @@ const Slider =() =>{
     // Updated array to include heading, subheading, and button text for each slide
     const slides = [
         {
-            src: 'https://sherwanirental.com/wp-content/uploads/2024/05/Website-Banner-3_compressed.jpg',
-            heading: "Dazzle in Designer Sherwanis",
-            subheading: "Make a statement at any celebration with our exclusive range of sherwanis, designed for unforgettable moments.",
-            buttonText: "Discover Partywear"
+            src: slide1,
+            heading: "Explore New Arrivals",
+            subheading: "Discover the latest trends in our exclusive collection.",
+            buttonText: "Shop New Arrivals"
         },
         {
-            src: 'https://img.freepik.com/premium-photo/entrepreneur-manager-male-formal-fashion-professional-unshaven-ceo-confident-grizzled-boss-copy-space-mature-businessman-formalwear-business-success-successful-man-businesslike-suit_545934-6792.jpg',
-            heading: "Sharp and Sophisticated Suits",
-            subheading: "Step into style with our expertly tailored suits, perfect for any formal occasion.",
-            buttonText: "Explore Formal Wear"
+            src: slide2,
+            heading: "Summer Collection",
+            subheading: "Bright and breezy styles to enjoy the sun.",
+            buttonText: "Explore Summer"
         },
         {
-            src: 'https://cdn.shopify.com/s/files/1/1857/6931/files/nehru-jackets_600x600.jpg?v=1658230751',
-            heading: "Elegance in Kurta & Nehru Jacket",
-            subheading: "Embrace tradition with our refined collection of kurtas and Nehru jackets, crafted for timeless appeal.",
-            buttonText: "Shop Traditional Styles"
+            src: slide3,
+            heading: "Limited Edition",
+            subheading: "Exclusive pieces crafted with precision and care.",
+            buttonText: "Shop Limited Edition"
         }
     ];
-    
 
     const [currentSlide, setCurrentSlide] = useState(0);
 
@@ -56,10 +55,10 @@ const Slider =() =>{
                         className={`absolute w-full h-full transition-all  ease-linear
               ${currentSlide === idx ? "opacity-100 scale-110" : "opacity-0 scale-100"}`}
                     >
-                        <img
+                        <Image
                             src={slide.src}
                             alt={`Slide ${idx + 1}`}
-                            className="object-cover object-top w-full h-full"
+                            className="object-cover w-full h-full"
                         />
                     </div>
                 ))}
