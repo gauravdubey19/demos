@@ -64,7 +64,7 @@ export const footer: FooterSection[] = [
 
 export const cardList: CardValues[] = [
   {
-    _id: null,
+    _id: "null",
     image_link: "/assets/card.jpeg",
     title: "Bold Red Shirt",
     slug: "bold-red-shirt",
@@ -79,9 +79,10 @@ export const cardList: CardValues[] = [
     availableSizes: [""],
     colorOptions: [],
     categories: [],
+    quantityInStock: 0,
   },
   {
-    _id: null,
+    _id: "null",
     image_link:
       "https://image.made-in-china.com/2f0j00hswiAnGJiRoZ/Business-Suit-Men-s-Striped-Stretch-Business-Suit-Color-Textile-OEM-ODM.webp",
     title: "Bold Red Shirt",
@@ -97,9 +98,10 @@ export const cardList: CardValues[] = [
     availableSizes: [""],
     colorOptions: [],
     categories: [],
+    quantityInStock: 0,
   },
   {
-    _id: null,
+    _id: "null",
     image_link:
       "https://rukminim2.flixcart.com/image/850/1000/xif0q/kurta/j/h/f/xl-men-ethnic-premium-kurta-dhar-textile-original-imagy2tcphwu3jzh.jpeg?q=90&crop=false",
     title: "Bold Red Shirt",
@@ -115,9 +117,10 @@ export const cardList: CardValues[] = [
     availableSizes: [""],
     colorOptions: [],
     categories: [],
+    quantityInStock: 0,
   },
   {
-    _id: null,
+    _id: "null",
     image_link:
       "https://cdn.linenclub.com/media/catalog/product/cache/41d32663a01600992c99bcd3aa36f0e1/l/c/lcsfsp0212930_1.jpg",
     title: "Bold Red Shirt",
@@ -133,9 +136,10 @@ export const cardList: CardValues[] = [
     availableSizes: [""],
     colorOptions: [],
     categories: [],
+    quantityInStock: 0,
   },
   {
-    _id: null,
+    _id: "null",
     image_link:
       "https://cdn.linenclub.com/media/catalog/product/cache/41d32663a01600992c99bcd3aa36f0e1/l/c/lcjkch3000701_0.jpg",
     title: "Bold Red Shirt",
@@ -151,9 +155,10 @@ export const cardList: CardValues[] = [
     availableSizes: [""],
     colorOptions: [],
     categories: [],
+    quantityInStock: 0,
   },
   {
-    _id: null,
+    _id: "null",
     image_link:
       "https://5.imimg.com/data5/ANDROID/Default/2021/6/DJ/TP/HU/12881310/product-jpeg.jpg",
     title: "Bold Red Shirt",
@@ -169,9 +174,10 @@ export const cardList: CardValues[] = [
     availableSizes: [""],
     colorOptions: [],
     categories: [],
+    quantityInStock: 0,
   },
   {
-    _id: null,
+    _id: "null",
     image_link:
       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSEdFaWkG3JgjADdehk3p7PZni3qT4p5-4JBDBKSigPBj-cec8jEzOP2xesN3zf5LEhhG4&usqp=CAU",
     title: "Bold Red Shirt",
@@ -187,9 +193,10 @@ export const cardList: CardValues[] = [
     availableSizes: [""],
     colorOptions: [],
     categories: [],
+    quantityInStock: 0,
   },
   {
-    _id: null,
+    _id: "null",
     image_link:
       "https://www.mkistore.co.uk/cdn/shop/files/MKI_30_5_240603.jpg?v=1719584934&width=1156",
     title: "Bold Red Shirt",
@@ -205,6 +212,7 @@ export const cardList: CardValues[] = [
     availableSizes: [""],
     colorOptions: [],
     categories: [],
+    quantityInStock: 0,
   },
 ];
 

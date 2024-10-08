@@ -1986,3 +1986,50 @@ export const a = "b";
 // };
 
 // export default Card;
+
+{/* The Wishlist button OUTSIDE the Link */}
+        {/* {!loading && (
+        <div className="absolute top-0 left-0 right-0 h-[240px] sm:h-[240px] md:h-[220px] lg:h-[340px] w-full flex-center z-10">
+          <div
+            className={`hidden md:block absolute -bottom-12 group-hover:bottom-0 group-hover:animate-slide-up left-0 right-0 z-50 w-full p-1 ease-out duration-300`}
+          >
+            <Button
+              disabled={wishlisting}
+              onClick={(e) => {
+                e.stopPropagation();
+                if (card._id) {
+                  return !productExistInWishlist(card._id)
+                    ? handleAddProductToWhistlist(card._id)
+                    : handleRemoveProductFromWishlist(card._id);
+                }
+              }}
+              size="sm"
+              className={`w-full text-lg rounded hover:shadow-md disabled:opacity-70 ${
+                card._id && !productExistInWishlist(card._id)
+                  ? "bg-white backdrop-blur-md border border-[#FF6464] text-[#FF6464]"
+                  : "bg-[#FF6464]"
+              }`}
+            >
+              {card._id && !productExistInWishlist(card._id) ? (
+                <span className="flex-center gap-1 py-1">
+                  <GoHeart
+                    color="#FF6464"
+                    className="group-hover:scale-110 mr-1"
+                  />
+                  Wishlist
+                </span>
+              ) : (
+                <span className="flex-center gap-1 py-1">
+                  <GoHeartFill
+                    color="white"
+                    className="group-hover:scale-110 mr-1"
+                  />
+                  Wishlisted
+                </span>
+              )}
+            </Button>
+          </div>
+        </div>
+      )} */}
+
+        {/* The link to the product */}

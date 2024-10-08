@@ -82,7 +82,7 @@ const HeroWithDrag: React.FC = () => {
               // ref={leftRef} // Ensure this ref is properly linked to the cursor context
               className="w-full h-full z-0 flex items-center justify-start"
             >
-              <div className="w-fit h-fit ml-4 flex-center bg-white rounded-full p-1 group-hover:animate-motion-left">
+              <div className="w-fit h-fit ml-4 flex-center bg-white/70 backdrop-blur-sm rounded-full p-1 group-hover:animate-motion-left">
                 <IoArrowForwardSharp size={40} className="text-primary" />
               </div>
             </div>
@@ -116,7 +116,7 @@ const HeroWithDrag: React.FC = () => {
           >
             <div className="absolute inset-0 bg-black/20 z-20"></div>
             <video
-            ref={videoRef}
+              ref={videoRef}
               src="/videos/heroMergedTrim.mp4"
               playsInline
               muted
