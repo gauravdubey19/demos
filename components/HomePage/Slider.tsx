@@ -12,12 +12,6 @@ const Slider =() =>{
     // Updated array to include heading, subheading, and button text for each slide
     const slides = [
         {
-            src: slide1,
-            heading: "Explore New Arrivals",
-            subheading: "Discover the latest trends in our exclusive collection.",
-            buttonText: "Shop New Arrivals"
-        },
-        {
             src: slide4,
             heading: "Summer Collection",
             subheading: "Bright and breezy styles to enjoy the sun.",
@@ -28,6 +22,12 @@ const Slider =() =>{
             heading: "Limited Edition",
             subheading: "Exclusive pieces crafted with precision and care.",
             buttonText: "Shop Limited Edition"
+        },
+        {
+            src: slide1,
+            heading: "Explore New Arrivals",
+            subheading: "Discover the latest trends in our exclusive collection.",
+            buttonText: "Shop New Arrivals"
         }
     ];
 
