@@ -141,9 +141,9 @@ const MiddelContainor = () => {
     <div className="w-full flex-center flex-col gap-16 z-50">
       <div className="w-full flex flex-col gap-2">
         <div className="relative w-full h-[230px] flex items-end justify-center bg-white text-primary p-4">
-          <div className="absolute md:-left-[6.8rem] top-7 gap-1 text-[90px] font-medium">
+          <div className="absolute md:-left-[6.8rem] top-7 gap-1 text-[2rem] font-medium">
             <span className="md:text-white">Ex</span>
-            <span className="">plore</span>
+            <span className="">plore Men</span>
           </div>
           <span className="text-6xl lg:text-7xl font-light">Textiles</span>
         </div>

@@ -161,7 +161,7 @@ const ProductCategory: React.FC<ProductCategoryProps> = ({
         />
         <div className="mt-10 md:mt-0 w-full px-2 md:px-10 lg:px-14 h-screen overflow-auto ">
           <h2 className="md:ml-2 px-2 md:px-0 space-y-2 animate-slide-down">
-            {/* <Breadcrumbs /> */}
+            <Breadcrumbs />
             <span className="text-xl lg:text-2xl font-bold">
               {reverseSlug(category)}
               {category === "all" ? " Categories" : " Category"}
