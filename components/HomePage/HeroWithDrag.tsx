@@ -50,7 +50,7 @@ const HeroWithDrag: React.FC = () => {
                 duration: 1,
                 ease: "power2.inOut",
               });
-              router.push("/products/all");
+              router.push("/products");
             }
           },
         });
