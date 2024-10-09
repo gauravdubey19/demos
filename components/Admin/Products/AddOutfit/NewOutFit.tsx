@@ -145,6 +145,9 @@ const NewOutfit = () => {
       return;
     }
     setOutfitImage(outfitImageUrl);
+    const newOutfitCollection = [...outfitCollection];
+    newOutfitCollection[0].outfitImage = outfitImageUrl;
+    setOutfitCollection(newOutfitCollection);
     setLoadingImageUpload(false);
   };
 
