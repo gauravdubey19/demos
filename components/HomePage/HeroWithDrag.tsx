@@ -122,7 +122,7 @@ const HeroWithDrag: React.FC = () => {
               muted
               autoPlay
               loop
-              className={`object-cover scale-105 z-0`}
+              className={`object-cover h-full w-screen scale-105 z-0`}
             />
           </div>
           <div
@@ -142,21 +142,21 @@ export default HeroWithDrag;
 const MiddleContainer: React.FC = () => {
   return (
     <div className="w-full flex flex-col items-center gap-10 md:gap-16 animate-slide-down">
-      <div className="w-full flex flex-col gap-2">
-        <div className="relative w-full h-[230px] flex items-end justify-center bg-white/50 text-primary p-4">
-          <div className="absolute md:-left-[6.8rem] top-7 z-10 gap-1 text-[90px] font-medium drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)]">
-            <span className="md:text-white">Ex</span>
-            <span>plore</span>
-          </div>
-          <span className="text-6xl lg:text-7xl font-light drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.5)]">
-            Textiles
-          </span>
-        </div>
-        <span className="w-full animate-slide-up text-center text-balance text-[2rem] md:text-2xl lg:text-[2rem] font-light drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.5)] overflow-hidden">
-          Textiles <span className="text-[#AA6C0 font-medium">&</span> Ready
-          made
-        </span>
-      </div>
+     <div className="w-full flex flex-col gap-2">
+  <div className="relative w-full h-[230px] flex items-end justify-center bg-white/50 text-primary p-4">
+    <div className="absolute md:-left-[6.8rem] lg:top-7 top-2 z-10 gap-1 lg:text-[6rem] md:text-[5rem] text-[3rem] font-medium drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)]">
+      <span className="md:text-white">Ex</span>
+      <span>plore</span>
+    </div>
+    <span className="text-[2.8rem] lg:text-[5rem] md:text-[3.5rem] font-light drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.5)]">
+      Textiles
+    </span>
+  </div>
+  <span className="w-full animate-slide-up text-center text-balance text-[1.5rem] md:text-2xl lg:text-[2rem] font-light drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.5)] overflow-hidden">
+    Textiles <span className="text-[#AA6C0] font-medium">&</span> Ready made
+  </span>
+</div>
+
     </div>
   );
 };

@@ -44,7 +44,7 @@ export interface CarouselProps {
 
 // Product Card types :
 export interface CardValues {
-  _id: string;
+  _id: string | null;
   image_link: string;
   images?: string[];
   title: string;

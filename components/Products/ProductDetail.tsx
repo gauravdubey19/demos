@@ -222,7 +222,7 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({
   }, [handleScroll]);
 
   return (
-    <div className="relative z-50 select-none lg:sticky top-20 w-full h-full md:h-[50vh] lg:h-[85vh] flex flex-col gap-3 md:flex-row-reverse justify-between overflow-hidden lg:overflow-visible">
+    <div className="relative z-50 select-none lg:sticky lg:top-20 w-full h-full md:h-[50vh] lg:h-[85vh] flex flex-col gap-3 md:flex-row-reverse justify-between overflow-hidden lg:overflow-visible">
       <Image
         src={currentImage}
         alt="Product Image"
@@ -407,8 +407,8 @@ const Details: React.FC<DetailsProps> = ({
           )}
         </div>
         <div>
-          <h1 className="text-3xl font-bold">{product.title}</h1>
-          <p className="text-muted-foreground mt-2">{product.description}</p>
+          <h1 className="lg:text-3xl md:text-xl text-lg font-bold">{product.title}</h1>
+          <p className="text-muted-foreground lg:text-lg md:text-md text-sm mt-2">{product.description}</p>
         </div>
 
         {/* Pricing and Discount */}

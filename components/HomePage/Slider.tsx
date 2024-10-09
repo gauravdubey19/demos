@@ -67,13 +67,13 @@ const Slider =() =>{
 
             {/* Text content based on the current slide */}
             <div className="absolute bottom-10 left-10 z-20 text-white space-y-4">
-                <h2 className="text-5xl font-bold tracking-wide">
+                <h2 className="lg:text-5xl md:text-3xl text-2xl font-bold tracking-wide">
                     {slides[currentSlide].heading}
                 </h2>
-                <p className="text-xl">
+                <p className="lg:text-xl text-md">
                     {slides[currentSlide].subheading}
                 </p>
-                <button className="px-6 py-3 bg-white text-black rounded-lg hover:bg-gray-200 transition-all duration-1000">
+                <button className="lg:px-6 lg:py-3 px-4 py-2 bg-white text-black rounded-lg hover:bg-gray-200 transition-all duration-1000">
                     {slides[currentSlide].buttonText}
                 </button>
             </div>
