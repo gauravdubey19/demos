@@ -3,11 +3,7 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import {
-  deleteFileFromCD,
-  removeFile,
-  uploadNewFile,
-} from "@/utils/actions/fileUpload.action";
+import { removeFile, uploadNewFile } from "@/utils/actions/fileUpload.action";
 import { capitalizeString, generateSlug } from "@/lib/utils";
 import { CategoryCollectionValues, CategoryReq, Type } from "@/lib/types";
 import { toast } from "@/hooks/use-toast";
@@ -15,11 +11,10 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { IoSearchOutline } from "react-icons/io5";
 import { BsPlus, BsTrash } from "react-icons/bs";
-import { CldUploadWidget } from "next-cloudinary";
 
 const AddCategory: React.FC = () => {
   const router = useRouter();
-  const [categoryImage, setCategoryImage] = useState<any | null>(null);
+  const [categoryImage, setCategoryImage] = useState<string>("");
   const [loadingImageUpload, setLoadingImageUpload] = useState<boolean>(false);
   const [loadingSaving, setLoadingSaving] = useState<boolean>(false);
   const [success, setSuccess] = useState<boolean>(false);
@@ -52,48 +47,43 @@ const AddCategory: React.FC = () => {
     });
   };
 
-  // const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   const categoryImageFile = e.target.files?.[0];
-  //   if (!categoryImageFile) return;
-
-  //   setLoadingImageUpload(true);
-
-  //   if (categoryImage) {
-  //     const rmImage = await removeFile(categoryImage);
-  //     if (!rmImage) {
-  //       toast({
-  //         title: "Failed to remove old category image.",
-  //         description: "Please try again later...",
-  //         variant: "destructive",
-  //       });
-  //       setLoadingImageUpload(false);
-  //       return;
-  //     }
-  //   }
-
-  //   const categoryImageFileFormData = new FormData();
-  //   categoryImageFileFormData.append("file", categoryImageFile);
-  //   const categoryImageUrl = (await uploadNewFile(
-  //     categoryImageFileFormData
-  //   )) as string;
-
-  //   if (!categoryImageUrl) {
-  //     toast({
-  //       title: "Category image upload failed.",
-  //       description: "Please try again later...",
-  //       variant: "destructive",
-  //     });
-  //     setLoadingImageUpload(false);
-  //     return;
-  //   }
-
-  //   setCategoryImage(categoryImageUrl);
-  //   setCategory((prevCategory) => ({
-  //     ...prevCategory,
-  //     image: categoryImageUrl,
-  //   }));
-  //   setLoadingImageUpload(false);
-  // };
+  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const categoryImageFile = e.target.files?.[0];
+    if (!categoryImageFile) return;
+    setLoadingImageUpload(true);
+    if (categoryImage) {
+      const rmImage = await removeFile(categoryImage);
+      if (!rmImage) {
+        toast({
+          title: "Failed to remove old category image.",
+          description: "Please try again later...",
+          variant: "destructive",
+        });
+        setLoadingImageUpload(false);
+        return;
+      }
+    }
+    const categoryImageFileFormData = new FormData();
+    categoryImageFileFormData.append("file", categoryImageFile);
+    const categoryImageUrl = (await uploadNewFile(
+      categoryImageFileFormData
+    )) as string;
+    if (!categoryImageUrl) {
+      toast({
+        title: "Category image upload failed.",
+        description: "Please try again later...",
+        variant: "destructive",
+      });
+      setLoadingImageUpload(false);
+      return;
+    }
+    setCategoryImage(categoryImageUrl);
+    setCategory((prevCategory) => ({
+      ...prevCategory,
+      image: categoryImageUrl,
+    }));
+    setLoadingImageUpload(false);
+  };
 
   const handleAddTypes = (newTypes: Type[]) => {
     setCategory((prevCategory) => ({
@@ -119,7 +109,7 @@ const AddCategory: React.FC = () => {
       !slug ||
       !description ||
       !categoryImage ||
-      !categoryImage?.url ||
+      !categoryImage ||
       !hasTypes
     ) {
       toast({
@@ -135,7 +125,7 @@ const AddCategory: React.FC = () => {
 
     try {
       const category: CategoryReq = {
-        image: categoryImage?.url,
+        image: categoryImage,
         title,
         slug,
         description,
@@ -197,7 +187,6 @@ const AddCategory: React.FC = () => {
             onClick={handleSubmit}
             className="text-white"
           >
-            {/* {!loadingSaving ? "Save" : "Saving..."} */}
             {loadingSaving ? "Saving..." : success ? "Saved" : "Save"}
           </Button>
         </div>
@@ -212,73 +201,41 @@ const AddCategory: React.FC = () => {
               <h4 className="w-full h-fit capitalize text-md md:text-lg lg:text-xl font-medium">
                 Category Image
               </h4>
-              <CldUploadWidget
-                // uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_Preset}
-                signatureEndpoint="/api/sign-cloudinary-file-upload"
-                options={{ multiple: true, maxFiles: 5 }}
-                onSuccess={async (result, { widget }) => {
-                  // const info = result?.info;
-                  console.log(result?.info);
-                  if (categoryImage?.secure_url) {
-                    await deleteFileFromCD(categoryImage?.secure_url);
-                  }
-                  setCategoryImage(result?.info);
-                }}
-                onQueuesEnd={(result, { widget }) => {
-                  widget.close();
-                  setLoadingImageUpload(false);
-                }}
-              >
-                {({ open }) => {
-                  function handleOnClick() {
-                    setCategoryImage(null);
-                    setLoadingImageUpload(true);
-                    open();
-                  }
-                  return (
-                    <>
-                      <div
-                        onClick={handleOnClick}
-                        className="relative w-full h-[37vh] cursor-pointer bg-[#EAEAEA] border-2 border-gray-200 rounded-2xl flex-center group overflow-hidden"
-                      >
-                        {loadingImageUpload ? (
-                          <div className="absolute inset-0 z-20 bg-gray-300 flex-center animate-pulse cursor-not-allowed">
-                            Uploading Image...
-                          </div>
-                        ) : categoryImage?.url ? (
-                          <Image
-                            src={categoryImage?.url}
-                            alt="Category Image"
-                            layout="fill"
-                            objectFit="contain"
-                            className="w-full h-full rounded-2xl cursor-pointer overflow-hidden"
-                          />
-                        ) : (
-                          <div className="w-full h-full flex-center text-gray-500 cursor-pointer">
-                            Chooes Image
-                          </div>
-                        )}
-                        {/* {!loadingImageUpload && (
-                          <input
-                            type="file"
-                            accept="image/*"
-                            // onChange={handleImageChange}
-                            className="absolute inset-0 z-30 opacity-0 cursor-pointer"
-                          />
-                        )} */}
-                        <div className="absolute inset-0 z-10 group-hover:bg-black/10 ease-in-out duration-300" />
-                        {categoryImage?.url && !loadingImageUpload && (
-                          <>
-                            <div className="absolute inset-0 z-20 hidden group-hover:flex-center text-primary">
-                              Change Image
-                            </div>
-                          </>
-                        )}
-                      </div>
-                    </>
-                  );
-                }}
-              </CldUploadWidget>
+              <div className="relative w-full h-[37vh] bg-[#EAEAEA] border-2 border-gray-200 rounded-2xl flex-center group overflow-hidden">
+                {loadingImageUpload ? (
+                  <div className="absolute inset-0 z-20 bg-gray-300 flex-center animate-pulse cursor-not-allowed">
+                    Uploading Image...
+                  </div>
+                ) : categoryImage ? (
+                  <Image
+                    src={categoryImage}
+                    alt="Category Image"
+                    layout="fill"
+                    objectFit="contain"
+                    className="w-full h-full rounded-2xl cursor-pointer overflow-hidden"
+                  />
+                ) : (
+                  <div className="w-full h-full flex-center text-gray-500 cursor-pointer">
+                    Chooes Image
+                  </div>
+                )}
+                {!loadingImageUpload && (
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageChange}
+                    className="absolute inset-0 z-30 opacity-0 cursor-pointer"
+                  />
+                )}
+                <div className="absolute inset-0 z-10 group-hover:bg-black/10 ease-in-out duration-300" />
+                {categoryImage && !loadingImageUpload && (
+                  <>
+                    <div className="absolute inset-0 z-20 hidden group-hover:flex-center text-primary">
+                      Change Image
+                    </div>
+                  </>
+                )}
+              </div>
             </div>
             <div className="w-[70%] h-full p-2 space-y-3">
               <div className="space-y-1">
