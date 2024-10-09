@@ -20,6 +20,7 @@ import {
   ChartOptions,
 } from "chart.js";
 import ReactCountUp from "../ui/ReactCountUp";
+import Link from "next/link";
 
 ChartJS.register(
   CategoryScale,
@@ -78,24 +79,28 @@ const Dashboard = () => {
       value: collectionsLength?.products || 0,
       color: "#704324",
       icon: PiCubeLight,
+      herf: "/admin/all-products",
     },
     {
       head: "orders",
       value: collectionsLength?.orders || 0,
       color: "#2cd369",
       icon: BsCartCheck,
+      herf: "/admin/orders",
     },
     {
       head: "sales",
       value: collectionsLength?.totalSales || 0,
       color: "#962cd3",
       icon: GiProgression,
+      herf: "/admin/orders",
     },
     {
       head: "customers",
       value: collectionsLength?.users || 0,
       color: "#1743BE",
       icon: HiOutlineUsers,
+      herf: "/admin/customers",
     },
   ];
 
@@ -249,40 +254,45 @@ const Dashboard = () => {
         </div>
         <div className="w-full h-[87vh] md:h-[81.5vh] overflow-y-scroll">
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-2 p-4">
-            {totals.map((t, index) => (
-              <div
-                key={index}
-                className="w-full xl:w-64 h-32 flex items-center gap-2 p-2 shadow-xl rounded-xl hover:shadow-2xl ease-in-out duration-300"
-              >
-                <div
-                  className="h-full w-1"
-                  style={{ backgroundColor: t.color }}
-                />
-                <div className="relative w-full h-full flex justify-between gap-2">
-                  <div className="space-y-2">
-                    <p className="text-sm md:text-md xl:text-lg capitalize">
-                      Total {t.head}
-                    </p>
-                    <p style={{ color: t.color }}>
-                      <ReactCountUp
-                        amt={t.value as number || 0}
-                        duration={1}
-                        // decimals={t.head === "sales" && true}
-                        className="text-4xl md:text-3xl xl:text-4xl font-semibold"
-                      >
-                        {t.head === "sales" && "K"}
-                      </ReactCountUp>
-                    </p>
+            {totals.map((t, index) => {
+              const sales = t.head === "sales";
+              return (
+                <Link
+                  key={index}
+                  href={t.herf}
+                  className="w-full xl:w-64 h-32 flex items-center gap-2 p-2 shadow-xl rounded-xl hover:shadow-2xl ease-in-out duration-300"
+                >
+                  <div
+                    className="h-full w-1"
+                    style={{ backgroundColor: t.color }}
+                  />
+                  <div className="relative w-full h-full flex justify-between gap-2">
+                    <div className="space-y-2">
+                      <p className="text-sm md:text-md xl:text-lg capitalize">
+                        Total {t.head}
+                      </p>
+                      <p style={{ color: t.color }}>
+                        <ReactCountUp
+                          amt={(t.value as number) || 0}
+                          duration={1}
+                          prefix={sales ? "₹" : ""}
+                          // decimals={sales}
+                          className="text-4xl md:text-3xl xl:text-4xl font-semibold"
+                        >
+                          {sales && "K"}
+                        </ReactCountUp>
+                      </p>
+                    </div>
+                    <div className="w-fit h-full flex-center">
+                      <t.icon color={t.color} size={40} />
+                    </div>
+                    <div className="absolute bottom-0 left-0 text-xs md:text-sm xl:text-md">
+                      Year {new Date().getFullYear()}
+                    </div>
                   </div>
-                  <div className="w-fit h-full flex-center">
-                    <t.icon color={t.color} size={40} />
-                  </div>
-                  <div className="absolute bottom-0 left-0 text-xs md:text-sm xl:text-md">
-                    Year {new Date().getFullYear()}
-                  </div>
-                </div>
-              </div>
-            ))}
+                </Link>
+              );
+            })}
           </div>
           <div className="p-4 space-y-4">
             {/* charts section */}
