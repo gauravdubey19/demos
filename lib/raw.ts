@@ -1345,7 +1345,6 @@ export const a = "b";
 //   );
 // };
 
-
 // tailwind.config
 
 // import type { Config } from "tailwindcss";
@@ -1730,7 +1729,7 @@ export const a = "b";
 //   );
 // };
 
-// product card 
+// product card
 // "use client";
 
 // import React, { useEffect, useState } from "react";
@@ -1754,7 +1753,6 @@ export const a = "b";
 //     handleRemoveProductFromWishlist,
 //     productExistInWishlist,
 //   } = useCart();
-
 
 //   useEffect(() => {
 //     const getReviews = () => {
@@ -1875,9 +1873,9 @@ export const a = "b";
 //                   </div>
 //                 ))}
 //                 {/* discount svg overlaying the image */}
-               
+
 //               </div>
-               
+
 //                { card.oldPrice &&
 //               <div className="absolute -top-20 left-1 z-10 duration-300 ease-in-out group-hover:top-2">
 //                 <Image
@@ -1987,8 +1985,11 @@ export const a = "b";
 
 // export default Card;
 
-{/* The Wishlist button OUTSIDE the Link */}
-        {/* {!loading && (
+{
+  /* The Wishlist button OUTSIDE the Link */
+}
+{
+  /* {!loading && (
         <div className="absolute top-0 left-0 right-0 h-[240px] sm:h-[240px] md:h-[220px] lg:h-[340px] w-full flex-center z-10">
           <div
             className={`hidden md:block absolute -bottom-12 group-hover:bottom-0 group-hover:animate-slide-up left-0 right-0 z-50 w-full p-1 ease-out duration-300`}
@@ -2030,6 +2031,78 @@ export const a = "b";
             </Button>
           </div>
         </div>
-      )} */}
+      )} */
+}
 
-        {/* The link to the product */}
+{
+  /* The link to the product */
+}
+
+// add category
+
+// import { deleteFileFromCD} from "@/utils/actions/fileUpload.action";
+// import { CldUploadWidget } from "next-cloudinary";
+
+// const [categoryImage, setCategoryImage] = useState<any | null>(null);
+
+{
+  /* <CldUploadWidget
+                // uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_Preset}
+                signatureEndpoint="/api/sign-cloudinary-file-upload"
+                options={{ multiple: true, maxFiles: 5 }}
+                onSuccess={async (result, { widget }) => {
+                  // const info = result?.info;
+                  console.log(result?.info);
+                  if (categoryImage?.secure_url) {
+                    await deleteFileFromCD(categoryImage?.secure_url);
+                  }
+                  setCategoryImage(result?.info);
+                }}
+                onQueuesEnd={(result, { widget }) => {
+                  widget.close();
+                  setLoadingImageUpload(false);
+                }}
+              >
+                {({ open }) => {
+                  function handleOnClick() {
+                    setCategoryImage(null);
+                    setLoadingImageUpload(true);
+                    open();
+                  }
+                  return (
+                    <>
+                      <div
+                        onClick={handleOnClick}
+                        className="relative w-full h-[37vh] cursor-pointer bg-[#EAEAEA] border-2 border-gray-200 rounded-2xl flex-center group overflow-hidden"
+                      >
+                        {loadingImageUpload ? (
+                          <div className="absolute inset-0 z-20 bg-gray-300 flex-center animate-pulse cursor-not-allowed">
+                            Uploading Image...
+                          </div>
+                        ) : categoryImage?.url ? (
+                          <Image
+                            src={categoryImage?.url}
+                            alt="Category Image"
+                            layout="fill"
+                            objectFit="contain"
+                            className="w-full h-full rounded-2xl cursor-pointer overflow-hidden"
+                          />
+                        ) : (
+                          <div className="w-full h-full flex-center text-gray-500 cursor-pointer">
+                            Chooes Image
+                          </div>
+                        )}
+                        <div className="absolute inset-0 z-10 group-hover:bg-black/10 ease-in-out duration-300" />
+                        {categoryImage?.url && !loadingImageUpload && (
+                          <>
+                            <div className="absolute inset-0 z-20 hidden group-hover:flex-center text-primary">
+                              Change Image
+                            </div>
+                          </>
+                        )}
+                      </div>
+                    </>
+                  );
+                }}
+              </CldUploadWidget> */
+}
