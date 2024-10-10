@@ -64,10 +64,11 @@ export async function POST(req: NextRequest) {
       productCollection,
     });
 
-    const savedOutfit = await newOutfit.save();
+    // const savedOutfit =
+    await newOutfit.save();
 
     return NextResponse.json(
-      { message: "Outfit added successfully", outfit: savedOutfit },
+      { message: "Outfit added successfully" },
       { status: 201 }
     );
   } catch (error) {

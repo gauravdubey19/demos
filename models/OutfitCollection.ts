@@ -7,10 +7,10 @@ const OutfitSchema = new Schema(
     outfitImage: { type: String, required: true },
     productCollection: [
       {
+        productId: { type: String, required: true },
         title: { type: String, required: true },
         slug: { type: String, required: true },
         image: { type: String, required: true },
-        productId: { type: String, required: true },
         price: { type: Number, required: true },
       },
     ],

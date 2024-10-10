@@ -5,19 +5,7 @@ import Image from "next/image";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger"; // Import ScrollTrigger
 import CircularButton from "./CircularButton";
-
-interface Product {
-  title: string;
-  slug: string;
-  image: string;
-}
-
-interface OutfitData {
-  outfitTitle: string;
-  outfitSlug: string;
-  outfitImage: string;
-  productCollection: Product[];
-}
+import { OutfitData } from "@/lib/types";
 
 gsap.registerPlugin(ScrollTrigger); // Register ScrollTrigger plugin
 
@@ -77,12 +65,12 @@ const GridCards = () => {
     if (containerRef.current) {
       gsap.fromTo(
         containerRef.current,
-        { opacity: 0, y: 0 ,scale:.8}, 
+        { opacity: 0, y: 0, scale: 0.8 },
         {
           opacity: 1,
           y: -20,
           duration: 2,
-          scale:1,
+          scale: 1,
           ease: "power3.out",
           scrollTrigger: {
             trigger: containerRef.current, // Animate the container when it enters the viewport
@@ -114,38 +102,42 @@ const GridCards = () => {
           <div className="flex md:flex-col flex-row sm:gap-4 gap-2 md:w-[30%] w-full sm:h-[30%] h-[20%] md:h-full">
             {loading
               ? Array.from({ length: 2 }).map((_, index) => (
-                <div
-                  key={index}
-                  className="md:h-[50%] w-full bg-[#F4F4F4] rounded-3xl animate-pulse flex items-center justify-center"
-                >
-                  <div className="w-full h-full bg-gray-200 rounded-3xl"></div>
-                </div>
-              ))
-              : productCollection.slice(0, 2).reverse().map((product, index) => (
-                <div
-                  key={index}
-                  title={product.title}
-                  className="md:h-[50%] w-full bg-[#F4F4F4] rounded-3xl flex-center p-4 md:p-6 overflow-hidden"
-                >
-                  <Image
-                    ref={(el) => {
-                      if (el) imageRefs.current[index] = el;
-                    }}
-                    src={product.image}
-                    alt={product.title}
-                    width={300}
-                    height={300}
-                    className="w-full h-full py-1 p-1 object-contain"
-                  />
-                </div>
-              ))}
+                  <div
+                    key={index}
+                    className="md:h-[50%] w-full bg-[#F4F4F4] rounded-3xl animate-pulse flex items-center justify-center"
+                  >
+                    <div className="w-full h-full bg-gray-200 rounded-3xl"></div>
+                  </div>
+                ))
+              : productCollection
+                  .slice(0, 2)
+                  .reverse()
+                  .map((product, index) => (
+                    <div
+                      key={index}
+                      title={product.title}
+                      className="md:h-[50%] w-full bg-[#F4F4F4] rounded-3xl flex-center p-4 md:p-6 overflow-hidden"
+                    >
+                      <Image
+                        ref={(el) => {
+                          if (el) imageRefs.current[index] = el;
+                        }}
+                        src={product.image}
+                        alt={product.title}
+                        width={300}
+                        height={300}
+                        className="w-full h-full py-1 p-1 object-contain"
+                      />
+                    </div>
+                  ))}
           </div>
 
           {/* Column 2 */}
           <div className="flex flex-col md:w-[40%] w-full h-[40vh] sm:h-[57%] md:h-[103%]">
             <div
-              className={`relative h-full md:py-10 py-4 w-full ${loading ? "bg-gray-200 animate-pulse" : "bg-[#F4F4F4]"
-                } rounded-3xl flex items-center justify-center flex-col md:gap-10 gap-5 p-4 md:p-6 overflow-hidden`}
+              className={`relative h-full md:py-10 py-4 w-full ${
+                loading ? "bg-gray-200 animate-pulse" : "bg-[#F4F4F4]"
+              } rounded-3xl flex items-center justify-center flex-col md:gap-10 gap-5 p-4 md:p-6 overflow-hidden`}
             >
               {!loading && (
                 <>
@@ -171,44 +163,47 @@ const GridCards = () => {
           <div className="flex md:flex-col flex-row sm:gap-4 gap-2 md:w-[30%] w-full sm:h-[30%] h-[25%] sm:mt-16 md:mt-0 md:h-full">
             {loading
               ? Array.from({ length: 2 }).map((_, index) => (
-                <div
-                  key={index + 2}
-                  className="md:h-[50%] w-full bg-[#F4F4F4] rounded-3xl animate-pulse flex items-center justify-center"
-                >
-                  <div className="w-full h-full bg-gray-200 rounded-3xl"></div>
-                </div>
-              ))
+                  <div
+                    key={index + 2}
+                    className="md:h-[50%] w-full bg-[#F4F4F4] rounded-3xl animate-pulse flex items-center justify-center"
+                  >
+                    <div className="w-full h-full bg-gray-200 rounded-3xl"></div>
+                  </div>
+                ))
               : productCollection.slice(2, 4).map((product, index) => (
-                <div
-                  key={index + 2}
-                  title={product.title}
-                  className="md:h-[50%] w-full bg-[#F4F4F4] rounded-3xl flex-center p-4 md:p-6 overflow-hidden"
-                >
-                  <Image
-                    ref={(el) => {
-                      if (el) imageRefs.current[index + 3] = el;
-                    }}
-                    src={product.image}
-                    alt={product.title}
-                    width={300}
-                    height={300}
-                    className="w-full h-full py-1 p-1 object-contain"
-                  />
-                </div>
-              ))}
+                  <div
+                    key={index + 2}
+                    title={product.title}
+                    className="md:h-[50%] w-full bg-[#F4F4F4] rounded-3xl flex-center p-4 md:p-6 overflow-hidden"
+                  >
+                    <Image
+                      ref={(el) => {
+                        if (el) imageRefs.current[index + 3] = el;
+                      }}
+                      src={product.image}
+                      alt={product.title}
+                      width={300}
+                      height={300}
+                      className="w-full h-full py-1 p-1 object-contain"
+                    />
+                  </div>
+                ))}
           </div>
         </div>
 
         <div className="flex flex-row gap-4 mt-5 md:gap-10 items-end justify-center pb-10">
-          {outfitCollection.slice(0, 4).reverse().map((_, index) => (
-            <CircularButton
-              pic={icon}
-              index={index}
-              key={index}
-              isActive={currentOutfit === index}
-              onClick={() => handleButtonClick(index)}
-            />
-          ))}
+          {outfitCollection
+            .slice(0, 4)
+            .reverse()
+            .map((_, index) => (
+              <CircularButton
+                pic={icon}
+                index={index}
+                key={index}
+                isActive={currentOutfit === index}
+                onClick={() => handleButtonClick(index)}
+              />
+            ))}
         </div>
       </div>
     </div>

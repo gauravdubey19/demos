@@ -1,12 +1,14 @@
+"use client";
+
 import React, { useState, useEffect, useRef } from "react";
-import AddModal from "./AddModal";
-import CollectionGrid from "../OutfitCollection/CollectionGrid";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { removeFile, uploadNewFile } from "@/utils/actions/fileUpload.action";
 import { toast } from "@/hooks/use-toast";
-import { useRouter } from "next/navigation";
-import ReactCountUp from "@/components/ui/ReactCountUp";
 import { Button } from "@/components/ui/button";
+import AddModal from "./AddModal";
+import ReactCountUp from "@/components/ui/ReactCountUp";
+import CollectionGrid from "../OutfitCollection/CollectionGrid";
 
 interface Product {
   _id: string;
@@ -258,7 +260,7 @@ const NewOutfit = () => {
       }
 
       const data = await response.json();
-      console.log("Outfit saved successfully:", data);
+      // console.log("Outfit saved successfully:", data);
       toast({
         title: "Outfit saved successfully",
       });
