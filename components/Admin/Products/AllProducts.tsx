@@ -119,7 +119,7 @@ const AllProducts = () => {
         </div>
       </header>
 
-      <div className="w-full h-[calc(100vh-130px)] space-y-2 p-4 overflow-hidden">
+      <div className="w-full h-[75vh] lg:h-[calc(100vh-130px)] space-y-2 p-4 overflow-hidden">
         <ProductTable filteredProducts={filteredProducts} />
       </div>
     </section>

@@ -335,3 +335,20 @@ export interface Type {
   title: string;
   slug: string;
 }
+
+// outfit
+export interface ProductCollection {
+  productId: string;
+  title: string;
+  slug: string;
+  price: number;
+  image: string;
+}
+
+export interface OutfitData {
+  _id: string;
+  outfitTitle: string;
+  outfitSlug: string;
+  outfitImage: string;
+  productCollection: ProductCollection[];
+}
