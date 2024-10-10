@@ -216,13 +216,13 @@ const Navbar: React.FC<{ appName?: string }> = ({ appName = "LOGO" }) => {
                   <NavigationMenuItem key={index} className=" relative">
                     <NavigationMenuTrigger
                       className={`w-full cursor-pointer bg-transparent border-none outline-none p-1 ${
-                        pathname === `/products/${superCategory.slug}` &&
+                        pathname === `/products/superCategory/${superCategory.slug}` &&
                         "text-primary font-semibold"
                       }`}
                       onMouseEnter={() => setCurrentHover(superCategory.slug)}
                       onMouseLeave={() => setCurrentHover(null)}
                       onClick={() =>
-                        router.push(`/products/${superCategory.slug}`)
+                        router.push(`/products/superCategory/${superCategory.slug}`)
                       }
                     >
                       {superCategory.title}
