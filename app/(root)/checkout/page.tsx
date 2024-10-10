@@ -248,11 +248,11 @@ const CheckoutPage = () => {
       />
       <div className="pt-7 px-2 w-full flex justify-between md:flex-row flex-col gap-3 pb-5">
         <div className="md:w-[75%] w-full p-5 min-h-60 max-h-max border border-[#8888] rounded-lg">
-          <h1 className="text-2xl md:text-3xl text-black">
+          <h3 className="text-2xl md:text-3xl text-black">
             {checkoutStep === "cart" && "Shopping Cart"}
             {checkoutStep === "address" && "Choose Address & Contact Info"}
             {checkoutStep === "payment" && "Payment"}
-          </h1>
+          </h3>
 
           {checkoutStep === "cart" && (
             <ShoppingCart
