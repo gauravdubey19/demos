@@ -69,14 +69,13 @@ const Slider = ({ category }: SliderProps) => {
         ))}
       </div>
 
-      {/* Text content based on the current slide */}
       <div className="absolute bottom-10 left-10 z-20 text-white space-y-4">
         <h2 className="text-5xl font-bold tracking-wide">
           {typedSlides[category][currentSlide].heading}
         </h2>
-        <p className="text-xl">{slides[currentSlide].subheading}</p>
+        <p className="text-xl">{typedSlides[category][currentSlide].subheading}</p>
         <button className="px-6 py-3 bg-white text-black rounded-lg hover:bg-gray-200 transition-all duration-1000">
-          {slides[currentSlide].buttonText}
+          {typedSlides[category][currentSlide].buttonText}
         </button>
       </div>
 
