@@ -19,27 +19,45 @@ const AllOufitCollection = () => {
   const [search, setSearch] = useState<string>("");
 
   useEffect(() => {
-    const fetchOufits = async () => {
-      try {
-        const res = await fetch("/api/products/read/get-outfit-collection", {
-          method: "GET",
-          headers: { "Content-Type": "application/json" },
-        });
-
-        if (!res.ok) {
-          throw new Error("Failed to fetch outfit collection");
-        }
-
-        const data = await res.json();
-        setOutfits(data.outfits as OutfitData[]);
-        setLoading(false);
-      } catch (error) {
-        console.error("Error fetching outfit collection:", error);
-        setLoading(false);
-      }
-    };
-    fetchOufits();
+    fetchOutfits();
   }, []);
+
+  const fetchOutfits = async () => {
+    try {
+      const res = await fetch("/api/products/read/get-outfit-collection", {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      });
+
+      if (!res.ok) {
+        throw new Error("Failed to fetch outfit collection");
+      }
+
+      const data = await res.json();
+      setOutfits(data.outfits as OutfitData[]);
+      setLoading(false);
+    } catch (error) {
+      console.error("Error fetching outfit collection:", error);
+      setLoading(false);
+    }
+  };
+
+  const deleteOutfit = async (id: string) => {
+    try {
+      const res = await fetch(`/api/products/delete/detete-outfit-collection-by-id?id=${id}`, {
+        method: "DELETE",
+      });
+
+      if (!res.ok) {
+        throw new Error("Failed to delete outfit");
+      }
+
+      // Update the state to remove the deleted outfit
+      setOutfits(outfits.filter(outfit => outfit._id !== id));
+    } catch (error) {
+      console.error("Error deleting outfit:", error);
+    }
+  };
 
   if (loading) return <Loader />;
   if (outfits.length === 0) return <div>No Outfit Collection found!</div>;
@@ -108,7 +126,7 @@ const AllOufitCollection = () => {
         </header>
         <div className="w-full h-[75vh] lg:h-[calc(100vh-130px)] grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 p-4 overflow-y-auto">
           {filteredOutfits.map((outfit) => (
-            <CollectionCard key={outfit._id} outfit={outfit} />
+            <CollectionCard key={outfit._id} outfit={outfit} onDelete={deleteOutfit} />
           ))}
         </div>
       </section>

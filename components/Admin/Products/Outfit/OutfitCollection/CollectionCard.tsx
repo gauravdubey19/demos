@@ -13,11 +13,21 @@ import {
 } from "@/components/ui/accordion";
 import ReactCountUp from "@/components/ui/ReactCountUp";
 
-const CollectionCard: React.FC<{ outfit: OutfitData }> = ({ outfit }) => {
+interface CollectionCardProps {
+  outfit: OutfitData;
+  onDelete: (id: string) => void;
+}
+
+const CollectionCard: React.FC<CollectionCardProps> = ({ outfit, onDelete }) => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
 
   const openPopup = () => {
     setIsPopupOpen(true);
+  };
+
+  const handleDelete = () => {
+    onDelete(outfit._id);
+    setIsPopupOpen(false);
   };
 
   return (
@@ -91,6 +101,7 @@ const CollectionCard: React.FC<{ outfit: OutfitData }> = ({ outfit }) => {
           outfit={outfit}
           isPopupOpen={isPopupOpen}
           handlePopupClose={() => setIsPopupOpen(!isPopupOpen)}
+          onDelete={handleDelete}
         />
       )}
     </>
@@ -103,7 +114,8 @@ const OufitCollectionPopup: React.FC<{
   outfit: OutfitData;
   isPopupOpen: boolean;
   handlePopupClose: () => void;
-}> = ({ outfit, isPopupOpen, handlePopupClose }) => {
+  onDelete: () => void;
+}> = ({ outfit, isPopupOpen, handlePopupClose, onDelete }) => {
   return (
     <Dialog open={isPopupOpen} onOpenChange={handlePopupClose}>
       <DialogContent className="max-w-5xl">
@@ -154,12 +166,12 @@ const OufitCollectionPopup: React.FC<{
 
           <div className="w-full col-span-2 flex gap-2">
             <Button
-              onClick={handlePopupClose}
+              onClick={onDelete}
               variant="outline"
               size="sm"
-              className="w-full"
+              className="w-full border border-red-500 text-red-500 hover:bg-red-500 hover:text-white "
             >
-              Close
+              Delete
             </Button>
             <Button size="sm" className="w-full">
               Edit
