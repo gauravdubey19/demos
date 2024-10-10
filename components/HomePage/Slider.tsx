@@ -1,49 +1,49 @@
+
+
 "use client";
 import { useEffect, useState } from "react";
-import slide1 from "@/public/slide1.jpg";
-import slide2 from "@/public/slide2.jpg";
-import slide3 from "@/public/slide3.jpg";
-import slide4 from "@/public/slide4.jpeg";
-import slide5 from "@/public/slide5.jpeg";
-import slide6 from "@/public/slide6.jpeg";
-import slide7 from "@/public/slide7.jpeg";
+import { slides } from "@/lib/sampleSliderData";
 import Image from "next/image";
+import { StaticImageData } from "next/image";
 
-const Slider = () => {
-  // Updated array to include heading, subheading, and button text for each slide
-  const slides = [
-    {
-        src: slide1,
-        heading: "Elevate Your Formal Wardrobe",
-        subheading: "Discover timeless styles for the modern gentleman.",
-        buttonText: "Shop Formal Collection"
-    },
-    {
-        src: slide2,
-        heading: "Party in Style",
-        subheading: "Bold and vibrant looks to make every celebration unforgettable.",
-        buttonText: "Explore Partywear"
-    },
-    {
-        src: slide3,
-        heading: "Embrace Tradition with Elegance",
-        subheading: "Celebrate cultural heritage with our exclusive traditional wear.",
-        buttonText: "Shop Traditional Attire"
-    }
+// Define the structure of a single slide
+interface Slide {
+  src: StaticImageData;
+  heading: string;
+  subheading: string;
+  buttonText: string;
+}
 
-  ];
+// Define the structure of the slides object
+interface SlidesData {
+  all: Slide[];
+  traditional: Slide[];
+  partywear: Slide[];
+  formal: Slide[];
+}
 
+// Ensure that the imported slides match this structure
+const typedSlides: SlidesData = slides;
+
+// Define valid categories
+type Category = keyof SlidesData;
+
+interface SliderProps {
+  category: Category;
+}
+
+const Slider = ({ category }: SliderProps) => {
   const [currentSlide, setCurrentSlide] = useState(0);
 
   useEffect(() => {
     const slideInterval = setInterval(() => {
       setCurrentSlide((prevSlide) =>
-        prevSlide === slides.length - 1 ? 0 : prevSlide + 1
+        prevSlide === typedSlides[category].length - 1 ? 0 : prevSlide + 1
       );
-    }, 3000); // Change slide every 5 seconds
+    }, 3000); // Change slide every 3 seconds
 
     return () => clearInterval(slideInterval);
-  }, [slides.length]);
+  }, [category]);
 
   // Handle manual slide change when clicking on indicators
   const handleSlideChange = (idx: number) => {
@@ -51,17 +51,13 @@ const Slider = () => {
   };
 
   return (
-    <div className="relative w-full h-[calc(100vh-60px)] overflow-hidden mt-2  mb-20">
+    <div className="relative w-full h-[calc(100vh-60px)] overflow-hidden mt-11 mb-20">
       {/* Carousel images */}
       <div className="absolute inset-0 flex">
-        {slides.map((slide, idx) => (
+        {typedSlides[category].map((slide, idx) => (
           <div
             key={idx}
-            className={`absolute w-full h-full transition-all  ease-linear
-              ${
-                currentSlide === idx
-                  ? "opacity-100 scale-110"
-                  : "opacity-0 scale-100"
+            className={`absolute w-full h-full transition-all ease-linear ${currentSlide === idx ? "opacity-100 scale-110" : "opacity-0 scale-100"
               }`}
           >
             <Image
@@ -75,23 +71,23 @@ const Slider = () => {
 
       {/* Text content based on the current slide */}
       <div className="absolute bottom-10 left-10 z-20 text-white space-y-4">
-        <h2 className="lg:text-5xl md:text-3xl text-2xl font-bold tracking-wide">
-          {slides[currentSlide].heading}
+        <h2 className="text-5xl font-bold tracking-wide">
+          {typedSlides[category][currentSlide].heading}
         </h2>
-        <p className="lg:text-xl text-md">{slides[currentSlide].subheading}</p>
-        <button className="lg:px-6 lg:py-3 px-4 py-2 bg-white text-black rounded-lg hover:bg-gray-200 transition-all duration-1000">
+        <p className="text-xl">{slides[currentSlide].subheading}</p>
+        <button className="px-6 py-3 bg-white text-black rounded-lg hover:bg-gray-200 transition-all duration-1000">
           {slides[currentSlide].buttonText}
         </button>
       </div>
 
       {/* Scroll Indicator */}
       <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 z-20 flex space-x-2">
-        {slides.map((_, idx) => (
+        {typedSlides[category].map((_, idx) => (
           <span
             key={idx}
             onClick={() => handleSlideChange(idx)}
-            className={`cursor-pointer w-6 h-1 bg-white rounded-full transition-all duration-500 ease-in-out 
-              ${currentSlide === idx ? "opacity-100" : "opacity-50"}`}
+            className={`cursor-pointer w-6 h-1 bg-white rounded-full transition-all duration-500 ease-in-out ${currentSlide === idx ? "opacity-100" : "opacity-50"
+              }`}
           ></span>
         ))}
       </div>

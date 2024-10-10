@@ -38,7 +38,9 @@ const AllProducts = () => {
       try {
         const res = await fetch(`/api/products/read/get-all-products`, {
           method: "GET",
-          headers: { "Content-Type": "application/json" },
+          headers: { "Content-Type": "application/json" ,
+          "Cache-Control": "no-store", // Add Cache-Control header
+          },
         });
 
         if (!res.ok) {
@@ -119,7 +121,7 @@ const AllProducts = () => {
         </div>
       </header>
 
-      <div className="w-full h-[calc(100vh-130px)] space-y-2 p-4 overflow-hidden">
+      <div className="w-full h-[75vh] lg:h-[calc(100vh-130px)] space-y-2 p-4 overflow-hidden">
         <ProductTable filteredProducts={filteredProducts} />
       </div>
     </section>
