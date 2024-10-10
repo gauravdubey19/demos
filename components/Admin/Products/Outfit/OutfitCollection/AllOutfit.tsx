@@ -18,18 +18,21 @@ const AllOufitCollection = () => {
   const [isAscending, setIsAscending] = useState<boolean>(true);
   const [search, setSearch] = useState<string>("");
 
-  useEffect(() => {
-    const fetchOufits = async () => {
+   useEffect(() => {
+    const fetchOutfits = async () => {
       try {
         const res = await fetch("/api/products/read/get-outfit-collection", {
           method: "GET",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+            "Cache-Control": "no-store", // Add Cache-Control header
+          },
         });
-
+  
         if (!res.ok) {
           throw new Error("Failed to fetch outfit collection");
         }
-
+  
         const data = await res.json();
         setOutfits(data.outfits as OutfitData[]);
         setLoading(false);
@@ -38,7 +41,7 @@ const AllOufitCollection = () => {
         setLoading(false);
       }
     };
-    fetchOufits();
+    fetchOutfits();
   }, []);
 
   if (loading) return <Loader />;

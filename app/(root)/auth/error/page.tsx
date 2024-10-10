@@ -8,7 +8,7 @@ const AuthErrorPage: FC = () => {
 
   return (
     <div>
-      <h1>Authentication Error</h1>
+      <h3>Authentication Error</h3>
       <p>{error}</p>
     </div>
   );

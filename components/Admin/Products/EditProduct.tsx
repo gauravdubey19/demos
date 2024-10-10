@@ -347,7 +347,7 @@ const EditProduct: React.FC<{ slug: string }> = ({ slug }) => {
 
       if (res.ok) {
         setSuccess(true);
-        // router.push("/admin/all-products");
+        router.push("/admin/all-products");
       }
     } catch (error) {
       console.error("Error updating product:", error);
