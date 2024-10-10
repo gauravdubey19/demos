@@ -112,8 +112,7 @@ const Navbar: React.FC<{ appName?: string }> = ({ appName = "LOGO" }) => {
     if (pathname.includes("/admin")) return;
 
     const handleScroll = () => {
-      // window.scrollY > window.innerHeight * 2.9 &&
-      if (pathname === "/") {
+      if (window.scrollY > window.innerHeight * 1 && pathname === "/") {
         setIsVisible(true);
       } else if (pathname !== "/") {
         setIsVisible(true);
@@ -192,6 +191,7 @@ const Navbar: React.FC<{ appName?: string }> = ({ appName = "LOGO" }) => {
                   <CategoriesList categories={categories} />
                 </NavigationMenuContent>
               </NavigationMenuItem>
+
               {/* {categories.slice(0, 3).map((link, index) => {
                 const isActive = pathname === `/products/${link.slug}`;
                 return (
@@ -211,7 +211,7 @@ const Navbar: React.FC<{ appName?: string }> = ({ appName = "LOGO" }) => {
               })} */}
 
               {/* Map 3 supercategories below with their drop down containing categories */}
-              {superCategories.slice(0, 3).map((superCategory, index) => {
+              {superCategories.slice(0, 3).map(( superCategory, index) => {
                 return (
                   <NavigationMenuItem key={index} className=" relative">
                     <NavigationMenuTrigger
@@ -227,40 +227,38 @@ const Navbar: React.FC<{ appName?: string }> = ({ appName = "LOGO" }) => {
                     >
                       {superCategory.title}
                     </NavigationMenuTrigger>
-                    <div
-                      className={`w-max space-y-2 p-4 animate-slide-down flex flex-col gap-2 absolute top-full left-0 shadow-lg bg-white rounded-md ${
-                        currentHover === superCategory.slug ? "" : "hidden"
-                      }`}
-                      onMouseEnter={() => setCurrentHover(superCategory.slug)}
-                      onMouseLeave={() => setCurrentHover(null)}
-                    >
-                      {superCategory.categories.map((category: any) => (
-                        <div key={category._id}>
-                          <Link
-                            href={`/products/${category.slug}`}
-                            className="text-primary hover:underline"
-                          >
-                            {category.title}
-                          </Link>
-                          <div className="text-xs grid grid-cols-1 gap-1 pl-3">
-                            {categories
-                              .find((cat) => cat.slug === category.slug)
-                              ?.types.map((type) => (
-                                <Link
-                                  href={{
-                                    pathname: `/products/${category.slug}`,
-                                    query: { type: type.slug },
-                                  }}
-                                  key={type._id}
-                                  className="hover:text-primary ease-in-out duration-300"
-                                >
-                                  {type.title}
-                                </Link>
-                              ))}
+                    <NavigationMenuContent className="w-fit space-y-2 p-2 animate-slide-down">
+                      <div
+                        className={`w-[50vw] h-fit grid grid-cols-4 gap-2 items-center justify-center p-2`}
+                      >
+                        {superCategory.categories.map((category: any) => (
+                          <div key={category._id}>
+                            <Link
+                              href={`/products/${category.slug}`}
+                              className="text-primary hover-underline-lr"
+                            >
+                              {category.title}
+                            </Link>
+                            <div className="text-xs grid grid-cols-1 gap-1 pl-3">
+                              {categories
+                                .find((cat) => cat.slug === category.slug)
+                                ?.types.map((type) => (
+                                  <Link
+                                    href={{
+                                      pathname: `/products/${category.slug}`,
+                                      query: { type: type.slug },
+                                    }}
+                                    key={type._id}
+                                    className="hover:text-primary ease-in-out duration-300"
+                                  >
+                                    {type.title}
+                                  </Link>
+                                ))}
+                            </div>
                           </div>
-                        </div>
-                      ))}
-                    </div>
+                        ))}
+                      </div>
+                    </NavigationMenuContent>
                   </NavigationMenuItem>
                 );
               })}
@@ -421,7 +419,7 @@ const CategoriesList: React.FC<CategoriesListProps> = ({ categories }) => {
 
   return (
     <>
-      <div className="w-[70vw] h-fit grid grid-cols-4 gap-2 items-center justify-center p-2">
+      <div className="w-[50vw] h-fit grid grid-cols-4 gap-2 items-center justify-center p-2">
         {categories.map((category, index) => {
           const isActive = pathname === `/products/${category.slug}`;
 

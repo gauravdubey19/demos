@@ -23,6 +23,7 @@ export async function POST(req: NextRequest) {
   await connectToDB();
 
   const { outfitTitle, outfitImage, productCollection } = await req.json();
+  console.log(outfitTitle, outfitImage, productCollection);
 
   if (!outfitTitle || !outfitImage || !Array.isArray(productCollection)) {
     return NextResponse.json(
@@ -47,22 +48,24 @@ export async function POST(req: NextRequest) {
 
     if (counter > MAX_RETRIES) {
       return NextResponse.json(
-        { error: "Could not generate a unique slug" },
+        {
+          error:
+            "Theres already 10 similar oufit collection, so could not generate a new unique slug!",
+        },
         { status: 500 }
       );
     }
-
-    outfitSlug = uniqueSlug;
     console.log("Generated slug:", outfitSlug);
 
     const newOutfit = new OutfitCollection({
       outfitTitle,
-      outfitSlug,
+      outfitSlug: uniqueSlug,
       outfitImage,
       productCollection,
     });
 
     const savedOutfit = await newOutfit.save();
+
     return NextResponse.json(
       { message: "Outfit added successfully", outfit: savedOutfit },
       { status: 201 }

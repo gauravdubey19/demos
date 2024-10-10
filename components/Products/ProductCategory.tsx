@@ -9,7 +9,6 @@ import Goback from "../ui/Goback";
 import Loader from "../ui/Loader";
 import Breadcrumbs from "../ui/Breadcrumbs";
 
-
 const ProductCategory: React.FC<ProductCategoryProps> = ({
   category,
   type,
@@ -137,48 +136,45 @@ const ProductCategory: React.FC<ProductCategoryProps> = ({
 
   return (
     <section className="w-full h-full overflow-hidden">
-      <div
-        className={`relative w-full mt-[60px] py-4 `}
-      >
-        {/* <Goback /> */} 
-      
-       
-        <div className="flex flex-row ">
-         <Filter
-          categorySlug={category}
-          selectedType={selectedType}
-          setSelectedType={setSelectedType}
-          selectedColor={selectedColor}
-          setSelectedColor={setSelectedColor}
-          colorOptions={colorOptions}
-          availableSizes={availableSizes}
-          selectedSize={selectedSize}
-          setSelectedSize={setSelectedSize}
-          priceRange={priceRange}
-          setPriceRange={setPriceRange}
-          isAscending={isAscending}
-          setIsAscending={setIsAscending}
-        />
-        <div className="mt-10 md:mt-0 w-full px-2 md:px-10 lg:px-14 h-screen overflow-auto ">
-          <h2 className="md:ml-2 px-2 md:px-0 space-y-2 animate-slide-down">
-            {/* <Breadcrumbs /> */}
-            <span className="text-xl lg:text-2xl font-bold">
-              {reverseSlug(category)}
-              {category === "all" ? " Categories" : " Category"}
-            </span>
-          </h2>
-          {products.length > 0 ? (
-           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 gap-1 md:gap-6 animate-slide-up">
-              {products.map((card) => (
-                <Card key={card._id} card={card} category={category} />
-              ))}
-            </div>
-          ) : (
-            <div className="w-full h-[calc(100vh-120px)] text-center">
-              <span className="mt-4 text-xl">No Products found</span>
-            </div>
-          )}
-        </div>
+      <div className={`relative w-full mt-[60px] py-4 `}>
+        {/* <Goback /> */}
+
+        <div className="flex flex-row max-h-[calc(100vh-60px)]">
+          <Filter
+            categorySlug={category}
+            selectedType={selectedType}
+            setSelectedType={setSelectedType}
+            selectedColor={selectedColor}
+            setSelectedColor={setSelectedColor}
+            colorOptions={colorOptions}
+            availableSizes={availableSizes}
+            selectedSize={selectedSize}
+            setSelectedSize={setSelectedSize}
+            priceRange={priceRange}
+            setPriceRange={setPriceRange}
+            isAscending={isAscending}
+            setIsAscending={setIsAscending}
+          />
+          <div className="mt-10 md:mt-0 w-full px-2 md:px-10 lg:px-14 h-[calc(100vh-60px)] overflow-auto">
+            <h2 className="md:ml-2 px-2 md:px-0 space-y-2 animate-slide-down">
+              <Breadcrumbs />
+              <span className="text-xl lg:text-2xl font-bold">
+                {reverseSlug(category)}
+                {category === "all" ? " Categories" : " Category"}
+              </span>
+            </h2>
+            {products.length > 0 ? (
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 gap-1 md:gap-6 animate-slide-up">
+                {products.map((card) => (
+                  <Card key={card._id} card={card} category={category} />
+                ))}
+              </div>
+            ) : (
+              <div className="w-full h-[calc(100vh-120px)] text-center">
+                <span className="mt-4 text-xl">No Products found</span>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </section>
@@ -186,4 +182,3 @@ const ProductCategory: React.FC<ProductCategoryProps> = ({
 };
 
 export default ProductCategory;
- 

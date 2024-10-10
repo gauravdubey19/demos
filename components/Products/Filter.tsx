@@ -13,8 +13,8 @@ import { CategoryValues } from "@/lib/types";
 import { LiaFilterSolid } from "react-icons/lia";
 import { FaArrowDownShortWide, FaArrowUpShortWide } from "react-icons/fa6";
 import { GrClear } from "react-icons/gr";
-import Slider from 'rc-slider';
-import 'rc-slider/assets/index.css';
+import Slider from "rc-slider";
+import "rc-slider/assets/index.css";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 
 interface FilterProps {
@@ -95,7 +95,7 @@ const Filter: React.FC<FilterProps> = ({
   }, [categoryList, categorySlug]);
 
   return (
-    <div className="z-50 w-80 text-black bg-white p-4 ml-6 pr-8 border-r border-r-gray-300 h-screen overflow-y-auto">
+    <div className="z-50 w-80 text-black bg-white p-4 ml-6 pr-8 border-r border-r-gray-300 h-[calc(100vh-60px)] overflow-y-auto">
       <div className="md:hidden z-10 fixed bottom-0 left-0 right-0 w-full bg-zinc-700 flex justify-between items-center text-white py-2 divide-x-1">
         <div
           onClick={toggleShort}
@@ -108,17 +108,13 @@ const Filter: React.FC<FilterProps> = ({
             <FaArrowUpShortWide size={18} />
           )}
         </div>
-        <div
-          className="w-1/2 flex items-center justify-center gap-1 active:translate-y-1 transition-transform duration-300"
-        >
+        <div className="w-1/2 flex items-center justify-center gap-1 active:translate-y-1 transition-transform duration-300">
           <span>Filter</span>
           <LiaFilterSolid size={18} />
         </div>
       </div>
 
-      <div className="text-2xl md:text-3xl font-semibold mb-4">
-        Filter
-      </div>
+      <div className="text-2xl md:text-3xl font-semibold mb-4">Filter</div>
       {categoryList && (
         <div className="space-y-4 overflow-y-auto">
           <FilterContent
@@ -171,55 +167,57 @@ const FilterContent: React.FC<FilterContentProps> = ({
   priceRange,
   setPriceRange,
 }) => {
-  const [isAccordionOpen, setIsAccordionOpen] = useState<string | null>("category");
+  const [isAccordionOpen, setIsAccordionOpen] = useState<string | null>(
+    "category"
+  );
   return (
-  <>
-    <CategoryFilter
-      categoryList={categoryList}
-      selectedType={selectedType}
-      setSelectedType={setSelectedType}
-      isAccordionOpen={isAccordionOpen}
-      setIsAccordionOpen={setIsAccordionOpen}
-    />
-    <ColorFilter
-      colorOptions={colorOptions}
-      selectedColor={selectedColor}
-      setSelectedColor={setSelectedColor}
-      isAccordionOpen={isAccordionOpen}
-      setIsAccordionOpen={setIsAccordionOpen}
-    />
-    <SizeFilter
-      availableSizes={availableSizes}
-      selectedSize={selectedSize}
-      setSelectedSize={setSelectedSize}
-      isAccordionOpen={isAccordionOpen}
-      setIsAccordionOpen={setIsAccordionOpen}
-    />
-    <PriceFilter priceRange={priceRange} setPriceRange={setPriceRange} />
-  </>
-);
-}
+    <>
+      <CategoryFilter
+        categoryList={categoryList}
+        selectedType={selectedType}
+        setSelectedType={setSelectedType}
+        isAccordionOpen={isAccordionOpen}
+        setIsAccordionOpen={setIsAccordionOpen}
+      />
+      <ColorFilter
+        colorOptions={colorOptions}
+        selectedColor={selectedColor}
+        setSelectedColor={setSelectedColor}
+        isAccordionOpen={isAccordionOpen}
+        setIsAccordionOpen={setIsAccordionOpen}
+      />
+      <SizeFilter
+        availableSizes={availableSizes}
+        selectedSize={selectedSize}
+        setSelectedSize={setSelectedSize}
+        isAccordionOpen={isAccordionOpen}
+        setIsAccordionOpen={setIsAccordionOpen}
+      />
+      <PriceFilter priceRange={priceRange} setPriceRange={setPriceRange} />
+    </>
+  );
+};
 
 interface CategoryFilterProps {
   categoryList: CategoryValues;
   selectedType: string;
   setSelectedType: (type: string) => void;
   isAccordionOpen: string | null;
-  setIsAccordionOpen: (isOpen: string | null) => void; 
+  setIsAccordionOpen: (isOpen: string | null) => void;
 }
 interface ColorFilterProps {
   colorOptions: { _id: string; title: string; color: string }[];
   selectedColor: string;
   setSelectedColor: (color: string) => void;
   isAccordionOpen: string | null;
-  setIsAccordionOpen: (isOpen: string | null) => void; 
+  setIsAccordionOpen: (isOpen: string | null) => void;
 }
 interface SizeFilterProps {
   availableSizes: string[];
   selectedSize: string;
   setSelectedSize: (size: string) => void;
   isAccordionOpen: string | null;
-  setIsAccordionOpen: (isOpen: string | null) => void; 
+  setIsAccordionOpen: (isOpen: string | null) => void;
 }
 
 const CategoryFilter: React.FC<CategoryFilterProps> = ({
@@ -233,7 +231,9 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({
     <div className="space-y-4 animate-slide-up">
       <h3
         className="text-base font-medium cursor-pointer flex items-center justify-between"
-        onClick={() => setIsAccordionOpen(isAccordionOpen === "category" ? null : "category")}
+        onClick={() =>
+          setIsAccordionOpen(isAccordionOpen === "category" ? null : "category")
+        }
       >
         Category types
         <FaChevronDown
@@ -291,23 +291,24 @@ const ColorFilter: React.FC<ColorFilterProps> = ({
   isAccordionOpen,
   setIsAccordionOpen,
 }) => {
-
   return (
     <div className="space-y-4 animate-slide-up">
       <h3
         className="text-base font-medium cursor-pointer flex items-center justify-between"
-        onClick={() => setIsAccordionOpen(isAccordionOpen === "color" ? null : "color")}
+        onClick={() =>
+          setIsAccordionOpen(isAccordionOpen === "color" ? null : "color")
+        }
       >
         Colors
         <FaChevronDown
           className={`transition-transform duration-300 ${
-            isAccordionOpen==="color" ? "transform rotate-180" : ""
+            isAccordionOpen === "color" ? "transform rotate-180" : ""
           }`}
         />
       </h3>
       <div
         className={`transition-max-height duration-300 ease-in-out overflow-hidden ${
-          isAccordionOpen==="color" ? "max-h-screen" : "max-h-0"
+          isAccordionOpen === "color" ? "max-h-screen" : "max-h-0"
         }`}
       >
         <div className="flex flex-wrap gap-2">
@@ -344,7 +345,6 @@ const ColorFilter: React.FC<ColorFilterProps> = ({
   );
 };
 
-
 const SizeFilter: React.FC<SizeFilterProps> = ({
   availableSizes,
   selectedSize,
@@ -352,23 +352,24 @@ const SizeFilter: React.FC<SizeFilterProps> = ({
   isAccordionOpen,
   setIsAccordionOpen,
 }) => {
-
   return (
     <div className="space-y-4 animate-slide-up">
       <h3
         className="text-base font-medium cursor-pointer flex items-center justify-between"
-        onClick={() => setIsAccordionOpen(isAccordionOpen === "size" ? null : "size")}
+        onClick={() =>
+          setIsAccordionOpen(isAccordionOpen === "size" ? null : "size")
+        }
       >
         Sizes
         <FaChevronDown
           className={`transition-transform duration-300 ${
-            isAccordionOpen==="size" ? "transform rotate-180" : ""
+            isAccordionOpen === "size" ? "transform rotate-180" : ""
           }`}
         />
       </h3>
       <div
         className={`transition-max-height duration-300 ease-in-out overflow-hidden ${
-          isAccordionOpen==="size" ? "max-h-screen" : "max-h-0"
+          isAccordionOpen === "size" ? "max-h-screen" : "max-h-0"
         }`}
       >
         <div className="flex flex-wrap gap-2">
@@ -422,10 +423,10 @@ const PriceFilter: React.FC<PriceFilterProps> = ({
     }
   };
 
-   return (
+  return (
     <div className="space-y-4 animate-slide-up">
       <h3 className="text-base font-medium">Price Range</h3>
-  
+
       <div className="flex flex-col gap-2 max-w-[300px] w-[90%] mx-auto">
         <Slider
           range
@@ -435,9 +436,9 @@ const PriceFilter: React.FC<PriceFilterProps> = ({
           onChange={handleSliderChange}
           className="range-input-style"
           styles={{
-            track: { backgroundColor: '#FFB433' },
-            handle: { borderColor: '#FFB433' },
-            rail: { backgroundColor: '#ddd' },
+            track: { backgroundColor: "#FFB433" },
+            handle: { borderColor: "#FFB433" },
+            rail: { backgroundColor: "#ddd" },
           }}
         />
         <div className="flex justify-between">

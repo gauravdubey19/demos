@@ -146,9 +146,9 @@ const MiddleContainer: React.FC = () => {
     <div className="w-full flex flex-col items-center gap-10 md:gap-16 animate-slide-down">
       <div className="w-full flex flex-col gap-2">
         <div className="relative w-full h-[230px] flex items-end justify-center bg-white/50 text-primary p-4">
-          <div className="absolute md:-left-[6.8rem] top-7 z-10 gap-1 text-[90px] font-medium drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)]">
+          <div className="absolute md:-left-[6.8rem] top-7 z-10 gap-1 text-7xl font-medium drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)]">
             <span className="md:text-white">Ex</span>
-            <span>plore</span>
+            <span>plore Men</span>
           </div>
           <span className="text-6xl lg:text-7xl font-light drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.5)]">
             Textiles

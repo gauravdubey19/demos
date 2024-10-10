@@ -143,9 +143,9 @@ const MiddelContainor = () => {
   {/* Top Section */}
   <div className="relative w-full h-[150px] sm:h-[230px] flex items-end justify-center bg-white text-primary p-4">
     {/* Absolute Positioned Text */}
-    <div className="absolute left-4 md:-left-[6.8rem] top-2 md:top-7 flex flex-col gap-1 lg:text-[90px] md:text-[50px] text-[24px] font-medium">
+    <div className="absolute left-4 md:-left-[6.8rem] top-2 md:top-7 flex flex-col gap-1 lg:text-[2rem] md:text-[50px] text-[24px] font-medium">
       <span className="text-primary md:text-white">Ex</span>
-      <span>plore</span>
+      <span>plore Men</span>
     </div>
     
     {/* Centered Title */}

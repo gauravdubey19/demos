@@ -10,6 +10,7 @@ import { useCart } from "@/context/CartProvider";
 import { Button } from "../ui/button";
 import { Dialog, DialogContent, DialogTitle } from "../ui/dialog";
 import { AiOutlineMinus, AiOutlinePlus } from "react-icons/ai";
+import ReactCountUp from "../ui/ReactCountUp";
 
 const Card: React.FC<CardDetails> = ({ card, category, loading = false }) => {
   const [reviews, setReviews] = useState<number>(0);
@@ -84,54 +85,6 @@ const Card: React.FC<CardDetails> = ({ card, category, loading = false }) => {
             )}
           </div>
         )}
-
-        {/* The Wishlist button OUTSIDE the Link */}
-        {/* {!loading && (
-        <div className="absolute top-0 left-0 right-0 h-[240px] sm:h-[240px] md:h-[220px] lg:h-[340px] w-full flex-center z-10">
-          <div
-            className={`hidden md:block absolute -bottom-12 group-hover:bottom-0 group-hover:animate-slide-up left-0 right-0 z-50 w-full p-1 ease-out duration-300`}
-          >
-            <Button
-              disabled={wishlisting}
-              onClick={(e) => {
-                e.stopPropagation();
-                if (card._id) {
-                  return !productExistInWishlist(card._id)
-                    ? handleAddProductToWhistlist(card._id)
-                    : handleRemoveProductFromWishlist(card._id);
-                }
-              }}
-              size="sm"
-              className={`w-full text-lg rounded hover:shadow-md disabled:opacity-70 ${
-                card._id && !productExistInWishlist(card._id)
-                  ? "bg-white backdrop-blur-md border border-[#FF6464] text-[#FF6464]"
-                  : "bg-[#FF6464]"
-              }`}
-            >
-              {card._id && !productExistInWishlist(card._id) ? (
-                <span className="flex-center gap-1 py-1">
-                  <GoHeart
-                    color="#FF6464"
-                    className="group-hover:scale-110 mr-1"
-                  />
-                  Wishlist
-                </span>
-              ) : (
-                <span className="flex-center gap-1 py-1">
-                  <GoHeartFill
-                    color="white"
-                    className="group-hover:scale-110 mr-1"
-                  />
-                  Wishlisted
-                </span>
-              )}
-            </Button>
-          </div>
-        </div>
-      )} */}
-
-        {/* The link to the product */}
-
         <div className="relative h-[240px] sm:h-[240px] md:h-[220px] lg:h-[340px] w-full flex-center select-none overflow-hidden">
           <Link
             // className="w-full h-full relative"
@@ -195,16 +148,31 @@ const Card: React.FC<CardDetails> = ({ card, category, loading = false }) => {
           {!loading && card?._id && (
             <div className="absolute z-50 left-0 right-0 bottom-1.5 lg:-bottom-40 group-hover:bottom-1.5 px-1.5 w-full h-fit ease-in-out duration-300">
               <Button
+                type="button"
                 onClick={() => setAddToBag(!addToBag)}
-                disabled={itemExistInCart(card?._id)}
+                disabled={
+                  itemExistInCart(card?._id) || card.quantityInStock < 1
+                }
                 size="sm"
-                className={`w-full select-none font-light rounded-none hover:shadow-md active:translate-y-0.5 ${
+                className={`w-full rounded-none hover:shadow-md disabled:opacity-80 disabled:animate-none text-lg ${
                   loading
                     ? "bg-gray-200 animate-pulse text-gray-200"
-                    : "text-white bg-primary duration-300"
+                    : card.quantityInStock < 1
+                    ? "bg-red-500"
+                    : !itemExistInCart(card?._id)
+                    ? "bg-white backdrop-blur-md border border-[#FF6464] text-[#FF6464] duration-300"
+                    : "bg-[#FF6464]"
                 } ease-in-out`}
               >
-                {itemExistInCart(card?._id) ? "Added to bag" : "Add to bag"}
+                {card.quantityInStock < 1 ? (
+                  "Out of Stock"
+                ) : itemExistInCart(card?._id) ? (
+                  "Added to Cart"
+                ) : (
+                  <>
+                    Add to Cart <span className="text-2xl">+</span>
+                  </>
+                )}
               </Button>
             </div>
           )}
@@ -373,6 +341,7 @@ const AddToBagPopUp: React.FC<AddToBagPopUpProps> = ({
         product?.quantityInStock,
         quantity
       );
+      handleClose();
     }
   };
   return (
@@ -493,6 +462,22 @@ const AddToBagPopUp: React.FC<AddToBagPopUpProps> = ({
                 )}
               </span>
             </div>
+            <div className="w-fit flex-between gap-2">
+              <ReactCountUp
+                className="text-md"
+                prefix="₹"
+                amt={product.price}
+                decimals={true}
+              />
+              <span className="text-sm select-none text-primary">x</span>
+              <span className="text-md select-none">{quantity}</span>
+            </div>
+            <ReactCountUp
+              className="text-primary text-xl font-semibold"
+              prefix="₹"
+              amt={product.price * quantity}
+              decimals={true}
+            />
             {/* Action Buttons */}
             <div className="flex gap-2">
               <div className="flex-center gap-2 select-none">
@@ -502,7 +487,7 @@ const AddToBagPopUp: React.FC<AddToBagPopUpProps> = ({
                   size="icon"
                   className="bg-transparent"
                 >
-                  <AiOutlineMinus />
+                  <AiOutlineMinus color="#000" />
                 </Button>
                 <span className="text-sm text-primary select-none">
                   {quantity}

@@ -82,7 +82,7 @@ const HeroWithDrag: React.FC = () => {
               // ref={leftRef} // Ensure this ref is properly linked to the cursor context
               className="w-full h-full z-0 flex items-center justify-start"
             >
-              <div className="w-fit h-fit ml-4 flex-center bg-white rounded-full p-1 group-hover:animate-motion-left">
+              <div className="w-fit h-fit ml-4 flex-center bg-white/70 backdrop-blur-sm rounded-full p-1 group-hover:animate-motion-left">
                 <IoArrowForwardSharp size={40} className="text-primary" />
               </div>
             </div>
@@ -114,9 +114,9 @@ const HeroWithDrag: React.FC = () => {
             id="bg-section"
             className="absolute inset-0 -z-10 h-full w-full animate-slide-down"
           >
-            <div className="absolute inset-0 bg-black/20 z-20"></div>
+            <div className="absolute inset-0 bg-black/10 z-20"></div>
             <video
-            ref={videoRef}
+              ref={videoRef}
               src="/videos/heroMergedTrim.mp4"
               playsInline
               muted
@@ -142,21 +142,28 @@ export default HeroWithDrag;
 const MiddleContainer: React.FC = () => {
   return (
     <div className="w-full flex flex-col items-center gap-10 md:gap-16 animate-slide-down">
-     <div className="w-full flex flex-col gap-2">
-  <div className="relative w-full h-[230px] flex items-end justify-center bg-white/50 text-primary p-4">
-    <div className="absolute md:-left-[6.8rem] lg:top-7 top-2 z-10 gap-1 lg:text-[6rem] md:text-[5rem] text-[3rem] font-medium drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)]">
-      <span className="md:text-white">Ex</span>
-      <span>plore</span>
+      <div className="w-full flex flex-col gap-2">
+        <div className="relative w-full h-[230px] flex items-end justify-center bg-white/50 text-primary p-4">
+        <div className="absolute top-4 left-1/2 -translate-x-1/2">
+          <span className="text-4xl font-medium text-black ">Explore</span>
+        </div>
+          <div className="absolute md:-left-[6.8rem] lg:top-7 md:top-7 lg:mb-0 md:mb-0 mb-16 z-10 gap-1 text-[70px] md:text-[90px] lg:text-[90px] font-medium drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)]">
+            <span className="md:text-white">M</span>
+            <span >en</span>
+          </div>
+          <span className="text-6xl lg:text-7xl font-medium drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.5)]">
+            Fashion
+          </span>
+        </div>
+        <span className="w-full animate-slide-up text-center text-balance text-[2rem] md:text-2xl lg:text-[2rem] font-light drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.5)] overflow-hidden">
+          Textiles <span className="text-[#AA6C0 font-medium">&</span> Ready
+          made
+        </span>
+      </div>
     </div>
-    <span className="text-[2.8rem] lg:text-[5rem] md:text-[3.5rem] font-light drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.5)]">
-      Textiles
-    </span>
-  </div>
-  <span className="w-full animate-slide-up text-center text-balance text-[1.5rem] md:text-2xl lg:text-[2rem] font-light drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.5)] overflow-hidden">
-    Textiles <span className="text-[#AA6C0] font-medium">&</span> Ready made
-  </span>
-</div>
 
-    </div>
+
+
+
   );
 };
