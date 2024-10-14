@@ -1,5 +1,4 @@
-import { attach } from '@react-three/fiber/dist/declarations/src/core/utils';
-import { from, to } from 'gsap';
+
 import mongoose, { Schema, model, models } from 'mongoose';
 
 const HelpdeskSchema = new Schema({

@@ -64,14 +64,14 @@ const Section: React.FC<SectionProps> = ({ section, sections }) => {
   return (
     <div className="w-full h-full flex flex-col bg-[#F8F8F8] drop-shadow-lg overflow-hidden">
   <div
-    className={`flex flex-col border-b p-4 shadow-sm md:px-8 md:py-6 ${
-      section === "order-history" && "border-none "
+    className={`flex flex-col border-b p-4 shadow-sm md:px-8 md:py-6  ${
+      section === "order-history" && "border-none overflow-y-auto"
     }`}
   >
-    <div className="flex justify-between items-center">
+    <div className="flex justify-between items-center ">
       <h2
         className={`capitalize lg:text-xl font-semibold tracking-tight ${
-          section === "delete-my-account" && "text-red-500"
+          section === "delete-my-account" && "text-red-500 "
         }`}
       >
         {replaceHyphensWithSpaces(section)}
@@ -138,7 +138,7 @@ const Section: React.FC<SectionProps> = ({ section, sections }) => {
     {/* Tabs for Order History */}
     {section === "order-history" && (
       <>
-        <div className="flex mt-6 border-b overflow-x-auto">
+        <div className="flex mt-6 border-b overflow-visible">
           {tabs.map((tab) => (
             <div
               key={tab.id}
