@@ -15,7 +15,6 @@ import { useSession } from "next-auth/react";
 const Section: React.FC<SectionProps> = ({ section, sections }) => {
  
   const router = useRouter();
-  const {data:session} = useSession();
   const [orderDuration, setOrderDuration] = useState("past 3 months");
   const orderDurationOptions = ["past 3 months", "past 6 months", "2024"];
   const { fetchedOrders, fetchingOrders } = useGlobalContext();

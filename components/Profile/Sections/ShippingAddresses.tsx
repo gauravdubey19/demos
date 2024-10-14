@@ -20,7 +20,7 @@ const ShippingAddresses = () => {
 
   return (
     <>
-      <div className="mt-4 mb-4 px-6">
+      <div className="mt-4 mb-4 px-4">
         <div className='flex flex-row items-center mb-4'>
           {/* Select All */}
           <input
