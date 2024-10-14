@@ -57,7 +57,7 @@ const MyTickets = () => {
   }
 
   return (
-    <div className='mt-4 px-4'>
+    <div className='mt-4 px-4 pb-4'>
       {tickets.length === 0 ? (
         <div>No tickets found for this user.</div>
       ) : (

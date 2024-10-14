@@ -122,7 +122,7 @@ const HeroWithDrag: React.FC = () => {
               muted
               autoPlay
               loop
-              className={`object-cover scale-105 z-0`}
+              className={`object-cover h-full w-screen scale-105 z-0`}
             />
           </div>
           <div
@@ -145,9 +145,9 @@ const MiddleContainer: React.FC = () => {
       <div className="w-full flex flex-col gap-2">
         <div className="relative w-full h-[230px] flex items-end justify-center bg-white/50 text-primary p-4">
         <div className="absolute top-4 left-1/2 -translate-x-1/2">
-          <span className="text-4xl font-medium text-black">Explore</span>
+          <span className="text-4xl font-medium text-black ">Explore</span>
         </div>
-          <div className="absolute md:-left-[6.8rem] top-7 z-10 gap-1 text-[90px] font-medium drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)]">
+          <div className="absolute md:-left-[6.8rem] lg:top-7 md:top-7 lg:mb-0 md:mb-0 mb-16 z-10 gap-1 text-[70px] md:text-[90px] lg:text-[90px] font-medium drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)]">
             <span className="md:text-white">M</span>
             <span >en</span>
           </div>
@@ -161,5 +161,9 @@ const MiddleContainer: React.FC = () => {
         </span>
       </div>
     </div>
+
+
+
+
   );
 };

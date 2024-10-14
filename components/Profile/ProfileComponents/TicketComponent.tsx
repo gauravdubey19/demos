@@ -38,7 +38,7 @@ const TicketComponent: React.FC<{ ticket: Ticket }> = ({ ticket }) => {
     handleIssueTypeChange();
   }, [ticket.issueType]);
   return (
-    <div className="border p-4 mb-2 rounded shadow bg-white px-6">
+    <div className="border p-4 rounded shadow bg-white px-6">
       <h2 className="text-xl font-bold mb-2">{ticket.issueType}</h2>
       <p className={`text-sm text-gray-600 mb-1 `}>Status: {" "}
       <span className={`${ticket.status?.toLowerCase() === "open" ?"text-green":"text-red-500"} capitalize`}>{ticket.status}</span></p>

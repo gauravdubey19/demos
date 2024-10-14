@@ -211,7 +211,7 @@ const Navbar: React.FC<{ appName?: string }> = ({ appName = "LOGO" }) => {
               })} */}
 
               {/* Map 3 supercategories below with their drop down containing categories */}
-              {superCategories.slice(0, 3).map((superCategory, index) => {
+              {superCategories.slice(0, 3).map(( superCategory, index) => {
                 return (
                   <NavigationMenuItem key={index} className=" relative">
                     <NavigationMenuTrigger

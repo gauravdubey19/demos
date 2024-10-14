@@ -140,18 +140,26 @@ const MiddelContainor = () => {
   return (
     <div className="w-full flex-center flex-col gap-16 z-50">
       <div className="w-full flex flex-col gap-2">
-        <div className="relative w-full h-[230px] flex items-end justify-center bg-white text-primary p-4">
-          <div className="absolute md:-left-[6.8rem] top-7 gap-1 text-[2rem] font-medium">
-            <span className="md:text-white">Ex</span>
-            <span className="">plore Men</span>
-          </div>
-          <span className="text-6xl lg:text-7xl font-light">Textiles</span>
-        </div>
-        <span className="w-full text-center text-balance text-[2rem] md:text-2xl lg:text-[2rem] font-light overflow-hidden">
-          Textiles <span className="text-[#AA6C00] font-medium">&</span> Ready
-          made
-        </span>
-      </div>
+  {/* Top Section */}
+  <div className="relative w-full h-[150px] sm:h-[230px] flex items-end justify-center bg-white text-primary p-4">
+    {/* Absolute Positioned Text */}
+    <div className="absolute left-4 md:-left-[6.8rem] top-2 md:top-7 flex flex-col gap-1 lg:text-[2rem] md:text-[50px] text-[24px] font-medium">
+      <span className="text-primary md:text-white">Ex</span>
+      <span>plore Men</span>
+    </div>
+    
+    {/* Centered Title */}
+    <span className="text-lg md:text-5xl lg:text-6xl font-light">
+      Textiles
+    </span>
+  </div>
+
+  {/* Bottom Text */}
+  <span className="w-full text-center text-[1.25rem] sm:text-[1.75rem] md:text-2xl lg:text-[2rem] font-light overflow-hidden">
+    Textiles <span className="text-[#AA6C00] font-medium">&</span> Ready made
+  </span>
+</div>
+
       <Button
         onClick={handleScrollDown}
         className="w-fit h-fit select-none bg-white text-primary text-xl font-semibold tracking-[6px] p-2 px-3 rounded-none hover:shadow-xl ease-in-out duration-300"

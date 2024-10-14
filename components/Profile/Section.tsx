@@ -62,107 +62,113 @@ const Section: React.FC<SectionProps> = ({ section, sections }) => {
   };
 
   return (
-    <div className="w-full h-full flex flex-1 flex-col bg-[#F8F8F8] drop-shadow-lg overflow-hidden">
-      <div className={`flex flex-col border-b p-4 shadow-sm md:px-8 md:py-6 ${section ==="order-history" && "border-none overflow-y-auto"}`}>
-        <div className="flex-between">
-          <h2
-            className={`capitalize text-xl font-semibold tracking-tight ${
-              section === "delete-my-account" && "text-red-500"
-            }`}
-          >
-            {replaceHyphensWithSpaces(section)}
-          </h2>
+    <div className="w-full h-full flex flex-col bg-[#F8F8F8] drop-shadow-lg overflow-hidden">
+  <div
+    className={`flex flex-col border-b p-4 shadow-sm md:px-8 md:py-6 ${
+      section === "order-history" && "border-none "
+    }`}
+  >
+    <div className="flex justify-between items-center">
+      <h2
+        className={`capitalize lg:text-xl font-semibold tracking-tight ${
+          section === "delete-my-account" && "text-red-500"
+        }`}
+      >
+        {replaceHyphensWithSpaces(section)}
+      </h2>
 
-          {/* Shipping Addresses */}
-          {section === "shipping-addresses" && (
-            <div className="flex flex-row items-center justify-end">
-              <Button
-                className="hover:opacity-70 border border-primary mr-2"
-                onClick={() => router.push("/profile/add-a-new-address")}
-              >
-                <IoAddSharp size={22} />
-                Add Address
-              </Button>
-              <Button
-                className="bg-white border border-red-500 text-red-500 hover:bg-red-500 hover:text-white"
-                onClick={handleDeleteAddresses}
-                disabled={deletingAddresses}
-              >
-                {deletingAddresses ? "Deleting..." : "Delete All"}
-              </Button>
-            </div>
-          )}
+      {/* Shipping Addresses */}
+      {section === "shipping-addresses" && (
+  <div className="flex flex-col lg:flex-row md:flex-row items-center justify-end space-y-2 md:space-y-2 md:space-x-2 lg:space-y-2 lg:space-x-2">
+    <Button
+      className="hover:opacity-70 border border-primary w-full lg:w-auto lg:px-4 lg:py-2 md:p-2 text-xs lg:text-md md:text-sm"
+      onClick={() => router.push("/profile/add-a-new-address")}
+    >
+      <IoAddSharp size={22} />
+      Add Address
+    </Button>
+    <Button
+      className="bg-white border border-red-500 text-red-500 w-full lg:w-auto lg:px-4 lg:py-2 md:p-2 text-xs lg:text-md md:text-sm hover:bg-red-500 hover:text-white"
+      onClick={handleDeleteAddresses}
+      disabled={deletingAddresses}
+    >
+      {deletingAddresses ? "Deleting..." : "Delete All"}
+    </Button>
+  </div>
+)}
 
-          {/* Filter */}
-          {section === "order-history" && (
-            <div className="flex-center gap-3">
-              Filter:
-              <div className="relative group w-fit h-fit">
-                <Button className="h-fit text-white bg-primary capitalize py-2 px-3 rounded-md flex items-center">
-                  {orderDuration}{" "}
-                  <MdOutlineKeyboardArrowDown
-                    size={20}
-                    className="ml-1 group-hover:-rotate-180 ease-in-out duration-300"
-                  />
-                </Button>
-                <div className="hidden group-hover:block animate-slide-down absolute right-0 top-full z-40 w-full h-fit bg-white shadow-md rounded-md overflow-hidden min-w-[200px]">
-                  {orderDurationOptions.map((yr, index) => (
-                    <div
-                      key={index}
-                      onClick={() => setOrderDuration(yr)}
-                      className={`w-full cursor-pointer capitalize p-2 border-b border-b-slate-300 ${
-                        orderDuration === yr && "text-primary bg-slate-100"
-                      } hover:text-primary ease-in-out duration-300`}
-                    >
-                      {yr}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
 
-        {/* Search Bar */}
-        {section === "order-history" && (
-          <div className="w-full flex items-center justify-between gap-x-2 mt-4">
-            <SearchBar fetchedOrders={fetchedOrders} />
-          </div>
-        )}
-
-        {/* Tabs for Order History */}
-        {section === "order-history" && (
-          <>
-            <div className="flex mt-6 border-b">
-              {tabs.map((tab) => (
+      {/* Filter */}
+      {section === "order-history" && (
+        <div className="flex items-center gap-3">
+          <span>Filter:</span>
+          <div className="relative group">
+            <Button className="text-white bg-primary capitalize py-2 px-3 rounded-md flex items-center">
+              {orderDuration}{" "}
+              <MdOutlineKeyboardArrowDown
+                size={20}
+                className="ml-1 transition-transform duration-300 ease-in-out group-hover:-rotate-180"
+              />
+            </Button>
+            <div className="hidden group-hover:block animate-slide-down absolute right-0 top-full z-40 w-full bg-white shadow-md rounded-md min-w-[200px]">
+              {orderDurationOptions.map((yr, index) => (
                 <div
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id)}
-                  className={`cursor-pointer px-4 py-2 text-center ${
-                    activeTab === tab.id
-                      ? "border-b-2 border-primary text-primary"
-                      : "text-gray-500"
-                  }`}
+                  key={index}
+                  onClick={() => setOrderDuration(yr)}
+                  className={`cursor-pointer capitalize p-2 border-b border-gray-300 ${
+                    orderDuration === yr && "text-primary bg-gray-100"
+                  } hover:bg-gray-100 transition duration-300`}
                 >
-                  {tab.label}
+                  {yr}
                 </div>
               ))}
             </div>
-
-            {/* Tab Content */}
-            <div className="mt-6 overflow-y-auto">{renderTabContent(fetchedOrders)}</div>
-          </>
-        )}
-      </div>
-
-        { section !== "order-history" && (
-      <div className="w-full h-full overflow-y-scroll over-x">
-        {sections.map((sec) =>
-          section === sec.id ? <sec.sectionNode key={sec.id} /> : null
-        )}
-      </div>)
-      }
+          </div>
+        </div>
+      )}
     </div>
+
+    {/* Search Bar */}
+    {section === "order-history" && (
+      <div className="w-full flex items-center justify-between gap-x-2 mt-4">
+        <SearchBar fetchedOrders={fetchedOrders} />
+      </div>
+    )}
+
+    {/* Tabs for Order History */}
+    {section === "order-history" && (
+      <>
+        <div className="flex mt-6 border-b overflow-x-auto">
+          {tabs.map((tab) => (
+            <div
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              className={`cursor-pointer px-4 py-2 text-center ${
+                activeTab === tab.id
+                  ? "border-b-2 border-primary text-primary"
+                  : "text-gray-500"
+              }`}
+            >
+              {tab.label}
+            </div>
+          ))}
+        </div>
+
+        {/* Tab Content */}
+        <div className="mt-6 overflow-y-auto">{renderTabContent(fetchedOrders)}</div>
+      </>
+    )}
+  </div>
+
+  {section !== "order-history" && (
+    <div className="w-full h-full overflow-y-scroll">
+      {sections.map((sec) =>
+        section === sec.id ? <sec.sectionNode key={sec.id} /> : null
+      )}
+    </div>
+  )}
+</div>
+
 
   );
 };
