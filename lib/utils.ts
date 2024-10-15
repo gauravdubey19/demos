@@ -91,3 +91,13 @@ export const convertSecureUrlToPublicId = (secureUrl: string): string => {
     return "";
   }
 };
+
+export const formatSales = (num: number): number => {
+  if (num >= 1_000_000) {
+    return Math.round(num / 1_000_000); // millions (M)
+  } else if (num >= 1_000) {
+    return Math.round(num / 1_000); // thousands (K)
+  } else {
+    return num; // original number
+  }
+};

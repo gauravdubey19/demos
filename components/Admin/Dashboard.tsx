@@ -21,6 +21,7 @@ import {
 } from "chart.js";
 import ReactCountUp from "../ui/ReactCountUp";
 import Link from "next/link";
+import { formatSales } from "@/lib/utils";
 
 ChartJS.register(
   CategoryScale,
@@ -128,13 +129,13 @@ const Dashboard = () => {
     datasets: [
       {
         label: "Top Categories",
-        data: [12, 15, 10, 48, 15],
+        data: [45, 35, 25, 20, 10],
         backgroundColor: [
-          "#FFAC28",
-          "#FF6B6B",
-          "#4BC0C0",
-          "#FFD700",
-          "#6A67CE",
+          "#FFB433",
+          "#FFC766",
+          "#FFC766a5",
+          "#ffdb9c9a",
+          "#FFEDCE",
         ],
         hoverOffset: 4,
       },
@@ -232,7 +233,7 @@ const Dashboard = () => {
       },
       tooltip: {
         callbacks: {
-          label: (context: any) => `${context.label}: ${context.raw}%`, // Show percentage in tooltip
+          label: (context: any) => ` ${context.label}: ${context.raw}%`, // Show percentage in tooltip
         },
         backgroundColor: "#FFAC28", // Tooltip background color
         bodyFont: { size: 12 },
@@ -244,7 +245,7 @@ const Dashboard = () => {
 
   return (
     <>
-      <section className="w-full h-full overflow-hidden">
+      <section className="w-full h-full overflow-hidden bg-[#ffdb9c9a">
         <div className="space-y-2 p-4 md:py-6">
           <h2 className="capitalize text-2xl md:text-3xl lg:text-4xl font-semibold tracking-tight">
             Welcome Back{" "}
@@ -273,10 +274,13 @@ const Dashboard = () => {
                       </p>
                       <p style={{ color: t.color }}>
                         <ReactCountUp
-                          amt={(t.value as number) || 0}
+                          amt={
+                            sales
+                              ? formatSales(t.value as number)
+                              : (t.value as number) || 0
+                          }
                           duration={1}
                           prefix={sales ? "₹" : ""}
-                          // decimals={sales}
                           className="text-4xl md:text-3xl xl:text-4xl font-semibold"
                         >
                           {sales && "K"}

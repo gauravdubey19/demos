@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Button } from "../ui/button";
 import {
   Drawer,
   DrawerContent,
@@ -15,7 +14,7 @@ import { FaArrowDownShortWide, FaArrowUpShortWide } from "react-icons/fa6";
 import { GrClear } from "react-icons/gr";
 import Slider from "rc-slider";
 import "rc-slider/assets/index.css";
-import { FaChevronDown, FaChevronUp } from "react-icons/fa";
+import { FaChevronDown } from "react-icons/fa";
 
 interface FilterProps {
   categorySlug: string;
@@ -95,44 +94,79 @@ const Filter: React.FC<FilterProps> = ({
   }, [categoryList, categorySlug]);
 
   return (
-    <div className="z-50 w-80 text-black bg-white p-4 ml-6 pr-8 border-r border-r-gray-300 h-[calc(100vh-60px)] overflow-y-auto">
-      <div className="md:hidden z-10 fixed bottom-0 left-0 right-0 w-full bg-zinc-700 flex justify-between items-center text-white py-2 divide-x-1">
-        <div
-          onClick={toggleShort}
-          className="w-1/2 flex items-center justify-center gap-1 active:translate-y-1 transition-transform duration-300"
-        >
-          <span>Short</span>
-          {isAscending ? (
-            <FaArrowDownShortWide size={18} />
-          ) : (
-            <FaArrowUpShortWide size={18} />
-          )}
-        </div>
-        <div className="w-1/2 flex items-center justify-center gap-1 active:translate-y-1 transition-transform duration-300">
-          <span>Filter</span>
-          <LiaFilterSolid size={18} />
-        </div>
-      </div>
+    <div className="z-50 md:w-80 text-black bg-white md:p-4 md:ml-6 md:pr-8 md:border-r border-r-gray-300 h-[calc(100vh-60px)] overflow-y-auto">
+      <div className="md:hidden">
+        <Drawer>
+          <div className="md:hidden z-10 fixed bottom-0 left-0 right-0 w-full bg-zinc-700 flex justify-between items-center text-white py-2 divide-x-1">
+            <div
+              onClick={toggleShort}
+              className="w-1/2 flex-center gap-1 active:translate-y-1 transition-transform duration-300"
+            >
+              <span>Short</span>
+              {isAscending ? (
+                <FaArrowDownShortWide size={18} />
+              ) : (
+                <FaArrowUpShortWide size={18} />
+              )}
+            </div>
+            <DrawerTrigger asChild>
+              <div className="w-1/2 flex-center gap-1 active:translate-y-1 transition-transform duration-300">
+                <span>Filter</span>
+                <LiaFilterSolid size={18} />
+              </div>
+            </DrawerTrigger>
+          </div>
 
-      <div className="text-2xl md:text-3xl font-semibold mb-4">Filter</div>
-      {categoryList && (
-        <div className="space-y-4 overflow-y-auto">
-          <FilterContent
-            categorySlug={categorySlug}
-            categoryList={categoryList}
-            selectedType={selectedType}
-            setSelectedType={setSelectedType}
-            colorOptions={colorOptions}
-            selectedColor={selectedColor}
-            setSelectedColor={setSelectedColor}
-            availableSizes={availableSizes}
-            selectedSize={selectedSize}
-            setSelectedSize={setSelectedSize}
-            priceRange={priceRange}
-            setPriceRange={setPriceRange}
-          />
-        </div>
-      )}
+          <DrawerContent className="md:hidden bottom-0 z-50 w-full h-fit max-h-[70vh] md:max-h-[70vh] rounded-t-3xl text-white bg-white/40 backdrop-blur-sm border-none outline-none shadow-lg p-4">
+            <DrawerHeader>
+              <DrawerTitle className="text-2xl md:text-3xl font-semibold">
+                Filter
+              </DrawerTitle>
+            </DrawerHeader>
+            {categoryList && (
+              <>
+                <div className="md:hidden space-y-4 overflow-y-auto">
+                  <FilterContent
+                    categorySlug={categorySlug}
+                    categoryList={categoryList}
+                    selectedType={selectedType}
+                    setSelectedType={setSelectedType}
+                    colorOptions={colorOptions}
+                    selectedColor={selectedColor}
+                    setSelectedColor={setSelectedColor}
+                    availableSizes={availableSizes}
+                    selectedSize={selectedSize}
+                    setSelectedSize={setSelectedSize}
+                    priceRange={priceRange}
+                    setPriceRange={setPriceRange}
+                  />
+                </div>
+              </>
+            )}
+          </DrawerContent>
+        </Drawer>
+      </div>
+      <div className="hidden md:block">
+        <div className="text-2xl md:text-3xl font-semibold mb-4">Filter</div>
+        {categoryList && (
+          <div className="space-y-4 overflow-y-auto">
+            <FilterContent
+              categorySlug={categorySlug}
+              categoryList={categoryList}
+              selectedType={selectedType}
+              setSelectedType={setSelectedType}
+              colorOptions={colorOptions}
+              selectedColor={selectedColor}
+              setSelectedColor={setSelectedColor}
+              availableSizes={availableSizes}
+              selectedSize={selectedSize}
+              setSelectedSize={setSelectedSize}
+              priceRange={priceRange}
+              setPriceRange={setPriceRange}
+            />
+          </div>
+        )}
+      </div>
     </div>
   );
 };
@@ -238,7 +272,7 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({
         Category types
         <FaChevronDown
           className={`transition-transform duration-300 ${
-            isAccordionOpen === "category" ? "transform rotate-180" : ""
+            isAccordionOpen === "category" ? "transform -rotate-180" : ""
           }`}
         />
       </h3>
@@ -302,7 +336,7 @@ const ColorFilter: React.FC<ColorFilterProps> = ({
         Colors
         <FaChevronDown
           className={`transition-transform duration-300 ${
-            isAccordionOpen === "color" ? "transform rotate-180" : ""
+            isAccordionOpen === "color" ? "transform -rotate-180" : ""
           }`}
         />
       </h3>
@@ -311,7 +345,7 @@ const ColorFilter: React.FC<ColorFilterProps> = ({
           isAccordionOpen === "color" ? "max-h-screen" : "max-h-0"
         }`}
       >
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-2 p-0.5">
           {colorOptions.map(({ _id, title, color }) => (
             <button
               key={_id}
@@ -363,7 +397,7 @@ const SizeFilter: React.FC<SizeFilterProps> = ({
         Sizes
         <FaChevronDown
           className={`transition-transform duration-300 ${
-            isAccordionOpen === "size" ? "transform rotate-180" : ""
+            isAccordionOpen === "size" ? "transform -rotate-180" : ""
           }`}
         />
       </h3>
@@ -372,7 +406,7 @@ const SizeFilter: React.FC<SizeFilterProps> = ({
           isAccordionOpen === "size" ? "max-h-screen" : "max-h-0"
         }`}
       >
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-2 p-0.5">
           {availableSizes.map((size, index) => (
             <div key={index} className="">
               <button
@@ -399,7 +433,7 @@ const SizeFilter: React.FC<SizeFilterProps> = ({
                 setSelectedSize("");
               }}
               size={30}
-              className="w-8 h-8 cursor-pointer"
+              className="w-10 h-10 cursor-pointer"
             />
           )}
         </div>

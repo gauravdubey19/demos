@@ -9,7 +9,7 @@ import { Address, useGlobalContext } from "@/context/GlobalProvider";
 import { useRouter } from "next/navigation";
 // import { useRouter } from "next/router";
 
-const AddNewAddress = () => {
+const AddAddress = () => {
     const { data: session } = useSession();
     const {setAddresses} = useGlobalContext();
     const [addingAddress, setAddingAddress] = useState(false);
@@ -251,4 +251,4 @@ const AddNewAddress = () => {
   );
 };
 
-export default AddNewAddress;
+export default AddAddress;
