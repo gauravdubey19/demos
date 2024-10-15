@@ -1,7 +1,7 @@
 "use client";
-// 
+//
 
-// 
+//
 import React, { useState, useRef, useCallback, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
@@ -15,7 +15,6 @@ import {
 } from "@/components/ui/accordion";
 import ImageMagnify from "../ui/ImageMagnify";
 import Loader from "../ui/Loader";
-import Goback from "../ui/Goback";
 import { IoMdStar, IoIosArrowForward, IoIosArrowBack } from "react-icons/io";
 import {
   AdditionalInfoProps,
@@ -32,6 +31,7 @@ import ReactCountUp from "../ui/ReactCountUp";
 import { GoHeart, GoHeartFill } from "react-icons/go";
 import { Review, useGlobalContext } from "@/context/GlobalProvider";
 import Breadcrumbs from "../ui/Breadcrumbs";
+import ImageCarousel from "../ui/ImagesCarousel";
 
 const ProductDetail: React.FC<{ slug: string; categorySlug: string }> = ({
   slug,
@@ -115,11 +115,11 @@ const ProductDetail: React.FC<{ slug: string; categorySlug: string }> = ({
 
   return (
     <>
-      <section className="w-full h-full max-w-6xl px-4 py-10 mx-auto ">
-        <div className="w-full h-full lg:mt-[80px] xl:mt-10">
-          {/* <Goback /> */}
+      <section className="w-full h-full max-w-6xl px-4 py-10 mx-auto">
+        <div className="w-full h-full mt-8 lg:mt-[80px] xl:mt-10">
           <Breadcrumbs />
-          <div className="w-full h-full grid grid-cols-1 lg:grid-cols-[1fr_1fr] gap-6 lg:gap-12 items-start mt-2">
+          <div className="w-full h-full grid grid-cols-1 lg:grid-cols-[1fr_1fr] gap-6 lg:gap-12 items-start lg:mt-2">
+            <ImageGalleryMobile images={product.images} />
             <ImageGallery
               images={product.images}
               initialImageLink={product.image_link}
@@ -145,6 +145,27 @@ const ProductDetail: React.FC<{ slug: string; categorySlug: string }> = ({
 
 export default ProductDetail;
 
+const ImageGalleryMobile: React.FC<{ images: string[] }> = ({ images }) => {
+  return (
+    <>
+      <div className="md:hidden w-fit overflow-hidden">
+        <ImageCarousel slidesToShow={1} autoplay={false} dots>
+          {images.map((img, index) => (
+            <Image
+              key={index}
+              src={img}
+              alt={`image ${index}`}
+              width={400}
+              height={400}
+              objectFit="contain"
+              className="w-fit h-[60vh] object-contain cursor-default scale-[0.99] animate-slide-down"
+            />
+          ))}
+        </ImageCarousel>
+      </div>
+    </>
+  );
+};
 const ImageGallery: React.FC<ImageGalleryProps> = ({
   images,
   initialImageLink,
@@ -224,9 +245,7 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({
   }, [handleScroll]);
 
   return (
-    
-    
-<div className="relative z-50 select-none lg:sticky lg:top-20 w-full h-full md:h-[50vh] lg:h-[85vh] flex flex-col gap-3 md:flex-row-reverse justify-between overflow-hidden lg:overflow-visible">
+    <div className="hidden md:flex relative z-50 select-none lg:sticky lg:top-20 w-full h-full md:h-[50vh] lg:h-[85vh] flex-col gap-3 md:flex-row-reverse justify-between overflow-hidden lg:overflow-visible">
       <Image
         src={currentImage}
         alt="Product Image"
@@ -310,210 +329,7 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({
           </div>
         )}
       </div>
-    </div> 
-
-//     <div className="relative z-50 select-none lg:sticky lg:top-20 w-full h-full md:h-[50vh] lg:h-[85vh] flex flex-col gap-3 md:flex-row-reverse justify-between overflow-hidden lg:overflow-visible">
-//       <Image
-//         src={currentImage}
-//         alt="Product Image"
-//         width={800}
-//         height={800}
-//         objectFit="contain"
-//         className="lg:hidden h-[50%] w-full md:h-full md:w-[80%] object-contain overflow-hidden"
-//       />
-
-//       <ImageMagnify
-//         src={currentImage}
-//         alt="Product Image"
-//         zoomFactor={3}
-//         imageFit="cover"
-//         width="100%"
-//         height="100%"
-//         className="hidden lg:block lg:w-[80%] h-full relative"
-//       />
-
-//       <div className="relative w-full md:w-[20%] h-[50%] ">
-      
-//         {/* <div
-//           ref={thumbnailRef}
-//           className={`absolute h-full flex ${
-//             isMobileView ? "flex-row" : "flex-col"
-//           } gap-2 items-center overflow-scroll scroll-none`}
-//         >
-//           {images.map((image, index) => (
-//             <Image
-//               key={index}
-//               src={image}
-//               alt={`Preview thumbnail ${index + 1}`}
-//               onClick={() => setCurrentImage(image)}
-//               aria-label={`View Image ${index + 1}`}
-//               width={200}
-//               height={200}
-//               className={`cursor-pointer w-full h-fit ${
-//                 currentImage === image &&
-//                 "border border-primary shadow-md shadow-primary"
-//               }`}
-//             />
-//           ))}
-//         </div> */}
-
-        
-//          {/* slider */}
-// <div
-//   ref={thumbnailRef}
-//   className="relative w-full h-full flex flex-row gap-2 items-center overflow-x-scroll scroll-none"
-// >
-//   {images.map((image, index) => (
-//     <Image
-//       key={index}
-//       src={image}
-//       alt={`Preview thumbnail ${index + 1}`}
-//       onClick={() => setCurrentImage(image)}
-//       aria-label={`View Image ${index + 1}`}
-//       width={200}
-//       height={200}
-//       className={`cursor-pointer w-full h-auto ${
-//         currentImage === image ? 'border border-primary shadow-md shadow-primary' : ''
-//       }`}
-//     />
-//   ))}
-// </div>
-
-//         {showArrowLeft && (
-//           <div
-//             onClick={() => scrollThumbnails(isMobileView ? "left" : "up")}
-//             className={`absolute top-0 z-10 flex-center group cursor-pointer ${
-//               isMobileView
-//                 ? "-left-1 h-full w-10 bg-gradient-to-r from-white to-transparent"
-//                 : "w-full h-16 bg-gradient-to-b from-white to-transparent"
-//             } ease-in-out duration-200`}
-//           >
-//             <IoIosArrowBack
-//               size={30}
-//               className={`${
-//                 isMobileView
-//                   ? "group-active:scale-90 group-active:-translate-x-1"
-//                   : "rotate-90 group-hover:scale-110 group-active:-translate-y-1 group-active:-translate-x-1"
-//               } ease-in-out duration-300`}
-//             />
-//           </div>
-//         )}
-
-//         {showArrowRight && (
-//           <div
-//             onClick={() => scrollThumbnails(isMobileView ? "right" : "down")}
-//             className={`absolute bottom-0 z-10 flex-center group cursor-pointer ${
-//               isMobileView
-//                 ? "-right-1 h-full w-10 bg-gradient-to-l from-white to-transparent"
-//                 : "w-full h-16 bg-gradient-to-b from-transparent to-white"
-//             } ease-in-out duration-200`}
-//           >
-//             <IoIosArrowForward
-//               size={30}
-//               className={`${
-//                 isMobileView
-//                   ? "group-active:scale-90 group-active:translate-x-1"
-//                   : "rotate-90 group-hover:scale-110 group-active:translate-y-1"
-//               } ease-in-out duration-300`}
-//             />
-//           </div>
-//         )}
-//       </div>
-//     </div>
-
-// {/* <div className="relative z-50 select-none lg:sticky lg:top-20 w-full h-full md:h-[60vh] lg:h-[85vh] flex flex-col gap-3 justify-between overflow-hidden lg:overflow-visible">
-//   {/* Main Image for Mobile and Tablet */}
-//   <Image
-//     src={currentImage}
-//     alt="Product Image"
-//     width={800}
-//     height={800}
-//     objectFit="contain"
-//     className="lg:hidden h-[80%] w-full object-contain overflow-hidden md:h-[60%] lg:h-[80%]"
-//   />
-
-//   {/* Magnified Image for Desktop */}
-//   <ImageMagnify
-//     src={currentImage}
-//     alt="Product Image"
-//     zoomFactor={3}
-//     imageFit="cover"
-//     width="100%"
-//     height="100%"
-//     className="hidden lg:block lg:w-[80%] h-full relative"
-//   />
-
-//   <div className="relative w-full md:h-[40%] lg:h-[20%]">
-//     {/* Thumbnails Slider */}
-//     <div
-//   ref={thumbnailRef}
-//   className="relative w-full h-full flex flex-row gap-2 items-center overflow-x-auto scroll-none"
-// >
-//   {images.map((image, index) => (
-//     <Image
-//       key={index}
-//       src={image}
-//       alt={`Preview thumbnail ${index + 1}`}
-//       onClick={() => setCurrentImage(image)}
-//       aria-label={`View Image ${index + 1}`}
-//       width={200}
-//       height={200}
-//       className={`cursor-pointer h-32 w-32 object-cover rounded-md transition-transform duration-300 ease-in-out ${
-//         currentImage === image ? 'border border-primary shadow-md shadow-primary scale-105' : ''
-//       }`}
-//     />
-//   ))}
-// </div>
-
-
-//     {/* Left Arrow for Thumbnails */}
-//     {/* {showArrowLeft && (
-//       <div
-//         onClick={() => scrollThumbnails(isMobileView ? 'left' : 'up')}
-//         className={`absolute top-1/2 left-0 z-10 flex-center group cursor-pointer ${
-//           isMobileView
-//             ? '-left-2 h-full w-10 bg-gradient-to-r from-white to-transparent'
-//             : 'hidden' // Hide arrows on larger screens
-//         } ease-in-out duration-200 transform -translate-y-1/2`}
-//       >
-//         <IoIosArrowBack
-//           size={30}
-//           className={`${
-//             isMobileView
-//               ? 'group-active:scale-90 group-active:-translate-x-1'
-//               : 'rotate-90 group-hover:scale-110 group-active:-translate-y-1 group-active:-translate-x-1'
-//           } ease-in-out duration-300`}
-//         />
-//       </div>
-//     )} */}
-
-//     {/* Right Arrow for Thumbnails */}
-//     {/* {showArrowRight && (
-//       <div
-//         onClick={() => scrollThumbnails(isMobileView ? 'right' : 'down')}
-//         className={`absolute top-1/2 right-0 z-10 flex-center group cursor-pointer ${
-//           isMobileView
-//             ? '-right-2 h-full w-10 bg-gradient-to-l from-white to-transparent'
-//             : 'hidden' // Hide arrows on larger screens
-//         } ease-in-out duration-200 transform -translate-y-1/2`}
-//       >
-//         <IoIosArrowForward
-//           size={30}
-//           className={`${
-//             isMobileView
-//               ? 'group-active:scale-90 group-active:translate-x-1'
-//               : 'rotate-90 group-hover:scale-110 group-active:translate-y-1'
-//           } ease-in-out duration-300`}
-//         />
-//       </div>
-//     )} */}
-//   </div>
-// </div> */}
-
-
-
-
-
+    </div>
   );
 };
 
@@ -614,8 +430,12 @@ const Details: React.FC<DetailsProps> = ({
           )}
         </div>
         <div>
-          <h1 className="lg:text-3xl md:text-xl text-lg font-bold">{product.title}</h1>
-          <p className="text-muted-foreground lg:text-lg md:text-md text-sm mt-2">{product.description}</p>
+          <h1 className="lg:text-3xl md:text-2xl text-xl font-bold">
+            {product.title}
+          </h1>
+          <p className="text-muted-foreground lg:text-lg md:text-md text-sm mt-2">
+            {product.description}
+          </p>
         </div>
 
         {/* Pricing and Discount */}
