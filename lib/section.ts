@@ -20,7 +20,7 @@ import AllCategories from "@/components/Admin/Products/Category/AllCategories";
 import AllOufitCollection from "@/components/Admin/Products/Outfit/OutfitCollection/AllOutfit";
 import NewOutfit from "@/components/Admin/Products/Outfit/AddOutfit/NewOutFit";
 import TestimonialsAdmin from "@/components/Admin/Testimonials/TestimonialsAdmin";
-import HelpDesk from "@/components/Admin/Helpdesk/helpdesk";
+import Helpdesk from "@/components/Profile/Sections/Helpdesk";
 import MyTickets from "@/components/Profile/Sections/MyTickets";
 // icons
 import {
@@ -38,6 +38,7 @@ import { RiMoneyDollarCircleLine } from "react-icons/ri";
 import { GrMapLocation } from "react-icons/gr";
 import { AiOutlineCustomerService } from "react-icons/ai";
 import AddAddress from "@/components/Profile/Sections/AddAddresses";
+import HelpDesk from "@/components/Admin/Helpdesk/helpdesk";
 
 export const profileSections: SectionValues[] = [
   {
@@ -82,7 +83,7 @@ export const profileSections: SectionValues[] = [
     head: "Helpdesk",
     href: "/profile/helpdesk",
     icon: AiOutlineCustomerService,
-    sectionNode: HelpDesk,
+    sectionNode: Helpdesk,
   },
   {
     id: "my-tickets",
