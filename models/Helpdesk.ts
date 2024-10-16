@@ -18,6 +18,9 @@ const HelpdeskSchema = new Schema({
   subIssueType: {
     type: String, // Can contain order number, product number, or other relevant info
   },
+  orderNumber: {
+    type: String, 
+  },
   description: {
     type: String,
     required: true,
