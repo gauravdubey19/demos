@@ -211,10 +211,10 @@ const UserChart = () => {
 
   return (
     <>
-      <div className="chart-container w-full h-[50vh] bg-[#F8F8F8] drop-shadow-md rounded-lg p-4 overflow-hidden">
+      <div className="chart-container w-full lg:h-[50vh] bg-[#F8F8F8] drop-shadow-md rounded-lg p-4 overflow-hidden">
         <h2 className="text-xl font-bold">Total Customers</h2>
         <p className="text-gray-500">Year 2020</p>
-        <div className="relative w-full h-[40vh] flex-center">
+        <div className="relative w-full lg:h-[40vh] flex-center">
           <Line
             data={totalCustomersData}
             options={lineChartOptions}
@@ -262,7 +262,7 @@ const UserTable: React.FC<{ usersCollection: UserCollectionValues[] }> = ({
   return (
     <>
       <div className="w-full space-y-2 rounded-xl bg-[#F8F8F8] p-4 select-none">
-        <div className="w-full h-fit flex-between">
+        <div className="w-full h-fit flex flex-col lg:flex-row justify-between">
           <div className="w-fit font-semibold">Customer Details</div>
           <div className="w-fit h-fit flex-between gap-2">
             <div className="w-fit flex-center gap-1 cursor-pointer bg-white border border-primary py-1 px-2">
@@ -333,156 +333,3 @@ const UserTable: React.FC<{ usersCollection: UserCollectionValues[] }> = ({
     </>
   );
 };
-
-// const users = [
-//   {
-//     _id: 1,
-//     role: "user",
-//     email: "idkmyemail@gmail.com",
-//     phone_number: "+91 01234 56789",
-//     profile: "https://via.placeholder.com/50",
-//     firstName: "Gojo",
-//     lastName: "Satoru",
-//     createdAt: "01-03-2024",
-//   },
-//   {
-//     _id: 2,
-//     role: "user",
-//     profile: "https://via.placeholder.com/50",
-//     firstName: "Gojo",
-//     lastName: "Chandra Satoru",
-//     createdAt: "01-03-2024",
-//     email: "idkmyemail@gmail.com",
-//     phone_number: "+91 01234 56789",
-//   },
-//   {
-//     _id: 3,
-//     role: "user",
-//     profile: "https://via.placeholder.com/50",
-//     firstName: "LongggFirst",
-//     lastName: "Satoru",
-//     createdAt: "01-03-2024",
-//     email: "longemailll@gmail.com",
-//     phone_number: "+91 01234 56789",
-//   },
-//   {
-//     _id: 4,
-//     role: "user",
-//     profile: "https://via.placeholder.com/50",
-//     firstName: "Gojo",
-//     lastName: "Satoru",
-//     createdAt: "01-03-2024",
-//     email: "idkmyemail@gmail.com",
-//     phone_number: "+91 01234 56789",
-//   },
-//   {
-//     _id: 5,
-//     role: "user",
-//     profile: "https://via.placeholder.com/50",
-//     firstName: "Gojo",
-//     lastName: "Satoru",
-//     createdAt: "01-03-2024",
-//     email: "idkmyemail@gmail.com",
-//     phone_number: "+91 01234 56789",
-//   },
-//   {
-//     _id: 6,
-//     role: "user",
-//     profile: "https://via.placeholder.com/50",
-//     firstName: "Gojo",
-//     lastName: "Satoru",
-//     createdAt: "01-03-2024",
-//     email: "idkmyemail@gmail.com",
-//     phone_number: "+91 01234 56789",
-//   },
-//   {
-//     _id: 7,
-//     role: "user",
-//     profile: "https://via.placeholder.com/50",
-//     firstName: "Gojo",
-//     lastName: "Satoru",
-//     createdAt: "01-03-2024",
-//     email: "idkmyemail@gmail.com",
-//     phone_number: "+91 01234 56789",
-//   },
-//   {
-//     _id: 8,
-//     role: "user",
-//     profile: "https://via.placeholder.com/50",
-//     firstName: "Gojo",
-//     lastName: "Satoru",
-//     createdAt: "01-03-2024",
-//     email: "idkmyemail@gmail.com",
-//     phone_number: "+91 01234 56789",
-//   },
-//   {
-//     _id: 9,
-//     role: "user",
-//     profile: "https://via.placeholder.com/50",
-//     firstName: "Gojo",
-//     lastName: "Satoru",
-//     createdAt: "01-03-2024",
-//     email: "idkmyemail@gmail.com",
-//     phone_number: "+91 01234 56789",
-//   },
-//   {
-//     _id: 10,
-//     role: "user",
-//     profile: "https://via.placeholder.com/50",
-//     firstName: "Gojo",
-//     lastName: "Satoru",
-//     createdAt: "01-03-2024",
-//     email: "idkmyemail@gmail.com",
-//     phone_number: "+91 01234 56789",
-//   },
-//   {
-//     _id: 11,
-//     role: "user",
-//     profile: "https://via.placeholder.com/50",
-//     firstName: "Gojo",
-//     lastName: "Satoru",
-//     createdAt: "01-03-2024",
-//     email: "idkmyemail@gmail.com",
-//     phone_number: "+91 01234 56789",
-//   },
-//   {
-//     _id: 12,
-//     role: "user",
-//     profile: "https://via.placeholder.com/50",
-//     firstName: "Gojo",
-//     lastName: "Satoru",
-//     createdAt: "01-03-2024",
-//     email: "idkmyemail@gmail.com",
-//     phone_number: "+91 01234 56789",
-//   },
-//   {
-//     _id: 13,
-//     role: "user",
-//     profile: "https://via.placeholder.com/50",
-//     firstName: "Gojo",
-//     lastName: "Satoru",
-//     createdAt: "01-03-2024",
-//     email: "idkmyemail@gmail.com",
-//     phone_number: "+91 01234 56789",
-//   },
-//   {
-//     _id: 14,
-//     role: "user",
-//     profile: "https://via.placeholder.com/50",
-//     firstName: "Gojo",
-//     lastName: "Satoru",
-//     createdAt: "01-03-2024",
-//     email: "idkmyemail@gmail.com",
-//     phone_number: "+91 01234 56789",
-//   },
-//   {
-//     _id: 15,
-//     role: "user",
-//     profile: "https://via.placeholder.com/50",
-//     firstName: "Gojo",
-//     lastName: "Satoru",
-//     createdAt: "01-03-2024",
-//     email: "idkmyemail@gmail.com",
-//     phone_number: "+91 01234 56789",
-//   },
-// ];

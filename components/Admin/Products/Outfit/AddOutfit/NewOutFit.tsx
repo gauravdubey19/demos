@@ -288,11 +288,11 @@ const NewOutfit = () => {
   return (
     <>
       <section className="w-full h-full overflow-hidden">
-        <header className="w-full h-fit flex justify-between p-4 md:py-6">
+        <header className="w-full h-fit flex flex-col lg:flex-row justify-between gap-2 p-4 md:py-6">
           <h2 className="capitalize text-2xl md:text-3xl lg:text-4xl font-semibold tracking-tight">
             Add New Outfit Collection
           </h2>
-          <div className="w-fit flex-center gap-2 md:gap-4">
+          <div className="w-full lg:w-fit flex items-center justify-end gap-2 md:gap-4">
             <Button
               type="button"
               onClick={() => router.back()}

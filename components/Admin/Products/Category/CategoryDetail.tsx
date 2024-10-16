@@ -52,11 +52,11 @@ const CategoryDetail: React.FC<{ categoryId: string }> = ({ categoryId }) => {
   return (
     <>
       <section className="w-full h-full overflow-hidden">
-        <header className="w-full h-fit flex justify-between p-4 md:py-6">
+        <header className="w-full h-fit flex flex-col lg:flex-row justify-between p-4 md:py-6">
           <h2 className="capitalize text-2xl md:text-3xl lg:text-4xl font-semibold tracking-tight">
             Category Details
           </h2>
-          <div className="w-fit flex-center gap-2 md:gap-4">
+          <div className="w-full lg:w-fit flex items-center justify-end gap-2 md:gap-4">
             <Button
               onClick={() => setIsCategoryEditOpen(true)}
               className="bg-transparent border border-primary text-primary"
@@ -304,8 +304,8 @@ const CategoryInfo: React.FC<{ category: CategoryCollectionValues }> = ({
   category,
 }) => {
   return (
-    <div className="w-full h-[55vh] flex gap-2 bg-gray-100 rounded-xl p-4">
-      <div className="pfp w-[30%] h-full flex-center border-r">
+    <div className="w-full h-[55vh] flex-center flex-col lg:flex-row gap-2 bg-gray-100 rounded-xl p-4">
+      <div className="pfp w-[60%] lg:w-[30%] h-full flex-center lg:border-r">
         <Image
           src={category?.image ?? "/logo.png"}
           alt="Profile Picture"
@@ -314,7 +314,7 @@ const CategoryInfo: React.FC<{ category: CategoryCollectionValues }> = ({
           className="w-full h-full object-contain"
         />
       </div>
-      <div className="w-[70%] h-full overflow-hidden">
+      <div className="w-full lg:w-[70%] h-full overflow-hidden">
         <h2 className="text-md md:text-lg lg:text-xl font-semibold">
           <Link
             href={`/products/${category?.slug}`}
@@ -413,24 +413,24 @@ export const CategoryTypesTable: React.FC<CategoryTypesTableProps> = ({
   return (
     <>
       <div className="w-full space-y-2 rounded-xl bg-[#F8F8F8] p-4 select-none">
-        <div className="w-full h-fit flex-between">
+        <div className="w-full h-fit flex justify-between flex-col lg:flex-row gap-2">
           <div className="w-fit font-semibold">Category types</div>
           <div className="w-fit h-fit flex-between gap-2">
             {/* Search Bar */}
-            <div className="w-fit flex-center gap-1 cursor-pointer bg-white border border-primary py-1 px-2">
+            <div className="w-52 lg:w-fit flex-center gap-1 cursor-pointer bg-white border border-primary py-1 px-2">
               <IoSearchOutline size={20} className="text-primary" />
               <input
                 type="text"
                 placeholder="Search by Type title"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="placeholder:text-primary bg-none border-none outline-none"
+                className="w-fit placeholder:text-primary bg-none border-none outline-none"
               />
             </div>
             {/* add type */}
             <Button
               onClick={() => setIsAddOpen(true)}
-              className="h-fit text-white rounded-none"
+              className="h-fit rounded-none"
             >
               <BsPlus size={20} className="mr-1" />
               Add Type

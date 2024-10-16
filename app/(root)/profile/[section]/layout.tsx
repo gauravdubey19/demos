@@ -14,9 +14,9 @@ export default async function ProfileLayout({
   children,
 }: ProfileAdminParams) {
   const session = await getServerSession();
-  // if (!session) {
-  //   redirect("/");
-  // }
+  if (!session) {
+    redirect("/");
+  }
 
   return (
     <>

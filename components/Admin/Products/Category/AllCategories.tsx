@@ -26,9 +26,10 @@ const AllCategories = () => {
       try {
         const res = await fetch(`/api/products/read/get-categories`, {
           method: "GET",
-          headers: { "Content-Type": "application/json",
+          headers: {
+            "Content-Type": "application/json",
             "Cache-Control": "no-store", // Add Cache-Control header
-           },
+          },
         });
 
         if (!res.ok) {
@@ -74,11 +75,11 @@ const AllCategories = () => {
         <h2 className="capitalize text-2xl md:text-3xl lg:text-4xl font-semibold tracking-tight">
           All Categories
         </h2>
-        <div className="w-full h-fit flex-between gap-2">
+        <div className="w-full h-fit flex lg:items-center justify-between flex-col lg:flex-row gap-2">
           <h2 className="capitalize text-md md:text-lg lg:text-xl">
             Total Categories: <ReactCountUp amt={filteredCategories.length} />
           </h2>
-          <div className="w-fit h-fit flex-center gap-2 md:gap-4">
+          <div className="w-fit h-fit flex justify-end flex-col lg:flex-row gap-2 md:gap-4">
             <div className="w-fit flex-center gap-1 cursor-pointer border border-primary py-1 px-2">
               <IoSearchOutline size={20} className="text-primary" />
               <input
