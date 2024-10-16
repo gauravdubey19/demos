@@ -13,7 +13,6 @@ import {
   AccordionTrigger,
 } from "../ui/accordion";
 import { useGlobalContext } from "@/context/GlobalProvider";
-import { FaUserCircle } from "react-icons/fa";
 
 const Sidebar: React.FC<SectionProps> = ({ section, sections }) => {
   // console.log(section);
@@ -22,7 +21,7 @@ const Sidebar: React.FC<SectionProps> = ({ section, sections }) => {
   const pathname = usePathname();
   return (
     <>
-      <aside className="hidden h-full w-fit md:w-[32%] lg:w-[25%] xl:w-[20%] select-none flex-col border-r bg-[#F8F8F8] p-4 md:flex drop-shadow-lg overflow-hidden">
+      <aside className="hidden h-full w-fit md:w-[32%] lg:w-[25%] xl:w-[20%] select-none flex-col border-r bg-[#F8F8F8] p-2 md:flex drop-shadow-lg overflow-hidden">
         {pathname.includes("/admin") ? (
           <Link
             href="/"
@@ -43,7 +42,7 @@ const Sidebar: React.FC<SectionProps> = ({ section, sections }) => {
           userData?.firstName &&
           userData?.email && (
             <div className="flex-center gap-2 bg-[#ffb43327] text-sm text-primary text-justify p-2">
-              <div className="w-[17%] h-10 rounded-full overflow-hidden">
+              <div className="w-10 h-10 rounded-full overflow-hidden">
                 <Image
                   src={userData?.profile || "/profile.png"}
                   alt="profile"
@@ -52,7 +51,7 @@ const Sidebar: React.FC<SectionProps> = ({ section, sections }) => {
                   className="w-full h-full"
                 />
               </div>
-              <div className="w-[80%] space-y-1 overflow-hidden">
+              <div className="w-[75%] space-y-1 overflow-hidden">
                 <h4 title={userData?.firstName} className="font-medium">
                   {userData?.firstName}
                 </h4>
@@ -73,7 +72,7 @@ const Sidebar: React.FC<SectionProps> = ({ section, sections }) => {
             defaultValue={
               section === "queries" || section === "faqs" ? "item-5" : "item-2"
             }
-            className="w-full px-2"
+            className="w-full px-0"
           >
             {sections.map((sec, index) =>
               sec.sidebarHidden ? null : (

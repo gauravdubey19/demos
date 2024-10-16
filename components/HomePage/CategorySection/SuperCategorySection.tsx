@@ -1,4 +1,3 @@
-
 "use client";
 import React, { useEffect, useState, useRef } from "react";
 import CategoryCarousel from "@/components/ui/category/CategoryCarousel";
@@ -14,7 +13,9 @@ interface SuperCategorySectionProps {
   categories: any[];
 }
 
-const SuperCategorySection: React.FC<SuperCategorySectionProps> = ({ categories: propCategories }) => {
+const SuperCategorySection: React.FC<SuperCategorySectionProps> = ({
+  categories: propCategories,
+}) => {
   const [activeSlide, setActiveSlide] = useState<number>(0);
   const [categories, setCategories] = useState<CategoryValues[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -35,8 +36,9 @@ const SuperCategorySection: React.FC<SuperCategorySectionProps> = ({ categories:
         const data = await res.json();
         if (data.categories) {
           // Filter categories based on propCategories
-          const filteredCategories = data.categories.filter((category: CategoryValues) =>
-            propCategories.some(propCat => propCat.title === category.title)
+          const filteredCategories = data.categories.filter(
+            (category: CategoryValues) =>
+              propCategories.some((propCat) => propCat.title === category.title)
           );
           setCategories(filteredCategories);
           setLoading(false);
@@ -114,9 +116,9 @@ const SuperCategorySection: React.FC<SuperCategorySectionProps> = ({ categories:
   };
 
   return (
-    <section className="lg:min-h-screen w-full flex-center flex-col p-4 overflow-hidden">
+    <section className="h-fit max-h-[calc(100vh-60px)] w-full flex-center flex-col p-4 overflow-hidden">
       <div className="w-full max-w-3xl mb-5">
-        <div className="h-[2px] bg-black w-full mb-5" />
+        <div className="h-[2px] bg-black w-full mt-8 mb-5" />
         <h1 className="md:text-4xl text-2xl font-bold text-center">
           Choose Your Style
         </h1>
@@ -131,10 +133,6 @@ const SuperCategorySection: React.FC<SuperCategorySectionProps> = ({ categories:
 };
 
 export default SuperCategorySection;
-
-
-
-
 
 // "use client";
 
@@ -264,13 +262,3 @@ export default SuperCategorySection;
 // };
 
 // export default SuperCategorySection;
-
-
-
-
-
-
-
-
-
-

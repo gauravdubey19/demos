@@ -12,7 +12,7 @@ import { toast } from "@/hooks/use-toast";
 
 const Footer: React.FC<{ appName?: string }> = ({ appName = "LOGO" }) => {
   const pathname = usePathname();
-  if (pathname.includes("/admin")) return;
+  if (pathname.includes("/admin") || pathname.includes("/profile")) return;
   return (
     <footer
       className={`relative z-40 bg-background w-full text-foreground py-12 border-t border-border space-y-4 sm:space-y-6 md:space-y-8 lg:space-y-10 overflow-hidden`}

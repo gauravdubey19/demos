@@ -1,10 +1,9 @@
-
-
 "use client";
 import { useEffect, useState } from "react";
 import { slides } from "@/lib/sampleSliderData";
 import Image from "next/image";
 import { StaticImageData } from "next/image";
+import { Button } from "../ui/button";
 
 // Define the structure of a single slide
 interface Slide {
@@ -51,14 +50,17 @@ const Slider = ({ category }: SliderProps) => {
   };
 
   return (
-    <div className="relative w-full h-[calc(100vh-60px)] overflow-hidden mt-11 mb-20">
+    <div className="relative w-full h-[calc(100vh-60px)] mt-[60px] overflow-hidden">
       {/* Carousel images */}
       <div className="absolute inset-0 flex">
         {typedSlides[category].map((slide, idx) => (
           <div
             key={idx}
-            className={`absolute w-full h-full transition-all ease-linear ${currentSlide === idx ? "opacity-100 scale-110" : "opacity-0 scale-100"
-              }`}
+            className={`absolute w-full h-full transition-all ease-linear ${
+              currentSlide === idx
+                ? "opacity-100 scale-110"
+                : "opacity-0 scale-100"
+            }`}
           >
             <Image
               src={slide.src}
@@ -69,24 +71,27 @@ const Slider = ({ category }: SliderProps) => {
         ))}
       </div>
 
-      <div className="absolute bottom-10 left-10 z-20 text-white space-y-4">
+      <div className="absolute bottom-10 left-0 right-0 w-full z-20 text-white space-y-4 p-2 md:p-4 lg:px-6 xl:px-8">
         <h2 className="text-5xl font-bold tracking-wide">
           {typedSlides[category][currentSlide].heading}
         </h2>
-        <p className="text-xl">{typedSlides[category][currentSlide].subheading}</p>
-        <button className="px-6 py-3 bg-white text-black rounded-lg hover:bg-gray-200 transition-all duration-1000">
+        <p className="text-xl">
+          {typedSlides[category][currentSlide].subheading}
+        </p>
+        <Button variant="secondary" className="hover:bg-black hover:text-white">
           {typedSlides[category][currentSlide].buttonText}
-        </button>
+        </Button>
       </div>
 
       {/* Scroll Indicator */}
-      <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 z-20 flex space-x-2">
+      <div className="absolute bottom-5 left-1/2 transform -translate-x-1/2 z-20 flex space-x-2">
         {typedSlides[category].map((_, idx) => (
           <span
             key={idx}
             onClick={() => handleSlideChange(idx)}
-            className={`cursor-pointer w-6 h-1 bg-white rounded-full transition-all duration-500 ease-in-out ${currentSlide === idx ? "opacity-100" : "opacity-50"
-              }`}
+            className={`cursor-pointer w-6 h-1 bg-white rounded-full transition-all duration-500 ease-in-out ${
+              currentSlide === idx ? "opacity-100" : "opacity-50"
+            }`}
           ></span>
         ))}
       </div>

@@ -148,7 +148,7 @@ export default ProductDetail;
 const ImageGalleryMobile: React.FC<{ images: string[] }> = ({ images }) => {
   return (
     <>
-      <div className="md:hidden  h-[65vh] overflow-hidden">
+      <div className="md:hidden h-[65vh] overflow-hidden">
         <ImageCarousel slidesToShow={1} autoplay={false} dots>
           {images.map((img, index) => (
             <Image
