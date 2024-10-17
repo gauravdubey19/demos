@@ -1,21 +1,46 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { faqData } from "@/lib/FaqSampleData";
 import { ChevronDown, ChevronUp } from "lucide-react";
 
+interface FAQItem {
+  question: string;
+  answer: string;
+}
+
+interface FAQSection {
+  headline: string;
+  questions: FAQItem[];
+}
+
 const FAQ = () => {
-  const [openAccordion, setOpenAccordion] = useState(null);
-  const [selectedQuestion, setSelectedQuestion] = useState(null);
-  const [selectedAnswer, setSelectedAnswer] = useState(null);
+  const [faqData, setFaqData] = useState<FAQSection[]>([]);
+  const [openAccordion, setOpenAccordion] = useState<string | null>(null);
+  const [selectedQuestion, setSelectedQuestion] = useState<string | null>(null);
+  const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
-    if (faqData.length > 0 && faqData[0].questions.length > 0) {
-      const defaultQuestion = faqData[0].questions[0];
-      setSelectedQuestion(defaultQuestion.question);
-      setSelectedAnswer(defaultQuestion.answer);
-    }
+    const fetchFAQs = async () => {
+      try {
+        const response = await fetch('/api/faq/get');
+        if (!response.ok) {
+          throw new Error('Failed to fetch FAQs');
+        }
+        const data = await response.json();
+        setFaqData(data);
+
+        if (data.length > 0 && data[0].questions.length > 0) {
+          const defaultQuestion = data[0].questions[0];
+          setSelectedQuestion(defaultQuestion.question);
+          setSelectedAnswer(defaultQuestion.answer);
+        }
+      } catch (error) {
+        console.error('Error fetching FAQs:', error);
+      }
+    };
+
+    fetchFAQs();
 
     const handleResize = () => {
       setIsMobile(window.innerWidth < 768);
@@ -26,11 +51,11 @@ const FAQ = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const toggleAccordion = (id: any) => {
+  const toggleAccordion = (id: string) => {
     setOpenAccordion(openAccordion === id ? null : id);
   };
 
-  const handleQuestionClick = (question: any, answer: any) => {
+  const handleQuestionClick = (question: string, answer: string) => {
     setSelectedQuestion(question);
     setSelectedAnswer(answer);
     if (isMobile) {
@@ -61,14 +86,13 @@ const FAQ = () => {
                 onClick={() => toggleAccordion(accordionId)}
               >
                 <ul className="list-disc pl-6 md:pl-10">
-                  {section.questions.map((faq: any, faqIndex: any) => (
+                  {section.questions.map((faq, faqIndex) => (
                     <li
                       key={`faq-${faqIndex}`}
-                      className={`text-sm md:text-base text-black mb-2 cursor-pointer flex flex-row gap-2 transition-colors duration-300 ease-in-out ${
-                        selectedQuestion === faq.question
+                      className={`text-sm md:text-base text-black mb-2 cursor-pointer flex flex-row gap-2 transition-colors duration-300 ease-in-out ${selectedQuestion === faq.question
                           ? "text-[#FFB433]"
                           : ""
-                      }`}
+                        }`}
                       onClick={() =>
                         handleQuestionClick(faq.question, faq.answer)
                       }
@@ -98,7 +122,7 @@ const FAQ = () => {
   );
 };
 
-interface AccordionI {
+interface AccordionProps {
   id: string;
   title: string;
   children: React.ReactNode;
@@ -106,15 +130,14 @@ interface AccordionI {
   onClick: () => void;
 }
 
-const Accordion = ({ id, title, children, isOpen, onClick }: AccordionI) => {
+const Accordion = ({ id, title, children, isOpen, onClick }: AccordionProps) => {
   return (
     <div className="mb-2">
       <h2 id={`${id}-heading`}>
         <button
           type="button"
-          className={`flex items-center w-full py-3 md:py-5 font-medium text-sm md:text-base text-black ${
-            !isOpen ? "border-b border-gray-200 dark:border-gray-700" : null
-          } dark:text-gray-400 gap-2 md:gap-3 transition-all duration-300 ease-in-out`}
+          className={`flex items-center w-full py-3 md:py-5 font-medium text-sm md:text-base text-black ${!isOpen ? "border-b border-gray-200 dark:border-gray-700" : null
+            } dark:text-gray-400 gap-2 md:gap-3 transition-all duration-300 ease-in-out`}
           onClick={onClick}
           aria-expanded={isOpen}
           aria-controls={`${id}-body`}
@@ -129,9 +152,8 @@ const Accordion = ({ id, title, children, isOpen, onClick }: AccordionI) => {
       </h2>
       <div
         id={`${id}-body`}
-        className={`overflow-hidden transition-all duration-300 ease-in-out ${
-          isOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
-        }`}
+        className={`overflow-hidden transition-all duration-300 ease-in-out ${isOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
+          }`}
       >
         <div className="py-3 md:py-5 border-b border-gray-200 dark:border-gray-700">
           {children}

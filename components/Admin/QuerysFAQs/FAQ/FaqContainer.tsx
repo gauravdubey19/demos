@@ -5,6 +5,8 @@ import SearchForm from './SearchBar'
 import FAQ from "./FAccordian";
 import FaqModal from './FaqModal';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Button } from '@/components/ui/button';
+import { Trash2 } from 'lucide-react';
 
 
 const FaqContainer = () => {
@@ -75,7 +77,8 @@ const FaqContainer = () => {
         </div>
       ) : (
         // Render actual data when loaded
-        <FAQ faqData={faqData} setFaqData={setFaqData} />
+          <FAQ faqData={faqData} setFaqData={setFaqData} />
+         
       )}
     </div>
   )
