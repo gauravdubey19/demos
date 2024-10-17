@@ -198,17 +198,17 @@ export const adminSections: SectionValues[] = [
     sectionNode: TestimonialsAdmin,
   },
   {
-    id: "my-account",
-    head: "My Account",
-    href: "/admin/my-account",
-    icon: AiOutlineSetting,
-    sectionNode: MyAccount,
-  },
-  {
     id: "helpdesk",
     head: "Helpdesk",
     href: "/admin/helpdesk",
     icon: AiOutlineCustomerService,
     sectionNode: HelpDesk,
+  },
+  {
+    id: "my-account",
+    head: "My Account",
+    href: "/admin/my-account",
+    icon: AiOutlineSetting,
+    sectionNode: MyAccount,
   },
 ];

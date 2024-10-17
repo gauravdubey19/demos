@@ -50,10 +50,10 @@ const TestimonialsAdmin = () => {
   };
 
   // console.log(convertSecureUrlToPublicId("https://res.cloudinary.com/dlpj5pmvp/video/upload/v1728304108/zkwxwpatesr0lldupmgy.mp4"), "\n zkwxwpatesr0lldupmgy");
-  
+
   return (
     <>
-      <section className="w-full h-full overflow-hidden select-none">
+      <section className="w-full h-full select-none overflow-hidden">
         <header className="w-full h-fit space-y-2 p-4 md:py-6">
           <h2 className="capitalize text-2xl md:text-3xl lg:text-4xl font-semibold tracking-tight">
             Testimonials
@@ -67,7 +67,7 @@ const TestimonialsAdmin = () => {
           </div>
         </header>
         <div className="w-full h-[calc(100vh-130px)] space-y-2 py-4 px-3 overflow-hidden">
-          <div className="relative w-full h-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 px-1 overflow-auto">
+          <div className="relative w-full h-full grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-4 px-1 overflow-auto">
             {loading
               ? [1, 2, 3, 4, 5, 6, 7, 8].map((_, index) => (
                   <div key={index} className="pt-4">

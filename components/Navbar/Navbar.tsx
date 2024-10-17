@@ -153,9 +153,7 @@ const Navbar: React.FC<{ appName?: string }> = ({ appName = "LOGO" }) => {
       }
     }
   }, [isVisible, pathname]);
-  // useEffect(() => {
-  //   console.log("Status: ",status);
-  // }, [status]);
+
   return (
     <div
       ref={navbarRef}
@@ -188,41 +186,29 @@ const Navbar: React.FC<{ appName?: string }> = ({ appName = "LOGO" }) => {
                   All Categories
                 </NavigationMenuTrigger>
                 <NavigationMenuContent className="w-fit space-y-2 p-2 animate-slide-down">
-                  <CategoriesList categories={categories} />
+                  <CategoriesList
+                    categories={categories}
+                    superCategories={[]}
+                  />
                 </NavigationMenuContent>
               </NavigationMenuItem>
 
-              {/* {categories.slice(0, 3).map((link, index) => {
-                const isActive = pathname === `/products/${link.slug}`;
-                return (
-                  <NavigationMenuItem key={index}>
-                    <Link
-                      href={`/products/${link.slug}`}
-                      className={`capitalize cursor-pointer ${
-                        isActive
-                          ? "text-primary font-semibold"
-                          : "w-fit hover-underline-lr active:translate-y-0.5"
-                      } ease-in-out duration-200`}
-                    >
-                      {link.title.split(" ")[0]}
-                    </Link>
-                  </NavigationMenuItem>
-                );
-              })} */}
-
               {/* Map 3 supercategories below with their drop down containing categories */}
-              {superCategories.slice(0, 3).map(( superCategory, index) => {
+              {superCategories.slice(0, 3).map((superCategory, index) => {
                 return (
                   <NavigationMenuItem key={index} className=" relative">
                     <NavigationMenuTrigger
                       className={`w-full cursor-pointer bg-transparent border-none outline-none p-1 ${
-                        pathname === `/products/superCategory/${superCategory.slug}` &&
+                        pathname ===
+                          `/products/superCategory/${superCategory.slug}` &&
                         "text-primary font-semibold"
                       }`}
                       onMouseEnter={() => setCurrentHover(superCategory.slug)}
                       onMouseLeave={() => setCurrentHover(null)}
                       onClick={() =>
-                        router.push(`/products/superCategory/${superCategory.slug}`)
+                        router.push(
+                          `/products/superCategory/${superCategory.slug}`
+                        )
                       }
                     >
                       {superCategory.title}
@@ -266,7 +252,7 @@ const Navbar: React.FC<{ appName?: string }> = ({ appName = "LOGO" }) => {
           </NavigationMenu>
         </div>
       </div>
-      <MobileNav categories={categories} />
+      <MobileNav categories={categories} superCategories={superCategories} />
 
       <div className="hidden md:flex-center md:gap-4 lg:gap-6 relative">
         {/* search */}
@@ -411,6 +397,7 @@ export default Navbar;
 
 export interface CategoriesListProps {
   categories: CategoryValues[];
+  superCategories: any[];
 }
 
 const CategoriesList: React.FC<CategoriesListProps> = ({ categories }) => {

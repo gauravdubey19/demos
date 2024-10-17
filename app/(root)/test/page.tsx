@@ -187,7 +187,8 @@ export default function TestPage() {
           creatingCategory ? "Creating Categories..." : "Create Super Categories"
         }</Button> */}
         {/* <UploadFilesComoponent /> */}
-        <ProductCategorySection />
+        {/* <ProductCategorySection /> */}
+        test
       </div>
       {/* <PaymentGateway isOpen={open} handleClose={() => setOpen(!open)} /> */}
     </>

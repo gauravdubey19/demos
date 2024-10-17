@@ -44,16 +44,19 @@ const AllOufitCollection = () => {
 
   const deleteOutfit = async (id: string) => {
     try {
-      const res = await fetch(`/api/products/delete/detete-outfit-collection-by-id?id=${id}`, {
-        method: "DELETE",
-      });
+      const res = await fetch(
+        `/api/products/delete/detete-outfit-collection-by-id?id=${id}`,
+        {
+          method: "DELETE",
+        }
+      );
 
       if (!res.ok) {
         throw new Error("Failed to delete outfit");
       }
 
       // Update the state to remove the deleted outfit
-      setOutfits(outfits.filter(outfit => outfit._id !== id));
+      setOutfits(outfits.filter((outfit) => outfit._id !== id));
     } catch (error) {
       console.error("Error deleting outfit:", error);
     }
@@ -84,7 +87,7 @@ const AllOufitCollection = () => {
 
   return (
     <>
-      <section className="w-full h-full overflow-hidden select-none">
+      <section className="w-full h-full select-none overflow-hidden">
         <header className="w-full h-fit space-y-2 p-4 md:py-6">
           <h2 className="capitalize text-2xl md:text-3xl lg:text-4xl font-semibold tracking-tight">
             All Outfit Collections
@@ -126,7 +129,11 @@ const AllOufitCollection = () => {
         </header>
         <div className="w-full h-[75vh] lg:h-[calc(100vh-130px)] grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 p-4 overflow-y-auto">
           {filteredOutfits.map((outfit) => (
-            <CollectionCard key={outfit._id} outfit={outfit} onDelete={deleteOutfit} />
+            <CollectionCard
+              key={outfit._id}
+              outfit={outfit}
+              onDelete={deleteOutfit}
+            />
           ))}
         </div>
       </section>

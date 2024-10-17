@@ -148,7 +148,7 @@ export default ProductDetail;
 const ImageGalleryMobile: React.FC<{ images: string[] }> = ({ images }) => {
   return (
     <>
-      <div className="md:hidden  h-[65vh] overflow-hidden">
+      <div className="md:hidden h-[65vh] overflow-hidden">
         <ImageCarousel slidesToShow={1} autoplay={false} dots>
           {images.map((img, index) => (
             <Image
@@ -262,15 +262,15 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({
         imageFit="cover"
         width="100%"
         height="100%"
-        className="hidden lg:block lg:w-[80%] h-full relative"
+        className="hidden lg:block lg:w-[80%] h-full relative "
       />
 
-      <div className="relative w-full md:w-[20%] h-[20%] md:h-full">
+      <div className="relative w-full h-full md:w-[20%] lg:h-[50%] md:h-full flex flex-col">
         <div
           ref={thumbnailRef}
           className={`absolute h-full flex ${
             isMobileView ? "flex-row" : "flex-col"
-          } gap-2 items-center overflow-scroll scroll-none`}
+          } gap-2 items-center overflow-scroll scroll-none `}
         >
           {images.map((image, index) => (
             <Image
@@ -281,9 +281,9 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({
               aria-label={`View Image ${index + 1}`}
               width={200}
               height={200}
-              className={`cursor-pointer w-full h-fit ${
+              className={`cursor-pointer lg:w-full lg:h-fit md:w-full md:h-fit w-40 h-40 ${
                 currentImage === image &&
-                "border border-primary shadow-md shadow-primary"
+                "border border-primary shadow-md shadow-primary overflow-hidden"
               }`}
             />
           ))}

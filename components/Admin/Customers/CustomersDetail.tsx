@@ -134,8 +134,8 @@ const CustomersDetail: React.FC<{ userId: string }> = ({ userId }) => {
 
 const UserDetail: React.FC<{ user: UserValues }> = ({ user }) => {
   return (
-    <div className="w-full h-[55vh] flex gap-2 bg-gray-100 rounded-xl p-4">
-      <div className="pfp w-[30%] h-full flex-center flex-col gap-4 md:gap-6 border-r">
+    <div className="w-full h-[55vh] flex-center flex-col lg:flex-row gap-2 bg-gray-100 rounded-xl p-4">
+      <div className="pfp w-[70%] lg:w-[30%] h-full flex-center flex-col gap-4 md:gap-6 lg:border-r">
         <div className="flex-center flex-col space-y-2">
           <div className="w-32 h-32 rounded-full overflow-hidden">
             <Image
@@ -153,7 +153,7 @@ const UserDetail: React.FC<{ user: UserValues }> = ({ user }) => {
               Send Email <HiOutlineMail size={20} className="ml-1" />
             </Button> */}
       </div>
-      <div className="w-[70%] h-full overflow-hidden">
+      <div className="w-full lg:w-[70%] h-full overflow-hidden">
         <h2 className="text-md md:text-lg lg:text-xl font-semibold">
           Personal Information
         </h2>
@@ -205,11 +205,11 @@ export const OrderTable = ({
     });
   return (
     <div className="w-full space-y-2 rounded-xl bg-[#F8F8F8] p-4 select-none">
-      <div className="w-full h-fit flex-between">
+      <div className="w-full h-fit flex justify-between flex-col lg:flex-row">
         <div className="w-fit font-semibold">Recent Orders</div>
         <div className="w-fit h-fit flex-between gap-2">
           {/* Search Bar */}
-          <div className="w-fit flex-center gap-1 cursor-pointer bg-white border border-primary py-1 px-2">
+          <div className="w-52 lg:w-fit flex-center gap-1 cursor-pointer bg-white border border-primary py-1 px-2">
             <IoSearchOutline size={20} className="text-primary" />
             <input
               type="text"
