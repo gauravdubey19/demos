@@ -1,10 +1,11 @@
+import HelpDesk from '@/components/helpdesk/Helpdesk'
 import React from 'react'
 
 function Helpdesk() {
   return (
-    <div>
-      helo
-    </div>
+
+      <HelpDesk/>
+
   )
 }
 

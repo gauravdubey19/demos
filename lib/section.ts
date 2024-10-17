@@ -20,7 +20,8 @@ import AllCategories from "@/components/Admin/Products/Category/AllCategories";
 import AllOufitCollection from "@/components/Admin/Products/Outfit/OutfitCollection/AllOutfit";
 import NewOutfit from "@/components/Admin/Products/Outfit/AddOutfit/NewOutFit";
 import TestimonialsAdmin from "@/components/Admin/Testimonials/TestimonialsAdmin";
-import HelpDesk from "@/components/Admin/Helpdesk/helpdesk";
+import Helpdesk from "@/components/Profile/Sections/Helpdesk";
+import MyTickets from "@/components/Profile/Sections/MyTickets";
 // icons
 import {
   AiOutlinePieChart,
@@ -30,12 +31,14 @@ import {
 import { PiCubeLight } from "react-icons/pi";
 import { SlLayers } from "react-icons/sl";
 import { LiaQuestionSolid } from "react-icons/lia";
-import { IoVideocamOutline } from "react-icons/io5";
+import { IoTicketOutline, IoVideocamOutline } from "react-icons/io5";
 import { RxPerson } from "react-icons/rx";
 import { CiShoppingBasket } from "react-icons/ci";
 import { RiMoneyDollarCircleLine } from "react-icons/ri";
 import { GrMapLocation } from "react-icons/gr";
 import { AiOutlineCustomerService } from "react-icons/ai";
+import AddAddress from "@/components/Profile/Sections/AddAddresses";
+import HelpDesk from "@/components/Admin/Helpdesk/helpdesk";
 
 export const profileSections: SectionValues[] = [
   {
@@ -68,11 +71,26 @@ export const profileSections: SectionValues[] = [
     sidebarHidden: true,
   },
   {
+    id: "add-a-new-address",
+    head: "Add a New Address",
+    href: "/profile/add-a-new-address",
+    icon: GrMapLocation,
+    sectionNode: AddAddress,
+    sidebarHidden: true,
+  },
+  {
     id: "helpdesk",
     head: "Helpdesk",
     href: "/profile/helpdesk",
     icon: AiOutlineCustomerService,
-    sectionNode: HelpDesk,
+    sectionNode: Helpdesk,
+  },
+  {
+    id: "my-tickets",
+    head: "My tickets",
+    href: "/profile/my-tickets",
+    icon: IoTicketOutline,
+    sectionNode: MyTickets,
   },
   // {
   //   id: "payment-methods",
@@ -180,17 +198,17 @@ export const adminSections: SectionValues[] = [
     sectionNode: TestimonialsAdmin,
   },
   {
-    id: "my-account",
-    head: "My Account",
-    href: "/admin/my-account",
-    icon: AiOutlineSetting,
-    sectionNode: MyAccount,
-  },
-  {
     id: "helpdesk",
     head: "Helpdesk",
     href: "/admin/helpdesk",
     icon: AiOutlineCustomerService,
     sectionNode: HelpDesk,
+  },
+  {
+    id: "my-account",
+    head: "My Account",
+    href: "/admin/my-account",
+    icon: AiOutlineSetting,
+    sectionNode: MyAccount,
   },
 ];

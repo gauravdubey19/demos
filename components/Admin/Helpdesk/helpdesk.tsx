@@ -1,147 +1,249 @@
-"use client";
-import Link from 'next/link';
 
-const HelpDesk = () => {
-  return (
-    <div className="m-4 md:m-8 h-[90vh] overflow-y-scroll">
-  {/* Welcome Section */}
-  <div className="text-center mb-8 px-4 md:px-12 lg:px-24">
-    <h2 className="text-xl md:text-2xl mb-4">Hi, How can we help?</h2>
-    <p className="text-gray-600 text-sm md:text-base lg:text-lg mb-6">
-      Welcome to our Help & Support Center. Here you can find answers to
-      common questions, track your orders, manage returns, and more. Our
-      goal is to provide you with the best possible support experience.
-    </p>
-  </div>
 
-  {/* Search Bar */}
-  <div className="mb-8 px-4 md:px-12 lg:px-24">
-    <input
-      type="text"
-      placeholder="Ask any question..."
-      className="w-full p-2 md:p-3 border rounded-md bg-gray-50 focus:outline-none focus:ring-2 focus:ring-yellow-400"
-    />
-    <span className="text-center flex justify-center text-gray-500 mt-2 text-sm">
-      Or <span className="text-black font-bold ml-1">choose</span> an option
-    </span>
-  </div>
 
-  {/* FAQ Section */}
-  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-8 px-4 md:px-12 lg:px-24">
-    <div className="bg-yellow-100 p-4 rounded-md">
-      <div className="flex justify-center mb-2">
-        <span className="text-2xl">❓</span>
-      </div>
-      <Link href="/contact" passHref>
-        <div className="text-center cursor-pointer">
-          <p className="text-lg font-semibold">FAQ</p>
-          <small className="text-gray-500">
-            Find quick answers to common questions here!
-          </small>
+// import React, { useState, useMemo, useEffect } from 'react';
+// import { ChevronDown } from 'lucide-react';
+// import Analysis from './Analysis';
+// import QueryCard from './QueryCard';
+// import { Skeleton } from '@/components/ui/skeleton';
+
+// interface Query {
+//     _id: string;
+//     name: string;
+//     email: string;
+//     answers: any;
+//     question: string;
+//     createdAt: any;
+//     status: 'answered' | 'unanswered';
+// }
+
+// const Helpdesk = () => {
+//     const [queries, setQueries] = useState<Query[]>([]);
+//     const [selectedQuery, setSelectedQuery] = useState<Query | null>(null);
+
+//     useEffect(() => {
+//         const fetchQueries = async () => {
+//             try {
+//                 const response = await fetch('/api/helpdesk/admin/get');
+//                 const data = await response.json();
+//                 setQueries(data.queries);
+//                 if (data.queries.length > 0) {
+//                     const latestQuery = data.queries.reduce((prev: Query, current: Query) =>
+//                         (new Date(prev.createdAt) > new Date(current.createdAt)) ? prev : current
+//                     );
+//                     setSelectedQuery(latestQuery);
+//                 }
+//             } catch (error) {
+//                 console.error('Error fetching queries:', error);
+//             }
+//         };
+
+//         fetchQueries();
+//     }, []);
+
+//     const analysisData = useMemo(() => {
+//         const answered = queries.filter(q => q.status === 'answered').length;
+//         const unanswered = queries.filter(q => q.status === 'unanswered').length;
+//         return {
+//             answeredCount: answered,
+//             unansweredCount: unanswered,
+//             total: answered + unanswered
+//         };
+//     }, [queries]);
+
+//     const handleQueryClick = (query: Query) => {
+//         setSelectedQuery(query);
+//     };
+
+//     const handleRefreshQueries = async () => {
+//         try {
+//             const response = await fetch('/api/querry/get');
+//             const data = await response.json();
+//             setQueries(data.queries);
+//         } catch (error) {
+//             console.error('Error fetching queries:', error);
+//         }
+//     };
+
+//     return (
+//         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 h-screen overflow-y-scroll">
+//             <h1 className="text-3xl font-bold mb-6">Queries</h1>
+//             <Analysis data={analysisData} />
+
+//             <div className='flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6'>
+//                 <h2 className="text-xl font-semibold mb-4 sm:mb-0">Customer Queries</h2>
+//                 <div className='flex flex-col sm:flex-row items-start sm:items-center gap-2'>
+//                     <div className="w-full sm:w-auto mb-2 sm:mb-0">
+//                         <input
+//                             type="text"
+//                             placeholder="Search for a related question..."
+//                             className="w-full p-2 border border-yellow-500 rounded-lg outline-none"
+//                         />
+//                     </div>
+//                     <div className="w-full sm:w-auto">
+//                         <button className="w-full p-2 bg-yellow-500 text-white rounded-lg flex items-center justify-center">
+//                             All queries <ChevronDown className="ml-2" />
+//                         </button>
+//                     </div>
+//                 </div>
+//             </div>
+
+//             <div className="flex flex-col lg:flex-row">
+//                 <div className="w-full lg:pr-4 mb-6 lg:mb-0">
+//                     {queries.length === 0 ? (
+//                         <div className="space-y-4">
+//                             {[1, 2, 3, 4, 5].map((_, index) => (
+//                                 <Skeleton key={index} className="bg-gray-200 rounded-lg p-4 h-40 w-full animate-pulse" />
+//                             ))}
+//                         </div>
+//                     ) : (
+//                         <div className="space-y-4">
+//                             {queries.map((query) => (
+//                                 <QueryCard
+//                                     onRefreshQueries={handleRefreshQueries}
+//                                     selectedQuery={selectedQuery}
+//                                     key={query._id}
+//                                     query={query}
+//                                     onClick={() => handleQueryClick(query)}
+//                                 />
+//                             ))}
+//                         </div>
+//                     )}
+//                 </div>
+//                 {/* <div className="w-full lg:w-[60%] lg:pl-4">
+//                     <AnswerChat
+//                         selectedQuery={selectedQuery}
+//                         onRefreshQueries={handleRefreshQueries}
+//                     />
+//                 </div> */}
+//             </div>
+//         </div>
+//     );
+// };
+
+// export default Helpdesk;
+
+
+
+
+
+import React, { useState, useMemo, useEffect } from 'react';
+import { ChevronDown } from 'lucide-react';
+import Analysis from './Analysis';
+import QueryCard from './QueryCard';
+import { Skeleton } from '@/components/ui/skeleton';
+
+interface HelpdeskQuery {
+    _id: string;
+    fullName: string;
+    userId: string;
+    issueType: string;
+    subIssueType: string;
+    description: string;
+    attachments: string[];
+    status: 'open' | 'closed';
+    createdAt: string;
+    updatedAt: string;
+}
+
+const Helpdesk = () => {
+    const [tickets, setTickets] = useState<HelpdeskQuery[]>([]);
+    const [selectedQuery, setSelectedQuery] = useState<HelpdeskQuery | null>(null);
+
+    useEffect(() => {
+        const fetchQueries = async () => {
+            try {
+                const response = await fetch('/api/helpdesk/admin/get');
+                const data = await response.json();
+                console.log(data)
+                setTickets(data.helpdeskTickets); // Adjusted to match your API response
+                if (data.helpdeskTickets.length > 0) {
+                    const latestQuery = data.helpdeskTickets.reduce((prev: HelpdeskQuery, current: HelpdeskQuery) =>
+                        (new Date(prev.createdAt) > new Date(current.createdAt)) ? prev : current
+                    );
+                    setSelectedQuery(latestQuery);
+                }
+            } catch (error) {
+                console.error('Error fetching queries:', error);
+            }
+        };
+
+        fetchQueries();
+    }, []);
+
+    const analysisData = useMemo(() => {
+        const openTickets = tickets.filter(q => q.status === 'open').length;
+        const closedTickets = tickets.filter(q => q.status === 'closed').length;
+        return {
+            openCount: openTickets,
+            closedCount: closedTickets,
+            total: openTickets + closedTickets
+        };
+    }, [tickets]);
+
+    const handleQueryClick = (query: HelpdeskQuery) => {
+        setSelectedQuery(query);
+    };
+
+    const handleRefreshQueries = async () => {
+        try {
+            const response = await fetch('/api/helpdesk/admin/get');
+            const data = await response.json();
+            setTickets(data.helpdeskTickets);
+        } catch (error) {
+            console.error('Error refreshing queries:', error);
+        }
+    };
+
+    return (
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 h-screen overflow-y-scroll">
+            <h1 className="text-3xl font-bold mb-6">Helpdesk Tickets</h1>
+            <Analysis data={analysisData} />
+
+            <div className='flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6'>
+                <h2 className="text-xl font-semibold mb-4 sm:mb-0">Customer Tickets</h2>
+                <div className='flex flex-col sm:flex-row items-start sm:items-center gap-2'>
+                    <div className="w-full sm:w-auto mb-2 sm:mb-0">
+                        <input
+                            type="text"
+                            placeholder="Search for a related ticket..."
+                            className="w-full p-2 border border-yellow-500 rounded-lg outline-none"
+                        />
+                    </div>
+                    <div className="w-full sm:w-auto">
+                        <button className="w-full p-2 bg-yellow-500 text-white rounded-lg flex items-center justify-center">
+                            All Tickets <ChevronDown className="ml-2" />
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div className="flex flex-col lg:flex-row">
+                <div className="w-full lg:pr-4 mb-6 lg:mb-0">
+                    {tickets.length === 0 ? (
+                        <div className="space-y-4">
+                            {[1, 2, 3, 4, 5].map((_, index) => (
+                                <Skeleton key={index} className="bg-gray-200 rounded-lg p-4 h-40 w-full animate-pulse" />
+                            ))}
+                        </div>
+                    ) : (
+                        <div className="space-y-4">
+                            {tickets.map((ticket) => (
+                                <QueryCard
+                                    onRefreshQueries={handleRefreshQueries}
+                                    selectedQuery={selectedQuery}
+                                    key={ticket._id}
+                                    ticket={ticket}
+                                    onClick={() => handleQueryClick(ticket)}
+                                />
+                            ))}
+                        </div>
+                    )}
+                </div>
+                {/* You can add a detailed view or chat for the selected query in this section */}
+            </div>
         </div>
-      </Link>
-    </div>
-    <div className="bg-blue-50 p-4 rounded-md">
-      <div className="flex justify-center mb-2">
-        <span className="text-2xl">❓</span>
-      </div>
-      <Link href="/contact" passHref>
-        <div className="text-center cursor-pointer">
-          <p className="text-lg font-semibold">Queries</p>
-          <small className="text-gray-500">
-            Find queries and get quick assistance here!
-          </small>
-        </div>
-      </Link>
-    </div>
-  </div>
-
-  {/* Submit Ticket Form */}
-  <div className="mt-8 flex justify-center px-4 md:px-6 lg:px-12">
-    <div className="w-full max-w-2xl mx-auto mt-10 p-6 bg-white shadow-lg rounded-md">
-      <h2 className="text-xl md:text-2xl font-semibold mb-6">Submit a Ticket</h2>
-      <form>
-        {/* Full Name Input */}
-        <div className="mb-4">
-          <label htmlFor="fullName" className="block text-gray-700 mb-2">Full Name</label>
-          <input
-            type="text"
-            id="fullName"
-            placeholder="Full Name"
-            className="w-full p-2 md:p-3 border rounded-md bg-gray-100 focus:outline-none focus:ring-2 focus:ring-yellow-400 hover:bg-yellow-100"
-            required
-          />
-        </div>
-
-        {/* Email Input */}
-        <div className="mb-4">
-          <label htmlFor="email" className="block text-gray-700 mb-2">Email</label>
-          <input
-            type="email"
-            id="email"
-            placeholder="john.doe@example.com"
-            className="w-full p-2 md:p-3 border rounded-md bg-gray-100 focus:outline-none focus:ring-2 focus:ring-yellow-400 hover:bg-yellow-100"
-            required
-          />
-        </div>
-
-        {/* Issue Type Select */}
-        <div className="mb-4">
-          <label htmlFor="issueType" className="block text-gray-700 mb-2">Issue Type</label>
-          <select
-            id="issueType"
-            className="w-full p-2 md:p-3 border rounded-md bg-gray-100 focus:outline-none focus:ring-2 focus:ring-yellow-400 hover:bg-yellow-100"
-            required
-          >
-            <option value="">Select Issue Type</option>
-            <option>Order Issue</option>
-            <option>Payment Issue</option>
-            <option>Product Issue</option>
-            <option>Return & Exchange Issue</option>
-            <option>Account Issue</option>
-            <option>Shipping Issue</option>
-            <option>Technical Issue</option>
-            <option>General Inquiry</option>
-          </select>
-        </div>
-
-        {/* Order Number Input */}
-        <div className="mb-4">
-          <label htmlFor="orderNumber" className="block text-gray-700 mb-2">Order Number</label>
-          <input
-            type="text"
-            id="orderNumber"
-            placeholder="Order no."
-            className="w-full p-2 md:p-3 border rounded-md bg-gray-100 focus:outline-none focus:ring-2 focus:ring-yellow-400 hover:bg-yellow-100"
-          />
-        </div>
-
-        {/* Description Textarea */}
-        <div className="mb-6">
-          <label htmlFor="description" className="block text-gray-700 mb-2">Detailed Message/Description</label>
-          <textarea
-            id="description"
-            placeholder="Detailed Message/Description"
-            className="w-full p-2 md:p-3 border rounded-md bg-gray-100 focus:outline-none focus:ring-2 focus:ring-yellow-400 hover:bg-yellow-100 resize-y"
-            required
-          ></textarea>
-        </div>
-
-        {/* Submit Button */}
-        <div className="flex justify-center">
-          <button
-            type="submit"
-            className="w-1/2 md:w-1/3 p-2 md:p-3 bg-yellow-400 text-white font-bold rounded-md hover:bg-yellow-500 transition-colors"
-          >
-            Submit
-          </button>
-        </div>
-      </form>
-    </div>
-  </div>
-</div>
-
-  );
+    );
 };
 
-export default HelpDesk;
+export default Helpdesk;

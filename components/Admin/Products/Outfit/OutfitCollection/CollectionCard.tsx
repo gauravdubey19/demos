@@ -12,6 +12,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import ReactCountUp from "@/components/ui/ReactCountUp";
+import { useRouter } from "next/navigation";
 
 interface CollectionCardProps {
   outfit: OutfitData;
@@ -116,6 +117,9 @@ const OufitCollectionPopup: React.FC<{
   handlePopupClose: () => void;
   onDelete: () => void;
 }> = ({ outfit, isPopupOpen, handlePopupClose, onDelete }) => {
+
+  const router = useRouter()
+
   return (
     <Dialog open={isPopupOpen} onOpenChange={handlePopupClose}>
       <DialogContent className="max-w-5xl">
@@ -173,7 +177,11 @@ const OufitCollectionPopup: React.FC<{
             >
               Delete
             </Button>
-            <Button size="sm" className="w-full">
+            <Button 
+              onClick={() => router.push(`/admin/all-outfit-collections/edit-outfit-collections/${outfit._id}`)}
+              size="sm" 
+              className="w-full"
+            >
               Edit
             </Button>
           </div>

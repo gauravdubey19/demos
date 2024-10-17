@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Line, Pie } from "react-chartjs-2";
 import {
@@ -16,9 +15,7 @@ import {
   ArcElement,
   ChartOptions,
 } from "chart.js";
-import { IoSearchOutline } from "react-icons/io5";
 import { MdOutlineKeyboardArrowDown } from "react-icons/md";
-import { FaArrowDownShortWide, FaArrowUpShortWide } from "react-icons/fa6";
 import { Order } from "@/context/GlobalProvider";
 import { OrderTable } from "../Customers/CustomersDetail";
 
@@ -134,13 +131,13 @@ const OrderChart = () => {
     datasets: [
       {
         label: "Top Categories",
-        data: [12, 15, 10, 48, 15],
+        data: [45, 35, 25, 20, 10],
         backgroundColor: [
-          "#FFAC28",
-          "#FF6B6B",
-          "#4BC0C0",
-          "#FFD700",
-          "#6A67CE",
+          "#FFB433",
+          "#FFC766",
+          "#FFC766a5",
+          "#ffdb9c9a",
+          "#FFEDCE",
         ],
         hoverOffset: 4,
       },
@@ -220,7 +217,7 @@ const OrderChart = () => {
       },
       tooltip: {
         callbacks: {
-          label: (context: any) => `${context.label}: ${context.raw}%`, // Show percentage in tooltip
+          label: (context: any) => ` ${context.label}: ${context.raw}%`, // Show percentage in tooltip
         },
         backgroundColor: "#FFAC28", // Tooltip background color
         bodyFont: { size: 12 },
@@ -243,11 +240,11 @@ const OrderChart = () => {
         {/* Top Selling Categories Pie Chart */}
         <div className="chart-container h-fit lg:h-[50vh] bg-[#F8F8F8] shadow-md rounded-lg p-4 hover:shadow-lg ease-in-out duration-300 overflow-hidden">
           <h2 className="text-xl font-bold">Top Selling Categories</h2>
-          <div className="relative w-full h-full flex-center">
+          <div className="relative w-full h-fit flex-center">
             <Pie
               data={topSellingCategoriesData}
               options={pieChartOptions}
-              className="w-full h-full lg:scale-125"
+              className="w-full h-fit lg:scale-125"
             />
           </div>
         </div>
