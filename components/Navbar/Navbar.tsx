@@ -188,7 +188,7 @@ const Navbar: React.FC<{ appName?: string }> = ({ appName = "LOGO" }) => {
                   All Categories
                 </NavigationMenuTrigger>
                 <NavigationMenuContent className="w-fit space-y-2 p-2 animate-slide-down">
-                  <CategoriesList categories={categories} />
+                  <CategoriesList categories={categories} superCategories={[]} />
                 </NavigationMenuContent>
               </NavigationMenuItem>
 
@@ -266,7 +266,7 @@ const Navbar: React.FC<{ appName?: string }> = ({ appName = "LOGO" }) => {
           </NavigationMenu>
         </div>
       </div>
-      <MobileNav categories={categories} />
+      <MobileNav categories={categories} superCategories={superCategories}/>
 
       <div className="hidden md:flex-center md:gap-4 lg:gap-6 relative">
         {/* search */}
@@ -411,6 +411,7 @@ export default Navbar;
 
 export interface CategoriesListProps {
   categories: CategoryValues[];
+  superCategories:any[];
 }
 
 const CategoriesList: React.FC<CategoriesListProps> = ({ categories }) => {

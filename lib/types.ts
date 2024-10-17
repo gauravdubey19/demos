@@ -194,6 +194,7 @@ export interface AddProductValues {
 }
 
 export interface CategoryValues {
+  subCategories: any;
   _id: string;
   title: string;
   slug: string;
@@ -201,6 +202,7 @@ export interface CategoryValues {
   description: string;
   types: { _id: string; title: string; slug: string }[];
 }
+
 
 // Profile & Admin types
 export interface ProfileAdminParams {
