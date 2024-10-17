@@ -418,7 +418,7 @@ const MobileNav: React.FC<CategoriesListProps> = ({ categories,superCategories }
       </Accordion>
     ) : (
       <SheetClose>
-      
+        
         <Link
           href="/products/all"
           className={`flex items-center justify-between text-lg font-medium ${

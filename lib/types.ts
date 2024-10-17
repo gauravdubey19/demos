@@ -194,7 +194,8 @@ export interface AddProductValues {
 }
 
 export interface CategoryValues {
-  subCategories: any;
+  subCategories: CategoryValues[];
+  // subCategories: any;
   _id: string;
   title: string;
   slug: string;

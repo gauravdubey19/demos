@@ -77,6 +77,7 @@ const Filter: React.FC<FilterProps> = ({
               description: "All categories",
               types: AllTypes,
               image: "",
+              subCategories: [],
             });
           } else {
             const filteredCategory: CategoryValues[] = categories.filter(
