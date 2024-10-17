@@ -318,7 +318,7 @@ const MobileNav: React.FC<CategoriesListProps> = ({
                       pathname === "/products/all" && "text-primary"
                     }`}
                   >
-                    All Categories
+                    <SheetClose>All Categories</SheetClose>
                   </Link>
                 </AccordionTrigger>
                 <AccordionContent className="px-2 h-fit max-h-[25vh] overflow-x-hidden overflow-y-scroll">
@@ -337,7 +337,7 @@ const MobileNav: React.FC<CategoriesListProps> = ({
                               "text-primary"
                             }`}
                           >
-                            {category?.title}
+                            <SheetClose>{category?.title}</SheetClose>
                           </Link>
                         </AccordionTrigger>
                         <AccordionContent className="space-y-2 px-4 text-lg">
@@ -351,7 +351,7 @@ const MobileNav: React.FC<CategoriesListProps> = ({
                                 key={type._id}
                                 className="w-fit hover-underline-lr"
                               >
-                                {type?.title}
+                                <SheetClose>{type?.title}</SheetClose>
                               </Link>
                             </p>
                           ))}
@@ -376,7 +376,7 @@ const MobileNav: React.FC<CategoriesListProps> = ({
                         "text-primary"
                       }`}
                     >
-                      {superCategory.title}
+                      <SheetClose>{superCategory.title}</SheetClose>
                     </Link>
                   </AccordionTrigger>
                   <AccordionContent className="px-2 h-fit max-h-[25vh] overflow-x-hidden overflow-y-scroll">
@@ -396,7 +396,7 @@ const MobileNav: React.FC<CategoriesListProps> = ({
                                   "text-primary"
                                 }`}
                               >
-                                {category?.title}
+                                <SheetClose>{category?.title}</SheetClose>
                               </Link>
                             </AccordionTrigger>
                             <AccordionContent className="space-y-2 px-4 text-lg">
@@ -412,7 +412,7 @@ const MobileNav: React.FC<CategoriesListProps> = ({
                                       key={type._id}
                                       className="w-full hover-underline-lr"
                                     >
-                                      {type?.title}
+                                      <SheetClose>{type?.title}</SheetClose>
                                     </Link>
                                   </p>
                                 ))}
