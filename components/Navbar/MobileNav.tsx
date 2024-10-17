@@ -204,15 +204,15 @@
 
 // export default MobileNav;
 
-
 import React, { useState, useEffect } from "react";
-import { IoChevronForward } from "react-icons/io5";
-import { signOut, useSession } from "next-auth/react";
-import { CategoriesListProps } from "./Navbar";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
+import { signOut, useSession } from "next-auth/react";
+import { profileSections } from "@/lib/section";
+import { useCart } from "@/context/CartProvider";
 import { Turn as Hamburger } from "hamburger-react";
+import { CategoriesListProps } from "./Navbar";
 import {
   Sheet,
   SheetClose,
@@ -220,54 +220,19 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { DialogTitle } from "@radix-ui/react-dialog";
 import { Button } from "../ui/button";
-import { useCart } from "@/context/CartProvider";
-
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "@/components/ui/accordion"
+} from "@/components/ui/accordion";
+import { DialogTitle } from "../ui/dialog";
 
-const links = [
-  { head: "Home", href: "/" },
-  {
-    head: "All Categories",
-    href: "/categories",
-    subCategories: [
-      {
-        title: "Category 1",
-        slug: "category-1",
-        subCategories: [
-          { title: "Category Type 1", slug: "category-type-1" },
-          { title: "Category Type 2", slug: "category-type-2" },
-        ],
-      },
-      { title: "Category 2", slug: "category-2" },
-      { title: "Category 3", slug: "category-3" },
-      { title: "A very long category 4", slug: "very-long-category-4" },
-      { title: "Category 4", slug: "category-4" },
-    ],
-  },
-  { head: "Traditional", href: "/traditional" },
-  { head: "Party Wears", href: "/party-wears" },
-  { head: "Formal Wears", href: "/formal-wears" },
-  { head: "About Us", href: "/about-us" },
-  { head: "Contact & FAQs", href: "/contact-faqs" },
-];
-
-const accountLinks = [
-  { head: "My Account", href: "/account" },
-  { head: "Order History", href: "/order-history" },
-  { head: "Shipping Address", href: "/shipping-address" },
-  { head: "Helpdesk", href: "/helpdesk" },
-  { head: "My Tickets", href: "/my-tickets" },
-];
-
-const MobileNav: React.FC<CategoriesListProps> = ({ categories,superCategories }) => {
-
+const MobileNav: React.FC<CategoriesListProps> = ({
+  categories,
+  superCategories,
+}) => {
   const [isOpen, setOpen] = useState(false);
   const { data: session } = useSession();
   const pathname = usePathname();
@@ -287,197 +252,228 @@ const MobileNav: React.FC<CategoriesListProps> = ({ categories,superCategories }
 
   return (
     <div className="md:hidden bg-white">
-    <Sheet open={isOpen} onOpenChange={setOpen}>
-      <SheetTrigger asChild>
-        <div onClick={handleMenuClick}>
-          <Hamburger toggled={isOpen} toggle={setOpen} direction="right" size={28} />
-        </div>
-      </SheetTrigger>
-  
-      <SheetContent side="right" className="top-[3.7rem] h-[calc(100vh-60px)] bg-white border-none p-0 shadow-lg">
-        
-        {!session?.user && (
-          <div className="py-2 px-4 absolute top-0 w-full mt-4">
-            <SheetClose>
-              <Link href="/sign-in">
-                <Button className="w-full text-white bg-primary">Login / Sign Up</Button>
+      <Sheet open={isOpen} onOpenChange={setOpen}>
+        <SheetTrigger asChild>
+          <div onClick={handleMenuClick}>
+            <Hamburger
+              toggled={isOpen}
+              toggle={setOpen}
+              direction="right"
+              size={28}
+            />
+          </div>
+        </SheetTrigger>
+
+        <SheetContent
+          side="right"
+          closeIcon={false}
+          className="top-[3.7rem] h-[calc(100vh-60px)] bg-white border-none p-0 shadow-lg font-dmSans"
+        >
+          <DialogTitle></DialogTitle>
+          {!session?.user ? (
+            <SheetClose className="w-full px-4 mt-5">
+              <Link href="/sign-in" className="w-full">
+                <Button className="w-full rounded-none">Login / Sign Up</Button>
               </Link>
             </SheetClose>
-          </div>
-        )}
-        
-        {session?.user && (
-          <DialogTitle className="bg-yellow-500 m-0 p-0 w-full">
-            <SheetTitle className="flex items-center justify-between mb-0 p-4">
+          ) : (
+            <SheetTitle className="w-full flex-between bg-primary p-4">
               <div className="flex items-center">
                 <Image
                   src={session.user.image || "/profile.png"}
                   alt="profile"
                   width={40}
                   height={40}
-                  className="rounded-full mr-2"
+                  className="w-12 h-12 rounded-full mr-2"
                 />
-                <span>{session.user.name || "User"}</span>
+                <div className="">
+                  <p>{session.user.name || "User"}</p>
+                  <p className="text-sm line-clamp-1">
+                    {session.user.email || "User"}
+                  </p>
+                </div>
               </div>
             </SheetTitle>
-          </DialogTitle>
-        )}
-  
-        <nav className="flex flex-col relative top-20">
-          {/* {links.map((link, index) => (
-            <div key={index} className="py-2 px-4">
-              {link.head === "All Categories" ? (
-                <Accordion type="single" collapsible>
-                  <AccordionItem value={`category-${index}`}>
-                    <AccordionTrigger className="flex items-center justify-between text-lg font-medium text-gray-700">
-                      {link.head}
-                    </AccordionTrigger>
-                    <AccordionContent className="ml-4 mt-1">
-                      <Accordion type="single" collapsible>
-                        {link.subCategories?.map((subCat, subIndex) => (
-                          <AccordionItem key={subIndex} value={`subCategory-${subIndex}`}>
-                            <AccordionTrigger className="flex items-center justify-between text-gray-600 py-2">
-                              {subCat.title}
-                              {subCat.subCategories && (
-                                <IoChevronForward className="ml-2" />
-                              )}
-                            </AccordionTrigger>
-                            <AccordionContent className="ml-4 mt-1">
-                              {subCat.subCategories?.map((subSubCat, subSubIndex) => (
-                                <div key={subSubIndex} className="py-1">
-                                  <Link
-                                    href={`/categories/${subCat.slug}/${subSubCat.slug}`}
-                                    className="text-gray-500"
-                                    onClick={() => setOpen(false)}
-                                  >
-                                    {subSubCat.title}
-                                  </Link>
-                                </div>
-                              ))}
-                            </AccordionContent>
-                          </AccordionItem>
-                        ))}
-                      </Accordion>
-                    </AccordionContent>
-                  </AccordionItem>
-                </Accordion>
-              ) : (
-                <SheetClose>
+          )}
+
+          <nav className="w-full relative mt-4">
+            <Accordion
+              type="single"
+              collapsible
+              className="w-full h-fit flex flex-col gap-4 px-4 py-2"
+            >
+              <Link
+                href="/"
+                className={`w-full text-xl font-medium ${
+                  pathname === "/" && "text-primary"
+                }`}
+              >
+                Home
+              </Link>
+              <AccordionItem value={`item-1`} className="border-none text-xl">
+                <AccordionTrigger className="p-0">
                   <Link
                     href="/products/all"
-                    className={`flex items-center justify-between text-lg font-medium ${
-                      pathname === link.href ? "text-primary" : "text-gray-700"
+                    className={`w-fit hover-underline-lr ${
+                      pathname === "/products/all" && "text-primary"
                     }`}
-                    onClick={() => setOpen(false)}
                   >
-                    {link.head}
-                    {["Traditional", "Party Wears", "Formal Wears"].includes(link.head) && (
-                      <IoChevronForward className="ml-2" />
-                    )}
+                    All Categories
                   </Link>
-                </SheetClose>
-              )}
-            </div>
-          ))} */}
-          {categories.map((category, index) => (
-  <div key={index} className="py-2 px-4">
-    {category.title === "All Categories" ? ( // "All Categories" ko check karna
-      <Accordion type="single" collapsible>
-        <AccordionItem value={`category-${index}`}>
-          <AccordionTrigger className="flex items-center justify-between text-lg font-medium text-gray-700">
-            {category.title}
-          </AccordionTrigger>
-          <AccordionContent className="ml-4 mt-1">
-            <Accordion type="single" collapsible>
-              {category.subCategories?.map((subCat: { title: string | number | bigint | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<React.AwaitedReactNode> | null | undefined; subCategories: any[]; slug: any; }, subIndex: React.Key | null | undefined) => (
-                <AccordionItem key={subIndex} value={`subCategory-${subIndex}`}>
-                  <AccordionTrigger className="flex items-center justify-between text-gray-600 py-2">
-                    {subCat.title}
-                    {subCat.subCategories && (
-                      <IoChevronForward className="ml-2" />
-                    )}
-                  </AccordionTrigger>
-                  <AccordionContent className="ml-4 mt-1">
-                    {subCat.subCategories?.map((subSubCat, subSubIndex) => (
-                      <div key={subSubIndex} className="py-1">
-                        <Link
-                          href={`/categories/${subCat.slug}/${subSubCat.slug}`}
-                          className="text-gray-500"
-                          onClick={() => setOpen(false)}
-                        >
-                          {subSubCat.title}
-                        </Link>
-                      </div>
+                </AccordionTrigger>
+                <AccordionContent className="px-2 h-fit max-h-[25vh] overflow-x-hidden overflow-y-scroll">
+                  <Accordion type="single" collapsible>
+                    {categories.map((category, index) => (
+                      <AccordionItem
+                        key={index}
+                        value={`item-${index}`}
+                        className="border-none"
+                      >
+                        <AccordionTrigger className="py-2 text-lg">
+                          <Link
+                            href={`/products/${category.slug}`}
+                            className={`w-fit hover-underline-lr ${
+                              pathname === `/products/${category.slug}` &&
+                              "text-primary"
+                            }`}
+                          >
+                            {category?.title}
+                          </Link>
+                        </AccordionTrigger>
+                        <AccordionContent className="space-y-2 px-4 text-lg">
+                          {category?.types?.map((type, index) => (
+                            <p key={index}>
+                              <Link
+                                href={{
+                                  pathname: `/products/${category?.slug}`,
+                                  query: { type: type?.slug },
+                                }}
+                                key={type._id}
+                                className="w-fit hover-underline-lr"
+                              >
+                                {type?.title}
+                              </Link>
+                            </p>
+                          ))}
+                        </AccordionContent>
+                      </AccordionItem>
                     ))}
+                  </Accordion>
+                </AccordionContent>
+              </AccordionItem>
+              {superCategories.map((superCategory, index) => (
+                <AccordionItem
+                  key={index}
+                  value={`item-${index + 2}`}
+                  className="border-none text-xl"
+                >
+                  <AccordionTrigger className="p-0">
+                    <Link
+                      href={`/products/superCategory/${superCategory.slug}`}
+                      className={`w-fit hover-underline-lr ${
+                        pathname ===
+                          `/products/superCategory/${superCategory.slug}` &&
+                        "text-primary"
+                      }`}
+                    >
+                      {superCategory.title}
+                    </Link>
+                  </AccordionTrigger>
+                  <AccordionContent className="px-2 h-fit max-h-[25vh] overflow-x-hidden overflow-y-scroll">
+                    <Accordion type="single" collapsible>
+                      {superCategory?.categories.map(
+                        (category: any, index: number) => (
+                          <AccordionItem
+                            key={index}
+                            value={`item-${index}`}
+                            className="border-none"
+                          >
+                            <AccordionTrigger className="py-2 text-lg">
+                              <Link
+                                href={`/products/${category.slug}`}
+                                className={`w-fit hover-underline-lr ${
+                                  pathname === `/products/${category.slug}` &&
+                                  "text-primary"
+                                }`}
+                              >
+                                {category?.title}
+                              </Link>
+                            </AccordionTrigger>
+                            <AccordionContent className="space-y-2 px-4 text-lg">
+                              {categories
+                                .find((cat) => cat.slug === category.slug)
+                                ?.types.map((type) => (
+                                  <p key={index}>
+                                    <Link
+                                      href={{
+                                        pathname: `/products/${category?.slug}`,
+                                        query: { type: type?.slug },
+                                      }}
+                                      key={type._id}
+                                      className="w-full hover-underline-lr"
+                                    >
+                                      {type?.title}
+                                    </Link>
+                                  </p>
+                                ))}
+                            </AccordionContent>
+                          </AccordionItem>
+                        )
+                      )}
+                    </Accordion>
                   </AccordionContent>
                 </AccordionItem>
               ))}
-            </Accordion>
-          </AccordionContent>
-        </AccordionItem>
-      </Accordion>
-    ) : (
-      <SheetClose>
-        
-        <Link
-          href="/products/all"
-          className={`flex items-center justify-between text-lg font-medium ${
-            pathname === category.slug ? "text-primary" : "text-gray-700"
-          }`}
-          onClick={() => setOpen(false)}
-        >
-          {category.title}
-          {["Traditional", "Party Wears", "Formal Wears"].includes(category.title) && (
-            <IoChevronForward className="ml-2" />
-          )}
-        </Link>
-      </SheetClose>
-    )}
-  </div>
-))}
 
-  
-          {session?.user && (
-            <>
-              {accountLinks.map((link, index) => (
-                <div key={index} className="py-2 px-4">
-                  <SheetClose>
+              <Link
+                href="/about"
+                className={`w-full text-xl font-medium ${
+                  pathname.includes("/about") && "text-primary"
+                }`}
+              >
+                About Us
+              </Link>
+              <Link
+                href="/contact"
+                className={`w-full text-xl font-medium ${
+                  pathname.includes("/contact") && "text-primary"
+                }`}
+              >
+                Contact & FAQ{"'"}s
+              </Link>
+            </Accordion>
+            {session?.user && (
+              <div className="py-2 px-4 space-y-4">
+                <div className="border-b border-black/30 mt-2 mb-2"></div>
+                {profileSections.map((link, index) => (
+                  <SheetClose key={index} className="w-full">
                     <Link
                       href={link.href}
-                      className={`flex items-center justify-between text-lg font-medium ${
-                        pathname === link.href ? "text-primary" : "text-gray-700"
+                      className={`flex-between text-xl font-medium ${
+                        pathname.includes(link.href) && "text-primary"
                       }`}
-                      onClick={() => setOpen(false)}
                     >
                       {link.head}
                     </Link>
                   </SheetClose>
-                </div>
-              ))}
-  
-              <div className="py-2 px-4">
-                <div
-                  onClick={() => {
-                    localStorage.removeItem("jwt");
-                    signOut();
-                  }}
-                  className="w-full text-gray-500 cursor-pointer font-medium"
-                >
-                  Logout
-                </div>
+                ))}
+                <SheetClose className="w-full">
+                  <Button
+                    onClick={() => {
+                      localStorage.removeItem("jwt");
+                      signOut();
+                    }}
+                    className="w-full rounded-none"
+                  >
+                    Logout
+                  </Button>
+                </SheetClose>
               </div>
-              <div className="py-2 px-4">
-                <div className="w-full text-gray-500 cursor-pointer font-medium">
-                  Delete Your Account
-                </div>
-              </div>
-            </>
-          )}
-        </nav>
-      </SheetContent>
-    </Sheet>
-  </div>
-  
+            )}
+          </nav>
+        </SheetContent>
+      </Sheet>
+    </div>
   );
 };
 
