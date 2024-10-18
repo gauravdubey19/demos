@@ -1,11 +1,15 @@
+"use client";
 import React, { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { Address, useGlobalContext } from '@/context/GlobalProvider';
 import AddressCardCheckbox from '../ProfileComponents/AddressCardCheckbox';
 
 const ShippingAddresses = () => {
-  const { addresses, addressLoading,selectedAddresses, setSelectedAddresses} = useGlobalContext();
+  const { addresses, addressLoading,selectedAddresses, setSelectedAddresses,setAddressLoading,fetchAddresses,setAddresses,getAddresses} = useGlobalContext();
   
+  useEffect(() => {
+    getAddresses();
+  }, [getAddresses]);
   const handleSelect = (addressId: string) => {
     setSelectedAddresses((prevSelected) =>
       prevSelected.includes(addressId)

@@ -27,7 +27,6 @@ export const authOptions = NextAuth({
         }
         await connectToDB();
         const sessionUser = await User.findOne({ email: session.user.email });
-        console.log("Session User: ", sessionUser);
         if (sessionUser) {
           session.user.id = sessionUser._id.toString();
         }

@@ -110,14 +110,7 @@ export type Order = {
   };
   timestamps: string;
 };
-// {
-//   "_id": "66fb77709cce6f97e8444fc5",
-//   "email": "ashriarya.024@gmail.com",
-//   "firstName": "ashriIs",
-//   "lastName": "Mallick",
-//   "profile": "https://lh3.googleusercontent.com/a/ACg8ocKEbPo_II51vLVImp8p-oJOYRQBMckUaAToEVZ5Vsp9hbDVajS9=s96-c",
-//   "phone_number": "8887953505"
-// }
+
 export type UserDataAdmin = {
   _id: string;
   email?: string;
@@ -185,6 +178,7 @@ interface GlobalState {
   addresses: Address[];
   setAddresses: React.Dispatch<React.SetStateAction<Address[]>>;  
   addressLoading: boolean;
+  setAddressLoading: React.Dispatch<React.SetStateAction<boolean>>;
   selectedAddresses: string[];
   setSelectedAddresses: React.Dispatch<React.SetStateAction<string[]>>;
   handleDeleteAddresses: () => void;
@@ -201,11 +195,14 @@ interface GlobalState {
   setSearchQuery: React.Dispatch<React.SetStateAction<string>>;
   fetchedOrders: Order[];
   fetchingOrders: boolean;
+  fetchAddresses: (userId: string) => Promise<{ addresses: Address[] } | null>;
   setFetchingOrders: React.Dispatch<React.SetStateAction<boolean>>;
   setFetchedOrders: React.Dispatch<React.SetStateAction<Order[]>>;
   fetchReviews: (productId: string) => Promise<Review[]>;
   deletingAddresses: boolean;
   setDeletingAddresses: React.Dispatch<React.SetStateAction<boolean>>;
+  fetchOrders: () => Promise<void>;
+  getAddresses: () => Promise<void>;
 }
 
 interface SessionExtended extends Session {
@@ -249,24 +246,7 @@ const GlobalProvider = ({ children }: { children: ReactNode }) => {
   const [searchLoading, setSearchLoading] = useState<boolean>(false);
   const [fetchingOrders, setFetchingOrders] = useState<boolean>(false);
   const [fetchedOrders, setFetchedOrders] = useState<Order[]>([]);
-  useEffect(()=>{
-    console.log("Session: ", session);
-    if(!session?.user?.id) return;
-    const fetchOrders = async () => {
-      const userId = session?.user?.id;
-      try{
-      setFetchingOrders(true);
-      const response = await fetch(`/api/orders/${userId}`);
-      const data = await response.json();
-      setFetchedOrders(data);
-      } catch (error) {
-        console.error('Error fetching orders:', error);
-      } finally {
-        setFetchingOrders(false);
-      }
-    }
-    fetchOrders();
-  },[session])
+
   const [editAddressData, setEditAddressData] = useState({
     _id: "",
     firstName: "",
@@ -299,21 +279,19 @@ const GlobalProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  useEffect(() => {
-    const getAddresses = async () => {
-      setAddressLoading(true);
-      if (session?.user?.id) {
-        const data = await fetchAddresses(session.user.id);
-        if (data) {
-          setAddresses(data.addresses || []);
-        }
-        setAddressLoading(false);
+  
+  const getAddresses = async () => {
+    setAddressLoading(true);
+    if (session?.user?.id && !addresses.length) {
+      console.log('Fetching addresses');
+      const data = await fetchAddresses(session.user.id);
+      console.log('Addresses:', data);
+      if (data) {
+        setAddresses(data.addresses || []);
       }
-    };
-
-    getAddresses();
-  }, [session, setAddresses]);
-
+    }
+    setAddressLoading(false);
+  };
   useEffect(() => {
     const tokenTemp = localStorage.getItem("jwt");
     setToken(tokenTemp);
@@ -329,6 +307,9 @@ const GlobalProvider = ({ children }: { children: ReactNode }) => {
       localStorage.removeItem("jwt");
       signOut();
       //   alert('User ID is null');
+      return;
+    }
+    if(user){
       return;
     }
     try {
@@ -369,7 +350,7 @@ const GlobalProvider = ({ children }: { children: ReactNode }) => {
       signOut();
       setError("Error fetching user");
     }
-  }, [session]);
+  }, [session,user]);
 
       // utils/fetchReviews.ts
       const fetchReviews = async (productId: string) => {
@@ -396,7 +377,21 @@ const GlobalProvider = ({ children }: { children: ReactNode }) => {
         }
       };
 
-      
+      const fetchOrders = async () => {
+        console.log("Fetching Orders real");
+        const userId = session?.user?.id;
+        try{
+        setFetchingOrders(true);
+        const response = await fetch(`/api/orders/${userId}`);
+        const data = await response.json();
+        console.log("Data orders:",data);
+        setFetchedOrders(data);
+        } catch (error) {
+          console.error('Error fetching orders:', error);
+        } finally {
+          setFetchingOrders(false);
+        }
+      }
   useEffect(() => {
     fetchUser();
   }, [fetchUser]);
@@ -633,7 +628,9 @@ const handleDeleteAddresses = async () => {
         handleDeleteAddresses, editAddressData, setEditAddressData, suggestions, setSuggestions, activeTab, setActiveTab,
         searchLoading, setSearchLoading,
         searchQuery, setSearchQuery, fetchedOrders, fetchingOrders, setFetchingOrders, setFetchedOrders,
-        fetchReviews, deletingAddresses, setDeletingAddresses
+        fetchReviews, deletingAddresses, setDeletingAddresses,
+        setAddressLoading,fetchAddresses, fetchOrders,
+        getAddresses
       }}
     >
       {children}

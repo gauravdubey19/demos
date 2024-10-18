@@ -258,7 +258,7 @@ export const PaymentGateway = ({
         </Tabs>
         <CardFooter className="flex-between bg-yellow-50">
           <div className="text-sm text-primary mt-3 -mb-3">
-            Secured by <span className="font-semibold">CSK Textile</span>
+            Secured by <span className="font-semibold">Voltsec</span>
           </div>
           <div className="flex-center space-x-2 mt-3 -mb-3">
             <BsShieldLock className="h-3 w-3 -mr-1 text-primary" />

@@ -19,6 +19,8 @@ type Providers = Record<
 const SocialsLogin = () => {
   const [providers, setProviders] = useState<Providers>(null);
   const [error, setError] = useState<string | null>(null);
+  const [signingIn, setSigningIn] = useState(false);
+
   useEffect(() => {
     (async () => {
       try {
@@ -30,9 +32,23 @@ const SocialsLogin = () => {
       }
     })();
   }, []);
+
+  const handleSignIn = async (providerId: string) => {
+    setSigningIn(true);
+    try {
+      await signIn(providerId);
+    } catch (error) {
+      console.error("Error during sign-in:", error);
+      setError("Error during sign-in");
+    } finally {
+      setSigningIn(false);
+    }
+  };
+
   if (error) {
     return <div>{error}</div>;
   }
+
   return (
     <div className="w-full mt-7">
       <div className="flex flex-row items-center gap-2 px-10">
@@ -42,23 +58,26 @@ const SocialsLogin = () => {
       </div>
 
       <div className="flex flex-row items-center justify-center gap-10 mt-7">
-        {/* {providers &&
+        {providers &&
           Object.values(providers).map((provider) => {
-            // if (provider.id === "google") {
-            return ( */}
-        <Button
-          className="w-fit bg-transparent text-black text-xl br hover:bg-primary hover:text-white"
-          type="button"
-          // key={provider.id}
-          onClick={(e) => signIn("google")}
-          // signIn(provider.id);}
-        >
-          <FcGoogle className="mr-" />
-          oogle
-        </Button>
-        {/* );
-            // }
-          })} */}
+            if (provider.id === "google") {
+              return (
+                <Button
+                  className={`w-fit bg-transparent text-black text-lg br hover:bg-primary hover:text-white ${
+                    signingIn ? "opacity-70 cursor-not-allowed" : ""
+                  }`}
+                  type="button"
+                  key={provider.id}
+                  onClick={() => handleSignIn(provider.id)}
+                  disabled={signingIn}
+                >
+                  <FcGoogle className="mr-2" size={24} />
+                  {signingIn ? "Signing In..." : "Sign in with Google"}
+                </Button>
+              );
+            }
+            return null;
+          })}
       </div>
     </div>
   );

@@ -39,7 +39,7 @@ const CheckoutPage = () => {
     totalDiscount: 0,
   });
 
-  const { setFetchedOrders } = useGlobalContext();
+  const { setFetchedOrders,fetchOrders,fetchedOrders } = useGlobalContext();
   useEffect(() => {
     console.log("selectedAddress: ", selectedAddress);
   }, [selectedAddress]);
@@ -112,7 +112,11 @@ const CheckoutPage = () => {
       const data = await response.json();
       setCart([]);
       handleClearCart();
+      if(fetchedOrders.length===0) {
+        await fetchOrders();
+      }else{
       setFetchedOrders((prevOrders) => [data.order, ...prevOrders]);
+    }
       router.push(`/profile/order-history`);
       toast({
         title: "Order placed successfully",

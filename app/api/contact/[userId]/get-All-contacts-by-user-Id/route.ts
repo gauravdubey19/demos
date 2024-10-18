@@ -50,19 +50,9 @@ async function getContactsByUserId(userId: string) {
         // Find contacts that match the userId
         const contact = await Contact.findOne({ userId});
         const user = await User.findById(userId);
-        console.log('Contact:', contact);
-        console.log('User:', user);
         let userAddress = null;
         if(contact && user){
-            console.log("user.firstName", user.firstName);
-            console.log("user.lastName", user.lastName);
-            console.log("user.phone_number", user.phone_number);
-            console.log("contact.address", contact.address);
-            console.log("contact.city", contact.city);
-            console.log("contact.state", contact.state);
-            console.log("contact.zipCode", contact.zipCode);
             if(user.firstName && user.lastName && user.phone_number && contact.address && contact.city && contact.state && contact.zipCode){
-            console.log('User and contact details found');
             userAddress = {
             _id: contact._id,
             firstName: user.firstName,

@@ -13,12 +13,20 @@ import AllOrders from "./ProfileComponents/AllOrders";
 import { useSession } from "next-auth/react";
 
 const Section: React.FC<SectionProps> = ({ section, sections }) => {
- 
+  const { data: session } = useSession();
   const router = useRouter();
   const [orderDuration, setOrderDuration] = useState("past 3 months");
   const orderDurationOptions = ["past 3 months", "past 6 months", "2024"];
-  const { fetchedOrders, fetchingOrders } = useGlobalContext();
+  const { fetchedOrders, fetchingOrders,setFetchingOrders,setFetchedOrders,fetchOrders } = useGlobalContext();
 
+  useEffect(()=>{
+    console.log("Fetching Orders:",section!=="order-history",!fetchedOrders.length);
+    if(!session?.user?.id) return;
+    if(section!=="order-history") return;
+    if(fetchedOrders.length) return;
+   
+    fetchOrders();
+  },[fetchOrders, fetchedOrders.length, section, session?.user?.id])
   const tabs = [
     { id: "allOrders", label: "All Orders" },
     { id: "notShippedYet", label: "Not Shipped Yet" },

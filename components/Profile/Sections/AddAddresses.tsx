@@ -11,7 +11,7 @@ import { useRouter } from "next/navigation";
 
 const AddAddress = () => {
     const { data: session } = useSession();
-    const {setAddresses} = useGlobalContext();
+    const {setAddresses,addresses,getAddresses} = useGlobalContext();
     const [addingAddress, setAddingAddress] = useState(false);
     const router = useRouter();
 
@@ -118,7 +118,11 @@ const AddAddress = () => {
         });
         // Back to the previous page
         console.log("Address added successfully: ", responseData);
+        if(addresses.length === 0){
+          getAddresses();
+        }else{
         setAddresses((prevAddresses: Address[]) => [responseData.address,...prevAddresses]);
+        }
         window.history.back();
       } else {
         const errorData = await response.json();
