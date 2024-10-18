@@ -53,12 +53,11 @@ const Navbar: React.FC<{ appName?: string }> = ({ appName = "LOGO" }) => {
   const navbarRef = useRef<HTMLDivElement>(null);
   const { showLeft, showRight } = useCursor();
   const visible = showLeft || showRight;
-  const { userData } = useGlobalContext();
   const [categories, setCategories] = useState<CategoryValues[]>([]);
   const router = useRouter();
   const { favProducts } = useCart();
   const [superCategories, setSuperCategories] = useState<any[]>([]);
-  const [currentHover, setCurrentHover] = useState<string | null>(null);
+  
   useEffect(() => {
     const fetchSuperCategories = async () => {
       try {
@@ -132,33 +131,12 @@ const Navbar: React.FC<{ appName?: string }> = ({ appName = "LOGO" }) => {
     };
   }, [pathname, visible]);
 
-  useEffect(() => {
-    if (pathname.includes("/admin")) return;
-
-    if (navbarRef.current) {
-      if (isVisible) {
-        gsap.to(navbarRef.current, {
-          y: 0,
-          opacity: 1,
-          duration: 1,
-          ease: "power3.out",
-        });
-      } else {
-        gsap.to(navbarRef.current, {
-          y: -100,
-          opacity: 0,
-          duration: 1,
-          ease: "power3.out",
-        });
-      }
-    }
-  }, [isVisible, pathname]);
-
   return (
     <div
       ref={navbarRef}
-      className="fixed top-0 z-[9999] max-h-[60px] w-full select-none flex-between bg-white text-black p-2 px-3 md:p-4 lg:px-12 shadow-lg transition-all"
-      style={{ transform: "translateY(-100px)", opacity: 0 }}
+      className={`fixed  ${
+        isVisible ? "top-0" : "-top-full"
+      } left-0 right-0 z-[9999] max-h-[60px] w-full select-none flex-between bg-white text-black p-2 px-3 md:p-4 lg:px-12 shadow-md transition-all ease-in-out duration-700`}
     >
       <div className="flex-center gap-4 md:gap-6">
         <Link
@@ -203,8 +181,6 @@ const Navbar: React.FC<{ appName?: string }> = ({ appName = "LOGO" }) => {
                           `/products/superCategory/${superCategory.slug}` &&
                         "text-primary font-semibold"
                       }`}
-                      onMouseEnter={() => setCurrentHover(superCategory.slug)}
-                      onMouseLeave={() => setCurrentHover(null)}
                       onClick={() =>
                         router.push(
                           `/products/superCategory/${superCategory.slug}`

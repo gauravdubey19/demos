@@ -37,7 +37,7 @@ const Cart = () => {
         <SheetTrigger asChild>
           <div
             onClick={handleCartClick}
-            className="relative w-12 h-12 md:w-8 md:h-8 rounded-full border border-[#D3D3D3] flex-center group cursor-pointer"
+            className="relative w-12 h-12 md:w-8 md:h-8 rounded-full lg:border border-[#D3D3D3] flex-center group cursor-pointer"
           >
             {cart?.length > 0 && (
               <ReactCountUp
@@ -49,7 +49,7 @@ const Cart = () => {
               size={20}
               className={`${
                 isOpen ? "lg:fill-primary" : "lg:fill-[#717171]"
-              } fill-primary scale-125 md:scale-100 group-hover:fill-primary ease-in-out duration-300`}
+              } lg:fill-primary scale-125 md:scale-100 group-hover:fill-primary ease-in-out duration-300`}
             />
           </div>
         </SheetTrigger>
