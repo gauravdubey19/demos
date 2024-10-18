@@ -35,9 +35,9 @@ const CollectionCard: React.FC<CollectionCardProps> = ({ outfit, onDelete }) => 
     <>
       <div
         id="collection-card"
-        className="relative h-max border rounded-lg border-gray-300 flex-between flex-col scale-95 hover:scale-100 ease-in-out duration-300"
+        className="relative h-max border rounded-lg border-gray-300 flex-between flex-col scale-95 hover:scale-100 ease-in-out duration-300 overflow-hidden"
       >
-        <div className="w-full bg-gray-50 space-y-2 p-2 rounded-lg shadow-md">
+        <div className="w-full bg-gray-50 space-y-2 p-2 rounded-lg shadow-md overflow-hidden">
           <div className="grid grid-cols-3 gap-1">
             {/* grid 1 */}
             <div className="grid grid-rows-2 gap-1">
