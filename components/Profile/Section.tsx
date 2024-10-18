@@ -11,6 +11,7 @@ import { Order, useGlobalContext } from "@/context/GlobalProvider";
 import { MdOutlineKeyboardArrowDown } from "react-icons/md";
 import SearchBar from "./ProfileComponents/SearchBar";
 import AllOrders from "./ProfileComponents/AllOrders";
+import { useSession } from "next-auth/react";
 
 const Section: React.FC<SectionProps> = ({ section, sections }) => {
   const { data: session } = useSession();
