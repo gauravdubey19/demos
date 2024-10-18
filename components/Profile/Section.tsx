@@ -78,7 +78,7 @@ const Section: React.FC<SectionProps> = ({ section, sections }) => {
   };
 
   const renderOrderHistory = () => (
-    <div className={`flex flex-col ${isMobile ? 'space-y-4' : ''}`}>
+    <div className={`flex flex-col ${isMobile ? 'space-y-4' : ''} overflow-y-auto`}>
       <h2 className="capitalize lg:text-xl font-semibold tracking-tight">
         {replaceHyphensWithSpaces(section)}
       </h2>
@@ -192,7 +192,7 @@ const Section: React.FC<SectionProps> = ({ section, sections }) => {
 
   return (
     <div className="w-full h-full flex flex-col bg-[#F8F8F8] drop-shadow-lg overflow-hidden">
-      <div className={`flex flex-col border-b p-4 shadow-sm md:px-8 md:py-6 ${section === "order-history" && "border-none overflow-y-auto"}`}>
+      <div className={`flex flex-col border-b p-4 shadow-sm mb-14 md:mb-0 md:px-8 md:py-6 ${section === "order-history" && "border-none"} overflow-y-auto`}>
         {section === "order-history" ? (
           renderOrderHistory()
         ) : (
