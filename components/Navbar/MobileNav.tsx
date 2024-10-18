@@ -209,7 +209,7 @@ import { usePathname } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { signOut, useSession } from "next-auth/react";
-import { profileSections } from "@/lib/section";
+import { adminSections, profileSections } from "@/lib/section";
 import { useCart } from "@/context/CartProvider";
 import { Turn as Hamburger } from "hamburger-react";
 import { CategoriesListProps } from "./Navbar";
@@ -267,7 +267,7 @@ const MobileNav: React.FC<CategoriesListProps> = ({
         <SheetContent
           side="right"
           closeIcon={false}
-          className="top-[3.7rem] h-[calc(100vh-60px)] bg-white border-none p-0 shadow-lg font-dmSans"
+          className="top-[3.7rem] max-h-[calc(100vh-60px)] bg-white border-none p-0 shadow-lg font-dmSans overflow-x-hidden overflow-y-scroll"
         >
           <DialogTitle></DialogTitle>
           {!session?.user ? (
@@ -308,7 +308,7 @@ const MobileNav: React.FC<CategoriesListProps> = ({
                   pathname === "/" && "text-primary"
                 }`}
               >
-                Home
+                <SheetClose>Home</SheetClose>
               </Link>
               <AccordionItem value={`item-1`} className="border-none text-xl">
                 <AccordionTrigger className="p-0">
@@ -321,7 +321,7 @@ const MobileNav: React.FC<CategoriesListProps> = ({
                     <SheetClose>All Categories</SheetClose>
                   </Link>
                 </AccordionTrigger>
-                <AccordionContent className="px-2 h-fit max-h-[25vh] overflow-x-hidden overflow-y-scroll">
+                <AccordionContent className="px-2 h-fit overflow-hidden">
                   <Accordion type="single" collapsible>
                     {categories.map((category, index) => (
                       <AccordionItem
@@ -379,7 +379,7 @@ const MobileNav: React.FC<CategoriesListProps> = ({
                       <SheetClose>{superCategory.title}</SheetClose>
                     </Link>
                   </AccordionTrigger>
-                  <AccordionContent className="px-2 h-fit max-h-[25vh] overflow-x-hidden overflow-y-scroll">
+                  <AccordionContent className="px-2 h-fit overflow-hidden">
                     <Accordion type="single" collapsible>
                       {superCategory?.categories.map(
                         (category: any, index: number) => (
@@ -431,7 +431,7 @@ const MobileNav: React.FC<CategoriesListProps> = ({
                   pathname.includes("/about") && "text-primary"
                 }`}
               >
-                About Us
+                <SheetClose>About Us</SheetClose>
               </Link>
               <Link
                 href="/contact"
@@ -439,31 +439,91 @@ const MobileNav: React.FC<CategoriesListProps> = ({
                   pathname.includes("/contact") && "text-primary"
                 }`}
               >
-                Contact & FAQ{"'"}s
+                <SheetClose>Contact & FAQ{"'"}s</SheetClose>
               </Link>
             </Accordion>
             {session?.user && (
               <div className="py-2 px-4 space-y-4">
-                <div className="border-b border-black/30 mt-2 mb-2"></div>
-                {profileSections.map((link, index) => (
-                  <SheetClose key={index} className="w-full">
-                    <Link
-                      href={link.href}
-                      className={`flex-between text-xl font-medium ${
-                        pathname.includes(link.href) && "text-primary"
-                      }`}
-                    >
-                      {link.head}
-                    </Link>
-                  </SheetClose>
-                ))}
+                <div className="border-b border-black/30 mb-2"></div>
+                {session?.user?.role !== "admin" ? (
+                  profileSections.map(
+                    (link, index) =>
+                      link.id !== "edit-address" &&
+                      link.id !== "add-a-new-address" && (
+                        <Link
+                          key={index}
+                          href={link.href}
+                          className={`w-full flex text-xl font-medium ${
+                            pathname.includes(link.href) && "text-primary"
+                          }`}
+                        >
+                          <SheetClose className="w-fit">{link.head}</SheetClose>
+                        </Link>
+                      )
+                  )
+                ) : (
+                  <Accordion
+                    type="single"
+                    collapsible
+                    className="w-full h-fit flex flex-col gap-4"
+                  >
+                    {adminSections.map((link, index) =>
+                      !link.subSections ? (
+                        <Link
+                          key={index}
+                          href={link.href}
+                          className={`w-full flex text-xl font-medium ${
+                            pathname.includes(link.href) && "text-primary"
+                          }`}
+                        >
+                          <SheetClose className="w-fit">{link.head}</SheetClose>
+                        </Link>
+                      ) : (
+                        <AccordionItem
+                          key={index}
+                          value={`item-${index}`}
+                          className="border-none text-xl"
+                        >
+                          <AccordionTrigger className="p-0">
+                            <Link
+                              key={index}
+                              href={link.href}
+                              className={`w-fit flex text-xl font-medium ${
+                                pathname.includes(link.href) && "text-primary"
+                              }`}
+                            >
+                              <SheetClose className="w-fit">
+                                {link.head}
+                              </SheetClose>
+                            </Link>
+                          </AccordionTrigger>
+                          <AccordionContent className="px-2 h-fit overflow-hidden">
+                            {link?.subSections?.map((ss, index) => (
+                              <Link
+                                key={index}
+                                href={ss.href}
+                                className={`w-full flex text-xl font-medium ${
+                                  pathname.includes(ss.href) && "text-primary"
+                                }`}
+                              >
+                                <SheetClose className="w-fit">
+                                  {ss.head}
+                                </SheetClose>
+                              </Link>
+                            ))}
+                          </AccordionContent>
+                        </AccordionItem>
+                      )
+                    )}
+                  </Accordion>
+                )}
                 <SheetClose className="w-full">
                   <Button
                     onClick={() => {
                       localStorage.removeItem("jwt");
                       signOut();
                     }}
-                    className="w-full rounded-none"
+                    className="w-full rounded-none text-lg"
                   >
                     Logout
                   </Button>

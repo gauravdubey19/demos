@@ -95,7 +95,7 @@ const Filter: React.FC<FilterProps> = ({
   }, [categoryList, categorySlug]);
 
   return (
-    <div className="z-50 md:w-80 text-black bg-white md:p-4 md:ml-6 md:pr-8 md:border-r border-r-gray-300 h-[calc(100vh-60px)] overflow-y-auto">
+    <div className="z-40 md:w-80 text-black bg-white md:p-4 md:ml-6 md:pr-8 md:border-r border-r-gray-300 h-[calc(100vh-60px)] overflow-y-auto">
       <div className="md:hidden">
         <Drawer>
           <div className="md:hidden z-10 fixed bottom-0 left-0 right-0 w-full bg-zinc-700 flex justify-between items-center text-white py-2 divide-x-1">
