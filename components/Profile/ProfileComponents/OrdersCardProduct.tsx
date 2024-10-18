@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { X, Check } from "lucide-react";
 import Image from "next/image";
 import Dropdown from "../../Checkout/dropdownSelect";
@@ -16,24 +16,34 @@ interface CartDataI {
         quantity: number;
         selectedSize: string;
         selectedColor: {
-          title: string;
-          color: string
+            title: string;
+            color: string
         };
         timestamps: string;
         categorySlug: string;
     };
 }
 
-const OrderCardProduct
- = ({ data}: CartDataI) => {
+const OrderCardProduct = ({ data }: CartDataI) => {
     const router = useRouter();
-    return (
+    const [isMobile, setIsMobile] = useState(false);
 
-        <div className="border-b border-strokeLight hover:bg-slate-50 cursor-pointer" onClick={()=>{
-            router.push(`/products/${data?.categorySlug}/${data?.slug}`);
-        }}>
+    useEffect(() => {
+        const checkMobile = () => setIsMobile(window.innerWidth < 640); // Using 640px as the breakpoint for 'sm'
+        checkMobile();
+        window.addEventListener('resize', checkMobile);
+        return () => window.removeEventListener('resize', checkMobile);
+    }, []);
+
+    return (
+        <div
+            className="border-b border-strokeLight hover:bg-slate-50 cursor-pointer"
+            onClick={() => {
+                router.push(`/products/${data?.categorySlug}/${data?.slug}`);
+            }}
+        >
             <div className="p-3 sm:p-5 sm:px-1 w-full">
-                <div className="flex flex-col sm:flex-row items-start sm:items-center ">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center">
                     <div className="w-full sm:w-auto flex justify-center mr-5 sm:mr-6">
                         <Image
                             height={150}
@@ -43,7 +53,7 @@ const OrderCardProduct
                             className="object-cover"
                         />
                     </div>
-                    <div className="w-full space-y-2 ">
+                    <div className="w-full space-y-2">
                         <h2 className="text-base sm:text-xl font-montSemiBold">{data?.title}</h2>
 
                         <div className="flex flex-col gap-2">
@@ -67,12 +77,11 @@ const OrderCardProduct
                             <p className="font-bold">{"₹ "}{(data?.quantity * data?.price).toFixed(2)}</p>
                         </div>
                     </div>
-                    <FaChevronRight size={30} className="mr-2" />
+                    {!isMobile && <FaChevronRight size={30} className="mr-2" />}
                 </div>
             </div>
         </div>
     );
 };
 
-export default OrderCardProduct
-;
+export default OrderCardProduct;
