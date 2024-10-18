@@ -59,7 +59,7 @@ const HelpDesk: React.FC = () => {
         if (e.target.files) {
             const files = Array.from(e.target.files);
             const validFiles = files.filter(file =>
-                ['application/pdf', 'image/jpeg', 'image/png'].includes(file.type)
+                [ 'image/jpeg', 'image/png'].includes(file.type)
             );
 
             if (validFiles.length + selectedFiles.length > 4) {
@@ -74,7 +74,7 @@ const HelpDesk: React.FC = () => {
             if (validFiles.length !== files.length) {
                 toast({
                     title: "Invalid file type",
-                    description: "Only PDF, JPG, and PNG files are allowed.",
+                    description: " JPG, and PNG files are allowed.",
                     variant: "destructive",
                 });
             }

@@ -13,7 +13,7 @@ interface Ticket {
   attachments: any[];
 }
 
-const TicketComponent: React.FC<{ ticket: Ticket }> = ({ ticket }) => {
+const TicketComponent: React.FC<{ ticket: Ticket; onClick: () => void }> = ({ ticket, onClick }) => {
   const [issueType, setIssueType] = React.useState(ticket.issueType);
   const [subIssueLabel, setSubIssueLabel] = React.useState("");
   const [subIssueVisible, setSubIssueVisible] = React.useState(false);
@@ -38,21 +38,25 @@ const TicketComponent: React.FC<{ ticket: Ticket }> = ({ ticket }) => {
     handleIssueTypeChange();
   }, [ticket.issueType]);
   return (
-    <div className="border p-4 rounded shadow bg-white px-6">
+    <div className="border p-4 rounded shadow bg-white px-6 cursor-pointer" onClick={onClick}>
       <h2 className="text-xl font-bold mb-2">{ticket.issueType}</h2>
-      <p className={`text-sm text-gray-600 mb-1 `}>Status: {" "}
-      <span className={`${ticket.status?.toLowerCase() === "open" ?"text-green":"text-red-500"} capitalize`}>{ticket.status}</span></p>
-     {subIssueVisible && (
+      <p className={`text-sm text-gray-600 mb-1 `}>
+        Status: <span className={`${ticket.status?.toLowerCase() === "open" ? "text-green" : "text-red-500"} capitalize`}>
+          {ticket.status}
+        </span>
+      </p>
+      {subIssueVisible && (
         <p className="text-sm text-gray-600 mb-1">
           {subIssueLabel}: {ticket.subIssueType}
         </p>
-      )  
-        }
-  
+      )}
       <p className="text-sm text-gray-600 mb-1">Opened At: {new Date(ticket.createdAt).toLocaleString()}</p>
       <p className="text-sm text-gray-600 mb-1">Description: {ticket.description}</p>
     </div>
+
   );
 };
 
 export default TicketComponent;
+
+

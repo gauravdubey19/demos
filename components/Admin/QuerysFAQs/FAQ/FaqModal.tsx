@@ -1,4 +1,6 @@
 
+
+
 "use client"
 import React, { useState, ChangeEvent, FormEvent } from 'react'
 import {
@@ -14,11 +16,12 @@ import { Plus } from 'lucide-react'
 interface ModalProps {
     variant: 'create' | 'edit' | 'add'
     onSubmit: (data: string | { question: string, answer: string }) => void
+    onDelete?: () => void
     initialQuestion?: string
     initialAnswer?: string
 }
 
-const FaqModal: React.FC<ModalProps> = ({ variant, onSubmit, initialQuestion = '', initialAnswer = '' }) => {
+const FaqModal: React.FC<ModalProps> = ({ variant, onSubmit, onDelete, initialQuestion = '', initialAnswer = '' }) => {
     const [headline, setHeadline] = useState<string>('');
     const [question, setQuestion] = useState<string>(initialQuestion);
     const [answer, setAnswer] = useState<string>(initialAnswer);
@@ -44,6 +47,13 @@ const FaqModal: React.FC<ModalProps> = ({ variant, onSubmit, initialQuestion = '
 
     const handleAnswerChange = (event: ChangeEvent<HTMLTextAreaElement>): void => {
         setAnswer(event.target.value);
+    };
+
+    const handleDelete = (): void => {
+        if (onDelete) {
+            onDelete();
+            setIsOpen(false);
+        }
     };
 
     if (variant === 'create') {
@@ -107,9 +117,7 @@ const FaqModal: React.FC<ModalProps> = ({ variant, onSubmit, initialQuestion = '
                         <Plus className="w-4 h-4 mr-1" />
                         Add FAQ
                     </Button>
-                )
-                }
-
+                )}
             </DialogTrigger>
 
             <DialogContent className="bg-white text-black p-6 w-[30rem] max-w-full rounded-md">
@@ -147,8 +155,16 @@ const FaqModal: React.FC<ModalProps> = ({ variant, onSubmit, initialQuestion = '
                             />
                         </div>
 
-                        <div className="w-full flex justify-end pt-4">
-                            <Button type="submit" variant={'default'} className="w-full bg-[#ffb433] font-semibold hover:bg-[#9c6d1b]">
+                        <div className="w-full flex justify-between items-center pt-4">
+                            {/* Delete Button */}
+                            {isEdit && onDelete && (
+                                <Button type="button" variant="default" className="bg-red-500 hover:bg-red-700 text-white px-4 py-2 rounded-md" onClick={handleDelete}>
+                                    Delete FAQ
+                                </Button>
+                            )}
+
+                            {/* Submit Button */}
+                            <Button type="submit" variant={'default'} className={`${isEdit ? 'w-[70%]' : 'w-full'} bg-[#ffb433] font-semibold hover:bg-[#9c6d1b]`}>
                                 {submitButtonText}
                             </Button>
                         </div>

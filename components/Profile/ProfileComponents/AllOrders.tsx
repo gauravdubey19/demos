@@ -1,3 +1,4 @@
+"use client"
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { IoCheckmarkCircleSharp, IoChevronDown, IoChevronUp } from "react-icons/io5";
@@ -14,9 +15,14 @@ const AllOrders: React.FC<AllOrdersProps> = ({ fetchedOrders, isSearch = false, 
   const { searchLoading, searchQuery, setFetchedOrders: globalFetchedOrders } = useGlobalContext();
   const [isCancelDialogOpen, setIsCancelDialogOpen] = useState(false);
   const [selectedOrderId, setSelectedOrderId] = useState<string | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     setClientRendered(true);
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
   const orderStatusLine = (status: string, order: Order) => {
@@ -109,14 +115,18 @@ const AllOrders: React.FC<AllOrdersProps> = ({ fetchedOrders, isSearch = false, 
                   <p className='font-mont text-color-tertiary text-sm'>Order Placed</p>
                   <p className='font-dmSansSemiBold'>{clientRendered ? formatDate(order.orderInfo.orderDate) : '...'}</p>
                 </div>
-                <div className='bg-primary w-[0.5px] h-[50px]' />
-                <div className='flex flex-col gap-1'>
-                  <p className='font-mont text-color-tertiary text-sm'>Total Price</p>
-                  <p className='font-dmSansSemiBold flex flex-row items-center'>
-                    <MdOutlineCurrencyRupee size={18} />
-                    {clientRendered ? order.orderInfo.totalPrice.toFixed(2) : '...'}
-                  </p>
-                </div>
+                {!isMobile && (
+                  <>
+                    <div className='bg-primary w-[0.5px] h-[50px]' />
+                    <div className='flex flex-col gap-1'>
+                      <p className='font-mont text-color-tertiary text-sm'>Total Price</p>
+                      <p className='font-dmSansSemiBold flex flex-row items-center'>
+                        <MdOutlineCurrencyRupee size={18} />
+                        {clientRendered ? order.orderInfo.totalPrice.toFixed(2) : '...'}
+                      </p>
+                    </div>
+                  </>
+                )}
               </div>
             </div>
             <div>
@@ -144,6 +154,15 @@ const AllOrders: React.FC<AllOrdersProps> = ({ fetchedOrders, isSearch = false, 
                     <span className='font-mont text-base'>Order ID: </span>
                     <span className='font-montSemiBold text-base'>{order.orderInfo.orderID}</span>
                   </div>
+                  {isMobile && (
+                    <div className='mt-1'>
+                      <span className='font-mont text-base'>Total Price: </span>
+                      <span className='font-montSemiBold text-base flex items-center'>
+                        <MdOutlineCurrencyRupee size={18} />
+                        {clientRendered ? order.orderInfo.totalPrice.toFixed(2) : '...'}
+                      </span>
+                    </div>
+                  )}
                 </div>
                 {order.orderInfo.orderStatus === 'pending' &&
                   <Button
