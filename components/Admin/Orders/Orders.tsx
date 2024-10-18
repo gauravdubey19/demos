@@ -240,7 +240,7 @@ const OrderChart = () => {
         {/* Top Selling Categories Pie Chart */}
         <div className="chart-container h-fit lg:h-[50vh] bg-[#F8F8F8] shadow-md rounded-lg p-4 hover:shadow-lg ease-in-out duration-300 overflow-hidden">
           <h2 className="text-xl font-bold">Top Selling Categories</h2>
-          <div className="relative w-full h-fit flex-center">
+          <div className="relative w-full h-full flex-center">
             <Pie
               data={topSellingCategoriesData}
               options={pieChartOptions}
