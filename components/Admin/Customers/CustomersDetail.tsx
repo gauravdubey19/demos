@@ -79,13 +79,15 @@ const CustomersDetail: React.FC<{ userId: string }> = ({ userId }) => {
       }
     };
 
-    if (!user) fetchUser();
-  }, [user, userId]);
+     fetchUser();
+  }, [ userId]);
 
   useEffect(() => {
     const fetchUserOrders = async () => {
       try {
-        const useOrdersrRes = await fetch(`/api/orders/${userId}`);
+        const useOrdersrRes = await fetch(`/api/orders/${userId}`,{
+          "cache": "no-store", // Add Cache-Control header
+        });
         const data = await useOrdersrRes.json();
         setUserOrders(data as Order[]);
         setIsLoading(false);
@@ -94,8 +96,8 @@ const CustomersDetail: React.FC<{ userId: string }> = ({ userId }) => {
       }
     };
 
-    if (userOrders.length === 0) fetchUserOrders();
-  }, [userId, userOrders]);
+   fetchUserOrders();
+  }, [userId]);
 
   if (!user) return <Loader />;
 

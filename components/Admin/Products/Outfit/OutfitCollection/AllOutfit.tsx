@@ -26,6 +26,7 @@ const AllOufitCollection = () => {
     try {
       const res = await fetch("/api/products/read/get-outfit-collection", {
         method: "GET",
+        "cache": "no-store", // Add Cache-Control header
         headers: { "Content-Type": "application/json" },
       });
 

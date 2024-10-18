@@ -26,6 +26,7 @@ const AllCategories = () => {
       try {
         const res = await fetch(`/api/products/read/get-categories`, {
           method: "GET",
+          "cache": "no-store", // Add Cache-Control header
           headers: {
             "Content-Type": "application/json",
             "Cache-Control": "no-store", // Add Cache-Control header

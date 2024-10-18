@@ -105,6 +105,7 @@ const MyTickets = () => {
       try {
         const res = await fetch(`/api/helpdesk/${session?.user?.id}`, {
           method: 'GET',
+          "cache": "no-store", // Add Cache-Control header
           headers: {
             'Content-Type': 'application/json',
             'Cache-Control': 'no-store', // Ensure no caching
