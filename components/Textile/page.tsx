@@ -147,7 +147,7 @@ export default function RenderTextile() {
   return (
     <div className="w-screen py-4 h-auto sm:h-screen overflow-hidden flex justify-between items-start flex-col sm:flex-row">
       {/* Types selection area */}
-<div className="order-3 md:order-1 sm:w-[10%] w-full h-48 sm:h-full flex justify-start flex-col overflow-auto pb-4 p-2 pt-0 relative" style={{scrollbarWidth: 'none'}}>
+<div className="order-3 md:order-1 sm:w-[10%] w-full h-56 sm:h-full flex justify-start flex-col overflow-auto pb-4 p-2 pt-0 relative" style={{scrollbarWidth: 'none'}}>
       <Types types={types} changeType={activeCameraAngle}/>
 </div>
 
