@@ -60,7 +60,7 @@ const Dashboard = () => {
         }
 
         const data = await res.json();
-        console.log("res:", data);
+        // console.log("res:", data);
         setCollectionsLength(data);
       } catch (error) {
         console.error("Error fetching collections:", error);
@@ -323,7 +323,7 @@ const Dashboard = () => {
             {/* Total Customers Line Chart */}
             <div className="chart-container w-full h-fit bg-[#F8F8F8] drop-shadow-md rounded-lg p-4 hover:shadow-lg ease-in-out duration-300 overflow-hidden">
               <h2 className="text-xl font-bold">Total Customers</h2>
-              <p className="text-gray-500">Year 2020</p>
+              <p className="text-gray-500">Year 2024</p>
               <div className="relative w-full h-fit lg:h-[65vh] flex-center">
                 <Line
                   data={totalCustomersData}
