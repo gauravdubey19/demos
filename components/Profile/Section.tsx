@@ -21,13 +21,11 @@ const Section: React.FC<SectionProps> = ({ section, sections }) => {
   const { fetchedOrders, fetchingOrders,setFetchingOrders,setFetchedOrders,fetchOrders } = useGlobalContext();
 
   useEffect(()=>{
-    console.log("Fetching Orders:",section!=="order-history",!fetchedOrders.length);
     if(!session?.user?.id) return;
     if(section!=="order-history") return;
-    if(fetchedOrders.length) return;
-   
+    
     fetchOrders();
-  },[fetchOrders, fetchedOrders.length, section, session?.user?.id])
+  },[ section, session?.user?.id])
   const tabs = [
     { id: "allOrders", label: "All Orders" },
     { id: "notShippedYet", label: "Not Shipped Yet" },

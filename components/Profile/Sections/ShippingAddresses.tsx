@@ -9,7 +9,7 @@ const ShippingAddresses = () => {
   
   useEffect(() => {
     getAddresses();
-  }, [getAddresses]);
+  }, []);
   const handleSelect = (addressId: string) => {
     setSelectedAddresses((prevSelected) =>
       prevSelected.includes(addressId)

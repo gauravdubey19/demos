@@ -282,7 +282,7 @@ const GlobalProvider = ({ children }: { children: ReactNode }) => {
   
   const getAddresses = async () => {
     setAddressLoading(true);
-    if (session?.user?.id && !addresses.length) {
+    if (session?.user?.id) {
       console.log('Fetching addresses');
       const data = await fetchAddresses(session.user.id);
       console.log('Addresses:', data);
