@@ -38,10 +38,13 @@ const AllProducts = () => {
       try {
         const res = await fetch(`/api/products/read/get-all-products`, {
           method: "GET",
-          "cache": "no-store",
+          cache: "no-store",
+          next:{
+            revalidate: 0,
+          },
           headers: {
             "Content-Type": "application/json",
-            "Cache-Control": "no-store",
+            
           },
         });
 
