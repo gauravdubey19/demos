@@ -50,7 +50,7 @@ const Slider = ({ category }: SliderProps) => {
   };
 
   return (
-    <div className="relative w-full h-[calc(100vh-60px)] mt-[60px] overflow-hidden">
+    <div className="relative w-full h-[calc(100vh-60px)] mt-[60px] overflow-hidden mb-12">
       {/* Carousel images */}
       <div className="absolute inset-0 flex">
         {typedSlides[category].map((slide, idx) => (

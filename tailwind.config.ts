@@ -153,6 +153,8 @@ const baseConfig: Config = {
         montBold: ["Montserrat-bold", "sans-serif"],
         mont: ["Montserrat", "sans-serif"],
         montSemiBold: ["Montserrat-semibold", "sans-serif"],
+        cinzelBold: ["Cinzel-Bold", "serif"],
+        bebasNeue: ["Bebas-Neue", "sans-serif"],
       },
       spacing: {
         word: "0.25em",

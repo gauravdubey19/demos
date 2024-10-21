@@ -265,7 +265,7 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({
         className="hidden lg:block lg:w-[80%] h-full relative "
       />
 
-      <div className="relative w-full h-full md:w-[20%] lg:h-[50%] md:h-full flex flex-col">
+      <div className="relative w-full h-full md:w-[20%] flex flex-col">
         <div
           ref={thumbnailRef}
           className={`absolute h-full flex ${

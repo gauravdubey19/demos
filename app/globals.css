@@ -152,3 +152,46 @@ body {
   font-family: "Montserrat-semibold";
   src: url("../public/fonts/Montserrat-SemiBold.ttf");
 }
+@font-face {
+  font-family: "Cinzel-Bold";
+  src: url("../public/fonts/Cinzel-Bold.ttf");
+}
+@font-face {
+  font-family: "Bebas-Neue";
+  src: url("../public/fonts/BebasNeue-Regular.ttf");
+}
+
+.button-default {
+  color: var(--primary);
+  background-color: rgba(0, 0, 0, 0.7);
+  border: 2px solid var(--primary);
+  border-radius: 25px;
+  padding: 1.25rem 2rem;
+  backdrop-filter: blur(10px);
+  font-size: 1.25rem;
+  font-family: 'Montserrat', sans-serif;
+  transition: background-color 0.3s ease-out, color 0.3s ease-out;
+}
+
+.button-hover {
+  background-color: var(--primary);
+  color: white;
+  font-family: 'Montserrat-bold', sans-serif;
+  border: 2px solid #fff
+}
+.cursorLeft {
+  cursor: url('../public/cursor1.svg'), auto;
+}
+.cursorRight {
+  cursor: url('../public/cursor2.svg'), auto;
+}
+
+@media screen and (max-width: 768px) {
+  .button-default {
+    padding: 0.8rem;
+    font-size: 1rem;
+    border-radius: 15px;
+    border: 1px solid var(--primary);
+  }
+  
+}

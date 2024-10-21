@@ -4,13 +4,15 @@ import GridCards from "./Grids/GridCards";
 import ProductCategorySection from "./CategorySection/ProductCategorySection";
 import TestimonialContainer from "./Testimonials/TestimonialContainer";
 import HeroWithDrag from "./HeroWithDrag";
+import NewHeroSection from "./NewHeroSection";
 
 const Home = () => {
   return (
     <>
       <main className="w-full h-full">
         {/* <GsapHero /> */}
-        <HeroWithDrag />
+        {/* <HeroWithDrag /> */}
+        <NewHeroSection />
         <CategorySection />
         {/* <GridCards /> */}
         <ProductCategorySection />

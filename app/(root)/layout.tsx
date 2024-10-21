@@ -5,6 +5,7 @@ import { GlobalProvider } from "@/context/GlobalProvider";
 import ScrollToTop from "@/components/ui/ScrollToTop";
 import { CartProvider } from "@/context/CartProvider";
 import BottomNav from "@/components/Navbar/BottomNav";
+import Loader from "@/components/ui/Loader";
 
 export default function RootLayout({
   children,
@@ -19,6 +20,7 @@ export default function RootLayout({
             <Navbar appName="CSK" />
             <BottomNav />
             {children}
+            {/* <Loader /> */}
             <ScrollToTop />
             <Footer appName="CSK Textile" />
           </CursorProvider>
