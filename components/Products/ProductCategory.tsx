@@ -8,6 +8,9 @@ import Filter from "./Filter";
 import Goback from "../ui/Goback";
 import Loader from "../ui/Loader";
 import Breadcrumbs from "../ui/Breadcrumbs";
+import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerTrigger } from "../ui/drawer";
+import { LiaFilterSolid } from "react-icons/lia";
+import MobileFilter from "./MobileFilter";
 
 const ProductCategory: React.FC<ProductCategoryProps> = ({
   category,
@@ -137,8 +140,6 @@ const ProductCategory: React.FC<ProductCategoryProps> = ({
   return (
     <section className="w-full h-full overflow-hidden">
       <div className={`relative w-full mt-[60px] py-4 `}>
-        {/* <Goback /> */}
-
         <div className="flex flex-row max-h-[calc(100vh-60px)]">
           <Filter
             categorySlug={category}
@@ -156,13 +157,48 @@ const ProductCategory: React.FC<ProductCategoryProps> = ({
             setIsAscending={setIsAscending}
           />
           <div className="w-full px-2 md:px-10 lg:px-14 h-[calc(100vh-60px)] overflow-auto">
-            <h2 className="md:ml-2 px-2 md:px-0 space-y-2 animate-slide-down">
-              <Breadcrumbs />
-              <span className="text-xl lg:text-2xl font-bold">
-                {reverseSlug(category)}
-                {category === "all" ? " Categories" : " Category"}
-              </span>
-            </h2>
+            <div className="md:ml-2 px-2 md:px-0 space-y-2 animate-slide-down flex justify-between items-center">
+              <div>
+                <Breadcrumbs />
+                <span className="text-xl lg:text-2xl font-bold">
+                  {reverseSlug(category)}
+                  {category === "all" ? " Categories" : " Category"}
+                </span>
+              </div>
+              <div className="md:hidden">
+                <Drawer>
+                  <DrawerTrigger asChild>
+                    <div className="flex items-center gap-1 active:translate-y-1 transition-transform duration-300">
+                      <span>Filter</span>
+                      <LiaFilterSolid size={18} />
+                    </div>
+                  </DrawerTrigger>
+                  <DrawerContent className="md:hidden fixed top-0 right-0 bottom-0 w-full max-w-md h-full bg-white p-4 z-50 shadow-lg rounded-l-2xl">
+                    <DrawerHeader>
+                      {/* <DrawerTitle className="text-2xl md:text-3xl font-semibold">
+                        Filter
+                      </DrawerTitle> */}
+                    </DrawerHeader>
+                    <MobileFilter
+                      categorySlug={category}
+                      selectedType={selectedType}
+                      setSelectedType={setSelectedType}
+                      selectedColor={selectedColor}
+                      setSelectedColor={setSelectedColor}
+                      colorOptions={colorOptions}
+                      availableSizes={availableSizes}
+                      selectedSize={selectedSize}
+                      setSelectedSize={setSelectedSize}
+                      priceRange={priceRange}
+                      setPriceRange={setPriceRange}
+                      isAscending={isAscending}
+                      setIsAscending={setIsAscending}
+                    />
+                    {/* Existing Filter content */}
+                  </DrawerContent>
+                </Drawer>
+              </div>
+            </div>
             {products.length > 0 ? (
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 gap-1 md:gap-6 animate-slide-up">
                 {products.map((card) => (
