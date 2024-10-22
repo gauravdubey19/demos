@@ -169,14 +169,16 @@ body {
   padding: 1.25rem 2rem;
   backdrop-filter: blur(10px);
   font-size: 1.25rem;
-  font-family: 'Montserrat', sans-serif;
+  font-family: 'Montserrat-SemiBold', sans-serif;
   transition: background-color 0.3s ease-out, color 0.3s ease-out;
 }
-
+#shopNow:hover span{
+  color: #fff;
+}
 .button-hover {
   background-color: var(--primary);
   color: white;
-  font-family: 'Montserrat-bold', sans-serif;
+  font-family: 'Montserrat-SemiBold', sans-serif;
   border: 2px solid #fff
 }
 .cursorLeft {

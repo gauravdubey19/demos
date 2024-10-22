@@ -5,6 +5,10 @@ import SlideComponent from "./SlideComponent";
 import { GoChevronLeft, GoChevronRight } from "react-icons/go";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
+import Logo from "@/public/logo.png";
+import { Button } from "../ui/button";
+import { FaArrowRightLong } from "react-icons/fa6";
 
 function NewHeroSection() {
   const slideRef = useRef<HTMLDivElement>(null);
@@ -54,6 +58,10 @@ function NewHeroSection() {
               3D Textiles
               </div>
             </Link>
+            <div className="relative items-center justify-center px-6 py-2  overflow-hidden hidden md:flex">
+              {/* <div className="absolute top-0 left-0 right-0 bottom-0 bg-black opacity-70 z-0 border border-primary rounded-full"></div> */}
+             <Image src={Logo} alt="CSK" width={100} height={100} className=" w-[80px] lg:w-[70px] h-auto relative z-10 " />
+            </div>
             <Link href="/products" className="button-default" id="readyMade">
               <div className="flex flex-row gap-2 items-center justify-center relative w-full h-full left-2">
               Ready Made
@@ -64,23 +72,23 @@ function NewHeroSection() {
         </div>
         <div className="w-full h-full absolute z-[40] hidden md:block">
           <div
-            className="w-1/2 left-0 top-0 absolute h-full opacity-0 hover:opacity-40 cursorRight"
+            className="w-1/3 left-0 top-0 absolute transition duration-300 ease-out h-full opacity-0 hover:opacity-60 cursorRight"
             id="leftHalf"
             onMouseEnter={() => handleMouseEnter('3dButton')}
             onMouseLeave={() => handleMouseLeave('3dButton')}
             onClick={()=> router.push("/three-d")}
             style={{
-              background: 'linear-gradient(60deg, var(--primary) 0%, transparent 70%, transparent 100%)',
+              background: 'linear-gradient(60deg, var(--primary) 0%, transparent 60%, transparent 100%)',
             }}
           ></div>
           <div
-            className="w-1/2 right-0 top-0 absolute h-full opacity-0 hover:opacity-40 cursorLeft"
+            className="w-1/3 right-0 top-0 absolute transition duration-300 ease-out h-full opacity-0 hover:opacity-60 cursorLeft"
             id="rightHalf"
             onMouseEnter={() => handleMouseEnter('readyMade')}
             onMouseLeave={() => handleMouseLeave('readyMade')}
             onClick={()=> router.push("/products")}
             style={{
-              background: 'linear-gradient(-60deg, var(--primary) 0%, transparent 70%, transparent 100%)',
+              background: 'linear-gradient(-60deg, var(--primary) 0%, transparent 60%, transparent 100%)',
             }}
           ></div>
         </div>
@@ -123,6 +131,19 @@ function NewHeroSection() {
           subtitle="At Affordable Rate"
           yellowSubString="Affordable"
         />
+      </div>
+      <div className="w-[220px] md:w-[300px] h-[100px] md:h-[120px] md:rounded-tl-[25px] rounded-tl-[20px] absolute bg-white bottom-0 right-0 z-50">
+     
+        <div className="w-full h-full flex items-center justify-center p-2 md:p-3 pr-0 md:pr-0 pb-0 md:pb-0">
+          <Button className="w-full h-full md:rounded-tl-[20px] md:rounded-br-[20px] rounded-tl-[15px] rounded-br-[15px] bg-black text-primary flex flex-col items-start gap-2 md:gap-4 px-6 hover:bg-primary hover:text-white rounded-tr-none rounded-bl-none" id="shopNow" onClick={()=> router.push("/products")}>
+            <span className="text-white text-[20px] md:text-[24px] lg:text-[28px] font-montSemiBold">Explore CSK</span>
+            <div className="flex flex-row gap-4 items-center">
+            <span className="text-primary text-[18px] underline font-mont">Shop Now</span>
+            <FaArrowRightLong className="" size={22} />
+            </div>
+          </Button>
+
+          </div>
       </div>
       </div>
     </section>

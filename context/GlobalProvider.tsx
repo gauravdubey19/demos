@@ -203,6 +203,10 @@ interface GlobalState {
   setDeletingAddresses: React.Dispatch<React.SetStateAction<boolean>>;
   fetchOrders: () => Promise<void>;
   getAddresses: () => Promise<void>;
+  preloaded: boolean;
+  setPreloaded: React.Dispatch<React.SetStateAction<boolean>>;
+  hasAnimationCompleted: boolean;
+  setHasAnimationCompleted: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 interface SessionExtended extends Session {
@@ -246,6 +250,7 @@ const GlobalProvider = ({ children }: { children: ReactNode }) => {
   const [searchLoading, setSearchLoading] = useState<boolean>(false);
   const [fetchingOrders, setFetchingOrders] = useState<boolean>(false);
   const [fetchedOrders, setFetchedOrders] = useState<Order[]>([]);
+  const [hasAnimationCompleted, setHasAnimationCompleted] = useState(false);
 
   const [editAddressData, setEditAddressData] = useState({
     _id: "",
@@ -257,7 +262,7 @@ const GlobalProvider = ({ children }: { children: ReactNode }) => {
     city: { name: "Select a city", code: "" },
     pincode: "",
   });
-
+  const [preloaded, setPreloaded] = useState(false);
   const fetchAddresses = async (userId: string): Promise<{ addresses: Address[] } | null> => {
     try {
       const response = await fetch(`/api/addresses/${userId}`, {
@@ -630,7 +635,8 @@ const handleDeleteAddresses = async () => {
         searchQuery, setSearchQuery, fetchedOrders, fetchingOrders, setFetchingOrders, setFetchedOrders,
         fetchReviews, deletingAddresses, setDeletingAddresses,
         setAddressLoading,fetchAddresses, fetchOrders,
-        getAddresses
+        getAddresses, preloaded, setPreloaded,
+        hasAnimationCompleted, setHasAnimationCompleted,
       }}
     >
       {children}
