@@ -20,7 +20,7 @@ export default async function ProfileLayout({
 
   return (
     <>
-      <div className="h-[calc(100vh-60px)] mt-[60px] w-full flex gap-6 md:p-6 overflow-hidden">
+      <div className="h-[calc(100vh-60px)] mt-[60px] w-full flex gap-6 md:p-6 overflow-y-auto overflow-hidden">
         <Sidebar
           section={decodeURIComponent(params.section)}
           sections={profileSections}
