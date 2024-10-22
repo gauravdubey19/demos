@@ -150,6 +150,18 @@ export interface Review {
   productId: string;
   userId: string;
 }
+export interface Coupon {
+  _id: string;
+  code: string;
+  discountType: string;
+  discountValue: number;
+  expirationDate: string;
+  minPurchaseAmount: number;
+  maxDiscountAmount?: number;
+  usageLimit: number;
+  userSpecific: boolean;
+  usedCount: number;
+}
 interface GlobalState {
   user: User | null;
   error: string | null;
@@ -207,6 +219,8 @@ interface GlobalState {
   setPreloaded: React.Dispatch<React.SetStateAction<boolean>>;
   hasAnimationCompleted: boolean;
   setHasAnimationCompleted: React.Dispatch<React.SetStateAction<boolean>>;
+  coupons: Coupon[];
+  setCoupons: React.Dispatch<React.SetStateAction<Coupon[]>>;
 }
 
 interface SessionExtended extends Session {
@@ -251,6 +265,7 @@ const GlobalProvider = ({ children }: { children: ReactNode }) => {
   const [fetchingOrders, setFetchingOrders] = useState<boolean>(false);
   const [fetchedOrders, setFetchedOrders] = useState<Order[]>([]);
   const [hasAnimationCompleted, setHasAnimationCompleted] = useState(false);
+  const [coupons, setCoupons] = useState<Coupon[]>([]);
 
   const [editAddressData, setEditAddressData] = useState({
     _id: "",
@@ -389,7 +404,6 @@ const GlobalProvider = ({ children }: { children: ReactNode }) => {
         setFetchingOrders(true);
         const response = await fetch(`/api/orders/${userId}`);
         const data = await response.json();
-        console.log("Data orders:",data);
         setFetchedOrders(data);
         } catch (error) {
           console.error('Error fetching orders:', error);
@@ -637,6 +651,7 @@ const handleDeleteAddresses = async () => {
         setAddressLoading,fetchAddresses, fetchOrders,
         getAddresses, preloaded, setPreloaded,
         hasAnimationCompleted, setHasAnimationCompleted,
+        coupons, setCoupons
       }}
     >
       {children}

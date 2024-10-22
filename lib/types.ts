@@ -292,7 +292,8 @@ export interface FormStatus {
 // Cart
 
 export interface CartItem {
-  productId: string;
+  discount: number;
+  productId:string;
   title: string;
   slug: string;
   price: number;
@@ -305,7 +306,7 @@ export interface CartItem {
     color: string;
   };
   categorySlug: string;
-  //above are needed for order shcmea
+  // above are needed for order schema
   description: string;
   availableSizes: string[];
   colorOptions: {
@@ -314,7 +315,6 @@ export interface CartItem {
     color: string;
   }[];
 }
-
 // category
 export interface CategoryCollectionValues {
   _id: string;

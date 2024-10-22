@@ -370,8 +370,15 @@ const Details: React.FC<DetailsProps> = ({
     });
 
     if (size.trim() !== "" && color.trim() !== "") {
+      let discountInPercentage = 0;
+      if(product.oldPrice){
+      discountInPercentage = Math.round(
+        ((product.oldPrice - product.price) / product.oldPrice) * 100
+      );
+    }
       const quantity = 1;
       handleAddToCart(
+        discountInPercentage,
         product._id,
         product.title,
         product.slug,

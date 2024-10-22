@@ -16,6 +16,7 @@ import {
   SelectValue,
 } from "../ui/select";
 import { useRouter } from "next/navigation";
+import { CartItem } from "@/lib/types";
 
 const Cart = () => {
   const router = useRouter();
@@ -98,28 +99,6 @@ const Cart = () => {
 };
 
 export default Cart;
-
-interface CartItem {
-  slug: string;
-  productId: string;
-  image: string;
-  title: string;
-  description: string;
-  price: number;
-  quantity: number;
-  quantityInStock: number;
-  availableSizes: string[];
-  selectedSize: string;
-  colorOptions: {
-    _id: string;
-    title: string;
-    color: string;
-  }[];
-  selectedColor: {
-    title: string;
-    color: string;
-  };
-}
 
 const CartItems = () => {
   const { cart } = useCart();

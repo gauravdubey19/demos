@@ -325,7 +325,14 @@ const AddToBagPopUp: React.FC<AddToBagPopUpProps> = ({
     });
 
     if (size.trim() !== "" && color.trim() !== "" && product._id) {
+      let discountInPercentage = 0;
+      if (product.oldPrice) {
+        discountInPercentage = Math.round(
+          ((product.oldPrice - product.price) / product.oldPrice) * 100
+        );
+      }
       handleAddToCart(
+        discountInPercentage,
         product._id,
         product.title,
         product.slug,
