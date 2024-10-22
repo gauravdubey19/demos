@@ -120,12 +120,15 @@ const NewAddProduct = () => {
   const [faqs, setFaqs] = useState<Faq[]>([]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    const quantityArr = colorOptions.flatMap(collection => 
-      collection.quantity.map(q => q.quantity)
+    const quantityArr = colorOptions.flatMap((collection) =>
+      collection.quantity.map((q) => q.quantity)
     );
-    
-    const total_quantity = quantityArr.reduce((sum, quantity) => sum + quantity, 0);
-    
+
+    const total_quantity = quantityArr.reduce(
+      (sum, quantity) => sum + quantity,
+      0
+    );
+
     e.preventDefault();
     setLoading(true);
     const fields = {
