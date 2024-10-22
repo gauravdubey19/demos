@@ -120,6 +120,12 @@ const NewAddProduct = () => {
   const [faqs, setFaqs] = useState<Faq[]>([]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    const quantityArr = colorOptions.flatMap(collection => 
+      collection.quantity.map(q => q.quantity)
+    );
+    
+    const total_quantity = quantityArr.reduce((sum, quantity) => sum + quantity, 0);
+    
     e.preventDefault();
     setLoading(true);
     const fields = {
@@ -141,7 +147,7 @@ const NewAddProduct = () => {
       images_collection: colorOptions,
       product_highlights,
       faqs,
-      sell_on_google_quantity: 1,
+      sell_on_google_quantity: total_quantity,
     };
     if (
       !title ||
