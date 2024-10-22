@@ -63,6 +63,12 @@ import { BsTrash } from "react-icons/bs";
 import { LuImageOff, LuImagePlus } from "react-icons/lu";
 import { HiOutlineSaveAs } from "react-icons/hi";
 import { BiLoaderAlt } from "react-icons/bi";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 interface CategoryValue {
   title: string;
@@ -556,6 +562,9 @@ export const ImageCollections: React.FC<ImageCollectionsProps> = ({
   const [isUploading, setIsUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const [images, setImages] = useState<string[]>([]);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+
   const handleAddColor = () => {
     const { color_name, color, images, quantity } = newColor;
     if (!color_name || !color || !images.length || !quantity.length) {
@@ -688,201 +697,263 @@ export const ImageCollections: React.FC<ImageCollectionsProps> = ({
   };
 
   return (
-    <div className="col-span-2">
-      {error && <div className="text-red-500 mb-2">{error}</div>}
-      <div className="flex flex-col gap-4">
-        {colorOptions.map((option, index) => (
-          <div key={index} className="flex-between gap-4 border-b pb-4 mb-4">
-            <div className="flex items-center gap-2">
-              <div
-                className="w-12 h-12 border border-gray-300 rounded-full"
-                style={{ backgroundColor: option.color }}
-              />
-              <span>{option.color_name}</span>
+    <>
+      <div className="col-span-2">
+        {error && <div className="text-red-500 mb-2">{error}</div>}
+        <div className="flex flex-col gap-4">
+          {colorOptions.map((option, index) => (
+            <div key={index} className="flex-between gap-4 border-b pb-4 mb-4">
+              <div className="flex items-center gap-2">
+                <div
+                  className="w-12 h-12 border border-gray-300 rounded-full"
+                  style={{ backgroundColor: option.color }}
+                />
+                <span>{option.color_name}</span>
+              </div>
+
+              {/* Displaying the image link */}
+              {option.image_link && (
+                <Image
+                  src={option.image_link}
+                  alt={option.color_name}
+                  width={200}
+                  height={200}
+                  onClick={() => {
+                    setIsOpen(true);
+                    setImages(option.images)
+                  }}
+                  className="w-16 h-16 object-cover rounded"
+                />
+              )}
+
+              {/* Displaying quantity */}
+              <div className="flex flex-col">
+                {option.quantity.map((q, idx) => (
+                  <div key={idx} className="flex items-center gap-2">
+                    <span>Size: {q.size}</span>
+                    <span>Quantity: {q.quantity}</span>
+                  </div>
+                ))}
+              </div>
+
+              <button
+                type="button"
+                onClick={() =>
+                  setColorOptions(colorOptions.filter((_, i) => i !== index))
+                }
+                className="p-2 rounded bg-red-100 hover:bg-red-200 text-red-600"
+              >
+                <BsTrash size={16} />
+              </button>
             </div>
+          ))}
 
-            {/* Displaying the image link */}
-            {option.image_link && (
-              <Image
-                src={option.image_link}
-                alt={option.color_name}
-                width={200}
-                height={200}
-                className="w-16 h-16 object-cover rounded"
-              />
-            )}
-
-            {/* Displaying quantity */}
-            <div className="flex flex-col">
-              {option.quantity.map((q, idx) => (
-                <div key={idx} className="flex items-center gap-2">
-                  <span>Size: {q.size}</span>
-                  <span>Quantity: {q.quantity}</span>
-                </div>
-              ))}
-            </div>
-
-            <button
-              type="button"
-              onClick={() =>
-                setColorOptions(colorOptions.filter((_, i) => i !== index))
-              }
-              className="p-2 rounded bg-red-100 hover:bg-red-200 text-red-600"
-            >
-              <BsTrash size={16} />
-            </button>
-          </div>
-        ))}
-
-        {isAdding && (
-          <div className="flex gap-4">
-            <div className="space-y-2">
-              <div className="flex gap-4">
-                <div>
-                  <label className="block text-sm font-medium">
-                    Choose Color
-                    {section === "add" && <span className="text-[red]">*</span>}
-                  </label>
-                  <div className="w-10 h-10 mt-2 drop-shadow-md border rounded-full overflow-hidden">
+          {isAdding && (
+            <div className="flex gap-4">
+              <div className="space-y-2">
+                <div className="flex gap-4">
+                  <div>
+                    <label className="block text-sm font-medium">
+                      Choose Color
+                      {section === "add" && (
+                        <span className="text-[red]">*</span>
+                      )}
+                    </label>
+                    <div className="w-10 h-10 mt-2 drop-shadow-md border rounded-full overflow-hidden">
+                      <input
+                        type="color"
+                        value={newColor.color}
+                        onChange={(e) => handleInputChange(e, "color")}
+                        className="w-full h-full rounded-full scale-150"
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700">
+                      HEX Color
+                      {section === "add" && (
+                        <span className="text-[red]">*</span>
+                      )}
+                    </label>
                     <input
-                      type="color"
+                      type="text"
                       value={newColor.color}
                       onChange={(e) => handleInputChange(e, "color")}
-                      className="w-full h-full rounded-full scale-150"
+                      className="mt-2 block w-28 p-2 border border-gray-300 rounded-md shadow-sm bg-[#F8F8F8]"
+                      placeholder="Enter"
+                    />
+                  </div>
+                  <div className="flex-1">
+                    <label className="block text-sm font-medium">
+                      Color Name
+                      {section === "add" && (
+                        <span className="text-[red]">*</span>
+                      )}
+                    </label>
+                    <input
+                      type="text"
+                      value={newColor.color_name}
+                      onChange={(e) => handleInputChange(e, "color_name")}
+                      placeholder="Enter color name"
+                      className="w-full mt-2 p-2 border border-gray-300 rounded-md shadow-sm bg-[#F8F8F8]"
                     />
                   </div>
                 </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">
-                    HEX Color
-                    {section === "add" && <span className="text-[red]">*</span>}
-                  </label>
-                  <input
-                    type="text"
-                    value={newColor.color}
-                    onChange={(e) => handleInputChange(e, "color")}
-                    className="mt-2 block w-28 p-2 border border-gray-300 rounded-md shadow-sm bg-[#F8F8F8]"
-                    placeholder="Enter"
-                  />
-                </div>
-                <div className="flex-1">
-                  <label className="block text-sm font-medium">
-                    Color Name
-                    {section === "add" && <span className="text-[red]">*</span>}
-                  </label>
-                  <input
-                    type="text"
-                    value={newColor.color_name}
-                    onChange={(e) => handleInputChange(e, "color_name")}
-                    placeholder="Enter color name"
-                    className="w-full mt-2 p-2 border border-gray-300 rounded-md shadow-sm bg-[#F8F8F8]"
-                  />
+
+                <div className="flex gap-4">
+                  <Button
+                    type="button"
+                    onClick={handleAddImage}
+                    disabled={isUploading}
+                    className="w-fit h-fit p-2 text-black cursor-pointer bg-blue-100 hover:bg-blue-200"
+                  >
+                    <LuImagePlus size={20} className="mr-1" />
+                    Add Images
+                    {isUploading && (
+                      <BiLoaderAlt size={20} className="ml-1 animate-spin" />
+                    )}
+                  </Button>
+
+                  {newColor.images.length > 0 && (
+                    <div className="w-fit max-w-[10wh] flex gap-2 overflow-x-scroll overflow-y-hidden">
+                      {newColor.images.map((img, idx) => (
+                        <div key={idx} className="flex gap-2 items-center">
+                          <Image
+                            src={img}
+                            alt="Uploaded"
+                            width={200}
+                            height={200}
+                            className="w-14 h-14 object-contain"
+                          />
+                          <Button
+                            type="button"
+                            onClick={() => handleRemoveImage(img)}
+                            className="w-fit h-fit p-2 text-black bg-red-100 hover:bg-red-200"
+                          >
+                            <LuImageOff size={16} />
+                          </Button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
               </div>
 
-              <div className="flex gap-4">
+              <div className="flex-">
+                <label className="block text-sm font-medium text-gray-700">
+                  Size and Quantity
+                </label>
+                {newColor.quantity.map((q, idx) => (
+                  <div key={idx} className="flex gap-2 mt-2">
+                    <div className="flex gap-2">
+                      {getAvailableSizes(idx).map((size) => (
+                        <button
+                          type="button"
+                          key={size}
+                          onClick={() =>
+                            handleQuantityChange(idx, "size", size)
+                          }
+                          className={`px-3 py-2 border rounded-full transition-all ${
+                            newColor.quantity[idx]?.size === size
+                              ? "bg-primary h-12 text-white"
+                              : "bg-[#F8F8F8]"
+                          }`}
+                        >
+                          {size}
+                        </button>
+                      ))}
+
+                      <input
+                        type="number"
+                        value={q.quantity}
+                        onChange={(e) =>
+                          handleQuantityChange(
+                            idx,
+                            "quantity",
+                            Number(e.target.value)
+                          )
+                        }
+                        placeholder="Quantity"
+                        className="w-20 p-2 border border-gray-300 rounded-md shadow-sm bg-[#F8F8F8]"
+                      />
+                    </div>
+                  </div>
+                ))}
                 <Button
                   type="button"
-                  onClick={handleAddImage}
-                  disabled={isUploading}
-                  className="w-fit h-fit p-2 text-black cursor-pointer bg-blue-100 hover:bg-blue-200"
+                  onClick={addNewQuantity}
+                  disabled={
+                    !newColor.quantity.at(-1)?.size ||
+                    !newColor.quantity.at(-1)?.quantity
+                  }
+                  variant="link"
+                  className="mt-2 text-blue-500"
                 >
-                  <LuImagePlus size={20} className="mr-1" />
-                  Add Images
-                  {isUploading && (
-                    <BiLoaderAlt size={20} className="ml-1 animate-spin" />
-                  )}
+                  + Add Size
                 </Button>
-
-                {newColor.images.length > 0 && (
-                  <div className="w-fit max-w-[10wh] flex gap-2 overflow-x-scroll overflow-y-hidden">
-                    {newColor.images.map((img, idx) => (
-                      <div key={idx} className="flex gap-2 items-center">
-                        <Image
-                          src={img}
-                          alt="Uploaded"
-                          width={200}
-                          height={200}
-                          className="w-14 h-14 object-contain"
-                        />
-                        <Button
-                          type="button"
-                          onClick={() => handleRemoveImage(img)}
-                          className="w-fit h-fit p-2 text-black bg-red-100 hover:bg-red-200"
-                        >
-                          <LuImageOff size={16} />
-                        </Button>
-                      </div>
-                    ))}
-                  </div>
-                )}
               </div>
-            </div>
 
-            <div className="flex-">
-              <label className="block text-sm font-medium text-gray-700">
-                Size and Quantity
-              </label>
-              {newColor.quantity.map((q, idx) => (
-                <div key={idx} className="flex gap-2 mt-2">
-                  <div className="flex gap-2">
-                    {getAvailableSizes(idx).map((size) => (
-                      <button
-                        type="button"
-                        key={size}
-                        onClick={() => handleQuantityChange(idx, "size", size)}
-                        className={`px-3 py-2 border rounded-full transition-all ${
-                          newColor.quantity[idx]?.size === size
-                            ? "bg-primary h-12 text-white"
-                            : "bg-[#F8F8F8]"
-                        }`}
-                      >
-                        {size}
-                      </button>
-                    ))}
-
-                    <input
-                      type="number"
-                      value={q.quantity}
-                      onChange={(e) =>
-                        handleQuantityChange(
-                          idx,
-                          "quantity",
-                          Number(e.target.value)
-                        )
-                      }
-                      placeholder="Quantity"
-                      className="w-20 p-2 border border-gray-300 rounded-md shadow-sm bg-[#F8F8F8]"
-                    />
-                  </div>
-                </div>
-              ))}
               <Button
                 type="button"
-                onClick={addNewQuantity}
-                disabled={
-                  !newColor.quantity.at(-1)?.size ||
-                  !newColor.quantity.at(-1)?.quantity
-                }
-                variant="link"
-                className="mt-2 text-blue-500"
+                onClick={handleAddColor}
+                className="w-fit h-fit p-2 mt-7 rounded text-black bg-yellow-100 hover:bg-yellow-200"
               >
-                + Add Size
+                <HiOutlineSaveAs size={20} className="mr-1" />
+                Save
               </Button>
             </div>
-
-            <Button
-              type="button"
-              onClick={handleAddColor}
-              className="w-fit h-fit p-2 mt-7 rounded text-black bg-yellow-100 hover:bg-yellow-200"
-            >
-              <HiOutlineSaveAs size={20} className="mr-1" />
-              Save
-            </Button>
-          </div>
-        )}
+          )}
+        </div>
       </div>
-    </div>
+
+      {isOpen && (
+        <ImagesPopup
+          images={[]}
+          setColorOptions={setColorOptions}
+          isOpen={isOpen}
+          handleClose={() => setIsOpen(!isOpen)}
+        />
+      )}
+    </>
+  );
+};
+
+interface ImagesPopupProps {
+  images: string[];
+  setColorOptions: React.Dispatch<
+    React.SetStateAction<ImageCollectionsValues[]>
+  >;
+  isOpen: boolean;
+  handleClose: () => void;
+}
+
+const ImagesPopup: React.FC<ImagesPopupProps> = ({
+  images,
+  setColorOptions,
+  isOpen,
+  handleClose,
+}) => {
+  return (
+    <Dialog open={isOpen} onOpenChange={handleClose}>
+      <DialogContent className="w-full h-fit max-h-[85%] flex-center flex-col gap-8">
+        <DialogTitle className="text-lg md:text-xl lg:text-2xl text-center">
+          Images
+        </DialogTitle>
+        <DialogDescription className="overflow-y-scroll max-h-[60vh] w-full grid md:grid-cols-2 gap-4">
+          {images.map((image, index) => (
+            <div key={index} className="flex justify-center">
+              <Image
+                src={image}
+                alt={"img " + index}
+                width={300}
+                height={300}
+                className="rounded-md object-cover"
+              />
+            </div>
+          ))}
+        </DialogDescription>
+      </DialogContent>
+    </Dialog>
   );
 };
 
