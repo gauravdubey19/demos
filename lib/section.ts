@@ -16,6 +16,7 @@ import FaqContainer from "@/components/Admin/QuerysFAQs/FAQ/FaqContainer";
 import Querry from "@/components/Admin/QuerysFAQs/Querries/Querry";
 import EditAddress from "@/components/Profile/Sections/EditAddress";
 import AddProduct from "@/components/Admin/Products/AddProduct";
+import NewAddProduct from "@/components/Admin/Products/NewAddProduct";
 import AllCategories from "@/components/Admin/Products/Category/AllCategories";
 import AllOufitCollection from "@/components/Admin/Products/Outfit/OutfitCollection/AllOutfit";
 import NewOutfit from "@/components/Admin/Products/Outfit/AddOutfit/NewOutFit";
@@ -133,7 +134,7 @@ export const adminSections: SectionValues[] = [
         id: "add-products",
         head: "Add Products",
         href: "/admin/add-products",
-        sectionNode: AddProduct,
+        sectionNode: NewAddProduct, //AddProduct,
       },
       {
         id: "all-outfit-collections",

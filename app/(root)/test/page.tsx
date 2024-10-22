@@ -9,6 +9,7 @@ import ImageMagnify from "@/components/ui/ImageMagnify";
 import { Button } from "@/components/ui/button";
 import PaymentGateway from "@/components/Checkout/Payment/PaymentGateway";
 import UploadFile from "@/components/ui/UploadsFile";
+import NewAddProduct from "@/components/Admin/Products/NewAddProduct";
 
 export default function TestPage() {
   const [image, setImage] = useState<string>("");
@@ -125,8 +126,8 @@ export default function TestPage() {
             { title: "Trousers", slug: "trousers" },
             { title: "Blazer", slug: "blazer" },
             { title: "Shirt", slug: "shirt" },
-            { title: "Sweater", slug: "sweater" }
-          ]
+            { title: "Sweater", slug: "sweater" },
+          ],
         },
         {
           title: "Partywears",
@@ -134,8 +135,8 @@ export default function TestPage() {
           categories: [
             { title: "Sherwani", slug: "sherwani" },
             { title: "Nehru Jacket", slug: "nehru-jacket" },
-            { title: "Pathani Suit", slug: "pathani-suit" }
-          ]
+            { title: "Pathani Suit", slug: "pathani-suit" },
+          ],
         },
         {
           title: "Traditional",
@@ -144,13 +145,13 @@ export default function TestPage() {
             { title: "Dhoti", slug: "dhoti" },
             { title: "Pajama", slug: "pajama" },
             { title: "Kurta", slug: "kurta" },
-            { title: "Jacket", slug: "jacket" }
-          ]
-        }
+            { title: "Jacket", slug: "jacket" },
+          ],
+        },
       ];
-  
+
       console.log("Sending superCategories to /api/superCategories...🚀");
-  
+
       const response = await fetch("/api/superCategories", {
         method: "POST",
         headers: {
@@ -158,11 +159,13 @@ export default function TestPage() {
         },
         body: JSON.stringify(superCategories),
       });
-  
+
       if (!response.ok) {
-        throw new Error(`Failed to create superCategories. Status: ${response.status}`);
+        throw new Error(
+          `Failed to create superCategories. Status: ${response.status}`
+        );
       }
-  
+
       const result = await response.json();
       console.log(`Success! 🎉 ${result.message}`);
     } catch (error) {
@@ -171,25 +174,26 @@ export default function TestPage() {
       setCreatingCategory(false);
     }
   };
-  
+
   const [open, setOpen] = useState(false);
   return (
     <>
-      <div className="mt-[60px] w-full h-screen p-10 flex flex-col gap-2">
-        {/* un-comment this below for creating sample data */}
-        {/* <CreateCategories /> */}
-        {/* <CreateProducts /> */}
-        {/* <Button onClick={() => setOpen(!open)}>Payment</Button>
+      <NewAddProduct />
+      {/* <div className="mt-[60px] w-full h-screen p-10 flex flex-col gap-2"> */}
+      {/* un-comment this below for creating sample data */}
+      {/* <CreateCategories /> */}
+      {/* <CreateProducts /> */}
+      {/* <Button onClick={() => setOpen(!open)}>Payment</Button>
         <Button onClick={handleSuperCategory}
         disabled={creatingCategory}
 
         >{
           creatingCategory ? "Creating Categories..." : "Create Super Categories"
         }</Button> */}
-        {/* <UploadFilesComoponent /> */}
-        {/* <ProductCategorySection /> */}
-        test
-      </div>
+      {/* <UploadFilesComoponent /> */}
+      {/* <ProductCategorySection /> */}
+
+      {/* </div> */}
       {/* <PaymentGateway isOpen={open} handleClose={() => setOpen(!open)} /> */}
     </>
   );

@@ -28,6 +28,7 @@ export const generateSlug = (name: string): string => {
 export const reverseSlug = (slug: string): string => {
   const name = slug
     .replace(/-/g, " ")
+    .replace(/_/g, " ")
     .toLowerCase()
     .replace(/\b\w/g, (char) => char.toUpperCase());
 
@@ -100,4 +101,17 @@ export const formatSales = (num: number): number => {
   } else {
     return num; // original number
   }
+};
+
+export const generateRandomSku = (length: number = 8): string => {
+  const characters =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  let result = "";
+
+  for (let i = 0; i < length; i++) {
+    const randomIndex = Math.floor(Math.random() * characters.length);
+    result += characters[randomIndex];
+  }
+
+  return result;
 };

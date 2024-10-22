@@ -25,7 +25,7 @@ export const uploadMultipleNewFiles = async (formData: FormData) => {
     const uploadedFiles = await utapi.uploadFiles(files);
 
     const uploadedFilesUrls = uploadedFiles.map((file) => file?.data?.url);
-    console.log("uploadedFiles", uploadedFilesUrls);
+    // console.log("uploadedFiles", uploadedFilesUrls);
 
     return uploadedFilesUrls;
   } catch (error) {
