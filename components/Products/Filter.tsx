@@ -98,53 +98,51 @@ const Filter: React.FC<FilterProps> = ({
     <div className="z-40 md:w-80 text-black bg-white md:p-4 md:ml-6 md:pr-8 md:border-r border-r-gray-300 h-[calc(100vh-60px)] overflow-y-auto">
       <div className="md:hidden">
         <Drawer>
-          <div className="md:hidden z-10 fixed bottom-0 left-0 right-0 w-full bg-zinc-700 flex justify-between items-center text-white py-2 divide-x-1">
-            <div
-              onClick={toggleShort}
-              className="w-1/2 flex-center gap-1 active:translate-y-1 transition-transform duration-300"
-            >
-              <span>Short</span>
-              {isAscending ? (
-                <FaArrowDownShortWide size={18} />
-              ) : (
-                <FaArrowUpShortWide size={18} />
-              )}
-            </div>
-            <DrawerTrigger asChild>
+          <DrawerTrigger asChild>
+            <div className="z-10 fixed bottom-0 left-0 right-0 w-full bg-zinc-700 flex justify-between items-center text-white py-2 divide-x-1">
+              <div
+                onClick={toggleShort}
+                className="w-1/2 flex-center gap-1 active:translate-y-1 transition-transform duration-300"
+              >
+                <span>Short</span>
+                {isAscending ? (
+                  <FaArrowDownShortWide size={18} />
+                ) : (
+                  <FaArrowUpShortWide size={18} />
+                )}
+              </div>
               <div className="w-1/2 flex-center gap-1 active:translate-y-1 transition-transform duration-300">
                 <span>Filter</span>
                 <LiaFilterSolid size={18} />
               </div>
-            </DrawerTrigger>
-          </div>
+            </div>
+          </DrawerTrigger>
 
-          <DrawerContent className="md:hidden bottom-0 z-50 w-full h-fit max-h-[70vh] md:max-h-[70vh] rounded-t-3xl text-white bg-white/40 backdrop-blur-sm border-none outline-none shadow-lg p-4">
-            <DrawerHeader>
-              <DrawerTitle className="text-2xl md:text-3xl font-semibold">
-                Filter
-              </DrawerTitle>
-            </DrawerHeader>
-            {categoryList && (
-              <>
-                <div className="md:hidden space-y-4 overflow-y-auto">
-                  <FilterContent
-                    categorySlug={categorySlug}
-                    categoryList={categoryList}
-                    selectedType={selectedType}
-                    setSelectedType={setSelectedType}
-                    colorOptions={colorOptions}
-                    selectedColor={selectedColor}
-                    setSelectedColor={setSelectedColor}
-                    availableSizes={availableSizes}
-                    selectedSize={selectedSize}
-                    setSelectedSize={setSelectedSize}
-                    priceRange={priceRange}
-                    setPriceRange={setPriceRange}
-                  />
-                </div>
-              </>
-            )}
-          </DrawerContent>
+          {categoryList && (
+            <DrawerContent className="md:hidden bottom-0 z-50 w-full h-fit max-h-[70vh] md:max-h-[70vh] rounded-t-3xl text-white bg-white/40 backdrop-blur-sm border-none outline-none shadow-lg p-4">
+              <DrawerHeader>
+                <DrawerTitle className="text-2xl md:text-3xl font-semibold">
+                  Filter
+                </DrawerTitle>
+              </DrawerHeader>
+              <div className="space-y-4 overflow-y-auto">
+                <FilterContent
+                  categorySlug={categorySlug}
+                  categoryList={categoryList}
+                  selectedType={selectedType}
+                  setSelectedType={setSelectedType}
+                  colorOptions={colorOptions}
+                  selectedColor={selectedColor}
+                  setSelectedColor={setSelectedColor}
+                  availableSizes={availableSizes}
+                  selectedSize={selectedSize}
+                  setSelectedSize={setSelectedSize}
+                  priceRange={priceRange}
+                  setPriceRange={setPriceRange}
+                />
+              </div>
+            </DrawerContent>
+          )}
         </Drawer>
       </div>
       <div className="hidden md:block">
