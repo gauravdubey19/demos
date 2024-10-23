@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { connectToDB } from "@/utils/db";
 import Cart from "@/models/Cart";
+import Products from "@/models/Products";
 
 export const GET = async (
   request: NextRequest,
@@ -13,7 +14,11 @@ export const GET = async (
   try {
     await connectToDB();
 
-    const cart = await Cart.findOne({ userId: params.id });
+    const cart = await Cart.findOne({ userId: params.id }).populate(
+      "cartItems.productId", "price oldPrice"
+    );
+
+    console.log(cart);
 
     if (!cart) {
       return NextResponse.json(

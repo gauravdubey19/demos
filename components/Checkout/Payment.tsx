@@ -5,6 +5,7 @@ import { useGlobalContext } from "@/context/GlobalProvider";
 import { Button } from "../ui/button";
 import { ChevronDown } from "lucide-react";
 import PaymentGateway from "./Payment/PaymentGateway";
+import CouponField from "./CouponField";
 
 interface PaymentI {
   handlePlaceOrder: () => void;
@@ -27,6 +28,7 @@ interface PaymentI {
   };
   totals: any;
   setInitiatedProcess: (v: boolean) => void;
+  totalAmount: number;
 }
 
 const Payment = ({
@@ -35,9 +37,8 @@ const Payment = ({
   placingOrder,
   selectedAddress,
   setInitiatedProcess,
+  totalAmount
 }: PaymentI) => {
-  const { totalMRP, totalDiscount, platformFee, shippingFee } = totals;
-  const totalAmount = totalMRP - totalDiscount + platformFee + shippingFee;
 
   const [isOpen, setIsOpen] = useState(false);
   const [otp, setOtp] = useState("");
@@ -91,6 +92,7 @@ const Payment = ({
   return (
     <>
       <div className="mb-2 pt-7 ">
+        <CouponField />
         <h2 id="cash-on-delivery-heading">
           <button
             type="button"
@@ -213,49 +215,6 @@ const Payment = ({
             </Button>
             {/* <PaymentGateway /> */}
           </div>
-          {/* <div className="p-4 space-y-3">
-          <p className="text-sm text-gray-500">Coming soon...</p>
-          <ul className="list-none mb-4">
-            <li className="flex items-center mb-2">
-              <input type="radio" id="card" name="online-payment" />
-              <label htmlFor="card" className="ml-2 text-sm text-gray-900">
-                Card
-              </label>
-            </li>
-            <li className="flex items-center mb-2">
-              <input type="radio" id="upi" name="online-payment" />
-              <label htmlFor="upi" className="ml-2 text-sm text-gray-900">
-                UPI
-              </label>
-            </li>
-            <li className="flex items-center mb-2">
-              <input type="radio" id="netbanking" name="online-payment" />
-              <label
-                htmlFor="netbanking"
-                className="ml- 2 text-sm text-gray-900"
-              >
-                Net Banking
-              </label>
-            </li>
-          </ul>
-          {sentOtp ? (
-            <Button
-              className="text-lg disabled:opacity-70"
-              onClick={handleVerifyOTP}
-              disabled={placingOrder}
-            >
-              {placingOrder ? "Placing Order..." : "Place Order"}
-            </Button>
-          ) : (
-            <Button
-              className="text-lg disabled:opacity-70"
-              onClick={handleOTPSend}
-              disabled={sendingOtp}
-            >
-              {sendingOtp ? "Sending OTP" : "Send OTP"}
-            </Button>
-          )}
-        </div> */}
         </div>
       </div>
       <PaymentGateway

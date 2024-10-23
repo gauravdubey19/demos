@@ -1,10 +1,11 @@
 import { Schema, model, models } from "mongoose";
+import Products from "./Products";
 
 const CartItemSchema = new Schema(
   {
     productId: {
       type: Schema.Types.ObjectId,
-      ref: "Product",
+      ref: "Products",
     },
     title: {
       type: String,
@@ -37,6 +38,10 @@ const CartItemSchema = new Schema(
     },
     availableSizes: {
       type: [String],
+      required: true,
+    },
+    discount: {
+      type: Number,
       required: true,
     },
     selectedSize: {

@@ -11,7 +11,7 @@ import React, {
 import { toast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { CartItem } from "@/lib/types";
+import { CartItem, } from "@/lib/types";
 import { useGlobalContext } from "./GlobalProvider";
 import { set } from "mongoose";
 
@@ -29,6 +29,7 @@ interface CartContextType {
   handleClearCart: () => void;
   itemExistInCart: (productId: string) => boolean;
   handleAddToCart: (
+    discount: number,
     productId: string,
     title: string,
     slug: string,
@@ -63,6 +64,12 @@ interface CartContextType {
   setCartLoading: React.Dispatch<React.SetStateAction<string | null>>;
   wishlisting: boolean;
   setWishlisting: React.Dispatch<React.SetStateAction<boolean>>;
+  finalCouponDiscount: number;
+  setfinalCouponDiscount: React.Dispatch<React.SetStateAction<number>>;
+  finalCouponCode: string;
+  setfinalCouponCode: React.Dispatch<React.SetStateAction<string>>;
+  finalTotalAmount: number;
+  setFinalTotalAmount: React.Dispatch<React.SetStateAction<number>>;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -74,13 +81,14 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
   const router = useRouter();
   const { userData } = useGlobalContext();
   // console.log(userData);
-
+  const [finalTotalAmount, setFinalTotalAmount] = useState<number>(0);
   const [isOpen, setOpen] = useState<boolean>(false);
   const [cart, setCart] = useState<CartItem[]>([]);
   const [favProducts, setFavProducts] = useState<string[]>(
     userData?.favProducts || []
   );
-
+  const [finalCouponDiscount, setfinalCouponDiscount] = useState<number>(0);
+  const [finalCouponCode, setfinalCouponCode] = useState<string>("");
   useEffect(() => {
     if (userData?.favProducts) setFavProducts(userData.favProducts);
     else setFavProducts([]);
@@ -120,6 +128,7 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
 
   const handleAddToCart = useCallback(
     async (
+      discount: number,
       productId: string,
       title: string,
       slug: string,
@@ -152,6 +161,7 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
       }
 
       const newItem: CartItem = {
+        discount,
         productId,
         title,
         slug,
@@ -665,7 +675,9 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
         cartLoading,
         setCartLoading,
         wishlisting,
-        setWishlisting,
+        setWishlisting, 
+        finalCouponDiscount, setfinalCouponCode, setfinalCouponDiscount, finalCouponCode,
+        finalTotalAmount, setFinalTotalAmount
       }}
     >
       {children}

@@ -39,7 +39,12 @@ import { GrMapLocation } from "react-icons/gr";
 import { AiOutlineCustomerService } from "react-icons/ai";
 import AddAddress from "@/components/Profile/Sections/AddAddresses";
 import HelpDesk from "@/components/Admin/Helpdesk/helpdesk";
+<<<<<<< HEAD
 import AddProductsInBulk from "@/components/Admin/Products/AddProductsInBulk";
+=======
+import GenerateCoupon from "@/components/Profile/Sections/GenerateCoupon";
+import MyCoupons from "@/components/Profile/Sections/MyCoupons";
+>>>>>>> 4140d72f91feb851beea13e6b3b141e5d1a00a9e
 
 export const profileSections: SectionValues[] = [
   {
@@ -62,6 +67,20 @@ export const profileSections: SectionValues[] = [
     href: "/profile/shipping-addresses",
     icon: GrMapLocation,
     sectionNode: ShippingAddresses,
+  },
+  {
+    id: "my-coupons",
+    head: "My Coupons",
+    href: "/profile/my-coupons",
+    icon: GrMapLocation,
+    sectionNode: MyCoupons,
+  },
+  {
+    id: "generate-coupon",
+    head: "Generate Coupon (For testing)",
+    href: "/profile/generate-coupon",
+    icon: GrMapLocation,
+    sectionNode: GenerateCoupon,
   },
   {
     id: "edit-address",

@@ -71,6 +71,29 @@ export interface CardValues {
   }[];
 }
 
+// export interface CardValues {
+//   _id: string;
+//   title: string;
+//   slug: string;
+//   description: string;
+//   price: number;
+//   oldPrice?: number;
+//   quantityInStock: number;
+//   images?: string[];
+//   colorOptions: Array<{ color: string; title: string; _id?: string }>;
+//   reviewsNumber?: number;
+//   ratings?: number;
+//   images_collection: Array<{
+//     color: string;
+//     color_name: string;
+//     image_link: string;
+//     quantity: Array<{
+//       size: string;
+//       quantity: number;
+//     }>;
+//   }>;
+// }
+
 export interface CardDetails {
   card: CardValues;
   category: string;
@@ -292,7 +315,8 @@ export interface FormStatus {
 // Cart
 
 export interface CartItem {
-  productId: string;
+  discount: number;
+  productId:string;
   title: string;
   slug: string;
   price: number;
@@ -305,7 +329,7 @@ export interface CartItem {
     color: string;
   };
   categorySlug: string;
-  //above are needed for order shcmea
+  // above are needed for order schema
   description: string;
   availableSizes: string[];
   colorOptions: {
@@ -314,7 +338,6 @@ export interface CartItem {
     color: string;
   }[];
 }
-
 // category
 export interface CategoryCollectionValues {
   _id: string;

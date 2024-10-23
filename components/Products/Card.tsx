@@ -289,8 +289,13 @@ const Card: React.FC<CardDetails> = ({ card, category, loading = false }) => {
 
 export default Card;
 
+interface QuantityInfo {
+  size: string;
+  quantity: number;
+}
+
 interface AddToBagPopUpProps {
-  product: CardValues;
+  product: any;
   categorySlug: string;
   isOpen: boolean;
   handleClose: () => void;
@@ -304,46 +309,56 @@ const AddToBagPopUp: React.FC<AddToBagPopUpProps> = ({
 }) => {
   const { handleAddToCart, itemExistInCart } = useCart();
   const [quantity, setQuantity] = useState<number>(1);
-  const [size, setSize] = useState<string>("");
-  const [color, setColor] = useState<string>("");
-  const [colorTitle, setColorTitle] = useState<string>("");
+  const [selectedColorIndex, setSelectedColorIndex] = useState<number | null>(null);
+  const [selectedSize, setSelectedSize] = useState<string>("");
   const [isValuesSelected, setIsValuesSelected] = useState<{
     size: boolean;
     color: boolean;
-    colorTitle: boolean;
   }>({
     size: false,
     color: false,
-    colorTitle: false,
   });
 
   const handleAddToCartBtn = () => {
     setIsValuesSelected({
-      size: size.trim() === "",
-      color: color.trim() === "",
-      colorTitle: colorTitle.trim() === "",
+      size: selectedSize.trim() === "",
+      color: selectedColorIndex === null,
     });
 
-    if (size.trim() !== "" && color.trim() !== "" && product._id) {
+    if (selectedSize.trim() !== "" && selectedColorIndex !== null && product._id) {
+      const selectedColor = product.images_collection[selectedColorIndex];
+      const discount = product.oldPrice
+        ? Math.round(((product.oldPrice - product.price) / product.oldPrice) * 100)
+        : 0;
+
       handleAddToCart(
+        discount,
         product._id,
         product.title,
         product.slug,
         product.description,
         product.price,
-        product.image_link,
-        product.availableSizes,
-        size,
+        selectedColor.image_link,
+        selectedColor.quantity.map((q: QuantityInfo) => q.size),
+        selectedSize,
         product.colorOptions,
-        colorTitle,
-        color,
+        selectedColor.color_name,
+        selectedColor.color,
         categorySlug,
-        product?.quantityInStock,
+        selectedColor.quantity.find((q: QuantityInfo) => q.size === selectedSize)?.quantity || 0,
         quantity
       );
       handleClose();
     }
   };
+
+  // Get available sizes for selected color
+  const availableSizes = selectedColorIndex !== null
+    ? product.images_collection[selectedColorIndex].quantity
+      .filter((q: { quantity: number }) => q.quantity > 0) // Explicitly define the type for q
+      .map((q: { size: string }) => q.size) // Explicitly define the type for q in map
+    : [];
+
   return (
     <>
       <Dialog open={isOpen} onOpenChange={handleClose}>
@@ -351,94 +366,37 @@ const AddToBagPopUp: React.FC<AddToBagPopUpProps> = ({
           <DialogTitle className="text-lg md:text-xl lg:text-2xl text-center">
             {product.title}
           </DialogTitle>
-          {/* Color & Size Selection and Buttons */}
           <div className="grid gap-4">
             {/* Color Selection */}
             <div className="grid gap-2">
               <label
                 htmlFor="color"
-                className={`text-base font-medium ${
-                  isValuesSelected.color && "text-[red]"
-                } ease-in-out duration-200`}
+                className={`text-base font-medium ${isValuesSelected.color && "text-[red]"}`}
               >
-                {!isValuesSelected.color
-                  ? "Select color"
-                  : "Please select color!"}
+                {!isValuesSelected.color ? "Select color" : "Please select color!"}
               </label>
-              <div
-                id="color-option"
-                className={`w-full h-fit flex gap-2 ${
-                  isValuesSelected.color && "animate-shake"
-                }`}
-              >
-                {product.colorOptions.map((c) => (
-                  <div
-                    key={c._id}
-                    title={c.title}
-                    onClick={() => {
-                      setColorTitle(c.title);
-                      setColor(c.color);
-                      setIsValuesSelected((prev) => ({
-                        ...prev,
-                        color: false,
-                      }));
-                    }}
-                    style={{ backgroundColor: c.color }}
-                    className={`w-10 h-10 rounded-full flex-center border-2 select-none ${
-                      itemExistInCart(product._id)
-                        ? "cursor-not-allowed opacity-40"
-                        : colorTitle === c.title
-                        ? "border-primary shadow-lg scale-105 cursor-not-allowed"
-                        : "hover:border-primary cursor-pointer"
-                    } ${
-                      isValuesSelected.color && "border-[red]"
-                    } ease-in-out duration-300`}
-                  ></div>
-                ))}
-              </div>
-            </div>
-            {/* Size Selection */}
-            <div className="grid gap-2">
-              <label
-                htmlFor="size"
-                className={`text-base font-medium ${
-                  isValuesSelected.size && "text-[red]"
-                } ease-in-out duration-200`}
-              >
-                {!isValuesSelected.size ? "Select size" : "Please select size!"}
-              </label>
-
-              <div
-                id="size-option"
-                className={`w-full h-fit flex gap-2 ${
-                  isValuesSelected.size && "animate-shake"
-                }`}
-              >
-                {product.availableSizes.map((s) => (
-                  <div
-                    key={s}
-                    onClick={() => {
-                      if (!itemExistInCart(product._id)) {
-                        setSize(s);
-                        setIsValuesSelected((prev) => ({
-                          ...prev,
-                          size: false,
-                        }));
-                      }
-                    }}
-                    className={`w-10 h-10 rounded-full flex-center border select-none ${
-                      itemExistInCart(product._id)
-                        ? "cursor-not-allowed opacity-40"
-                        : size === s
-                        ? "border-primary shadow-lg scale-105 cursor-not-allowed"
-                        : "hover:border-primary cursor-pointer"
-                    } ${
-                      isValuesSelected.size && "border-[red]"
-                    } ease-in-out duration-300`}
-                  >
-                    {s}
-                  </div>
-                ))}
+              <div id="color-option" className={`w-full h-fit flex gap-2 ${isValuesSelected.color && "animate-shake"}`}>
+                {product.images_collection && product.images_collection.map((colorOption: any, index: any) => {
+                  const totalQuantity = colorOption.quantity.reduce((sum: any, size: any) => sum + size.quantity, 0);
+                  return (
+                    <div
+                      key={index}
+                      title={`${colorOption.color_name}${totalQuantity === 0 ? " (Out of Stock)" : ""}`}
+                      onClick={() => {
+                        if (totalQuantity > 0 && !itemExistInCart(product._id)) {
+                          setSelectedColorIndex(index);
+                          setSelectedSize(""); // Reset size when color changes
+                          setIsValuesSelected((prev) => ({ ...prev, color: false }));
+                        }
+                      }}
+                      style={{ backgroundColor: colorOption.color }}
+                      className={`w-10 h-10 rounded-full flex-center border-2 select-none ${totalQuantity === 0
+                          ? "cursor-not-allowed opacity-40"
+                          : "hover:border-primary cursor-pointer"
+                        } ${isValuesSelected.color && "border-[red]"} ease-in-out duration-300`}
+                    />
+                  );
+                })}
               </div>
             </div>
             <div className="flex flex-col gap-y-2">
@@ -524,3 +482,4 @@ const AddToBagPopUp: React.FC<AddToBagPopUpProps> = ({
     </>
   );
 };
+

@@ -3,18 +3,33 @@ import { X, Check } from "lucide-react";
 import Image from "next/image";
 import Dropdown from "./dropdownSelect";
 import { useCart } from "@/context/CartProvider";
+import Link from "next/link";
 
-interface CartDataI {
+export interface CartDataI {
     data: {
-        title: string;
-        price: number;
-        image: string;
-        selectedSize: string;
-        selectedColor: { title: string; color: string };
-        quantity: number;
         selected: boolean;
-        productId: any;
-        _id: any;
+        discount: number;
+  productId:string;
+  title: string;
+  slug: string;
+  price: number;
+  quantity: number;
+  quantityInStock: number;
+  image: string;
+  selectedSize: string;
+  selectedColor: {
+    title: string;
+    color: string;
+  };
+  categorySlug: string;
+  // above are needed for order schema
+  description: string;
+  availableSizes: string[];
+  colorOptions: {
+    _id: string;
+    title: string;
+    color: string;
+  }[];
     };
     onRemoveCartItem?: (id: any) => void;
     onSelectItem: (id: any, isSelected: boolean) => void;
@@ -63,7 +78,7 @@ const CartCard = ({ data, onSelectItem }: CartDataI) => {
                         />
                     </div>
                     <div className="w-full space-y-3">
-                        <h2 className="text-lg sm:text-xl font-semibold">{data?.title}</h2>
+                        <Link href={`/products/${data?.categorySlug}/${data?.slug}`} className="text-lg sm:text-xl font-semibold underline hover:text-primary cursor-pointer">{data?.title}</Link>
 
                         <div className="space-y-2">
                             <div className="flex flex-wrap gap-4 items-center">
@@ -85,6 +100,12 @@ const CartCard = ({ data, onSelectItem }: CartDataI) => {
                             <p className="font-semibold">Price:</p>
                             <p className="font-bold">{"₹ "}{(data?.quantity * data?.price).toFixed(2)}</p>
                         </div>
+                        { data?.discount > 0 &&
+                        <div className="flex flex-wrap items-center gap-2 text-sm sm:text-base">
+                            <p className="font-semibold">Dicount:</p>
+                            <p className="font-bold text-green">{data?.discount}%</p>
+                        </div>
+}
                     </div>
                 </div>
             </div>

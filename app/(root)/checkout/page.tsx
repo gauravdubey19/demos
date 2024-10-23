@@ -28,8 +28,10 @@ const CheckoutPage = () => {
   const [placingOrder, setPlacingOrder] = useState<boolean>(false);
   const [initiatedProcess, setInitiatedProcess] = useState<boolean>(false);
   const [fetchingAddress, setFetchingAddress] = useState<boolean>(false);
-  const { cart, setOpen, setCart, handleClearCart } = useCart();
+  const { cart, setOpen, setCart, handleClearCart,finalCouponDiscount,setfinalCouponDiscount,finalCouponCode,setfinalCouponCode ,setFinalTotalAmount} = useCart();
   const [selectedItemsData, setSelectedItemsData] = useState<any[]>([]);
+  const [totalAmount, setTotalAmount] = useState<number>(0);
+  
   const [totals, setTotals] = useState({
     subtotal: 0,
     shippingFee: 0,
@@ -37,22 +39,28 @@ const CheckoutPage = () => {
     totalMRP: 0,
     platformFee: 0,
     totalDiscount: 0,
+    couponDiscount: finalCouponDiscount,
   });
 
+  useEffect(()=>{
+    setfinalCouponDiscount(0);
+    setfinalCouponCode('')
+  },[])
   const { setFetchedOrders,fetchOrders,fetchedOrders } = useGlobalContext();
   useEffect(() => {
-    console.log("selectedAddress: ", selectedAddress);
-  }, [selectedAddress]);
-  useEffect(() => {
-    console.log("cartData: ", cartData);
     const calculateTotals = () => {
       let totalMRP = 0;
       let totalDiscount = 0;
 
       cartData.forEach((item: any) => {
+        
         if (item.selected) {
+          let calculateDiscount = 0;
+          if(item?.discount){
+          calculateDiscount = (Number(item?.discount) * item?.price) / 100;
+          }
           totalMRP += item.price * item.quantity;
-          totalDiscount += (item.discount || 0) * item.quantity;
+          totalDiscount += (calculateDiscount || 0) * item.quantity;
         }
       });
       setTotals((prevTotals: any) => ({
@@ -73,14 +81,40 @@ const CheckoutPage = () => {
     }
   }, [addressData, selectedAddressId]);
 
+  const applyCoupon = async () => {
+        try {
+          const response = await fetch(`/api/coupon/apply`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ code: finalCouponCode, }),
+          });
+    
+          const data = await response.json();
+    
+          if (!response.ok) {
+            throw new Error(data.error || 'Failed to apply coupon');
+          }
+          setfinalCouponCode('');
+          setfinalCouponDiscount(data.discountValue);
+
+        } catch (err:any) {
+            console.log("error while applying coupon: ",err);
+        }
+      };
+    useEffect(()=>{
+      const { totalMRP, totalDiscount, platformFee, shippingFee } = totals;
+      const totalAmountTemp = totalMRP - totalDiscount - finalCouponDiscount + platformFee + shippingFee;
+      setTotalAmount(totalAmountTemp);
+      setFinalTotalAmount(totalAmountTemp);
+    },[totals,finalCouponDiscount])
   const placeOrder = async () => {
     if (!session?.user?.id || placingOrder) {
       return;
     }
     const userId = session.user.id;
-    const { totalMRP, totalDiscount, platformFee, shippingFee } = totals;
-    const totalAmount = totalMRP - totalDiscount + platformFee + shippingFee;
-    console.log("TotalAmount: ", totalAmount);
+   
     const orderDetails = {
       orderedProducts: cartData.filter((item) => item.selected),
       orderInfo: {
@@ -96,6 +130,12 @@ const CheckoutPage = () => {
 
     try {
       setPlacingOrder(true);
+      //if coupon applied
+      if(finalCouponCode){
+        console.log("finalCouponCode applied: ", finalCouponCode);
+        await applyCoupon();
+      }
+
       const response = await fetch(`/api/orders/${userId}`, {
         method: "POST",
         headers: {
@@ -110,6 +150,7 @@ const CheckoutPage = () => {
       }
 
       const data = await response.json();
+      console.log("order data: ", data);
       setCart([]);
       handleClearCart();
       if(fetchedOrders.length===0) {
@@ -282,6 +323,7 @@ const CheckoutPage = () => {
               placingOrder={placingOrder}
               selectedAddress={selectedAddress}
               setInitiatedProcess={setInitiatedProcess}
+              totalAmount={totalAmount}
             />
           )}
         </div>
