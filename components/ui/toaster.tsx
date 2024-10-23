@@ -55,31 +55,3 @@ export function Toaster() {
     </ToastProvider>
   );
 }
-
-// export function Toaster() {
-//   const { toasts } = useToast();
-
-//   return (
-//     <ToastProvider>
-//       {toasts.map(function ({
-//         id,
-//         title,
-//         description,
-//         imgSrc,
-//         buttonText,
-//         redirectTo,
-//         action,
-//         ...props
-//       }) {
-//         return (
-//           <Toast key={id} {...props}>
-
-//             {action}
-//             <ToastClose />
-//           </Toast>
-//         );
-//       })}
-//       <ToastViewport />
-//     </ToastProvider>
-//   );
-// }

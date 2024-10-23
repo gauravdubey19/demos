@@ -722,10 +722,10 @@ export const ImageCollections: React.FC<ImageCollectionsProps> = ({
                   width={200}
                   height={200}
                   onClick={() => {
-                    setIsOpen(true);
                     setImages(option.images);
+                    setIsOpen(true);
                   }}
-                  className="w-16 h-16 object-cover rounded"
+                  className="w-16 h-16 object-contain rounded cursor-pointer hover:scale-105 transition-all"
                 />
               )}
 
@@ -911,7 +911,7 @@ export const ImageCollections: React.FC<ImageCollectionsProps> = ({
 
       {isOpen && (
         <ImagesPopup
-          images={[]}
+          images={images}
           setColorOptions={setColorOptions}
           isOpen={isOpen}
           handleClose={() => setIsOpen(!isOpen)}
@@ -942,15 +942,15 @@ const ImagesPopup: React.FC<ImagesPopupProps> = ({
         <DialogTitle className="text-lg md:text-xl lg:text-2xl text-center">
           Images
         </DialogTitle>
-        <DialogDescription className="overflow-y-scroll max-h-[60vh] w-full grid md:grid-cols-2 gap-4">
+        <DialogDescription className="h-fit max-h-[60vh] w-full grid md:grid-cols-2 lg:grid-cols-3 gap-4 overflow-y-scroll">
           {images.map((image, index) => (
-            <div key={index} className="flex justify-center">
+            <div key={index} className="w-40 h-40">
               <Image
                 src={image}
                 alt={"img " + index}
                 width={300}
                 height={300}
-                className="rounded-md object-cover"
+                className="w-full h-full rounded-md object-contain"
               />
             </div>
           ))}
