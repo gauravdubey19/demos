@@ -70,7 +70,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 
-interface CategoryValue {
+export interface CategoryValue {
   title: string;
   slug: string;
 }
@@ -79,7 +79,7 @@ export interface Faq {
   answer: string;
 }
 
-interface ImageCollectionsValues {
+export interface ImageCollectionsValues {
   image_link: string;
   color: string;
   color_name: string;
@@ -87,7 +87,7 @@ interface ImageCollectionsValues {
   quantity: { size: string; quantity: number }[];
 }
 
-const availableSizes = ["XS", "S", "M", "L", "XL", "XXL"];
+export const availableSizes = ["XS", "S", "M", "L", "XL", "XXL"];
 
 const NewAddProduct = () => {
   const router = useRouter();
@@ -202,7 +202,7 @@ const NewAddProduct = () => {
           images_collection: colorOptions,
           product_highlights,
           faqs,
-          sell_on_google_quantity: 1,
+          sell_on_google_quantity: total_quantity,
         }),
       });
 
@@ -317,22 +317,25 @@ const NewAddProduct = () => {
                         <label className="block text-sm font-medium text-gray-700">
                           Sale Price Effective Date -{" "}
                           <span className="text-green">Start</span>
+                          <span className="text-[red]">*</span>
                         </label>
                         <input
                           type="datetime-local"
                           value={startDateTime}
                           onChange={(e) => setStartDateTime(e.target.value)}
+                          required={Boolean(price && sale_price)}
                           className="mt-2 block w-full border border-zinc-300 bg-[#F8F8F8] dark:border-zinc-800 rounded-md p-2"
                         />
                       </div>
                       <div className="flex-1">
                         <label className="block text-sm font-medium text-[red]">
-                          End
+                          End<span className="text-[red]">*</span>
                         </label>
                         <input
                           type="datetime-local"
                           value={endDateTime}
                           onChange={(e) => setEndDateTime(e.target.value)}
+                          required={Boolean(price && sale_price)}
                           className="mt-2 block w-full border border-zinc-300 bg-[#F8F8F8] dark:border-zinc-800 rounded-md p-2"
                         />
                       </div>
@@ -479,7 +482,7 @@ interface ProductHighlightsProps {
   setProduct_highlights: React.Dispatch<React.SetStateAction<string[]>>;
 }
 
-const ProductHighlights: React.FC<ProductHighlightsProps> = ({
+export const ProductHighlights: React.FC<ProductHighlightsProps> = ({
   product_highlights,
   setProduct_highlights,
 }) => {
@@ -719,10 +722,10 @@ export const ImageCollections: React.FC<ImageCollectionsProps> = ({
                   width={200}
                   height={200}
                   onClick={() => {
+                    setImages(option.images);
                     setIsOpen(true);
-                    setImages(option.images)
                   }}
-                  className="w-16 h-16 object-cover rounded"
+                  className="w-16 h-16 object-contain rounded cursor-pointer hover:scale-105 transition-all"
                 />
               )}
 
@@ -908,7 +911,7 @@ export const ImageCollections: React.FC<ImageCollectionsProps> = ({
 
       {isOpen && (
         <ImagesPopup
-          images={[]}
+          images={images}
           setColorOptions={setColorOptions}
           isOpen={isOpen}
           handleClose={() => setIsOpen(!isOpen)}
@@ -939,15 +942,15 @@ const ImagesPopup: React.FC<ImagesPopupProps> = ({
         <DialogTitle className="text-lg md:text-xl lg:text-2xl text-center">
           Images
         </DialogTitle>
-        <DialogDescription className="overflow-y-scroll max-h-[60vh] w-full grid md:grid-cols-2 gap-4">
+        <DialogDescription className="h-fit max-h-[60vh] w-full grid md:grid-cols-2 lg:grid-cols-3 gap-4 overflow-y-scroll">
           {images.map((image, index) => (
-            <div key={index} className="flex justify-center">
+            <div key={index} className="w-40 h-40">
               <Image
                 src={image}
                 alt={"img " + index}
                 width={300}
                 height={300}
-                className="rounded-md object-cover"
+                className="w-full h-full rounded-md object-contain"
               />
             </div>
           ))}

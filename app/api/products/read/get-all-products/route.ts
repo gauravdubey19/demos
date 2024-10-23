@@ -1,12 +1,12 @@
 import { NextResponse } from "next/server";
 import { connectToDB } from "@/utils/db";
-import Products from "@/models/Products";
+import NewProduct from "@/models/NewProduct";
 
 export const GET = async () => {
   try {
     await connectToDB();
 
-    const products = await Products.find({});
+    const products = await NewProduct.find({});
 
     if (!products) {
       return NextResponse.json(

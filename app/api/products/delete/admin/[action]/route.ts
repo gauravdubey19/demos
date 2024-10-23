@@ -4,6 +4,7 @@ import { utapi } from "@/server/uploadthing";
 import { extractFileKey } from "@/lib/utils";
 import { Categories } from "@/models/Categories";
 import Products from "@/models/Products";
+import NewProduct from "@/models/NewProduct";
 
 export const DELETE = async (
   request: NextRequest,
@@ -23,7 +24,7 @@ export const DELETE = async (
     await connectToDB();
 
     if (action === "delete-product") {
-      const product = await Products.findById(id);
+      const product = await NewProduct.findById(id);
 
       if (!product) {
         return NextResponse.json(
@@ -32,7 +33,7 @@ export const DELETE = async (
         );
       }
 
-      await Products.deleteOne({ _id: id });
+      await NewProduct.deleteOne({ _id: id });
 
       return NextResponse.json(
         { message: "Product deleted successfully!" },

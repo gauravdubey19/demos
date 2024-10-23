@@ -83,29 +83,29 @@ export const POST = async (request: NextRequest) => {
       sell_on_google_quantity?: number;
     } = await request.json();
 
-    console.log({
-      title,
-      description,
-      price,
-      sale_price,
-      sale_price_effective_date,
-      ratings,
-      reviews_number,
-      categories,
-      product_highlights,
-      type,
-      material,
-      pattern,
-      fabric_type,
-      care_instructions,
-      origin,
-      availability,
-      availability_date,
-      brand,
-      images_collection,
-      faqs,
-      sell_on_google_quantity,
-    });
+    // console.log({
+    //   title,
+    //   description,
+    //   price,
+    //   sale_price,
+    //   sale_price_effective_date,
+    //   ratings,
+    //   reviews_number,
+    //   categories,
+    //   product_highlights,
+    //   type,
+    //   material,
+    //   pattern,
+    //   fabric_type,
+    //   care_instructions,
+    //   origin,
+    //   availability,
+    //   availability_date,
+    //   brand,
+    //   images_collection,
+    //   faqs,
+    //   sell_on_google_quantity,
+    // });
 
     await connectToDB();
 

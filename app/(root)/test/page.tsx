@@ -11,6 +11,7 @@ import PaymentGateway from "@/components/Checkout/Payment/PaymentGateway";
 import UploadFile from "@/components/ui/UploadsFile";
 import NewAddProduct from "@/components/Admin/Products/NewAddProduct";
 import AddProduct from "@/components/Admin/Products/AddProduct";
+import AddProductsInBulk from "@/components/Admin/Products/AddProductsInBulk";
 
 export default function TestPage() {
   const [image, setImage] = useState<string>("");
@@ -179,7 +180,7 @@ export default function TestPage() {
   const [open, setOpen] = useState(false);
   return (
     <>
-      <AddProduct />
+      <AddProductsInBulk />
       {/* <div className="mt-[60px] w-full h-screen p-10 flex flex-col gap-2"> */}
       {/* un-comment this below for creating sample data */}
       {/* <CreateCategories /> */}
