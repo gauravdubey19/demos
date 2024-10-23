@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import ReactCountUp from "../ui/ReactCountUp";
+import { useCart } from "@/context/CartProvider";
 
 interface PriceDetailsI {
   cartData: any;
@@ -12,8 +13,10 @@ interface PriceDetailsI {
 }
 
 const PriceDetails = ({ totals, onProceed, currentStep }: PriceDetailsI) => {
-  const { totalMRP, totalDiscount, platformFee, shippingFee } = totals;
-  const totalAmount = totalMRP - totalDiscount + platformFee + shippingFee;
+  const {setFinalTotalAmount,finalCouponDiscount} = useCart();
+  const { totalMRP, totalDiscount, platformFee, shippingFee} = totals;
+  const totalAmount = totalMRP - totalDiscount - finalCouponDiscount + platformFee + shippingFee;
+
 
   return (
     <div className="md:w-1/4 w-full h-max border border-gray-400 rounded-lg text-gray-600 py-5 sticky top-20">
@@ -35,8 +38,12 @@ const PriceDetails = ({ totals, onProceed, currentStep }: PriceDetailsI) => {
           <p>Total Discount</p>
           <p className="text-green-500">
             <ReactCountUp prefix="- ₹" amt={totalDiscount} decimals={true} />
-            {/* {"- ₹ "}
-            {totalDiscount} */}
+          </p>
+        </div>
+        <div className="flex items-center justify-between px-5 text-base md:text-lg">
+          <p>Coupon</p>
+          <p className="text-green-500">
+            <ReactCountUp prefix="- ₹" amt={finalCouponDiscount} decimals={true} />
           </p>
         </div>
         <div className="flex items-center justify-between px-5 text-base md:text-lg">

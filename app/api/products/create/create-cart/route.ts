@@ -11,7 +11,6 @@ export const POST = async (request: NextRequest) => {
     // console.log(newCartItem);
 
     await connectToDB();
-
     const userExists = await User.exists({ _id: userId });
     if (!userExists) {
       return NextResponse.json({ error: "User not found!" }, { status: 404 });
@@ -20,7 +19,6 @@ export const POST = async (request: NextRequest) => {
     let existingCart = await Cart.findOne({ userId });
 
     if (existingCart) {
-      console.log("existingCart -> ", existingCart);
       // checking if the product with the same slug already exists in the cart
       const isProductInCart = existingCart.cartItems.some(
         (cartItem: CartItem) => cartItem.slug === newCartItem.slug

@@ -26,12 +26,36 @@ export const connectToDB = async () => {
     isConnected = true;
     console.log("MongoDB connected");
 
-    // Call addNewFields after the connection is established
-    // await addNewFields();
+    // Call updateCart after the connection is established
+    // await updateCart();
   } catch (error) {
     console.error("Failed to connect to MongoDB:", error);
   }
 };
+
+async function updateCart() {
+  try {
+    if (!mongoose.connection.db) {
+      console.log("No database connection");
+      return;
+    }
+
+    const result = await mongoose.connection.db
+      .collection("carts")
+      .updateMany(
+        { "cartItems.productId": { $exists: true } },
+        { $set: { "cartItems.$[elem].productId": "Products" } },
+        { arrayFilters: [{ "elem.productId": { $exists: true } }] }
+      );
+
+    console.log("Update result:", result);
+    console.log(`Updated documents: ${result.modifiedCount}`);
+  } catch (error) {
+    console.error("Error updating cart items:", error);
+  } finally {
+    await mongoose.connection.close();
+  }
+}
 
 // async function addNewFields() {
 //   try {

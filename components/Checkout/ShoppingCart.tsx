@@ -1,10 +1,11 @@
 import React from 'react';
 import CartCard from './CartCard';
 import { useCart } from "@/context/CartProvider";
+import { CartItem } from '@/lib/types';
 
 
 interface ShoppingCartI {
-    cartData: any[];
+    cartData: CartItem[];
     setSelectedItems: (count: number) => void;
     selectedItems: number;
     onSelectItem: (id: any, isSelected: boolean) => void;

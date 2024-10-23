@@ -449,47 +449,47 @@ const Details: React.FC<DetailsProps> = ({
     setIsValuesSelected((prev) => ({ ...prev, color: false }));
   };
 
-  const handleAddToCartBtn = () => {
-    setIsValuesSelected({
-      size: size.trim() === "",
-      color: !selectedColorData
-    });
+  // const handleAddToCartBtn = () => {
+  //   setIsValuesSelected({
+  //     size: size.trim() === "",
+  //     color: !selectedColorData
+  //   });
 
-    if (size.trim() !== "" && selectedColorData) {
-      const quantity = 1;
-      const selectedSizeData = selectedColorData.quantity.find(
-        (sq: ProductQuantity) => sq.size === size
-      );
+  //   if (size.trim() !== "" && selectedColorData) {
+  //     const quantity = 1;
+  //     const selectedSizeData = selectedColorData.quantity.find(
+  //       (sq: ProductQuantity) => sq.size === size
+  //     );
 
-      if (selectedSizeData && selectedSizeData.quantity > 0) {
-        handleAddToCart(
-          product._id,
-          product.title,
-          product.slug,
-          product.description,
-          product.price,
-          selectedColorData.images[0],
-          selectedColorData.quantity.map((sq: ProductQuantity) => sq.size),
-          size,
-          product.images_collection.map((ic: ImageCollection) => ({
-            _id: ic._id, // Add this line
-            title: ic.color_name, // Add this line
-            color: ic.color,
-          })),
-          selectedColorData.color_name,
-          selectedColorData.color,
-          categorySlug,
-          selectedSizeData.quantity,
-          quantity
-        );
-      }
-    }
-  };
+  //     if (selectedSizeData && selectedSizeData.quantity > 0) {
+  //       handleAddToCart(
+  //         product._id,
+  //         product.title,
+  //         product.slug,
+  //         product.description,
+  //         product.price,
+  //         selectedColorData.images[0],
+  //         selectedColorData.quantity.map((sq: ProductQuantity) => sq.size),
+  //         size,
+  //         product.images_collection.map((ic: ImageCollection) => ({
+  //           _id: ic._id, // Add this line
+  //           title: ic.color_name, // Add this line
+  //           color: ic.color,
+  //         })),
+  //         selectedColorData.color_name,
+  //         selectedColorData.color,
+  //         categorySlug,
+  //         selectedSizeData.quantity,
+  //         quantity
+  //       );
+  //     }
+  //   }
+  // };
 
   const handleBuyNowBtn = () => {
     if (!itemExistInCart(product._id)) {
       if (selectedColorData && size.trim() !== "") {
-        handleAddToCartBtn();
+        // handleAddToCartBtn();
         setOpen(!isOpen);
       }
     } else {
@@ -664,7 +664,7 @@ const Details: React.FC<DetailsProps> = ({
               itemExistInCart(product._id) ||
               product.availability !== "in_stock"
             }
-            onClick={handleAddToCartBtn}
+            // onClick={handleAddToCartBtn}
             size="lg"
             className="w-full select-none z-10 flex gap-1 bg-transparent text-lg text-primary border border-primary rounded-none hover:shadow-md active:translate-y-0.5 ease-in-out duration-300"
           >
