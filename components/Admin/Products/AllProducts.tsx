@@ -16,13 +16,13 @@ import { useRouter } from "next/navigation";
 
 interface ProductCollectionValues {
   _id: string;
-  image_link: string;
+  images_collection: [{ image_link: string }];
   title: string;
   slug: string;
   price: number;
-  oldPrice: number;
-  quantityInStock: number;
+  sale_price: number;
   categories: CategoryCollectionValues[];
+  sell_on_google_quantity: number;
 }
 
 const AllProducts = () => {
@@ -178,7 +178,7 @@ const ProductTable: React.FC<{
                     href={`/products/${product.categories[0].slug}/${product.slug}`}
                   >
                     <Image
-                      src={product.image_link}
+                      src={product.images_collection[0].image_link}
                       alt={product.title}
                       width={200}
                       height={200}
@@ -201,7 +201,9 @@ const ProductTable: React.FC<{
                   >
                     <ReactCountUp
                       prefix="₹"
-                      amt={product.price}
+                      amt={
+                        product.sale_price ? product.sale_price : product.price
+                      }
                       decimals={true}
                     />
                   </Link>
@@ -210,9 +212,12 @@ const ProductTable: React.FC<{
                   <Link
                     href={`/products/${product.categories[0].slug}/${product.slug}`}
                   >
-                    {product.oldPrice ? (
+                    {product.sale_price ? (
                       <ReactCountUp
-                        amt={calculateDiscount(product.price, product.oldPrice)}
+                        amt={calculateDiscount(
+                          product.sale_price,
+                          product.price
+                        )}
                       >
                         % off
                       </ReactCountUp>
@@ -225,7 +230,7 @@ const ProductTable: React.FC<{
                   <Link
                     href={`/products/${product.categories[0].slug}/${product.slug}`}
                   >
-                    {product.quantityInStock}
+                    {product.sell_on_google_quantity}
                   </Link>
                 </td>
                 <td className="w-fit h-full px-4 py-2 flex-center gap-2 mt-2">
@@ -265,226 +270,3 @@ const ProductTable: React.FC<{
 };
 
 export default AllProducts;
-
-// const products = [
-//   {
-//     _id: "1",
-//     image_link: "/images/product1.jpg",
-//     title: "Floral Summer Dress",
-//     slug: "Floral Summer Dress",
-//     price: 1999,
-//     oldPrice: 1999,
-//     quantityInStock: 1999,
-//     // category: "Dresses",
-//     // type: "Women",
-//   },
-//   {
-//     _id: "2",
-//     image_link: "/images/product2.jpg",
-//     title: "Classic Denim Jacket",
-//     slug: "Classic Denim Jacket",
-//     price: 2499,
-//     oldPrice: 2499,
-//     quantityInStock: 2499,
-//     // category: "Jackets",
-//     // type: "Unisex",
-//   },
-//   {
-//     _id: "3",
-//     image_link: "/images/product3.jpg",
-//     title: "Cotton Striped T-Shirt",
-//     slug: "Cotton Striped T-Shirt",
-//     price: 999,
-//     oldPrice: 999,
-//     quantityInStock: 999,
-//     // category: "T-Shirts",
-//     // type: "Men",
-//   },
-//   {
-//     _id: "4",
-//     image_link: "/images/product4.jpg",
-//     title: "Woolen Knit Scarf",
-//     slug: "Woolen Knit Scarf",
-//     price: 799,
-//     oldPrice: 799,
-//     quantityInStock: 799,
-//     // category: "Accessories",
-//     // type: "Unisex",
-//   },
-//   {
-//     _id: "5",
-//     image_link: "/images/product5.jpg",
-//     title: "Silk Evening Gown",
-//     slug: "Silk Evening Gown",
-//     price: 3499,
-//     oldPrice: 3499,
-//     quantityInStock: 3499,
-//     // category: "Dresses",
-//     // type: "Women",
-//   },
-//   {
-//     _id: "6",
-//     image_link: "/images/product6.jpg",
-//     title: "Plaid Cotton Shirt",
-//     slug: "Plaid Cotton Shirt",
-//     price: 1499,
-//     oldPrice: 1499,
-//     quantityInStock: 1499,
-//     // category: "Shirts",
-//     // type: "Men",
-//   },
-//   {
-//     _id: "7",
-//     image_link: "/images/product7.jpg",
-//     title: "Leather Biker Jacket",
-//     slug: "Leather Biker Jacket",
-//     price: 4999,
-//     oldPrice: 4999,
-//     quantityInStock: 4999,
-//     // category: "Jackets",
-//     // type: "Men",
-//   },
-//   {
-//     _id: "8",
-//     image_link: "/images/product8.jpg",
-//     title: "Casual Linen Pants",
-//     slug: "Casual Linen Pants",
-//     price: 1799,
-//     oldPrice: 1799,
-//     quantityInStock: 1799,
-//     // category: "Pants",
-//     // type: "Women",
-//   },
-//   {
-//     _id: "9",
-//     image_link: "/images/product9.jpg",
-//     title: "Cashmere Wool Sweater",
-//     slug: "Cashmere Wool Sweater",
-//     price: 2999,
-//     oldPrice: 2999,
-//     quantityInStock: 2999,
-//     // category: "Sweaters",
-//     // type: "Women",
-//   },
-//   {
-//     _id: "10",
-//     image_link: "/images/product10.jpg",
-//     title: "High-Waisted Jeans",
-//     slug: "High-Waisted Jeans",
-//     price: 2199,
-//     oldPrice: 2199,
-//     quantityInStock: 2199,
-//     // category: "Jeans",
-//     // type: "Women",
-//   },
-//   {
-//     _id: "11",
-//     image_link: "/images/product11.jpg",
-//     title: "Faux Fur Winter Coat",
-//     slug: "Faux Fur Winter Coat",
-//     price: 3799,
-//     oldPrice: 3799,
-//     quantityInStock: 3799,
-//     // category: "Coats",
-//     // type: "Women",
-//   },
-//   {
-//     _id: "12",
-//     image_link: "/images/product12.jpg",
-//     title: "Graphic Print Hoodie",
-//     slug: "Graphic Print Hoodie",
-//     price: 1899,
-//     oldPrice: 1899,
-//     quantityInStock: 1899,
-//     // category: "Hoodies",
-//     // type: "Men",
-//   },
-//   {
-//     _id: "13",
-//     image_link: "/images/product13.jpg",
-//     title: "Slim Fit Chinos",
-//     slug: "Slim Fit Chinos",
-//     price: 1599,
-//     oldPrice: 1599,
-//     quantityInStock: 1599,
-//     // category: "Pants",
-//     // type: "Men",
-//   },
-//   {
-//     _id: "14",
-//     image_link: "/images/product14.jpg",
-//     title: "Sporty Nylon Windbreaker",
-//     slug: "Sporty Nylon Windbreaker",
-//     price: 2299,
-//     oldPrice: 2299,
-//     quantityInStock: 2299,
-//     // category: "Jackets",
-//     // type: "Unisex",
-//   },
-//   {
-//     _id: "15",
-//     image_link: "/images/product15.jpg",
-//     title: "Linen Blouse",
-//     slug: "Linen Blouse",
-//     price: 1299,
-//     oldPrice: 1299,
-//     quantityInStock: 1299,
-//     // category: "Blouses",
-//     // type: "Women",
-//   },
-//   {
-//     _id: "16",
-//     image_link: "/images/product16.jpg",
-//     title: "Polka Dot Skirt",
-//     slug: "Polka Dot Skirt",
-//     price: 1399,
-//     oldPrice: 1399,
-//     quantityInStock: 1399,
-//     // category: "Skirts",
-//     // type: "Women",
-//   },
-//   {
-//     _id: "17",
-//     image_link: "/images/product17.jpg",
-//     title: "Vintage Denim Shorts",
-//     slug: "Vintage Denim Shorts",
-//     price: 1199,
-//     oldPrice: 1199,
-//     quantityInStock: 1199,
-//     // category: "Shorts",
-//     // type: "Women",
-//   },
-//   {
-//     _id: "18",
-//     image_link: "/images/product18.jpg",
-//     title: "Cargo Pants",
-//     slug: "Cargo Pants",
-//     price: 1699,
-//     oldPrice: 1699,
-//     quantityInStock: 1699,
-//     // category: "Pants",
-//     // type: "Men",
-//   },
-//   {
-//     _id: "19",
-//     image_link: "/images/product19.jpg",
-//     title: "Embroidered Kurta",
-//     slug: "Embroidered Kurta",
-//     price: 2199,
-//     oldPrice: 2199,
-//     quantityInStock: 2199,
-//     // category: "Kurtas",
-//     // type: "Men",
-//   },
-//   {
-//     _id: "20",
-//     image_link: "/images/product20.jpg",
-//     title: "Wool Blend Overcoat",
-//     slug: "Wool Blend Overcoat",
-//     price: 3999,
-//     oldPrice: 3999,
-//     quantityInStock: 3999,
-//     // category: "Coats",
-//     // type: "Men",
-//   },
-// ];

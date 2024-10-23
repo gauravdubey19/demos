@@ -8,7 +8,7 @@ import { toast } from "@/hooks/use-toast";
 import ReactCountUp from "@/components/ui/ReactCountUp";
 import { reverseSlug } from "@/lib/utils";
 
-interface Product {
+export interface ProductValues {
   title: string;
   description: string;
   price: number;
@@ -43,10 +43,10 @@ const AddProductsInBulk = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [success, setSuccess] = useState<boolean>(false);
 
-  const [products, setProducts] = useState<Product[]>([]);
+  const [products, setProducts] = useState<ProductValues[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [sortConfig, setSortConfig] = useState<{
-    key: keyof Product;
+    key: keyof ProductValues;
     direction: "asc" | "desc";
   } | null>(null);
 
@@ -67,7 +67,7 @@ const AddProductsInBulk = () => {
     return sortableProducts;
   }, [products, sortConfig]);
 
-  const handleSort = (key: keyof Product) => {
+  const handleSort = (key: keyof ProductValues) => {
     setSortConfig((current) => {
       if (current?.key === key) {
         return {
@@ -345,7 +345,9 @@ const AddProductsInBulk = () => {
                         scope="col"
                         className="px-6 py-3 cursor-pointer bg-[#EAEAEA] shadow-sm hover:bg-[#ffb4334e] ease-in-out duration-300"
                         onClick={() =>
-                          handleSort(header.toLowerCase() as keyof Product)
+                          handleSort(
+                            header.toLowerCase() as keyof ProductValues
+                          )
                         }
                       >
                         <div className="flex-between gap-2">

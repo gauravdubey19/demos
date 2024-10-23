@@ -70,7 +70,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 
-interface CategoryValue {
+export interface CategoryValue {
   title: string;
   slug: string;
 }
@@ -79,7 +79,7 @@ export interface Faq {
   answer: string;
 }
 
-interface ImageCollectionsValues {
+export interface ImageCollectionsValues {
   image_link: string;
   color: string;
   color_name: string;
@@ -87,7 +87,7 @@ interface ImageCollectionsValues {
   quantity: { size: string; quantity: number }[];
 }
 
-const availableSizes = ["XS", "S", "M", "L", "XL", "XXL"];
+export const availableSizes = ["XS", "S", "M", "L", "XL", "XXL"];
 
 const NewAddProduct = () => {
   const router = useRouter();
@@ -202,7 +202,7 @@ const NewAddProduct = () => {
           images_collection: colorOptions,
           product_highlights,
           faqs,
-          sell_on_google_quantity: 1,
+          sell_on_google_quantity: total_quantity,
         }),
       });
 
@@ -323,6 +323,7 @@ const NewAddProduct = () => {
                           type="datetime-local"
                           value={startDateTime}
                           onChange={(e) => setStartDateTime(e.target.value)}
+                          required={Boolean(price && sale_price)}
                           className="mt-2 block w-full border border-zinc-300 bg-[#F8F8F8] dark:border-zinc-800 rounded-md p-2"
                         />
                       </div>
@@ -334,6 +335,7 @@ const NewAddProduct = () => {
                           type="datetime-local"
                           value={endDateTime}
                           onChange={(e) => setEndDateTime(e.target.value)}
+                          required={Boolean(price && sale_price)}
                           className="mt-2 block w-full border border-zinc-300 bg-[#F8F8F8] dark:border-zinc-800 rounded-md p-2"
                         />
                       </div>
@@ -480,7 +482,7 @@ interface ProductHighlightsProps {
   setProduct_highlights: React.Dispatch<React.SetStateAction<string[]>>;
 }
 
-const ProductHighlights: React.FC<ProductHighlightsProps> = ({
+export const ProductHighlights: React.FC<ProductHighlightsProps> = ({
   product_highlights,
   setProduct_highlights,
 }) => {
