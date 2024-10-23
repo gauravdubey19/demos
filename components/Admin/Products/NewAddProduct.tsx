@@ -317,6 +317,7 @@ const NewAddProduct = () => {
                         <label className="block text-sm font-medium text-gray-700">
                           Sale Price Effective Date -{" "}
                           <span className="text-green">Start</span>
+                          <span className="text-[red]">*</span>
                         </label>
                         <input
                           type="datetime-local"
@@ -327,7 +328,7 @@ const NewAddProduct = () => {
                       </div>
                       <div className="flex-1">
                         <label className="block text-sm font-medium text-[red]">
-                          End
+                          End<span className="text-[red]">*</span>
                         </label>
                         <input
                           type="datetime-local"
@@ -720,7 +721,7 @@ export const ImageCollections: React.FC<ImageCollectionsProps> = ({
                   height={200}
                   onClick={() => {
                     setIsOpen(true);
-                    setImages(option.images)
+                    setImages(option.images);
                   }}
                   className="w-16 h-16 object-cover rounded"
                 />

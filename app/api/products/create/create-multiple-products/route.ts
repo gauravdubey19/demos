@@ -1,12 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { connectToDB } from "@/utils/db";
-import { Categories } from "@/models/Categories";
-import Products from "@/models/Products";
+import NewProduct from "@/models/NewProduct";
+import { generateRandomSku, generateSlug } from "@/lib/utils";
 
 export const POST = async (request: NextRequest) => {
   try {
     const products = await request.json();
-    console.log("Received products:", products);
+    // console.log("Received products:", products);
 
     await connectToDB();
 
@@ -14,64 +14,83 @@ export const POST = async (request: NextRequest) => {
       products.map(
         async (product: {
           title: string;
-          slug: string;
           description: string;
-          images: string[];
-          image_link: string;
           price: number;
-          oldPrice?: number;
-          availableSizes: string[];
-          colorOptions: { title: string; color: string }[];
-          categories: { title: string; slug: string }[];
-          type: string[];
           material: string;
-          fabricType?: string;
-          careInstructions?: string;
-          origin?: string;
-          quantityInStock: number;
-          brand?: string;
-          faqs: { question: string; answer: string }[];
+          fabric_type: string;
+          care_instructions: string;
+          origin: string;
+          brand: string;
+          categories: [{ title: string; slug: string }];
+          type: string[];
+          faqs: [{ question: string; answer: string }];
+          sale_price: number;
+          sale_price_effective_date: string;
+          pattern: string;
+          availability: string;
+          availability_date: string;
+          sell_on_google_quantity: number;
+          product_highlights: string[];
+          images_collection: [
+            {
+              image_link: string;
+              color: string;
+              color_name: string;
+              images: string[];
+              quantity: [{ size: string; quantity: number }];
+            }
+          ];
+          ratings?: number;
+          reviews_number?: number;
         }) => {
           const {
             title,
-            slug,
             description,
-            images,
-            image_link,
             price,
-            oldPrice,
-            availableSizes,
-            colorOptions,
+            material,
+            fabric_type,
+            care_instructions,
+            origin,
+            brand,
             categories,
             type,
-            material,
-            fabricType,
-            careInstructions,
-            origin,
-            quantityInStock,
-            brand,
             faqs,
+            sale_price,
+            sale_price_effective_date,
+            pattern,
+            availability,
+            availability_date,
+            sell_on_google_quantity,
+            product_highlights,
+            images_collection,
+            ratings = 0,
+            reviews_number = 0,
           } = product;
 
-          const newProduct = new Products({
+          const newProduct = new NewProduct({
+            sku: generateRandomSku(),
             title,
-            slug,
+            slug: generateSlug(title),
             description,
-            images,
-            image_link,
             price,
-            oldPrice,
-            availableSizes,
-            colorOptions,
+            sale_price,
+            sale_price_effective_date,
+            ratings,
+            reviews_number,
             categories,
+            product_highlights,
             type,
             material,
-            fabricType,
-            careInstructions,
+            pattern,
+            fabric_type,
+            care_instructions,
             origin,
-            quantityInStock,
+            availability,
+            availability_date,
             brand,
+            images_collection,
             faqs,
+            sell_on_google_quantity,
           });
 
           return newProduct.save();
@@ -91,102 +110,3 @@ export const POST = async (request: NextRequest) => {
     );
   }
 };
-
-// export const POST = async (request: NextRequest) => {
-//   try {
-//     const products = await request.json();
-//     console.log("Received products:", products);
-
-//     await connectToDB();
-
-//     const savedProducts = await Promise.all(
-//       products.map(
-//         async (product: {
-//           title: string;
-//           slug: string;
-//           description: string;
-//           images: string[];
-//           image_link: string;
-//           price: number;
-//           oldPrice?: number;
-//           availableSizes: string[];
-//           colorOptions: { title: string; color: string }[];
-//           categories: string[];
-//           type: string[];
-//           material: string;
-//           fabricType?: string;
-//           careInstructions?: string;
-//           origin?: string;
-//           quantityInStock: number;
-//           brand?: string;
-//           faqs: { question: string; answer: string }[];
-//         }) => {
-//           const {
-//             title,
-//             slug,
-//             description,
-//             images,
-//             image_link,
-//             price,
-//             oldPrice,
-//             availableSizes,
-//             colorOptions,
-//             categories: categorySlugs,
-//             type,
-//             material,
-//             fabricType,
-//             careInstructions,
-//             origin,
-//             quantityInStock,
-//             brand = "Chimanlal Suresh Kumar (CSK) Textiles",
-//             faqs,
-//           } = product;
-
-//           const categoryIds = await Promise.all(
-//             categorySlugs.map(async (slug) => {
-//               const category = await Categories.findOne({ slug });
-//               if (!category) {
-//                 throw new Error(`Category with slug '${slug}' not found`);
-//               }
-//               return category._id;
-//             })
-//           );
-
-//           const newProduct = new Products({
-//             title,
-//             slug,
-//             description,
-//             images,
-//             image_link,
-//             price,
-//             oldPrice,
-//             availableSizes,
-//             colorOptions,
-//             categories: categoryIds,
-//             type,
-//             material,
-//             fabricType,
-//             careInstructions,
-//             origin,
-//             quantityInStock,
-//             brand,
-//             faqs,
-//           });
-
-//           return newProduct.save();
-//         }
-//       )
-//     );
-
-//     return NextResponse.json(
-//       { message: `${savedProducts.length} products created successfully!` },
-//       { status: 201 }
-//     );
-//   } catch (error) {
-//     console.error("Error creating products:", error);
-//     return NextResponse.json(
-//       { error: "Failed to create products" },
-//       { status: 500 }
-//     );
-//   }
-// };

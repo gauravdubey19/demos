@@ -39,16 +39,16 @@ const AllProducts = () => {
         const res = await fetch(`/api/products/read/get-all-products`, {
           method: "GET",
           cache: "no-store",
-          next:{
+          next: {
             revalidate: 0,
           },
           headers: {
             "Content-Type": "application/json",
-            
           },
         });
 
         if (!res.ok) {
+          router.refresh();
           return;
           // throw new Error("Failed to fetch product collection");
         }
@@ -61,7 +61,7 @@ const AllProducts = () => {
     };
 
     fetchProductCollection();
-  }, []);
+  }, [router]);
 
   if (productCollection?.length === 0) return <Loader />;
 
