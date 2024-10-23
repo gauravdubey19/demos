@@ -1,16 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
 import { connectToDB } from "@/utils/db";
-import Products from "@/models/Products";
 import { generateSlug } from "@/lib/utils";
+import NewProduct from "@/models/NewProduct";
 
 const generateUniqueSlug = async (slug: string) => {
   let uniqueSlug = slug;
-  let slugExists = await Products.findOne({ slug: uniqueSlug });
+  let slugExists = await NewProduct.findOne({ slug: uniqueSlug });
 
   let counter = 1;
   while (slugExists) {
     uniqueSlug = `${slug}-${counter}`;
-    slugExists = await Products.findOne({ slug: uniqueSlug });
+    slugExists = await NewProduct.findOne({ slug: uniqueSlug });
     counter++;
   }
 
@@ -77,7 +77,7 @@ export async function PUT(
   try {
     await connectToDB();
 
-    const existingProduct = await Products.findById(_id);
+    const existingProduct = await NewProduct.findById(_id);
 
     if (!existingProduct) {
       return NextResponse.json({ error: "Product not found" }, { status: 404 });

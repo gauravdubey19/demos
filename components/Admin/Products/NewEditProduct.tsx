@@ -219,7 +219,7 @@ const NewEditProduct: React.FC<{ slug: string }> = ({ slug }) => {
 
     try {
       const res = await fetch(
-        `/api/products/update/admin/edit-product/${product?._id}`,
+        `/api/products/update/admin/new-edit-product/${product?._id}`,
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
