@@ -78,24 +78,32 @@ function NewHeroSection() {
     <section className="h-screen w-full relative flex items-center justify-center">
       <div className="md:h-[97.5%] h-[99%] w-[98.5%] md:rounded-[30px] rounded-[20px] overflow-hidden relative">
         <div className="absolute top-2 md:top-6 left-0 right-0 z-50 w-full">
-          <div className="flex justify-between items-center w-full h-full md:px-6 px-2">
-            <Link href={"/three-d"} className="button-default" id="3dButton">
+          <div className="flex justify-between items-cente r w-full h-full md:px-6 px-2">
+            <Link
+              href={"/three-d"}
+              className="h-fit button-default"
+              id="3dButton"
+            >
               <div className="flex flex-row gap-2 items-center justify-center relative w-full h-full right-2">
                 <GoChevronLeft size={26} className="" />
                 3D Textiles
               </div>
             </Link>
-            <div className="relative items-center justify-center px-6 py-2  overflow-hidden hidden md:flex">
+            <div className="relative px-6 py-2 overflow-hidden hidden md:flex-center">
               {/* <div className="absolute top-0 left-0 right-0 bottom-0 bg-black opacity-70 z-0 border border-primary rounded-full"></div> */}
               <Image
                 src={Logo}
                 alt="CSK"
                 width={100}
                 height={100}
-                className="w-[90px] h-auto relative z-10 "
+                className="w-[90px] lg:w-[140px] h-auto relative z-10"
               />
             </div>
-            <Link href="/products" className="button-default" id="readyMade">
+            <Link
+              href="/products"
+              className="h-fit button-default"
+              id="readyMade"
+            >
               <div className="flex flex-row gap-2 items-center justify-center relative w-full h-full left-2">
                 Ready Made
                 <GoChevronRight size={26} className="" />

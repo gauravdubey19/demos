@@ -252,7 +252,7 @@ const AddProductsInBulk = () => {
       const data = await res.json();
       toast({
         title: data.message || data.error,
-        description: data.message || "Products created successfully!",
+        description: data.message ? "Now you can view." : "Please try again...",
         variant: data.error ? "destructive" : "default",
       });
       if (res.ok) {

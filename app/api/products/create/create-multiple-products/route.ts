@@ -104,6 +104,22 @@ export const POST = async (request: NextRequest) => {
     );
   } catch (error) {
     console.error("Error creating products:", error);
+
+    if (
+      error instanceof Error &&
+      "code" in error &&
+      "keyPattern" in error &&
+      typeof error.code === "number" &&
+      error.code === 11000 &&
+      error.keyPattern &&
+      "slug" in (error.keyPattern as Record<string, unknown>)
+    ) {
+      return NextResponse.json(
+        { error: "This product already exists, change the product title!" },
+        { status: 400 }
+      );
+    }
+
     return NextResponse.json(
       { error: "Failed to create products" },
       { status: 500 }

@@ -83,7 +83,7 @@ const BottomNav = () => {
                 )}
                 {favProducts.length > 0 && (
                   <ReactCountUp
-                    className="absolute -top-2 -right-2 md:-top-2.5 md:-right-2.5 w-5 h-5 flex-center bg-red-500 text-white text-sm md:text-xs rounded-full p-1"
+                    className="absolute -top-3.5 -right-3.5 md:-top-2.5 md:-right-2.5 w-5 h-5 flex-center bg-red-500 text-white text-sm md:text-xs rounded-full p-1"
                     amt={favProducts.length}
                   />
                 )}
