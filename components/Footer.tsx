@@ -154,7 +154,7 @@ const Form = () => {
       const response = await fetch("/api/newsletter/add-newsletter", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(email),
+        body: JSON.stringify({email}),
       });
 
       const data = await response.json();
