@@ -42,6 +42,7 @@ import HelpDesk from "@/components/Admin/Helpdesk/helpdesk";
 import AddProductsInBulk from "@/components/Admin/Products/AddProductsInBulk";
 import GenerateCoupon from "@/components/Profile/Sections/GenerateCoupon";
 import MyCoupons from "@/components/Profile/Sections/MyCoupons";
+import NotificationSection from "@/components/Admin/Notifications/NotificationSection";
 
 export const profileSections: SectionValues[] = [
   {
@@ -233,5 +234,12 @@ export const adminSections: SectionValues[] = [
     href: "/admin/my-account",
     icon: AiOutlineSetting,
     sectionNode: MyAccount,
+  },
+  {
+    id: "my-notifications",
+    head: "My Notification",
+    href: "/admin/my-notifications",
+    icon: AiOutlineSetting,
+    sectionNode: NotificationSection,
   },
 ];
