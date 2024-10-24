@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { connectToDB } from "@/utils/db";
-import Products from "@/models/Products";
 import Order from "@/models/Order";
 import User from "@/models/User";
+import NewProduct from "@/models/NewProduct";
 
 export const GET = async (
   request: NextRequest,
@@ -21,7 +21,7 @@ export const GET = async (
     await connectToDB();
 
     if (require === "collections-length") {
-      const products = await Products.find();
+      const products = await NewProduct.find();
       const orders = await Order.find();
       const users = await User.find();
 

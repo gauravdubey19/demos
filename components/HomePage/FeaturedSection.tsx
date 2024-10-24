@@ -68,7 +68,7 @@ const FeaturedSection: React.FC<ProductSectionProps> = ({
         </div>
         <Carousel>
           {!loading
-            ? products.map((card, index) => (
+            ? products?.map((card, index) => (
                 <Card
                   key={index || card._id}
                   card={card}
@@ -76,7 +76,7 @@ const FeaturedSection: React.FC<ProductSectionProps> = ({
                   loading={loading}
                 />
               ))
-            : cardList.map((card, index) => (
+            : cardList?.map((card, index) => (
                 <Card
                   key={null}
                   card={card}

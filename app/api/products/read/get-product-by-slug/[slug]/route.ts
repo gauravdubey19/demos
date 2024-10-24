@@ -1,13 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { connectToDB } from "@/utils/db";
-import Products from "@/models/Products";
+// import Products from "@/models/Products";
 import NewProduct from "@/models/NewProduct";
 
 export const GET = async (
   request: NextRequest,
   { params }: { params: { slug: string } }
 ) => {
-  console.log(params)
+  console.log(params);
   try {
     await connectToDB();
 

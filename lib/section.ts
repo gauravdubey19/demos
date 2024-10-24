@@ -15,7 +15,6 @@ import MyAccount from "@/components/Admin/MyAccount";
 import FaqContainer from "@/components/Admin/QuerysFAQs/FAQ/FaqContainer";
 import Querry from "@/components/Admin/QuerysFAQs/Querries/Querry";
 import EditAddress from "@/components/Profile/Sections/EditAddress";
-import AddProduct from "@/components/Admin/Products/AddProduct";
 import NewAddProduct from "@/components/Admin/Products/NewAddProduct";
 import AllCategories from "@/components/Admin/Products/Category/AllCategories";
 import AllOufitCollection from "@/components/Admin/Products/Outfit/OutfitCollection/AllOutfit";
@@ -40,6 +39,7 @@ import { GrMapLocation } from "react-icons/gr";
 import { AiOutlineCustomerService } from "react-icons/ai";
 import AddAddress from "@/components/Profile/Sections/AddAddresses";
 import HelpDesk from "@/components/Admin/Helpdesk/helpdesk";
+import AddProductsInBulk from "@/components/Admin/Products/AddProductsInBulk";
 import GenerateCoupon from "@/components/Profile/Sections/GenerateCoupon";
 import MyCoupons from "@/components/Profile/Sections/MyCoupons";
 
@@ -147,10 +147,16 @@ export const adminSections: SectionValues[] = [
         sectionNode: AllProducts,
       },
       {
-        id: "add-products",
-        head: "Add Products",
-        href: "/admin/add-products",
+        id: "add-product",
+        head: "Add Product",
+        href: "/admin/add-product",
         sectionNode: NewAddProduct, //AddProduct,
+      },
+      {
+        id: "add-bulk-products",
+        head: "Add Bulk Products",
+        href: "/admin/add-bulk-products",
+        sectionNode: AddProductsInBulk,
       },
       {
         id: "all-outfit-collections",
