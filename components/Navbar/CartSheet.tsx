@@ -7,7 +7,7 @@ import { useCart } from "@/context/CartProvider";
 import { BsHandbag } from "react-icons/bs";
 import { AiOutlineMinus, AiOutlinePlus } from "react-icons/ai";
 import { Button } from "../ui/button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Select,
   SelectContent,
@@ -16,7 +16,7 @@ import {
   SelectValue,
 } from "../ui/select";
 import { useRouter } from "next/navigation";
-import { CartItem } from "@/lib/types";
+import { CartItem, ColorCartObject, ColorObject } from "@/lib/types";
 
 const Cart = () => {
   const router = useRouter();
@@ -123,35 +123,62 @@ const CartItemCard: React.FC<{ item: CartItem }> = ({ item }) => {
     handleColorSize,
   } = useCart();
 
-  const [size, setSize] = useState<string>(item?.selectedSize);
+  // useEffect(() => {
+  //   console.log("item: ", item);
+  // }, [item]);
+  const [size, setSize] = useState<string>(item?.selectedSize ?? item.productId.images_collection[0].quantity[0].size);
   const [color, setColor] = useState<{ title: string; color: string }>(
     item?.selectedColor
   );
+  const [currentColor, setCurrentColor] = useState<ColorCartObject>(item.productId.images_collection[0]);
+  useEffect(() => {
+    let selectedColor = item.productId.images_collection.find(
+      (c) => c.color === color.color
+    );
+    if (!selectedColor) {
+      selectedColor = item.productId.images_collection[0];
+      setCurrentColor(selectedColor);
+    }
+    setSize(selectedColor.quantity[0].size);
+    setCurrentColor(selectedColor);
+  },[color, item.productId.images_collection]);
+
   const { cartLoading } = useCart();
   const sizeLabels: { [key: string]: string } = {
+    XS: "Extra Small",
     S: "Small",
     M: "Medium",
     L: "Large",
     XL: "Extra Large",
+    XXL: "Extra Extra Large",
   };
 
   const handleSizeChange = (selectedSize: string) => {
     setSize(selectedSize);
-    handleColorSize("upd-size", item.productId, undefined, selectedSize);
+    // console.log("selectedSize: ", selectedSize);
+    handleColorSize("upd-size", item.productId._id, undefined, selectedSize);
   };
 
   const handleColorChange = (selectedColor: {
     title: string;
     color: string;
+    quantity: Array<{ size: string; quantity: number }>;
   }) => {
     setColor(selectedColor);
-    handleColorSize("upd-color", item.productId, selectedColor);
+    let size = item.selectedSize as undefined | string;
+    let sizeExists = selectedColor.quantity.find((q) => q.size === size);
+    if (!sizeExists) {
+      console.log("size not found ... updating one");
+      size = selectedColor.quantity[0].size;
+    }
+    handleColorSize("upd-color", item.productId._id, selectedColor, size);
   };
 
+  if(!item.productId.images_collection) return null;
   return (
     <div className="relative w-full h-fit group bg-white/20 rounded-md p-1 shadow-md hover:shadow-lg scale-95 hover:scale-100 ease-in-out duration-300">
       <div
-        onClick={() => handleRemoveFromCart(item.productId)}
+        onClick={() => handleRemoveFromCart(item.productId._id)}
         className={`absolute right-2 top-0 z-10 cursor-pointer opacity-0 group-hover:opacity-100 ${
           item.quantity !== 1 ? "text-gray-400 hover:text-[red]" : "text-[red]"
         }`}
@@ -178,42 +205,47 @@ const CartItemCard: React.FC<{ item: CartItem }> = ({ item }) => {
             id="color-&-size-selection"
             className="w-full h-fit mt-1 rounded-lg flex-between gap-1 overflow-hidden"
           >
-            <Select defaultValue={size} onValueChange={handleSizeChange}>
+            <Select defaultValue={size} value={size} onValueChange={handleSizeChange}>
               <SelectTrigger className="w-full bg-transparent border border-primary rounded-r-none rounded-l-lg ">
                 <SelectValue placeholder="Select size" />
               </SelectTrigger>
               <SelectContent>
-                {item.availableSizes.map((size) => (
-                  <SelectItem
-                    key={size}
-                    value={size}
-                    className="cursor-pointer"
-                  >
-                    {sizeLabels[size] || size}
-                  </SelectItem>
-                ))}
+                {item?.productId.images_collection?.map((c,index) => (
+                  c.color===item.selectedColor.color && c.quantity.map((q,index) => (
+                    <SelectItem
+                      key={index}
+                      value={q.size}
+                      className="cursor-pointer"
+                    >
+                      {sizeLabels[q.size]}
+                    </SelectItem>
+                  ))
+                ))
+                }
               </SelectContent>
             </Select>
             <Select
+            value={color?.title}
               defaultValue={color?.title}
               onValueChange={(selectedColor) => {
-                const selected = item.colorOptions.find(
-                  (c) => c.title === selectedColor
+                const selected = item.productId.images_collection.find(
+                  (c) => c.color_name === selectedColor
                 );
-                if (selected) handleColorChange(selected);
+                if (selected) handleColorChange({ title: selected.color_name, color: selected.color, quantity: selected.quantity });
+
               }}
             >
               <SelectTrigger className="w-full bg-transparent border border-primary rounded-l-none rounded-r-lg ">
                 <SelectValue placeholder="Select color" />
               </SelectTrigger>
               <SelectContent>
-                {item.colorOptions.map((c) => (
+                {item?.productId.images_collection?.map((c,index) => (
                   <SelectItem
-                    key={c._id}
-                    value={c?.title}
+                    key={index}
+                    value={c?.color_name}
                     className="cursor-pointer"
                   >
-                    {c?.title}
+                    {c?.color_name}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -236,7 +268,7 @@ const CartItemCard: React.FC<{ item: CartItem }> = ({ item }) => {
           <div className="flex-center gap-2 select-none">
             <Button
               type="button"
-              onClick={() => handleDecrement(item.productId)}
+              onClick={() => handleDecrement(item.productId._id)}
               disabled={item.quantity === 1}
               size="icon"
               className="cursor-pointer bg-transparent disabled:opacity-60 disabled:cursor-pointer"
@@ -251,14 +283,14 @@ const CartItemCard: React.FC<{ item: CartItem }> = ({ item }) => {
               size="icon"
               onClick={() =>
                 handleIncrement(
-                  item.productId,
-                  item.quantityInStock,
+                  item.productId._id,
+                  currentColor.quantity.find( q => q.size === size)?.quantity || 1,
                   item.quantity
                 )
               }
               disabled={
-                cartLoading === item.productId ||
-                item.quantityInStock === item.quantity
+                cartLoading === item.productId._id ||
+                item.quantity === item.productId.images_collection[0].quantity[0].quantity
               }
               className="cursor-pointer bg-transparent disabled:opacity-60 disabled:cursor-pointer"
             >

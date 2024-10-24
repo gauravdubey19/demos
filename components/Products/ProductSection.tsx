@@ -32,6 +32,7 @@ const ProductSection: React.FC<ProductSectionProps> = ({
 
         const data = await res.json();
         // console.log(data);
+        // console.log("All products for category",category, data);
         if (data as CardValues[]) {
           setProducts(data as CardValues[]);
           setLoading(false);

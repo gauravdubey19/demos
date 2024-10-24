@@ -13,7 +13,6 @@ import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { CartItem, } from "@/lib/types";
 import { useGlobalContext } from "./GlobalProvider";
-import { set } from "mongoose";
 
 interface CartContextType {
   cart: CartItem[];
@@ -29,6 +28,15 @@ interface CartContextType {
   handleClearCart: () => void;
   itemExistInCart: (productId: string) => boolean;
   handleAddToCart: (
+    images_collection: Array<{
+      color: string;
+      color_name: string;
+      image_link: string;
+      quantity: Array<{
+        size: string;
+        quantity: number;
+      }>;
+    }>,
     discount: number,
     productId: string,
     title: string,
@@ -36,13 +44,13 @@ interface CartContextType {
     description: string,
     price: number,
     image: string,
-    availableSizes: string[],
+    // availableSizes: string[],
     selectedSize: string,
-    colorOptions: {
-      _id: string;
-      title: string;
-      color: string;
-    }[],
+    // colorOptions: {
+    //   _id: string;
+    //   title: string;
+    //   color: string;
+    // }[],
     colorTitle: string,
     color: string,
     categorySlug: string,
@@ -70,6 +78,7 @@ interface CartContextType {
   setfinalCouponCode: React.Dispatch<React.SetStateAction<string>>;
   finalTotalAmount: number;
   setFinalTotalAmount: React.Dispatch<React.SetStateAction<number>>;
+  resetQuantity: (productId: string) => void;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -121,13 +130,22 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
 
   const itemExistInCart = useCallback(
     (productId: string): boolean => {
-      return cart.some((item) => item.productId === productId);
+      return cart.some((item) => item.productId._id === productId);
     },
     [cart]
   );
 
   const handleAddToCart = useCallback(
     async (
+      images_collection: Array<{
+        color: string;
+        color_name: string;
+        image_link: string;
+        quantity: Array<{
+          size: string;
+          quantity: number;
+        }>;
+      }>,
       discount: number,
       productId: string,
       title: string,
@@ -135,13 +153,13 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
       description: string,
       price: number,
       image: string,
-      availableSizes: string[],
+      // availableSizes: string[],
       selectedSize: string,
-      colorOptions: {
-        _id: string;
-        title: string;
-        color: string;
-      }[],
+      // colorOptions: {
+      //   _id: string;
+      //   title: string;
+      //   color: string;
+      // }[],
       colorTitle: string,
       color: string,
       categorySlug: string,
@@ -162,17 +180,17 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
 
       const newItem: CartItem = {
         discount,
-        productId,
+        productId:{
+          _id: productId,
+          images_collection,
+        },
         title,
         slug,
         description,
         price,
         image,
         quantity: quantity || 1,
-        quantityInStock,
-        availableSizes,
         selectedSize,
-        colorOptions,
         selectedColor: {
           title: colorTitle,
           color,
@@ -243,11 +261,11 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
         if (res.ok) {
           setCart((prevCart) => {
             const updatedCart = prevCart.filter(
-              (item) => item.productId !== productId
+              (item) => item.productId._id !== productId
             );
 
             const removedItem = prevCart.find(
-              (item) => item.productId === productId
+              (item) => item.productId._id === productId
             );
             if (removedItem) {
               toast({
@@ -351,7 +369,7 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
         });
       }
 
-      const item = cart.find((item) => item.productId === productId);
+      const item = cart.find((item) => item.productId._id === productId);
 
       if (!item) return;
 
@@ -366,7 +384,7 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
               userId: session.user.id,
-              productId: item.productId,
+              productId: item.productId._id,
             }),
           }
         );
@@ -376,7 +394,7 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
         if (res.ok) {
           setCart((prevCart) =>
             prevCart.map((item) =>
-              item.productId === productId
+              item.productId._id === productId
                 ? { ...item, quantity: item.quantity + 1 }
                 : item
             )
@@ -413,7 +431,7 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
         return;
       }
 
-      const item = cart.find((item) => item.productId === productId);
+      const item = cart.find((item) => item.productId._id === productId);
 
       if (!item || item.quantity === 1) {
         // if (item) handleRemoveFromCart(item.productId);
@@ -422,7 +440,7 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
 
       setCart((prevCart) =>
         prevCart.map((item) =>
-          item.productId === productId
+          item.productId._id === productId
             ? { ...item, quantity: item.quantity - 1 }
             : item
         )
@@ -436,7 +454,7 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
               userId: session.user.id,
-              productId: item.productId,
+              productId: item.productId._id,
             }),
           }
         );
@@ -450,7 +468,7 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
         } else {
           setCart((prevCart) =>
             prevCart.map((item) =>
-              item.productId === productId
+              item.productId._id === productId
                 ? { ...item, quantity: item.quantity + 1 }
                 : item
             )
@@ -465,7 +483,7 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
         console.error("Error decrementing quantity:", error);
         setCart((prevCart) =>
           prevCart.map((item) =>
-            item.productId === productId
+            item.productId._id === productId
               ? { ...item, quantity: item.quantity + 1 }
               : item
           )
@@ -480,6 +498,63 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
     [status, cart, router, session]
   );
 
+  const resetQuantity = useCallback(
+    async (productId: string) => {
+      if (status !== "authenticated") {
+        router.replace("/sign-in");
+        return;
+      }
+
+      const item = cart.find((item) => item.productId._id === productId);
+
+      if (!item) {
+        return;
+      }
+
+      try {
+        const res = await fetch(
+          "/api/products/update/update-cart-items/resetQuantity",
+          {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              userId: session.user.id,
+              productId: item.productId._id,
+            }),
+          }
+        );
+
+        const data = await res.json();
+
+        if (res.ok) {
+          setCart((prevCart) =>
+            prevCart.map((item) =>
+              item.productId._id === productId
+                ? { ...item, quantity: 1 }
+                : item
+            )
+          );
+          // toast({
+          //   title: data.message || "Quantity reset successfully.",
+          // });
+        } else {
+          toast({
+            title: data.error || "Failed to reset quantity.",
+            description: "Please try again later.",
+            variant: "destructive",
+          });
+        }
+      } catch (error) {
+        console.error("Error resetting quantity:", error);
+        toast({
+          title: "Something went wrong",
+          description: "Please try again later.",
+          variant: "destructive",
+        });
+      }
+    },
+    [status, cart, router, session] )
+
   const handleColorSize = useCallback(
     async (
       action: string,
@@ -492,7 +567,7 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
         return;
       }
 
-      const item = cart.find((item) => item.productId === productId);
+      const item = cart.find((item) => item.productId._id === productId);
 
       if (!item) {
         return;
@@ -506,7 +581,7 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
               userId: session.user.id,
-              productId: item.productId,
+              productId: item.productId._id,
               color,
               size,
             }),
@@ -521,7 +596,7 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
           // });
           setCart((prevCart) =>
             prevCart.map((cartItem) =>
-              cartItem.productId === productId
+              cartItem.productId._id === productId
                 ? {
                     ...cartItem,
                     selectedColor:
@@ -532,6 +607,7 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
                       action === "upd-size" && size
                         ? size
                         : cartItem.selectedSize,
+                        quantity: 1
                   }
                 : cartItem
             )
@@ -677,7 +753,8 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
         wishlisting,
         setWishlisting, 
         finalCouponDiscount, setfinalCouponCode, setfinalCouponDiscount, finalCouponCode,
-        finalTotalAmount, setFinalTotalAmount
+        finalTotalAmount, setFinalTotalAmount,
+        resetQuantity
       }}
     >
       {children}

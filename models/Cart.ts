@@ -1,11 +1,10 @@
 import { Schema, model, models } from "mongoose";
-import Products from "./Products";
 
 const CartItemSchema = new Schema(
   {
     productId: {
       type: Schema.Types.ObjectId,
-      ref: "Products",
+      ref: "NewProducts",
     },
     title: {
       type: String,
@@ -32,14 +31,14 @@ const CartItemSchema = new Schema(
       type: Number,
       required: true,
     },
-    quantityInStock: {
-      type: Number,
-      required: true,
-    },
-    availableSizes: {
-      type: [String],
-      required: true,
-    },
+    // quantityInStock: {
+    //   type: Number,
+    //   required: true,
+    // },
+  //  availableSizes: {
+  //     type: [String],
+  //     required: true,
+  //   }, 
     discount: {
       type: Number,
       required: true,
@@ -48,12 +47,12 @@ const CartItemSchema = new Schema(
       type: String,
       required: true,
     },
-    colorOptions: [
-      {
-        title: { type: String, required: true },
-        color: { type: String, required: true },
-      },
-    ],
+    // colorOptions: [
+    //   {
+    //     title: { type: String, required: true },
+    //     color: { type: String, required: true },
+    //   },
+    // ],
     selectedColor: {
       title: {
         type: String,

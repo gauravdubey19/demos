@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { ObjectId } from "mongodb";
 import { connectToDB } from "@/utils/db";
 import Products from "@/models/Products";
+import NewProduct from "@/models/NewProduct";
 
 export async function POST(request: NextRequest) {
   try {
@@ -18,7 +19,7 @@ export async function POST(request: NextRequest) {
     await connectToDB();
 
     const objectIds = ids.map((id: string) => new ObjectId(id));
-    const products = await Products.find({ _id: { $in: objectIds } });
+    const products = await NewProduct.find({ _id: { $in: objectIds } });
 
     if (products.length === 0) {
       return NextResponse.json(

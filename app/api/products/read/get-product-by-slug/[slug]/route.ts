@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { connectToDB } from "@/utils/db";
 import Products from "@/models/Products";
+import NewProduct from "@/models/NewProduct";
 
 export const GET = async (
   request: NextRequest,
@@ -10,7 +11,7 @@ export const GET = async (
   try {
     await connectToDB();
 
-    const product = await Products.findOne({ slug: params.slug });
+    const product = await NewProduct.findOne({ slug: params.slug });
 
     if (!product) {
       return NextResponse.json({ error: "Product not found" }, { status: 404 });

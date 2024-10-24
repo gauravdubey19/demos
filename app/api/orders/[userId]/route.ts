@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { connectToDB } from '@/utils/db';
 import Order from '@/models/Order';
 import Products from '@/models/Products';
+import NewProduct from '@/models/NewProduct';
 
 // Get Orders by User ID
 export async function GET(req: NextRequest, { params }: { params: { userId: string } }) {
@@ -52,23 +53,42 @@ export async function POST(req: NextRequest, { params }: { params: { userId: str
 
         // Decrease the stocks of the orderedProducts
         for (const product of newOrder.orderedProducts) {
-            const productToUpdate = await Products.findOne({ _id: product.productId });
+            const productToUpdate = await NewProduct.findOne({ _id: product.productId });
             if (!productToUpdate) {
                 console.error(`Product ${product.title} not found`);
                 return NextResponse.json({ error: `Product ${product.title} not found` }, { status: 404 });
             }
 
-            console.log("product quantity: ", product.quantity);
-            console.log("productToUpdate.quantityInStock: ", productToUpdate.quantityInStock);
+            // Find the correct color and size
+            const colorOption = productToUpdate.images_collection.find(
+                (color:any) => color.color_name === product.selectedColor.title
+            );
 
-            if (productToUpdate.quantityInStock < product.quantity) {
-                console.error(`Insufficient stock for product ${product.title}`);
-                return NextResponse.json({ error: `Insufficient stock for product ${product.title}` }, { status: 400 });
+            if (!colorOption) {
+                console.error(`Color ${product.selectedColor.title} not found for product ${product.title}`);
+                return NextResponse.json({ error: `Color ${product.selectedColor.title} not found for product ${product.title}` }, { status: 404 });
             }
 
-            productToUpdate.quantityInStock -= product.quantity;
+            const sizeOption = colorOption.quantity.find(
+                (size:any) => size.size === product.selectedSize
+            );
+
+            if (!sizeOption) {
+                console.error(`Size ${product.selectedSize} not found for product ${product.title}`);
+                return NextResponse.json({ error: `Size ${product.selectedSize} not found for product ${product.title}` }, { status: 404 });
+            }
+
+            if (sizeOption.quantity < product.quantity) {
+                console.error(`Insufficient stock for product ${product.title} in size ${product.selectedSize}`);
+                return NextResponse.json({ error: `Insufficient stock for product ${product.title} in size ${product.selectedSize}` }, { status: 400 });
+            }
+
+            // console.log("updating product quantity beforehand: ", sizeOption.quantity);
+            sizeOption.quantity -= product.quantity;
+            // console.log("updating product quantity after: ", sizeOption.quantity);
+            productToUpdate.sell_on_google_quantity = sizeOption.quantity;
             await productToUpdate.save();
-            console.log(`Product ${product.title} updated successfully`);
+            // console.log("Product updated successfully", productToUpdate);
         }
 
         const createdOrder = await Order.create(newOrder);
@@ -78,7 +98,6 @@ export async function POST(req: NextRequest, { params }: { params: { userId: str
         return NextResponse.json({ error: 'Error adding order' }, { status: 500 });
     }
 }
-
 // Update Order for User
 // export async function PUT(req: NextRequest, { params }: { params: { userId: string } }) {
 //     await connectToDB();

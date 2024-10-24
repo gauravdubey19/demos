@@ -1142,6 +1142,7 @@ import Loader from "../ui/Loader";
 import { IoMdStar, IoIosArrowForward, IoIosArrowBack } from "react-icons/io";
 import {
   AdditionalInfoProps,
+  ColorObject,
   DetailsProps,
   ImageGalleryProps,
   ProductDetailValues,
@@ -1161,13 +1162,27 @@ const ProductDetail: React.FC<{ slug: string; categorySlug: string }> = ({
   slug,
   categorySlug,
 }) => {
-  const [product, setProduct] = useState<ProductDetailValues | null>(null);
+  const [product, setProduct] = useState<ProductDetailValues |null>();
   const { fetchReviews } = useGlobalContext();
   const [loading, setLoading] = useState<boolean>(true);
   const [reviews, setReviews] = useState<Review[]>([]);
   const [avgRating, setAvgRating] = useState<number>(0);
   const [reviewLoading, setReviewLoading] = useState<boolean>(true);
-
+  const [size, setSize] = useState<string>("");
+  const [color, setColor] = useState<string>("");
+  const [colorTitle, setColorTitle] = useState<string>("");
+  const [isValuesSelected, setIsValuesSelected] = useState<{ size: boolean; color: boolean; colorTitle: boolean; }>({
+    size: false,
+    color: false,
+    colorTitle: false,
+  });
+  useEffect(() => {
+    if (!product) return;
+    if(!product.images_collection) return;
+    setColor(product?.images_collection[0].color??'');
+    setColorTitle(product?.images_collection[0].color_name??'');
+    setIsValuesSelected((prev) => ({ ...prev, color: false }));
+  }, [product]);
   useEffect(() => {
     if (!product) return;
     const getReviews = async () => {
@@ -1228,31 +1243,59 @@ const ProductDetail: React.FC<{ slug: string; categorySlug: string }> = ({
     // if (!product)
     fetchProductBySlug();
   }, [slug]);
+  const [currentColorObj, setCurrentColorObj] = useState<ColorObject | null>(null);
+ 
 
-  if (loading) return <Loader />;
-
-  if (!product) {
-    return <div>Product not found</div>;
+useEffect(() => {
+  if(product?.images_collection && product.images_collection.length > 0) {
+  setCurrentColorObj(product.images_collection[0]);
   }
-
+}, [product]);
   // console.log(product);
+useEffect(() => {
+  if(!product) return;
+  product.images_collection.forEach((colorObj) => {
+    if (colorObj.color === color) {
+      setCurrentColorObj(colorObj);
+    }
+  });
+}, [color]);
+if (loading) return <Loader />;
 
+if (!product) {
+  return <div>Product not found</div>;
+}
+if(!product.images_collection) {
+  return <div>Product images not found</div>;
+}
   return (
     <>
       <section className="w-full h-full max-w-6xl px-4 py-10 mx-auto">
         <div className="w-full h-full mt-8 lg:mt-[80px] xl:mt-10">
           <Breadcrumbs />
           <div className="w-full h-full grid grid-cols-1 lg:grid-cols-[1fr_1fr] gap-6 lg:gap-12 items-start lg:mt-2">
-            <ImageGalleryMobile images={product.images} />
+            { currentColorObj?.images &&
+            <ImageGalleryMobile images={currentColorObj.images} />
+          }
+          {currentColorObj?.images && 
             <ImageGallery
-              images={product.images}
-              initialImageLink={product.image_link}
+              images={currentColorObj.images}
+              initialImageLink={currentColorObj.image_link}
             />
+            }
             <Details
               product={product}
               categorySlug={categorySlug}
               avgRating={avgRating}
               reviewsLength={reviews.length}
+              size={size}
+              setSize={setSize}
+              color={color}
+              setColor={setColor}
+              colorTitle={colorTitle}
+              setColorTitle={setColorTitle}
+              isValuesSelected={isValuesSelected}
+              setIsValuesSelected={setIsValuesSelected}
             />
           </div>
           <ProductReviews
@@ -1294,14 +1337,16 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({
   images,
   initialImageLink,
 }) => {
-  const [currentImage, setCurrentImage] = useState<string>(initialImageLink);
+  const [currentImage, setCurrentImage] = useState<string>(images[0]);
   const [showArrowLeft, setShowArrowLeft] = useState<boolean>(false);
   const [showArrowRight, setShowArrowRight] = useState<boolean>(true);
   const [isMobileView, setIsMobileView] = useState<boolean>(
     window.innerWidth < 768
   );
   const thumbnailRef = useRef<HTMLDivElement>(null);
-
+useEffect(() => {
+  setCurrentImage(images[0]);
+}, [images]);
   const scrollThumbnails = (direction: "left" | "right" | "up" | "down") => {
     if (thumbnailRef.current) {
       const scrollAmount = isMobileView
@@ -1461,7 +1506,7 @@ const Details: React.FC<DetailsProps> = ({
   product,
   categorySlug,
   avgRating,
-  reviewsLength,
+  reviewsLength,size, setSize,color, setColor, colorTitle, setColorTitle, isValuesSelected, setIsValuesSelected,
 }) => {
   const {
     handleAddToCart,
@@ -1473,18 +1518,6 @@ const Details: React.FC<DetailsProps> = ({
     productExistInWishlist,
   } = useCart();
 
-  const [size, setSize] = useState<string>("");
-  const [color, setColor] = useState<string>("");
-  const [colorTitle, setColorTitle] = useState<string>("");
-  const [isValuesSelected, setIsValuesSelected] = useState<{
-    size: boolean;
-    color: boolean;
-    colorTitle: boolean;
-  }>({
-    size: false,
-    color: false,
-    colorTitle: false,
-  });
 
   const handleAddToCartBtn = () => {
     setIsValuesSelected({
@@ -1495,25 +1528,47 @@ const Details: React.FC<DetailsProps> = ({
 
     if (size.trim() !== "" && color.trim() !== "") {
       const quantity = 1;
-      const discount = product.oldPrice
-        ? calculateDiscount(product.price, product.oldPrice)
+      const discount = product.price && product.salePrice
+        ? calculateDiscount(product.salePrice, product.price)
         : 0;
 
+      // handleAddToCart(
+      //   product.images_collection,
+      //   discount,            // Add the discount parameter
+      //   product._id,
+      //   product.title,
+      //   product.slug,
+      //   product.description,
+      //   product.price,
+      //   product.image_link,
+      //   product.availableSizes,
+      //   size,
+      //   product.colorOptions,
+      //   colorTitle,
+      //   color,
+      //   categorySlug,
+      //   product.quantityInStock,
+      //   quantity
+      // );
+      let quantityOfSelected = product.images_collection.find(
+        (item) => item.color_name === colorTitle
+      )?.quantity.find((q) => q.size === size)?.quantity as number;
       handleAddToCart(
-        discount,            // Add the discount parameter
+        product.images_collection,
+        discount,
         product._id,
         product.title,
         product.slug,
         product.description,
         product.price,
-        product.image_link,
-        product.availableSizes,
+        product.images_collection[0].image_link,
+        // selectedColor.quantity.map((q: QuantityInfo) => q.size),
         size,
-        product.colorOptions,
+        // product.colorOptions,
         colorTitle,
         color,
         categorySlug,
-        product.quantityInStock,
+        quantityOfSelected,
         quantity
       );
     }
@@ -1575,9 +1630,9 @@ const Details: React.FC<DetailsProps> = ({
             decimals={true}
             className="text-4xl font-bold"
           />
-          {product.oldPrice && (
+          {product.price && (
             <ReactCountUp
-              amt={calculateDiscount(product.price, product.oldPrice)}
+              amt={calculateDiscount(product.price, product.price)}
               className="text-md text-[#2CD396] font-medium"
             >
               % off
@@ -1630,20 +1685,20 @@ const Details: React.FC<DetailsProps> = ({
                 isValuesSelected.color && "animate-shake"
               }`}
             >
-              {product.colorOptions.map((c) => (
+              {product.images_collection.map((c,index) => (
                 <div
-                  key={c._id}
-                  title={c.title}
+                  key={index}
+                  title={c.color_name}
                   onClick={() => {
-                    setColorTitle(c.title);
+                    setColorTitle(c.color_name);
                     setColor(c.color);
-                    setIsValuesSelected((prev) => ({ ...prev, color: false }));
+                    setIsValuesSelected((prev:any) => ({ ...prev, color: false }));
                   }}
                   style={{ backgroundColor: c.color }}
                   className={`w-10 h-10 rounded-full flex-center border-2 select-none ${
                     itemExistInCart(product._id)
                       ? "cursor-not-allowed opacity-40"
-                      : colorTitle === c.title
+                      : colorTitle === c.color_name
                       ? "border-primary shadow-lg scale-105 cursor-not-allowed"
                       : "hover:border-primary cursor-pointer"
                   } ${
@@ -1670,28 +1725,31 @@ const Details: React.FC<DetailsProps> = ({
                 isValuesSelected.size && "animate-shake"
               }`}
             >
-              {product.availableSizes.map((s) => (
+              { !isValuesSelected.color && product.images_collection.find(
+                (item) => item.color_name === colorTitle
+              )?.quantity.map((q, index) => (
                 <div
-                  key={s}
+                  key={index}
                   onClick={() => {
                     if (!itemExistInCart(product._id)) {
-                      setSize(s);
-                      setIsValuesSelected((prev) => ({ ...prev, size: false }));
+                      setSize(q.size);
+                      setIsValuesSelected((prev:any) => ({ ...prev, size: false }));
                     }
                   }}
                   className={`w-10 h-10 rounded-full flex-center border select-none ${
                     itemExistInCart(product._id)
                       ? "cursor-not-allowed opacity-40"
-                      : size === s
+                      : size === q.size
                       ? "border-primary shadow-lg scale-105 cursor-not-allowed"
                       : "hover:border-primary cursor-pointer"
                   } ${
                     isValuesSelected.size && "border-[red]"
                   } ease-in-out duration-300`}
                 >
-                  {s}
+                  {q.size}
                 </div>
               ))}
+            
             </div>
           </div>
           <div className="flex flex-col gap-y-2">
@@ -1719,7 +1777,7 @@ const Details: React.FC<DetailsProps> = ({
           <div className="grid gap-2">
             <Button
               disabled={
-                itemExistInCart(product._id) || product.quantityInStock === 0
+                itemExistInCart(product._id) || product.sell_on_google_quantity === 0 || isValuesSelected.size || isValuesSelected.color
               }
               onClick={handleAddToCartBtn}
               size="lg"
@@ -1734,7 +1792,7 @@ const Details: React.FC<DetailsProps> = ({
               )}
             </Button>
             <Button
-              disabled={product.quantityInStock === 0}
+              disabled={product.sell_on_google_quantity === 0}
               onClick={handleBuyNowBtn}
               size="lg"
               className="w-full text-lg rounded-none hover:shadow-md active:translate-y-0.5 ease-in-out duration-300"
@@ -1790,10 +1848,6 @@ const AdditionalInfo: React.FC<AdditionalInfoProps> = ({ product }) => {
           <AccordionTrigger>Other Information</AccordionTrigger>
           <AccordionContent className="bg-gray-100/50 text-sm p-4 rounded-md">
             <ul className="list-disc pl-5 space-y-2">
-              <li>
-                <strong>Available Sizes:</strong>{" "}
-                {product.availableSizes.join(", ")}
-              </li>
               {/* <li>
                 <strong>Color Options:</strong>{" "}
                 {product.colorOptions.join(", ")}
@@ -1811,7 +1865,7 @@ const AdditionalInfo: React.FC<AdditionalInfoProps> = ({ product }) => {
           <AccordionTrigger>Service FAQs</AccordionTrigger>
           <AccordionContent className="bg-gray-100/50 text-sm p-4 rounded-md">
             <ul className="list-disc pl-5 space-y-2">
-              {product.faqs.map((faq, index) => (
+              {product.faqs && product.faqs.map((faq, index) => (
                 <li key={index}>
                   <strong>{faq.question}</strong> {faq.answer}
                 </li>

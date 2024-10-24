@@ -42,28 +42,48 @@ export interface CarouselProps {
   className?: string;
 }
 
+export interface ColorObject{
+  color: string;
+  color_name: string;
+  image_link: string;
+  images: string[];
+  quantity: Array<{
+    size: string;
+    quantity: number;
+  }>;
+}
+export interface ColorCartObject{
+  color: string;
+  color_name: string;
+  image_link: string;
+  quantity: Array<{
+    size: string;
+    quantity: number;
+  }>;
+}
 // Product Card types :
 export interface CardValues {
   _id: string;
-  image_link: string;
-  images?: string[];
   title: string;
+  images_collection: Array<{
+    color: string;
+    color_name: string;
+    image_link: string;
+    images: string[];
+    quantity: Array<{
+      size: string;
+      quantity: number;
+    }>;
+  }>;
   description: string;
   slug: string;
+  sell_on_google_quantity: number;
   price: number;
-  oldPrice: number;
-  discount: number;
-  quantityInStock: number;
+  salePrice: number;
   type: string[];
   reviewsNumber?: number;
   ratings?: number;
   reviews: [];
-  availableSizes: [string];
-  colorOptions: {
-    _id: string;
-    title: string;
-    color: string;
-  }[];
   categories: {
     _id: string;
     title: string;
@@ -106,17 +126,19 @@ export interface ProductDetailValues {
   title: string;
   slug: string;
   description: string;
-  images: string[];
-  image_link: string;
   price: number;
-  oldPrice?: number;
-  quantityInStock: number;
-  availableSizes: string[];
-  colorOptions: {
-    _id: string;
-    title: string;
+  salePrice?: number;
+  sell_on_google_quantity: number;
+  images_collection: Array<{
     color: string;
-  }[];
+    color_name: string;
+    image_link: string;
+    images: string[];
+    quantity: Array<{
+      size: string;
+      quantity: number;
+    }>;
+  }>;
   categories: {
     _id: string;
     title: string;
@@ -150,6 +172,14 @@ export interface DetailsProps {
   categorySlug: string;
   avgRating: number;
   reviewsLength: number;
+  size: string;
+  color: string;
+  setColor: (color: string) => void;
+  setSize: (size: string) => void;
+  colorTitle: string;
+   setColorTitle: (colorTitle: string) => void;
+   isValuesSelected: { size: boolean; color: boolean; colorTitle: boolean; };
+    setIsValuesSelected: (isValuesSelected: any) => void;
 }
 
 export interface ImageGalleryProps {
@@ -164,18 +194,18 @@ export interface ProductReviewsProps {
 }
 export interface AdditionalInfoProps {
   product: {
-    material: string;
+    material?: string;
     fabricType?: string;
     careInstructions?: string;
-    origin: string;
-    availableSizes: string[];
-    colorOptions: {
+    origin?: string;
+    availableSizes?: string[];
+    colorOptions?: {
       _id: string;
       title: string;
       color: string;
     }[];
-    countryOfManufacture: string;
-    faqs: {
+    countryOfManufacture?: string;
+    faqs?: {
       question: string;
       answer: string;
     }[];
@@ -316,27 +346,32 @@ export interface FormStatus {
 
 export interface CartItem {
   discount: number;
-  productId:string;
+  productId:{
+    _id: string;
+    images_collection: Array<{
+      color: string;
+      color_name: string;
+      image_link: string;
+      quantity: Array<{
+        size: string;
+        quantity: number;
+      }>;
+    }>;
+  };
   title: string;
   slug: string;
   price: number;
   quantity: number;
-  quantityInStock: number;
   image: string;
   selectedSize: string;
   selectedColor: {
     title: string;
     color: string;
   };
+  // quantityInStock: number;
   categorySlug: string;
   // above are needed for order schema
   description: string;
-  availableSizes: string[];
-  colorOptions: {
-    _id: string;
-    title: string;
-    color: string;
-  }[];
 }
 // category
 export interface CategoryCollectionValues {

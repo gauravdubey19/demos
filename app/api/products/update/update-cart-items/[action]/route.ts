@@ -12,8 +12,8 @@ export const PUT = async (
     const { action } = params;
     const { userId, productId, color, size } = await request.json();
     // console.log(userId, productId, color, size, action);
-    
-
+    console.log("PRoduct ID", productId);
+    console.log("action: ", action);
     if (
       !["increment", "decrement", "remove", "upd-color", "upd-size"].includes(
         action
@@ -56,12 +56,18 @@ export const PUT = async (
           { status: 400 }
         );
       }
-    } else if (action === "remove") {
+    } else if(action==="resetQuantity"){
+      console.log("entered resetQuantity")
+      cart.cartItems[itemIndex].quantity = 1;
+    }
+    else if (action === "remove") {
       cart.cartItems.splice(itemIndex, 1);
     } else if (action === "upd-color" && color) {
       cart.cartItems[itemIndex].selectedColor = color;
+      cart.cartItems[itemIndex].quantity= 1;
     } else if (action === "upd-size" && size) {
       cart.cartItems[itemIndex].selectedSize = size;
+      cart.cartItems[itemIndex].quantity= 1;
     } else {
       return NextResponse.json(
         { error: "Invalid parameters" },

@@ -117,6 +117,6 @@ const NewProductSchema = new Schema(
   { timestamps: true }
 );
 
-const NewProduct = models.NewProduct || model("NewProduct", NewProductSchema);
+const NewProduct = models.NewProducts || model("NewProducts", NewProductSchema);
 
 export default NewProduct;

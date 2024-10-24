@@ -32,15 +32,15 @@ interface AddressI {
 
 const Address = ({ addressData, handleSelectAddress, selectedAddressId,fetchingAddress }: AddressI) => {
     const [hasProfileAddress, setHasProfileAddress] = React.useState(false);
-    useEffect(() => {
-        console.log('Address Data in address: ', addressData);
-    }, [addressData]);
+    // useEffect(() => {
+    //     console.log('Address Data in address: ', addressData);
+    // }, [addressData]);
     
     //map over the addressdata and check if any one of them has isSameAddress as true
     
     useEffect(() => {
         const hasProfileAddress = addressData.some((address) => address.isSameAddress);
-        console.log('hasProfileAddress: ', hasProfileAddress);
+        // console.log('hasProfileAddress: ', hasProfileAddress);
         setHasProfileAddress(hasProfileAddress);
     }, [addressData]);
     if(fetchingAddress){

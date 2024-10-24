@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { connectToDB } from "@/utils/db";
-import Products from "@/models/Products";
+import NewProduct from "@/models/NewProduct";
 
 export const GET = async (
   req: NextRequest,
@@ -9,11 +9,9 @@ export const GET = async (
   try {
     await connectToDB();
 
-    const products = await Products.find({
+    const products = await NewProduct.find({
       "categories.slug": params.slug,
     });
-    // console.log(products);
-
     return NextResponse.json(products, { status: 200 });
   } catch (error) {
     console.error("Error fetching products by category slug:", error);

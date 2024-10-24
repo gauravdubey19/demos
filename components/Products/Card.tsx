@@ -25,7 +25,9 @@ const Card: React.FC<CardDetails> = ({ card, category, loading = false }) => {
     itemExistInCart,
   } = useCart();
   // wishlisting,
-
+  // useEffect(() => {
+  //   console.log("Card: ", card);
+  // }, [card]);
   useEffect(() => {
     const getReviews = () => {
       if (!card._id) return;
@@ -38,19 +40,22 @@ const Card: React.FC<CardDetails> = ({ card, category, loading = false }) => {
   useEffect(() => {
     let interval: any;
     // Check if card has at least 2 images
-    if (!card.images || card.images.length < 2) return;
+    if (!card.images_collection || !card.images_collection[0].images || card.images_collection[0].images.length < 2) return;
 
     if (hovering) {
       interval = setInterval(() => {
         setCurrentImageIndex((prevIndex) => {
-          if (!card.images) return 0;
-          return (prevIndex + 1) % card.images.length;
+          if (!card.images_collection[0].images) return 0;
+          return (prevIndex + 1) % card.images_collection[0].images.length;
         });
       }, 1300); // Change image every 1.3 seconds
     }
     return () => clearInterval(interval);
-  }, [hovering, card.images]);
-
+  }, [hovering, card.images_collection]);
+if(card.sell_on_google_quantity < 1){
+  console.log("Out of stock");
+  return null;
+}
   return (
     <>
       <div
@@ -95,7 +100,7 @@ const Card: React.FC<CardDetails> = ({ card, category, loading = false }) => {
                 : " ease-in-out duration-300"
             }`}
           >
-            {!loading && card.images && card.images.length > 0 && (
+            {!loading && card.images_collection[0].images && card.images_collection[0].images.length > 0 && (
               <div className="relative w-full h-full">
                 <div
                   className="absolute inset-0 flex transition-transform duration-1000 ease-in-out group-hover:scale-105"
@@ -104,7 +109,7 @@ const Card: React.FC<CardDetails> = ({ card, category, loading = false }) => {
                     width: `100%`,
                   }}
                 >
-                  {card.images.map((image, index) => (
+                  {card.images_collection[0].images.map((image, index) => (
                     <div key={index} className="w-full h-full flex-shrink-0">
                       <Image
                         src={image}
@@ -119,7 +124,7 @@ const Card: React.FC<CardDetails> = ({ card, category, loading = false }) => {
                 </div>
 
                 {/* discount svg overlaying the image */}
-                {card.oldPrice && (
+                {card.salePrice && (
                   <div className="absolute z-10 left-1.5 top-1.5 lg:-top-20 lg:group-hover:top-1.5 ease-in-out duration-300">
                     <Image
                       src="/images/discount.png"
@@ -132,7 +137,7 @@ const Card: React.FC<CardDetails> = ({ card, category, loading = false }) => {
                       <span>
                         -
                         {Math.round(
-                          ((card.oldPrice - card.price) / card.oldPrice) * 100
+                          ((card.salePrice - card.price) / card.salePrice) * 100
                         )}
                         %
                         <br /> off
@@ -151,20 +156,20 @@ const Card: React.FC<CardDetails> = ({ card, category, loading = false }) => {
                 type="button"
                 onClick={() => setAddToBag(!addToBag)}
                 disabled={
-                  itemExistInCart(card?._id) || card.quantityInStock < 1
+                  itemExistInCart(card?._id) || card.sell_on_google_quantity < 1
                 }
                 size="sm"
                 className={`w-full rounded-none hover:shadow-md disabled:opacity-80 disabled:animate-none text-lg ${
                   loading
                     ? "bg-gray-200 animate-pulse text-gray-200"
-                    : card.quantityInStock < 1
+                    : card.sell_on_google_quantity < 1
                     ? "bg-red-500"
                     : !itemExistInCart(card?._id)
                     ? "bg-white backdrop-blur-md border border-[#FF6464] text-[#FF6464] duration-300"
                     : "bg-[#FF6464]"
                 } ease-in-out`}
               >
-                {card.quantityInStock < 1 ? (
+                {card.sell_on_google_quantity < 1 ? (
                   "Out of Stock"
                 ) : itemExistInCart(card?._id) ? (
                   "Added to Cart"
@@ -249,7 +254,7 @@ const Card: React.FC<CardDetails> = ({ card, category, loading = false }) => {
               >
                 {!loading && "₹" + card.price}
               </span>
-              {card.oldPrice && (
+              {card.salePrice && (
                 <div className="flex flex-wrap gap-2">
                   <span
                     className={`text-xs md:text-md line-through text-gray-400 ${
@@ -257,17 +262,17 @@ const Card: React.FC<CardDetails> = ({ card, category, loading = false }) => {
                       "mt-1 lg:mt-0 w-14 h-3 md:h-5 bg-gray-200 animate-pulse"
                     }`}
                   >
-                    {!loading && "₹" + card.oldPrice}
+                    {!loading && "₹" + card.salePrice}
                   </span>
                 </div>
               )}
             </div>
             <div className="w-full h-fit flex gap-2 overflow-auto">
-              {card.colorOptions.map((c, index) => (
+              {card.images_collection?.map((c, index) => (
                 <div
-                  key={index || c._id}
+                  key={index}
                   style={{ backgroundColor: c.color }}
-                  title={c.title}
+                  title={c.color_name}
                   className="w-6 h-6 rounded-full drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.5)] mb-0.5"
                 />
               ))}
@@ -309,16 +314,19 @@ const AddToBagPopUp: React.FC<AddToBagPopUpProps> = ({
 }) => {
   const { handleAddToCart, itemExistInCart } = useCart();
   const [quantity, setQuantity] = useState<number>(1);
-  const [selectedColorIndex, setSelectedColorIndex] = useState<number | null>(null);
+  const [selectedColorIndex, setSelectedColorIndex] = useState<number>(0);
   const [selectedSize, setSelectedSize] = useState<string>("");
   const [isValuesSelected, setIsValuesSelected] = useState<{
     size: boolean;
     color: boolean;
   }>({
-    size: false,
+    size: true,
     color: false,
   });
-
+useEffect(() => {
+  console.log("Product: ",product);
+}, [product]);
+  // Handle adding to cart
   const handleAddToCartBtn = () => {
     setIsValuesSelected({
       size: selectedSize.trim() === "",
@@ -327,11 +335,12 @@ const AddToBagPopUp: React.FC<AddToBagPopUpProps> = ({
 
     if (selectedSize.trim() !== "" && selectedColorIndex !== null && product._id) {
       const selectedColor = product.images_collection[selectedColorIndex];
-      const discount = product.oldPrice
-        ? Math.round(((product.oldPrice - product.price) / product.oldPrice) * 100)
+      const discount = product.sale_price
+        ? Math.round(((product.sale_price - product.price) / product.sale_price) * 100)
         : 0;
 
       handleAddToCart(
+        product.images_collection,
         discount,
         product._id,
         product.title,
@@ -339,9 +348,9 @@ const AddToBagPopUp: React.FC<AddToBagPopUpProps> = ({
         product.description,
         product.price,
         selectedColor.image_link,
-        selectedColor.quantity.map((q: QuantityInfo) => q.size),
+        // selectedColor.quantity.map((q: QuantityInfo) => q.size),
         selectedSize,
-        product.colorOptions,
+        // product.colorOptions,
         selectedColor.color_name,
         selectedColor.color,
         categorySlug,
@@ -352,134 +361,158 @@ const AddToBagPopUp: React.FC<AddToBagPopUpProps> = ({
     }
   };
 
-  // Get available sizes for selected color
+  // Get available sizes for the selected color
   const availableSizes = selectedColorIndex !== null
     ? product.images_collection[selectedColorIndex].quantity
-      .filter((q: { quantity: number }) => q.quantity > 0) // Explicitly define the type for q
-      .map((q: { size: string }) => q.size) // Explicitly define the type for q in map
+      .filter((q: { quantity: number }) => q.quantity > 0)
+      .map((q: { size: string }) => q.size)
     : [];
 
+  // Get available quantity for selected size
+  const availableQuantity = selectedColorIndex !== null && selectedSize
+    ? product.images_collection[selectedColorIndex].quantity.find(
+        (q: { size: string }) => q.size === selectedSize
+      )?.quantity || 0
+    : 0;
+
   return (
-    <>
-      <Dialog open={isOpen} onOpenChange={handleClose}>
-        <DialogContent className="w-full h-fit flex flex-col gap-8">
-          <DialogTitle className="text-lg md:text-xl lg:text-2xl text-center">
-            {product.title}
-          </DialogTitle>
-          <div className="grid gap-4">
-            {/* Color Selection */}
-            <div className="grid gap-2">
-              <label
-                htmlFor="color"
-                className={`text-base font-medium ${isValuesSelected.color && "text-[red]"}`}
-              >
-                {!isValuesSelected.color ? "Select color" : "Please select color!"}
-              </label>
-              <div id="color-option" className={`w-full h-fit flex gap-2 ${isValuesSelected.color && "animate-shake"}`}>
-                {product.images_collection && product.images_collection.map((colorOption: any, index: any) => {
-                  const totalQuantity = colorOption.quantity.reduce((sum: any, size: any) => sum + size.quantity, 0);
-                  return (
-                    <div
-                      key={index}
-                      title={`${colorOption.color_name}${totalQuantity === 0 ? " (Out of Stock)" : ""}`}
-                      onClick={() => {
-                        if (totalQuantity > 0 && !itemExistInCart(product._id)) {
-                          setSelectedColorIndex(index);
-                          setSelectedSize(""); // Reset size when color changes
-                          setIsValuesSelected((prev) => ({ ...prev, color: false }));
-                        }
-                      }}
-                      style={{ backgroundColor: colorOption.color }}
-                      className={`w-10 h-10 rounded-full flex-center border-2 select-none ${totalQuantity === 0
-                          ? "cursor-not-allowed opacity-40"
-                          : "hover:border-primary cursor-pointer"
-                        } ${isValuesSelected.color && "border-[red]"} ease-in-out duration-300`}
-                    />
-                  );
-                })}
-              </div>
-            </div>
-            <div className="flex flex-col gap-y-2">
-              <span
-                className={`text-sm py-2 px-2 ${
-                  product.quantityInStock > 5
-                    ? "text-green bg-emerald-50"
-                    : "text-red-500 bg-red-50"
-                }`}
-              >
-                {product.quantityInStock > 0
-                  ? product.quantityInStock < 5
-                    ? "Hurry Up! Only " + product.quantityInStock
-                    : product.quantityInStock
-                  : "No "}{" "}
-                products available in stock
-              </span>
-              <span>
-                {itemExistInCart(product._id) && (
-                  <span className="text-red-500 text-sm">Already in cart</span>
-                )}
-              </span>
-            </div>
-            <div className="w-fit flex-between gap-2">
-              <ReactCountUp
-                className="text-md"
-                prefix="₹"
-                amt={product.price}
-                decimals={true}
-              />
-              <span className="text-sm select-none text-primary">x</span>
-              <span className="text-md select-none">{quantity}</span>
-            </div>
-            <ReactCountUp
-              className="text-primary text-xl font-semibold"
-              prefix="₹"
-              amt={product.price * quantity}
-              decimals={true}
-            />
-            {/* Action Buttons */}
-            <div className="flex gap-2">
-              <div className="flex-center gap-2 select-none">
-                <Button
-                  onClick={() => setQuantity((prev) => prev - 1)}
-                  disabled={quantity === 1}
-                  size="icon"
-                  className="bg-transparent"
-                >
-                  <AiOutlineMinus color="#000" />
-                </Button>
-                <span className="text-sm text-primary select-none">
-                  {quantity}
-                </span>
-                <Button
-                  size="icon"
-                  onClick={() => setQuantity((prev) => prev + 1)}
-                  disabled={quantity === product.quantityInStock}
-                  className="bg-transparent"
-                >
-                  <AiOutlinePlus color="#000" />
-                </Button>
-              </div>
-              <Button
-                disabled={
-                  itemExistInCart(product._id) || product.quantityInStock === 0
-                }
-                onClick={handleAddToCartBtn}
-                size="lg"
-                className="w-full select-none z-10 flex gap-1 bg-transparent text-lg text-primary border border-primary rounded-none hover:shadow-md active:translate-y-0.5 ease-in-out duration-300"
-              >
-                {itemExistInCart(product._id) ? (
-                  "Added to cart"
-                ) : (
-                  <>
-                    Add to cart <span className="text-2xl">+</span>
-                  </>
-                )}
-              </Button>
+    <Dialog open={isOpen} onOpenChange={handleClose}>
+      <DialogContent className="w-full h-fit flex flex-col gap-8">
+        <DialogTitle className="text-lg md:text-xl lg:text-2xl text-center">
+          {product.title}
+        </DialogTitle>
+        <div className="grid gap-4">
+          {/* Color Selection */}
+          <div className="grid gap-2">
+            <label
+              htmlFor="color"
+              className={`text-base font-medium`}
+            >
+              Select color
+            </label>
+            <div id="color-option" className={`w-full h-fit flex gap-2 `}>
+              {product.images_collection.map((colorOption: any, index: number) => {
+                const totalQuantity = colorOption.quantity.reduce((sum: any, size: any) => sum + size.quantity, 0);
+                return (
+                  <div
+                    key={index}
+                    title={`${colorOption.color_name}${totalQuantity === 0 ? " (Out of Stock)" : ""}`}
+                    onClick={() => {
+                      if (totalQuantity > 0 && !itemExistInCart(product._id)) {
+                        setSelectedColorIndex(index);
+                        setSelectedSize(""); // Reset size when color changes
+                        setQuantity(1); 
+                        setIsValuesSelected((prev) => {
+                          return ({ size:true, color: false });
+                        })
+                      }
+                    }}
+                    style={{ backgroundColor: colorOption.color }}
+                    className={`w-10 h-10 rounded-full flex-center border-2 select-none ${
+                      totalQuantity === 0
+                        ? "cursor-not-allowed opacity-40"
+                        : "hover:border-primary cursor-pointer"
+                    } ${isValuesSelected.color && "border-[red]"} ease-in-out duration-300 ${selectedColorIndex === index ? "border-primary" : "border-gray-300"}`}
+                  />
+                );
+              })}
             </div>
           </div>
-        </DialogContent>
-      </Dialog>
-    </>
+
+          {/* Size Selection */}
+          {selectedColorIndex !== null && (
+            <div className="grid gap-2">
+              <label
+                htmlFor="size"
+                className={`text-base font-medium`}
+              >
+                Select Size
+              </label>
+              <div id="size-option" className={`w-full h-fit flex gap-2`}>
+                {availableSizes.map((size: string, index: number) => (
+                  <div
+                    key={index}
+                    onClick={() => {
+                      setSelectedSize(size);
+                      setIsValuesSelected((prev) => ({ ...prev, size: false }));
+                    }}
+                    className={`px-4 py-2 border rounded cursor-pointer ${selectedSize === size ? "border-primary" : "border-gray-300"} ${isValuesSelected.size && "border-[red]"} ease-in-out duration-300`}
+                  >
+                    {size}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Quantity Display */}
+         {
+          !isValuesSelected.size && !isValuesSelected.color &&
+          <div className="flex flex-col gap-y-2">
+            <span
+              className={`text-sm py-2 px-2 ${
+                availableQuantity > 5
+                  ? "text-green bg-emerald-50"
+                  : "text-red-500 bg-red-50"
+              }`}
+            >
+              {availableQuantity > 0
+                ? availableQuantity < 5
+                  ? `Hurry Up! Only ${availableQuantity} left`
+                  : `${availableQuantity} products available in stock`
+                : "No products available in stock"}
+            </span>
+          </div>
+        }
+
+        <div className="flex flex-row gap-6  ">
+          {/* Image Preview */}
+            <Image
+              src={product.images_collection[selectedColorIndex].image_link}
+              alt={product.title}
+              width={600}
+              height={600}
+              loading="lazy"
+              className="w-[150px] h-[150px] object-cover object-top"
+            />
+          {/* Quantity Adjuster */}
+          <div className="flex-center gap-2 select-none ">
+            <span className="text-lg">Quantity: </span>
+            <Button
+              onClick={() => setQuantity((prev) => prev - 1)}
+              disabled={quantity === 1 || selectedSize === ""}
+              size="icon"
+              className="bg-transparent"
+            >
+              <AiOutlineMinus color="#000" size={22} />
+            </Button>
+            <span className="text-lg text-primary select-none">{quantity}</span>
+            <Button
+              size="icon"
+              onClick={() => setQuantity((prev) => prev + 1)}
+              disabled={quantity === availableQuantity || selectedSize === ""}
+              className="bg-transparent"
+            >
+              <AiOutlinePlus color="#000" size={22} />
+            </Button>
+          </div>
+        </div>
+
+          {/* Add to Cart Button */}
+          <Button
+            disabled={
+              itemExistInCart(product._id) || availableQuantity === 0
+            }
+            onClick={handleAddToCartBtn}
+            size="lg"
+            className="w-full select-none z-10 flex gap-1 bg-transparent text-lg text-primary border border-primary rounded-none hover:shadow-md active:translate-y-0.5 ease-in-out duration-300"
+          >
+            {itemExistInCart(product._id) ? "Added to cart" : "Add to cart +"}
+          </Button>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 };
+
 

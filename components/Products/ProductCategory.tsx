@@ -64,10 +64,11 @@ const ProductCategory: React.FC<ProductCategoryProps> = ({
         const data: CardValues[] = await res.json();
 
         setAllProducts(data);
+        // console.log("All products for category",category, data);
         setProducts(data);
 
         // extracting color options & sizes from the fetched products
-        const allColorOptions = data.flatMap((product) => product.colorOptions);
+        const allColorOptions = data.flatMap((product) => product.images_collection.map((color,index) => ({_id:index.toString(), title: color.color_name, color: color.color })));
 
         const uniqueColorOptions = Array.from(
           new Map(
@@ -80,7 +81,7 @@ const ProductCategory: React.FC<ProductCategoryProps> = ({
 
         setColorOptions(uniqueColorOptions);
 
-        const allSizes = data.flatMap((product) => product.availableSizes);
+        const allSizes = data.flatMap((product) => product.images_collection.flatMap((color) => color.quantity.map((size) => size.size)));
         const uniqueAvailableSizes = Array.from(new Set(allSizes));
 
         setAvailableSizes(uniqueAvailableSizes);
@@ -106,12 +107,14 @@ const ProductCategory: React.FC<ProductCategoryProps> = ({
 
       // filtering based on color
       const matchesColor = selectedColor
-        ? product.colorOptions.some((color) => color.title === selectedColor)
+        ? product.images_collection.some((color) => color.color_name === selectedColor)
         : true;
 
       // filtering based on size
       const matchesSize = selectedSize
-        ? product.availableSizes.includes(selectedSize)
+        ? product.images_collection.some((color) =>
+            color.quantity.some((size) => size.size === selectedSize)
+          )
         : true;
 
       // filtering based on price range
