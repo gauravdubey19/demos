@@ -324,7 +324,7 @@ const AddProductsInBulk = () => {
                 <p className="mt-4 text-gray-500">Processing CSV file...</p>
               </div>
             </div>
-          ) : sortedProducts.length > 0 ? (
+          ) : sortedProducts?.length > 0 ? (
             <div className="relative overflow-x-auto shadow-md sm:rounded-lg animate-accordion-down">
               <table className="w-full text-sm text-left text-gray-500">
                 <thead className="text-xs text-gray-700 uppercase bg-gray-50">
@@ -363,7 +363,7 @@ const AddProductsInBulk = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {sortedProducts.map((product, index) => (
+                  {sortedProducts?.map((product, index) => (
                     <tr
                       key={index}
                       className="bg-white border-b hover:bg-gray-50"

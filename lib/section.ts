@@ -42,7 +42,8 @@ import HelpDesk from "@/components/Admin/Helpdesk/helpdesk";
 import AddProductsInBulk from "@/components/Admin/Products/AddProductsInBulk";
 import GenerateCoupon from "@/components/Profile/Sections/GenerateCoupon";
 import MyCoupons from "@/components/Profile/Sections/MyCoupons";
-import { IoIosSync } from "react-icons/io";
+import { IoIosSync, IoMdNotificationsOutline } from "react-icons/io";
+import NotificationSection from "@/components/Admin/Notifications/NotificationSection";
 
 export const profileSections: SectionValues[] = [
   {
@@ -229,10 +230,18 @@ export const adminSections: SectionValues[] = [
     sectionNode: HelpDesk,
   },
   {
+    id: "my-notifications",
+    head: "My Notification",
+    href: "/admin/my-notifications",
+    icon: IoMdNotificationsOutline,
+    sectionNode: NotificationSection,
+  },
+  {
     id: "my-account",
     head: "My Account",
     href: "/admin/my-account",
     icon: AiOutlineSetting,
     sectionNode: MyAccount,
   },
+
 ];

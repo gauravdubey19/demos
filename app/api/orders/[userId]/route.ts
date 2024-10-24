@@ -3,6 +3,8 @@ import { connectToDB } from '@/utils/db';
 import Order from '@/models/Order';
 import Products from '@/models/Products';
 import NewProduct from '@/models/NewProduct';
+import Notification from "@/models/Notification"; // Assuming Notification is a schema for notifications
+
 
 // Get Orders by User ID
 export async function GET(req: NextRequest, { params }: { params: { userId: string } }) {
@@ -23,6 +25,22 @@ export async function GET(req: NextRequest, { params }: { params: { userId: stri
     }
 }
 
+
+
+
+
+// Function to create a notification
+async function createLowStockNotification(productTitle: string, selectedSize: string, remainingQuantity: number) {
+    try {
+        const title = `Low Stock Alert: ${productTitle}`;
+        const message = `Stock for size ${selectedSize} of product ${productTitle} is running low. Only ${remainingQuantity} left in stock.`;
+
+        // Create and save the notification
+        await Notification.create({ title, message, read: false });
+    } catch (error) {
+        console.error('Error creating low stock notification:', error);
+    }
+}
 // Add Order for User
 export async function POST(req: NextRequest, { params }: { params: { userId: string } }) {
     await connectToDB();
@@ -41,7 +59,7 @@ export async function POST(req: NextRequest, { params }: { params: { userId: str
             orderedProducts: orderDetails.orderedProducts
         };
 
-        // Keep generating unique order ID until it is unique
+        // Generate unique order ID
         if (!newOrder.orderInfo) {
             console.log('Valid Order Info is required');
             return NextResponse.json({ error: 'Valid Order Info is required' }, { status: 400 });
@@ -51,7 +69,7 @@ export async function POST(req: NextRequest, { params }: { params: { userId: str
             newOrder.orderInfo.orderID = Math.floor(100000 + Math.random() * 900000).toString();
         } while (await Order.findOne({ 'orderInfo.orderID': newOrder.orderInfo.orderID }));
 
-        // Decrease the stocks of the orderedProducts
+        // Decrease stock for orderedProducts
         for (const product of newOrder.orderedProducts) {
             const productToUpdate = await NewProduct.findOne({ _id: product.productId });
             if (!productToUpdate) {
@@ -61,7 +79,7 @@ export async function POST(req: NextRequest, { params }: { params: { userId: str
 
             // Find the correct color and size
             const colorOption = productToUpdate.images_collection.find(
-                (color:any) => color.color_name === product.selectedColor.title
+                (color: any) => color.color_name === product.selectedColor.title
             );
 
             if (!colorOption) {
@@ -70,7 +88,7 @@ export async function POST(req: NextRequest, { params }: { params: { userId: str
             }
 
             const sizeOption = colorOption.quantity.find(
-                (size:any) => size.size === product.selectedSize
+                (size: any) => size.size === product.selectedSize
             );
 
             if (!sizeOption) {
@@ -83,12 +101,16 @@ export async function POST(req: NextRequest, { params }: { params: { userId: str
                 return NextResponse.json({ error: `Insufficient stock for product ${product.title} in size ${product.selectedSize}` }, { status: 400 });
             }
 
-            // console.log("updating product quantity beforehand: ", sizeOption.quantity);
+            // Update the stock quantity
             sizeOption.quantity -= product.quantity;
-            // console.log("updating product quantity after: ", sizeOption.quantity);
+
+            // If stock is less than 3, create a low stock notification
+            if (sizeOption.quantity < 3) {
+                await createLowStockNotification(product.title, product.selectedSize, sizeOption.quantity);
+            }
+
             productToUpdate.sell_on_google_quantity = sizeOption.quantity;
             await productToUpdate.save();
-            // console.log("Product updated successfully", productToUpdate);
         }
 
         const createdOrder = await Order.create(newOrder);
