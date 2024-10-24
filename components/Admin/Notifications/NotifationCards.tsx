@@ -33,10 +33,8 @@ const NotificationCard: React.FC<NotificationCardProps> = ({ title, message, dat
                     </div>
                     <div className="flex justify-between items-center mt-2">
                         <p className="text-gray-600">{message}</p>
-                        {read ? (
-                            <Button className='bg-green cursor-not-allowed'>Mark as read</Button>
-                        ) : (
-                            <Button onClick={onMarkAsRead}>Mark as read</Button>
+                        {!read && (
+                            <Button onClick={onMarkAsRead} className='hover:opacity-70'>Mark as read</Button>
                         )}
                     </div>
                 </div>

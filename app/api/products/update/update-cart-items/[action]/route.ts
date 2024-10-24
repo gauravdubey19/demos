@@ -63,7 +63,9 @@ export const PUT = async (
     else if (action === "remove") {
       cart.cartItems.splice(itemIndex, 1);
     } else if (action === "upd-color" && color) {
+      console.log("entered upd-color: ", color,size);
       cart.cartItems[itemIndex].selectedColor = color;
+      cart.cartItems[itemIndex].selectedSize = size;
       cart.cartItems[itemIndex].quantity= 1;
     } else if (action === "upd-size" && size) {
       cart.cartItems[itemIndex].selectedSize = size;
@@ -74,7 +76,7 @@ export const PUT = async (
         { status: 400 }
       );
     }
-
+    console.log("cart before saving: ", cart);
     await cart.save();
 
     return NextResponse.json(
