@@ -1,9 +1,5 @@
-
-
 "use client";
-//
 
-//
 import React, { useState, useRef, useCallback, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
@@ -40,7 +36,7 @@ const ProductDetail: React.FC<{ slug: string; categorySlug: string }> = ({
   slug,
   categorySlug,
 }) => {
-  const [product, setProduct] = useState<ProductDetailValues |null>();
+  const [product, setProduct] = useState<ProductDetailValues | null>();
   const { fetchReviews } = useGlobalContext();
   const [loading, setLoading] = useState<boolean>(true);
   const [reviews, setReviews] = useState<Review[]>([]);
@@ -49,16 +45,20 @@ const ProductDetail: React.FC<{ slug: string; categorySlug: string }> = ({
   const [size, setSize] = useState<string>("");
   const [color, setColor] = useState<string>("");
   const [colorTitle, setColorTitle] = useState<string>("");
-  const [isValuesSelected, setIsValuesSelected] = useState<{ size: boolean; color: boolean; colorTitle: boolean; }>({
+  const [isValuesSelected, setIsValuesSelected] = useState<{
+    size: boolean;
+    color: boolean;
+    colorTitle: boolean;
+  }>({
     size: false,
     color: false,
     colorTitle: false,
   });
   useEffect(() => {
     if (!product) return;
-    if(!product.images_collection) return;
-    setColor(product?.images_collection[0].color??'');
-    setColorTitle(product?.images_collection[0].color_name??'');
+    if (!product.images_collection) return;
+    setColor(product?.images_collection[0].color ?? "");
+    setColorTitle(product?.images_collection[0].color_name ?? "");
     setIsValuesSelected((prev) => ({ ...prev, color: false }));
   }, [product]);
   useEffect(() => {
@@ -121,46 +121,47 @@ const ProductDetail: React.FC<{ slug: string; categorySlug: string }> = ({
     // if (!product)
     fetchProductBySlug();
   }, [slug]);
-  const [currentColorObj, setCurrentColorObj] = useState<ColorObject | null>(null);
- 
+  const [currentColorObj, setCurrentColorObj] = useState<ColorObject | null>(
+    null
+  );
 
-useEffect(() => {
-  if(product?.images_collection && product.images_collection.length > 0) {
-  setCurrentColorObj(product.images_collection[0]);
-  }
-}, [product]);
-  // console.log(product);
-useEffect(() => {
-  if(!product) return;
-  product.images_collection.forEach((colorObj) => {
-    if (colorObj.color === color) {
-      setCurrentColorObj(colorObj);
+  useEffect(() => {
+    if (product?.images_collection && product.images_collection.length > 0) {
+      setCurrentColorObj(product.images_collection[0]);
     }
-  });
-}, [color]);
-if (loading) return <Loader />;
+  }, [product]);
+  // console.log(product);
+  useEffect(() => {
+    if (!product) return;
+    product.images_collection.forEach((colorObj) => {
+      if (colorObj.color === color) {
+        setCurrentColorObj(colorObj);
+      }
+    });
+  }, [color]);
+  if (loading) return <Loader />;
 
-if (!product) {
-  return <div>Product not found</div>;
-}
-if(!product.images_collection) {
-  return <div>Product images not found</div>;
-}
+  if (!product) {
+    return <div>Product not found</div>;
+  }
+  if (!product.images_collection) {
+    return <div>Product images not found</div>;
+  }
   return (
     <>
       <section className="w-full h-full max-w-6xl px-4 py-10 mx-auto">
         <div className="w-full h-full mt-8 lg:mt-[80px] xl:mt-10">
           <Breadcrumbs />
           <div className="w-full h-full grid grid-cols-1 lg:grid-cols-[1fr_1fr] gap-6 lg:gap-12 items-start lg:mt-2">
-            { currentColorObj?.images &&
-            <ImageGalleryMobile images={currentColorObj.images} />
-          }
-          {currentColorObj?.images && 
-            <ImageGallery
-              images={currentColorObj.images}
-              initialImageLink={currentColorObj.image_link}
-            />
-            }
+            {currentColorObj?.images && (
+              <ImageGalleryMobile images={currentColorObj.images} />
+            )}
+            {currentColorObj?.images && (
+              <ImageGallery
+                images={currentColorObj.images}
+                initialImageLink={currentColorObj.image_link}
+              />
+            )}
             <Details
               product={product}
               categorySlug={categorySlug}
@@ -222,9 +223,9 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({
     window.innerWidth < 768
   );
   const thumbnailRef = useRef<HTMLDivElement>(null);
-useEffect(() => {
-  setCurrentImage(images[0]);
-}, [images]);
+  useEffect(() => {
+    setCurrentImage(images[0]);
+  }, [images]);
   const scrollThumbnails = (direction: "left" | "right" | "up" | "down") => {
     if (thumbnailRef.current) {
       const scrollAmount = isMobileView
@@ -380,13 +381,21 @@ useEffect(() => {
   );
 };
 
-const ALL_SIZES = ['S', 'M', 'L', 'XL', 'XXL', 'XXXL'];
+const ALL_SIZES = ["S", "M", "L", "XL", "XXL", "XXXL"];
 
 const Details: React.FC<DetailsProps> = ({
   product,
   categorySlug,
   avgRating,
-  reviewsLength,size, setSize,color, setColor, colorTitle, setColorTitle, isValuesSelected, setIsValuesSelected,
+  reviewsLength,
+  size,
+  setSize,
+  color,
+  setColor,
+  colorTitle,
+  setColorTitle,
+  isValuesSelected,
+  setIsValuesSelected,
 }) => {
   const {
     handleAddToCart,
@@ -397,7 +406,6 @@ const Details: React.FC<DetailsProps> = ({
     handleRemoveProductFromWishlist,
     productExistInWishlist,
   } = useCart();
-
 
   // Function to check if a size is available for the selected color
   const isSizeAvailable = (sizeToCheck: string): boolean => {
@@ -431,8 +439,6 @@ const Details: React.FC<DetailsProps> = ({
     return sizeObj?.quantity || 0;
   };
 
-
-
   const handleAddToCartBtn = () => {
     setIsValuesSelected({
       size: size.trim() === "",
@@ -442,9 +448,10 @@ const Details: React.FC<DetailsProps> = ({
 
     if (size.trim() !== "" && color.trim() !== "") {
       const quantity = 1;
-      const discount = product.price && product.salePrice
-        ? calculateDiscount(product.salePrice, product.price)
-        : 0;
+      const discount =
+        product.price && product.salePrice
+          ? calculateDiscount(product.salePrice, product.price)
+          : 0;
 
       // handleAddToCart(
       //   product.images_collection,
@@ -464,9 +471,9 @@ const Details: React.FC<DetailsProps> = ({
       //   product.quantityInStock,
       //   quantity
       // );
-      let quantityOfSelected = product.images_collection.find(
-        (item) => item.color_name === colorTitle
-      )?.quantity.find((q) => q.size === size)?.quantity as number;
+      let quantityOfSelected = product.images_collection
+        .find((item) => item.color_name === colorTitle)
+        ?.quantity.find((q) => q.size === size)?.quantity as number;
       handleAddToCart(
         product.images_collection,
         discount,
@@ -599,14 +606,17 @@ const Details: React.FC<DetailsProps> = ({
                 isValuesSelected.color && "animate-shake"
               }`}
             >
-              {product?.images_collection.map((c,index) => (
+              {product?.images_collection.map((c, index) => (
                 <div
                   key={index}
                   title={c.color_name}
                   onClick={() => {
                     setColorTitle(c.color_name);
                     setColor(c.color);
-                    setIsValuesSelected((prev:any) => ({ ...prev, color: false }));
+                    setIsValuesSelected((prev: any) => ({
+                      ...prev,
+                      color: false,
+                    }));
                   }}
                   style={{ backgroundColor: c.color }}
                   className={`w-10 h-10 rounded-full flex-center border-2 select-none ${
@@ -626,51 +636,62 @@ const Details: React.FC<DetailsProps> = ({
           <div className="grid gap-2">
             <label
               htmlFor="size"
-              className={`text-base font-medium ${isValuesSelected.size && "text-[red]"
-                } ease-in-out duration-200`}
+              className={`text-base font-medium ${
+                isValuesSelected.size && "text-[red]"
+              } ease-in-out duration-200`}
             >
               {!isValuesSelected.size ? "Select size" : "Please select size!"}
             </label>
 
             <div
               id="size-option"
-              className={`w-full h-fit flex flex-wrap gap-2 ${isValuesSelected.size && "animate-shake"
-                }`}
+              className={`w-full h-fit flex flex-wrap gap-2 ${
+                isValuesSelected.size && "animate-shake"
+              }`}
             >
-              {!isValuesSelected.color && ALL_SIZES.map((sizeOption) => {
-                const isAvailable = isSizeAvailable(sizeOption);
-                const quantity = getQuantityForSize(sizeOption);
+              {!isValuesSelected.color &&
+                ALL_SIZES.map((sizeOption) => {
+                  const isAvailable = isSizeAvailable(sizeOption);
+                  const quantity = getQuantityForSize(sizeOption);
 
-                return (
-                  <div
-                    key={sizeOption}
-                    onClick={() => {
-                      if (!itemExistInCart(product._id) && isAvailable) {
-                        setSize(sizeOption);
-                        setIsValuesSelected((prev:any) => ({ ...prev, size: false }));
+                  return (
+                    <div
+                      key={sizeOption}
+                      onClick={() => {
+                        if (!itemExistInCart(product._id) && isAvailable) {
+                          setSize(sizeOption);
+                          setIsValuesSelected((prev: any) => ({
+                            ...prev,
+                            size: false,
+                          }));
+                        }
+                      }}
+                      title={
+                        isAvailable ? `${quantity} in stock` : "Out of stock"
                       }
-                    }}
-                    title={isAvailable ? `${quantity} in stock` : 'Out of stock'}
-                    className={`w-10 h-10 rounded-full flex-center border select-none ${itemExistInCart(product._id) || !isAvailable
-                        ? "cursor-not-allowed opacity-40 bg-gray-100"
-                        : size === sizeOption
+                      className={`w-10 h-10 rounded-full flex-center border select-none ${
+                        itemExistInCart(product._id) || !isAvailable
+                          ? "cursor-not-allowed opacity-40 bg-gray-100"
+                          : size === sizeOption
                           ? "border-primary shadow-lg scale-105 cursor-not-allowed"
                           : "hover:border-primary cursor-pointer"
-                      } ${isValuesSelected.size && "border-[red]"
+                      } ${
+                        isValuesSelected.size && "border-[red]"
                       } ease-in-out duration-300`}
-                  >
-                    {sizeOption}
-                  </div>
-                );
-              })}
+                    >
+                      {sizeOption}
+                    </div>
+                  );
+                })}
             </div>
 
             {/* Show available sizes message */}
             <div className="text-sm text-muted-foreground">
               {colorTitle && (
                 <span>
-                  Available sizes for {colorTitle}:{' '}
-                  {ALL_SIZES.filter(s => isSizeAvailable(s)).join(', ') || 'None'}
+                  Available sizes for {colorTitle}:{" "}
+                  {ALL_SIZES.filter((s) => isSizeAvailable(s)).join(", ") ||
+                    "None"}
                 </span>
               )}
             </div>
@@ -700,7 +721,10 @@ const Details: React.FC<DetailsProps> = ({
           <div className="grid gap-2">
             <Button
               disabled={
-                itemExistInCart(product._id) || product.sell_on_google_quantity === 0 || isValuesSelected.size || isValuesSelected.color
+                itemExistInCart(product._id) ||
+                product.sell_on_google_quantity === 0 ||
+                isValuesSelected.size ||
+                isValuesSelected.color
               }
               onClick={handleAddToCartBtn}
               size="lg"
@@ -788,11 +812,12 @@ const AdditionalInfo: React.FC<AdditionalInfoProps> = ({ product }) => {
           <AccordionTrigger>Service FAQs</AccordionTrigger>
           <AccordionContent className="bg-gray-100/50 text-sm p-4 rounded-md">
             <ul className="list-disc pl-5 space-y-2">
-              {product.faqs && product.faqs.map((faq, index) => (
-                <li key={index}>
-                  <strong>{faq.question}</strong> {faq.answer}
-                </li>
-              ))}
+              {product.faqs &&
+                product.faqs.map((faq, index) => (
+                  <li key={index}>
+                    <strong>{faq.question}</strong> {faq.answer}
+                  </li>
+                ))}
             </ul>
           </AccordionContent>
         </AccordionItem>
@@ -1100,6 +1125,3 @@ const ProductReviews: React.FC<ProductReviewsProps> = ({
     </div>
   );
 };
-
-
-
