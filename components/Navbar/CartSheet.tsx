@@ -135,13 +135,15 @@ const CartItemCard: React.FC<{ item: CartItem }> = ({ item }) => {
     let selectedColor = item.productId.images_collection.find(
       (c) => c.color === color.color
     );
-    if (!selectedColor) {
+    let sizeExists = selectedColor?.quantity.find((q) => q.size === size);
+    if (!sizeExists) {
+      console.log("Setting selectedColor: ", selectedColor);
       selectedColor = item.productId.images_collection[0];
-      setCurrentColor(selectedColor);
+      setSize(selectedColor.quantity[0].size);
     }
-    setSize(selectedColor.quantity[0].size);
+    if(selectedColor)
     setCurrentColor(selectedColor);
-  },[color, item.productId.images_collection]);
+  },[color, item.productId.images_collection, size]);
 
   const { cartLoading } = useCart();
   const sizeLabels: { [key: string]: string } = {
@@ -165,12 +167,11 @@ const CartItemCard: React.FC<{ item: CartItem }> = ({ item }) => {
     quantity: Array<{ size: string; quantity: number }>;
   }) => {
     setColor(selectedColor);
-    let size = item.selectedSize as undefined | string;
-    let sizeExists = selectedColor.quantity.find((q) => q.size === size);
-    if (!sizeExists) {
-      console.log("size not found ... updating one");
-      size = selectedColor.quantity[0].size;
-    }
+    let size = selectedColor.quantity[0].size;
+    let selectedSizeExists = selectedColor.quantity.find((q) => q.size === size);
+    if (!selectedSizeExists) {
+      console.log("Setting new size");
+      size = selectedColor.quantity[0].size;}
     handleColorSize("upd-color", item.productId._id, selectedColor, size);
   };
 

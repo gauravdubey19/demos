@@ -60,7 +60,7 @@ function NewHeroSection() {
             </Link>
             <div className="relative items-center justify-center px-6 py-2  overflow-hidden hidden md:flex">
               {/* <div className="absolute top-0 left-0 right-0 bottom-0 bg-black opacity-70 z-0 border border-primary rounded-full"></div> */}
-             <Image src={Logo} alt="CSK" width={100} height={100} className=" w-[80px] lg:w-[70px] h-auto relative z-10 " />
+             <Image src={Logo} alt="CSK" width={100} height={100} className="w-[90px] h-auto relative z-10 " />
             </div>
             <Link href="/products" className="button-default" id="readyMade">
               <div className="flex flex-row gap-2 items-center justify-center relative w-full h-full left-2">

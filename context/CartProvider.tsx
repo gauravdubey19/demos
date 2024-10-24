@@ -604,10 +604,12 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
                         ? color
                         : cartItem.selectedColor,
                     selectedSize:
-                      action === "upd-size" && size
+                      action === "upd-color" && size
+                        ? size
+                        : action === "upd-size" && size
                         ? size
                         : cartItem.selectedSize,
-                        quantity: 1
+                    quantity: 1,
                   }
                 : cartItem
             )

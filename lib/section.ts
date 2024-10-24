@@ -34,7 +34,7 @@ import { LiaQuestionSolid } from "react-icons/lia";
 import { IoTicketOutline, IoVideocamOutline } from "react-icons/io5";
 import { RxPerson } from "react-icons/rx";
 import { CiShoppingBasket } from "react-icons/ci";
-import { RiMoneyDollarCircleLine } from "react-icons/ri";
+import { RiCouponLine, RiMoneyDollarCircleLine } from "react-icons/ri";
 import { GrMapLocation } from "react-icons/gr";
 import { AiOutlineCustomerService } from "react-icons/ai";
 import AddAddress from "@/components/Profile/Sections/AddAddresses";
@@ -42,6 +42,7 @@ import HelpDesk from "@/components/Admin/Helpdesk/helpdesk";
 import AddProductsInBulk from "@/components/Admin/Products/AddProductsInBulk";
 import GenerateCoupon from "@/components/Profile/Sections/GenerateCoupon";
 import MyCoupons from "@/components/Profile/Sections/MyCoupons";
+import { IoIosSync } from "react-icons/io";
 
 export const profileSections: SectionValues[] = [
   {
@@ -69,14 +70,14 @@ export const profileSections: SectionValues[] = [
     id: "my-coupons",
     head: "My Coupons",
     href: "/profile/my-coupons",
-    icon: GrMapLocation,
+    icon: RiCouponLine,
     sectionNode: MyCoupons,
   },
   {
     id: "generate-coupon",
     head: "Generate Coupon (For testing)",
     href: "/profile/generate-coupon",
-    icon: GrMapLocation,
+    icon: IoIosSync,
     sectionNode: GenerateCoupon,
   },
   {
